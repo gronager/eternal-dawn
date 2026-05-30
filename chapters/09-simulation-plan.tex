@@ -13,11 +13,112 @@ scope; higher tiers build on lower ones. A small group could complete Tiers 1--2
 in a year; Tiers 3--4 are multi-year programs. Code lives in \texttt{sims/} and
 outputs in \texttt{sims/output/}.
 
+\section{Phase 0: Is the universe a black-hole interior?}
+\label{sec:phase0}
+
+Before any dynamical simulation, there is cheaper and more decisive work to do.
+The thesis at the foundation of everything else is that \emph{our universe is the
+interior of a (rotating) black hole}---an inverse bubble behind a Cartasis
+membrane. In the Copernican spirit, we do not assume this; we take the
+universe's \emph{measured} numbers and ask what they already imply. Four
+``corners'' need only arithmetic and existing catalogs, yet each ties an
+observed quantity to a black-hole property. \Cref{fig:firstlight} collects them;
+the calculation is reproducible as \texttt{figures/scripts/ch02\_bh\_first\_light.py}.
+
+\paragraph{Corner A --- flatness is the Schwarzschild condition.} For a
+Friedmann universe the critical density is $\rho_c = 3H^2/8\pi G$, and the mass
+inside the Hubble sphere of radius $R_H = c/H$ is
+$M = \tfrac{4}{3}\pi R_H^3\,\Omega\rho_c$. Its Schwarzschild radius is then
+\[
+  R_s = \frac{2GM}{c^2}
+      = \frac{2G}{c^2}\cdot\frac{4}{3}\pi\Big(\frac{c}{H}\Big)^{3}\Omega\,
+        \frac{3H^2}{8\pi G}
+      = \Omega\,\frac{c}{H} = \Omega\,R_H .
+\]
+So $R_s/R_H = \Omega$ \emph{identically}. The measured flatness
+$\Omega = 1.000 \pm 0.005$ is therefore numerically the statement that the
+observable universe sits at its own Schwarzschild radius---exactly what a
+black-hole interior requires.\sidenote{This is a necessary, not sufficient,
+condition: any critical-density FRW model satisfies it, and the interior
+Schwarzschild geometry is not literally FRW. It is the zeroth-order
+consistency check, not a proof.} With Planck values,
+$M \approx 9.2\times10^{52}\,\mathrm{kg}$ and $R_s/R_H = 1.000$.
+
+\paragraph{Corner B --- the spin is sub-extremal, and predicts an axis.} If the
+interior is Kerr-like, it carries a dimensionless spin $a^* = cJ/GM^2$. The
+largest \emph{causal} angular momentum of the Hubble-sphere mass, $J \sim McR_H$,
+gives
+\[
+  a^*_{\max} = \frac{cJ}{GM^2} = \frac{c^2 R_H}{GM} = \frac{2}{\Omega} \approx 2 ,
+\]
+of order unity. A realistic small net rotation therefore leaves the universe
+comfortably sub-extremal ($a^* < 1$), consistent with a genuine,
+cosmic-censored Kerr interior rather than a naked singularity. The decisive
+observational handle is direction, not magnitude: if the preferred axis is
+inherited from the parent's spin, the CMB low-multipole alignment (the ``axis of
+evil'') and the JWST galaxy-rotation asymmetry~\citep{shamir2025} should share a
+single axis. \textbf{Testing that alignment against existing catalogs is the
+single cheapest potentially-decisive measurement in the whole program.}
+
+\paragraph{Corner C --- ``CMB $=$ Hawking'' cannot mean the present horizon.}
+The Hawking temperature of the Hubble-sphere mass is
+$T_H = \hbar c^3/8\pi G M k_B \approx 1.3\times10^{-30}\,\mathrm{K}$, and (because
+$R_s = R_H$) it equals exactly half the present cosmological-horizon
+Gibbons--Hawking temperature, $T_H = \tfrac12\,\hbar H/2\pi k_B$. Both are
+$\sim\!30$ orders of magnitude below the $2.7255\,\mathrm{K}$ CMB. The honest
+consequence: the CMB is \emph{not} present-day horizon radiation. The
+identification can only work as parent-horizon radiation emitted near the bounce
+(hot at emission) and redshifted by the internal expansion. This sharpens what a
+successful calculation must deliver---a spectrum, not just a temperature---and
+hands the hard part to Tier~2.
+
+\paragraph{Corner D --- the dark sector fixes a single filter number.} If dark
+matter is filter-rejected counterpart matter, the dark-matter-to-baryon ratio is
+$(1-f)/f = \omega_c/\omega_b$, so the membrane pass-fraction is
+$f = \omega_b/(\omega_b+\omega_c)$. Planck's $\omega_c/\omega_b \approx 5.4$ gives
+$f \approx 0.157 \approx 1/6$. Any Einstein--Cartan filter model must reproduce
+this one number; it is the tightest quantitative target the membrane physics
+faces.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{bh_first_light}
+  \caption{Phase-0 consistency checks. \emph{Left:} the Hawking temperature
+    $T_H(M)$; the observable universe lands $\sim\!30$ orders of magnitude below
+    the CMB, so the CMB cannot be present-horizon radiation. \emph{Right:} the
+    dimensionless black-hole identities read straight off Planck cosmology---
+    $R_s/R_H=\Omega\approx1$, maximal spin $a^*_{\max}\approx2$, and membrane
+    filter $f\approx0.16$.}
+  \label{fig:firstlight}
+\end{figure}
+
+\paragraph{Recommended order.} Do Corner~A and~B first (an afternoon, plus one
+catalog-alignment analysis), then C and D as supporting consistency relations.
+Only then move to the dynamical core below: Phase~0 establishes that the
+\emph{kinematics} are consistent with a black-hole interior; the tiers establish
+the \emph{mechanism}.
+
 \section{Tier 1: Single-bounce Einstein--Cartan dynamics}
 
 \paragraph{Goal.} Numerically evolve a spherical collapse of fermionic matter
 through the bounce. Output: complete characterization of the bounce as a function
 of input parameters.
+
+\paragraph{Minimal model.} The cheapest dynamical demonstration is homogeneous:
+a Weyssenhoff spin fluid in Einstein--Cartan obeys a modified Friedmann equation
+in which the averaged spin contributes a negative quadratic term,
+\[
+  \Big(\frac{\dot a}{a}\Big)^2
+    = \frac{8\pi G}{3}\,\rho\Big(1 - \frac{\rho}{\rhoc}\Big),
+\]
+so the expansion rate vanishes and reverses at $\rho = \rhoc$: a bounce, not a
+singularity. Integrating this single ODE (with the continuity equation for
+$\rho(a)$) and showing $a(t)$ reaching a finite minimum at $\rhoc$ is the
+\emph{minimum viable bounce}---a few dozen lines, and the first time the central
+claim is exhibited rather than asserted. The spherical-collapse code below
+upgrades this to an inhomogeneous interior matched to an exterior Schwarzschild
+geometry, so that one figure shows a black hole from outside and an expanding
+cosmology from inside.
 
 \paragraph{Setup.}
 \begin{itemize}

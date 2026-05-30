@@ -27,6 +27,8 @@ build/
 # Keep committed figure PDFs (generated from figures/tex or figures/data)
 !figures/pdf/
 !figures/pdf/*.pdf
+# but not the preview rasters
+figures/pdf/*.png
 
 # Python / sims
 __pycache__/
@@ -34,3 +36,7 @@ __pycache__/
 .venv/
 venv/
 sims/**/output/
+
+# Python build/editable-install artifacts
+*.egg-info/
+*.egg-link
