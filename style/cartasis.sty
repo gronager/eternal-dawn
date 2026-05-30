@@ -1,15 +1,17 @@
-% cartasis.sty — style package for the Supraverse Cartasis Theory monograph
+% cartasis.sty — style package for the Supraverse Cartasis Theory monograph.
+% Designed for the `memoir` class. Palatino (mathpazo) text + math, a classic
+% Bringhurst chapter style, generous outer margin for sidenotes and margin
+% citations.
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{style/cartasis}[2026/05/30 Supraverse Cartasis Theory style]
 
-% --- Encoding and fonts (pdflatex-portable) ---
+% --- Encoding and fonts (Palatino) ---
 \RequirePackage[T1]{fontenc}
 \RequirePackage[utf8]{inputenc}
-\RequirePackage{lmodern}
+\RequirePackage{mathpazo}            % Palatino text + matching math
+\RequirePackage[scaled=0.88]{helvet} % Helvetica for sans (heads), scaled to match
 \RequirePackage{microtype}
-
-% --- Page geometry ---
-\RequirePackage[a4paper,margin=1in]{geometry}
+\linespread{1.05}                    % Palatino wants a little extra leading
 
 % --- Math ---
 \RequirePackage{amsmath}
@@ -17,13 +19,39 @@
 \RequirePackage{amsthm}
 \RequirePackage{mathtools}
 
-% --- Tables and graphics ---
+% --- Tables, graphics, lists ---
 \RequirePackage{booktabs}
 \RequirePackage{array}
 \RequirePackage{graphicx}
 \graphicspath{{figures/pdf/}}
+\RequirePackage{enumitem}
+\setlist{itemsep=0.2ex, topsep=0.6ex}
 
-% --- Citations and references (natbib; hyperref before cleveref) ---
+% --- Page layout (memoir) ---
+% Generous outer margin holds sidenotes and margin citations.
+\setlrmarginsandblock{1.1in}{2.1in}{*}
+\setulmarginsandblock{1.2in}{1.4in}{*}
+\setmarginnotes{0.25in}{1.7in}{\onelineskip}
+\setheadfoot{\onelineskip}{2\onelineskip}
+\setheaderspaces{*}{2\onelineskip}{*}
+\checkandfixthelayout
+
+% --- Sectioning, headers, ToC ---
+\chapterstyle{bringhurst}
+\setsecnumdepth{subsection}
+\maxsecnumdepth{subsection}
+\settocdepth{section}
+\makepagestyle{cartasis}
+\makeevenhead{cartasis}{\thepage}{}{\scshape\small\leftmark}
+\makeoddhead{cartasis}{\scshape\small\rightmark}{}{\thepage}
+\makeheadrule{cartasis}{\textwidth}{\normalrulethickness}
+\pagestyle{cartasis}
+% Sans, small-caps style for section heads in the Palatino setting
+\setsecheadstyle{\normalfont\sffamily\bfseries\large}
+\setsubsecheadstyle{\normalfont\sffamily\bfseries\normalsize}
+\setsubsubsecheadstyle{\normalfont\sffamily\itshape\normalsize}
+
+% --- Citations and cross-references (natbib; hyperref before cleveref) ---
 \RequirePackage[numbers,sort&compress]{natbib}
 \RequirePackage[hidelinks]{hyperref}
 \RequirePackage{cleveref}
@@ -32,16 +60,17 @@
 \theoremstyle{definition}
 \newtheorem{axiom}{Axiom}
 \renewcommand{\theaxiom}{A\arabic{axiom}}   % A1, A2, ...
-
 \theoremstyle{remark}
 \newtheorem{conjecture}{Conjecture}
 \newtheorem*{openquestion}{Open question}
 
 % --- Convenience macros ---
+\RequirePackage{xspace}
 \newcommand{\rhoc}{\rho_{C}}                  % Cartasis density
 \newcommand{\Msun}{M_{\odot}}
 \newcommand{\SCT}{\textsc{sct}\xspace}
-\RequirePackage{xspace}
 \newcommand{\Cartasis}{\emph{Cartasis}\xspace}
+% A lightweight sidenote for epistemic asides / margin remarks.
+\newcommand{\sidenote}[1]{\marginpar{\footnotesize\raggedright #1}}
 
 \endinput
