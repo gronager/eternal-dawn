@@ -1,0 +1,47 @@
+% cartasis.sty — style package for the Supraverse Cartasis Theory monograph
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{style/cartasis}[2026/05/30 Supraverse Cartasis Theory style]
+
+% --- Encoding and fonts (pdflatex-portable) ---
+\RequirePackage[T1]{fontenc}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage{lmodern}
+\RequirePackage{microtype}
+
+% --- Page geometry ---
+\RequirePackage[a4paper,margin=1in]{geometry}
+
+% --- Math ---
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{amsthm}
+\RequirePackage{mathtools}
+
+% --- Tables and graphics ---
+\RequirePackage{booktabs}
+\RequirePackage{array}
+\RequirePackage{graphicx}
+\graphicspath{{figures/pdf/}}
+
+% --- Citations and references (natbib; hyperref before cleveref) ---
+\RequirePackage[numbers,sort&compress]{natbib}
+\RequirePackage[hidelinks]{hyperref}
+\RequirePackage{cleveref}
+
+% --- Theorem-like environments for the framework's claims ---
+\theoremstyle{definition}
+\newtheorem{axiom}{Axiom}
+\renewcommand{\theaxiom}{A\arabic{axiom}}   % A1, A2, ...
+
+\theoremstyle{remark}
+\newtheorem{conjecture}{Conjecture}
+\newtheorem*{openquestion}{Open question}
+
+% --- Convenience macros ---
+\newcommand{\rhoc}{\rho_{C}}                  % Cartasis density
+\newcommand{\Msun}{M_{\odot}}
+\newcommand{\SCT}{\textsc{sct}\xspace}
+\RequirePackage{xspace}
+\newcommand{\Cartasis}{\emph{Cartasis}\xspace}
+
+\endinput

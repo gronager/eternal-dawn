@@ -33,40 +33,51 @@ The framework is a synthesis, not pure invention. Original contributions are (a)
 - First-principles derivation over numerical fits.
 - When something is speculative, label it. When something is established, cite it.
 - Plots and simulations should be reproducible from the repo.
-- LaTeX for the final write-up, markdown for working drafts.
+- The monograph is authored in LaTeX. Equations and formulas belong in LaTeX, not markdown — author new material directly in the `.tex` chapters. Quick scratch notes may start as markdown in `notes/`, but anything with math should move into the LaTeX chapters promptly.
 
 ## Repo structure
 
 ```
-supraverse/
-├── CLAUDE.md                    # this file
-├── README.md                    # public-facing description
-├── 00-axioms.md                 # minimal axioms and what follows from them
-├── 01-cartasis.md               # the bounce membrane and its physics
-├── 02-baby-universes.md         # how baby universes form and evolve
-├── 03-chirality-flip-filter.md  # matter-antimatter dynamics across bounces
-├── 04-supraverse.md             # the global structure: foam, equilibrium, lineages
-├── 05-dark-sector.md            # dark matter, dark energy, CMB-as-Hawking
-├── 06-time-arrow.md             # emergence of time direction
-├── 07-observational-tests.md    # predictions and how to check them
-├── 08-simulation-plan.md        # tiered simulation pathway
-├── 09-visualization.md          # gravity-scaled conformal mapping
-├── 10-open-questions.md         # what we don't know
-├── notes/                       # working notes, scratch derivations
-└── sims/                        # simulation code (eventually)
+cartasis/
+├── CLAUDE.md                       # this file
+├── README.md                       # public-facing description + build instructions
+├── Makefile                        # `make` builds the PDF (latexmk); see also figures/, sim targets
+├── book.tex                        # main document — includes frontmatter, chapters, appendices
+├── frontmatter/                    # title, dedication, epigraph, preface (.tex)
+├── chapters/                       # the monograph, one .tex per chapter (CANONICAL)
+│   ├── 01-axioms.tex
+│   ├── 02-cartasis.tex
+│   ├── 03-baby-universes.tex
+│   ├── 04-chirality-flip-filter.tex
+│   ├── 05-supraverse.tex
+│   ├── 06-dark-sector.tex
+│   ├── 07-time-arrow.tex
+│   ├── 08-observational-tests.tex
+│   ├── 09-simulation-plan.tex
+│   └── 10-visualization.tex
+├── appendices/
+│   └── A-open-questions.tex        # what we don't know
+├── style/cartasis.sty              # preamble: packages, axiom/conjecture envs, macros
+├── bibliography/references.bib      # all citations
+├── figures/{tex,data,pdf,scripts}/ # figure sources, data, generated PDFs, build scripts
+├── data/                           # observational datasets for comparison (Ch. 8)
+├── drafts/                         # ORIGINAL markdown drafts, archived for provenance
+├── notes/                          # working notes, scratch derivations (markdown ok)
+├── sims/                           # simulation code (eventually)
+└── build/                          # LaTeX build output (gitignored)
 ```
 
-Each numbered file is self-contained enough to be read independently but assumes the axioms in 00. Cross-references use the numbered prefix.
+Each chapter is self-contained enough to be read independently but assumes the axioms in Chapter 1. Cross-references use LaTeX labels (`chap:*`, `ax:*`, `app:openq`) via `\ref`/`\Cref`. The `drafts/` markdown files are the pre-LaTeX originals — they are archival; **edit the `.tex` chapters, not the drafts.**
 
 ## Workflow notes for Claude Code sessions
 
 When picking up this project:
 
-1. Read CLAUDE.md (this file) and 00-axioms.md first to load context.
-1. The conversation that originated this framework was long and rambling. The MD files are the distilled version. Trust the MD files over any prior conversation memory.
+1. Read CLAUDE.md (this file) and `chapters/01-axioms.tex` first to load context.
+1. The conversation that originated this framework was long and rambling. The chapters are the distilled version. Trust the chapters over any prior conversation memory.
 1. When extending or revising, preserve the parsimony. The framework’s strength is that it derives a lot from very little. Adding postulates is a regression.
 1. When uncertain whether something is established physics vs. speculation, default to labeling speculation. Honesty about epistemic status is more valuable than apparent completeness.
-1. LaTeX conversion comes after the markdown is firm. Don’t switch formats prematurely.
+1. The monograph is in LaTeX. Build the PDF with `make` (runs `latexmk -pdf book.tex`). Author new material directly in `chapters/*.tex`; the markdown in `drafts/` is archival provenance only.
 1. Simulation code should be Python or Julia, with results saved as plots in `sims/output/`. Numerical relativity libraries (Einstein Toolkit, GRChombo) are too heavy for early exploration; start with custom finite-difference codes.
 
 ## What this project is not

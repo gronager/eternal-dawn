@@ -1,0 +1,198 @@
+\chapter{Simulation Plan}
+\label{chap:sims}
+
+\section{Philosophy}
+
+The framework's strength is that it should be simulable from first principles.
+Rare large vacuum fluctuations, Einstein--Cartan bounces, and thermodynamic
+equilibrium are all computable problems. The path from ``interesting framework''
+to ``constrained by data'' runs through simulation.
+
+The simulation work is tiered. Each tier is a tractable project of definite
+scope; higher tiers build on lower ones. A small group could complete Tiers 1--2
+in a year; Tiers 3--4 are multi-year programs. Code lives in \texttt{sims/} and
+outputs in \texttt{sims/output/}.
+
+\section{Tier 1: Single-bounce Einstein--Cartan dynamics}
+
+\paragraph{Goal.} Numerically evolve a spherical collapse of fermionic matter
+through the bounce. Output: complete characterization of the bounce as a function
+of input parameters.
+
+\paragraph{Setup.}
+\begin{itemize}
+  \item 1D spherical symmetry (radial coordinate $r$, time $t$).
+  \item Initial conditions: a uniform ball of matter at moderate density,
+    slightly overdense to drive gravitational collapse.
+  \item Matter modeled as a Weyssenhoff fluid: a perfect fluid with spin density
+    (semiclassical treatment of fermion spin in the continuous limit).
+  \item Evolution: Einstein--Cartan field equations with torsion sourced by spin
+    density.
+  \item Tracking: density, pressure, spin density, metric components, and torsion
+    components as functions of $r$ and $t$.
+\end{itemize}
+
+\paragraph{Numerical method.} A finite-difference scheme on a radial grid
+($\sim 10^3$ to $10^4$ points), with adaptive mesh refinement near the bounce
+(where gradients become extreme), implicit time stepping for stability near peak
+density, and conservation checks (total mass--energy, total spin, total particle
+number).
+
+\paragraph{Expected output.} The bounce happens at $\rho \sim \rhoc \sim
+10^{50}\,\mathrm{kg\,m^{-3}}$ (verified); the bounce timescale in proper time;
+the bounce duration and profile shape; the maximum density reached as a function
+of initial conditions; the equation of state through the bounce; and the energy
+balance (kinetic energy in expansion vs.\ energy contained in spin/torsion
+fields).
+
+\paragraph{Tools.} Python with NumPy/SciPy for prototyping (optionally Julia for
+performance), standard ODE solvers (RK4, implicit methods), custom grid handling
+and AMR, and plotting with matplotlib.
+
+\paragraph{Effort estimate.} 2--3 months for a competent graduate student;
+$\sim 500$--$1500$ lines of code; validation against existing single-bounce
+papers (Brandt, Magueijo, Pop\l{}awski~\citep{poplawski2012,poplawski2016}).
+
+\paragraph{Status of existing work.} Several authors have done pieces of this. No
+one has produced a clean, well-documented reference implementation. \emph{A
+valuable side-output of this tier is producing such a reference implementation.}
+
+\section{Tier 2: Perturbation evolution through the bounce}
+
+\paragraph{Goal.} Take the output of Tier 1 (a clean bounce profile) and evolve
+cosmological perturbations through it. Output: the primordial power spectrum from
+the bounce, comparable to CMB observations.
+
+\paragraph{Setup.} Start with the Tier 1 spherical bounce background; add linear
+perturbations to the metric and matter fields; evolve them using linearized
+Einstein--Cartan equations; track the power spectrum of scalar, vector, and
+tensor modes through the bounce; and compute predictions for CMB observables (the
+scalar spectral index $n_s$, the tensor-to-scalar ratio $r$, the running of the
+spectral index, and non-Gaussianities).
+
+\paragraph{Numerical method.} Mode-by-mode evolution in Fourier space;
+long-wavelength modes treated as classical fields and short-wavelength modes
+quantum-mechanically (mode functions); Bunch--Davies-like initial conditions at
+large negative time (deep in collapse); modes tracked through the bounce and into
+post-bounce expansion.
+
+\paragraph{Expected output.} The primordial power-spectrum amplitude and shape,
+the spectral tilt, and the tensor-to-scalar ratio, compared to Planck CMB
+observations ($n_s = 0.965 \pm 0.004$, $r < 0.06$ upper
+limit)~\citep{planck2018} and to $\Lambda$CDM $+$ inflation predictions.
+
+\paragraph{Decisive test.} If the bounce produces a near-scale-invariant spectrum
+with $n_s \approx 0.96$ and $r$ within observational bounds, \textbf{the
+framework is observationally viable.} If the spectrum is dramatically different,
+the framework fails this test. This is the central calculational challenge for
+\SCT. Existing work on bounce cosmologies (loop quantum cosmology, ekpyrotic
+models) provides templates for similar calculations~\citep{ashtekar2006}.
+
+\paragraph{Effort estimate.} 6--12 months for someone with
+cosmological-perturbation-theory background; $\sim 1000$--$3000$ lines of code
+building on Tier 1.
+
+\section{Tier 3: Chirality dynamics through the bounce}
+
+\paragraph{Goal.} Quantify the flip $+$ filter mechanism. Predict the chirality
+bias of a baby universe given the parent's properties.
+
+\paragraph{Setup.} Use the Tier 1 bounce background; include fermion content
+explicitly (not just a Weyssenhoff fluid); track baryon number, lepton number,
+and chiral currents through the bounce; include electroweak physics at
+temperatures above the EW scale (sphaleron processes); compute the filter
+efficiency for chirality; and compute net baryon-number production/preservation.
+
+\paragraph{Decisive tests.} Does the framework predict
+$\eta = n_B/n_\gamma \sim 6 \times 10^{-10}$? Does it predict a
+dark-matter-to-baryon ratio $\sim 5$? Are these robust to parameter choices, or
+do they require fine-tuning?
+
+\paragraph{Effort estimate.} 12--24 months; significant theoretical work in
+addition to numerical; coupling Einstein--Cartan to the Standard Model is
+non-trivial.
+
+\section{Tier 4: Supraverse population statistics}
+
+\paragraph{Goal.} Simulate the full supraverse: many vacuum fluctuations
+producing OG bounces, each seeding lineages of descendant universes. Compute
+equilibrium distributions of universe parameters; check that observer-supporting
+universes cluster near our observed parameters.
+
+\paragraph{Setup.} Treat the supraverse as a stochastic process: vacuum
+fluctuations produce OG bounces at random locations; each OG bounce seeds a
+lineage; each universe evolves cosmologically and produces descendants through
+internal black-hole formation; track populations across many generations; and
+compute distributions of universe mass, age, baryon asymmetry, and chirality
+lineage depth.
+
+\paragraph{Decisive tests.} An equilibrium distribution exists and is computable;
+observer-supporting universes cluster around some peak; and our observed
+parameters sit near the peak (validating the fine-tuning resolution).
+
+\paragraph{Effort estimate.} A multi-year project, several people; requires
+Tiers 1--3 as input. Output: the most comprehensive cosmological prediction the
+framework can make.
+
+\section{Tier 5: Direct observation comparisons}
+
+\paragraph{Goal.} Use the simulations to make specific predictions for
+observational programs (Planck, DESI, Euclid, LiteBIRD, JWST, etc.) and compare
+directly: a precise CMB spectrum shape including specific deviations from
+$\Lambda$CDM; large-scale-structure clustering with dark matter as parent
+influence; the Hubble parameter at different redshifts; galaxy-rotation asymmetry
+magnitude from parent rotation; and the dark-energy evolution trajectory.
+
+\paragraph{Decisive tests.} The framework is genuinely tested against existing
+and forthcoming observational data. Each prediction either matches or does not.
+
+\paragraph{Effort estimate.} Each comparison is its own project; a multi-decade
+research program at full scope.
+
+\section{Minimum viable project}
+
+If we want one project that demonstrates the framework's viability:
+\textbf{Tier 2 (perturbation through bounce) with a focus on the CMB power
+spectrum.} This is decisive---either the bounce reproduces something close to the
+observed CMB spectrum or it does not. The result is publishable in either case.
+The effort is bounded at $\sim 12$ months, and the required expertise (numerical
+relativity $+$ cosmological perturbation theory) is widely available. This should
+be the first priority for any simulation effort.
+
+\section{Visualization parallel track}
+
+Alongside the physics simulations, the visualization work
+(Chapter~\ref{chap:viz}) can proceed independently. It does not require Tier 2
+outputs to start---it can begin with simpler models of supraverse structure and
+refine as physics simulations produce better inputs. The visualization track is
+more accessible and might be the right place for someone with
+computational/graphics interests to start.
+
+\section{Tooling}
+
+\paragraph{Languages.} Python (prototyping, plotting, analysis; default for
+Tier 1); Julia (performance-sensitive numerics; optional for Tiers 1--2,
+advisable for Tiers 3--4); C++ with the Einstein Toolkit (if existing numerical
+relativity infrastructure is leveraged---heavy but well-tested).
+
+\paragraph{Libraries.} NumPy, SciPy, matplotlib (Python); DifferentialEquations.jl
+(Julia); Einstein Toolkit, GRChombo (numerical relativity); CAMB or CLASS (CMB
+power spectrum, for comparison to standard predictions).
+
+\paragraph{Hardware.} Tiers 1--2: workstation or single-node cluster
+($\sim$ hours--days). Tier 3: small cluster ($\sim$ days--weeks). Tier 4:
+significant cluster resources ($\sim$ weeks--months). Tier 5: depends on the
+specific calculations.
+
+\paragraph{Storage.} Simulations should produce reproducible outputs in
+standardized formats (HDF5 preferred); visualization data should be portable
+across plotting backends; code in git, with versioning of major releases.
+
+\section{Reproducibility}
+
+All simulation code should be open source from the start, documented well enough
+that others can reproduce results, validated against analytic limits where they
+exist, and tested for numerical convergence (refine grid, check stability). The
+point is not to ``prove'' \SCT through simulations---the point is to make the
+framework testable. Reproducible code lets others check, extend, and challenge
+results.

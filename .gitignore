@@ -1,0 +1,36 @@
+# LaTeX build artifacts
+build/
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.out
+*.synctex.gz
+*.toc
+*.idx
+*.ind
+*.ilg
+*.nav
+*.snm
+*.vrb
+*.run.xml
+*.bcf
+*.pdf
+
+# Keep build dir tracked but empty
+!build/.gitkeep
+
+# Keep committed figure PDFs (generated from figures/tex or figures/data)
+!figures/pdf/
+!figures/pdf/*.pdf
+
+# Python / sims
+__pycache__/
+*.pyc
+.venv/
+venv/
+sims/**/output/

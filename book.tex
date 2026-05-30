@@ -1,0 +1,48 @@
+% =====================================================================
+%  Supraverse Cartasis Theory — main document
+%  Compile from the project root, e.g.:
+%      latexmk -pdf book.tex
+%  (chapters are authored in chapters/, drafts in markdown live in drafts/)
+% =====================================================================
+\documentclass[11pt,oneside]{book}
+
+\usepackage{style/cartasis}
+
+\title{Supraverse Cartasis Theory\\[0.5ex]
+       \large A Continuous, Conservative Cosmology from Minimal Axioms}
+\author{Mikkel Gronager}
+\date{Working draft --- \today}
+
+\begin{document}
+
+% ------------------------- Front matter -------------------------
+\frontmatter
+\input{frontmatter/title}
+\input{frontmatter/dedication}
+\input{frontmatter/epigraph}
+\tableofcontents
+\input{frontmatter/preface}
+
+% ------------------------- Main matter --------------------------
+\mainmatter
+\include{chapters/01-axioms}
+\include{chapters/02-cartasis}
+\include{chapters/03-baby-universes}
+\include{chapters/04-chirality-flip-filter}
+\include{chapters/05-supraverse}
+\include{chapters/06-dark-sector}
+\include{chapters/07-time-arrow}
+\include{chapters/08-observational-tests}
+\include{chapters/09-simulation-plan}
+\include{chapters/10-visualization}
+
+% ------------------------- Appendices ---------------------------
+\appendix
+\include{appendices/A-open-questions}
+
+% ------------------------- Back matter --------------------------
+\backmatter
+\bibliographystyle{plainnat}
+\bibliography{bibliography/references}
+
+\end{document}

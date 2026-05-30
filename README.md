@@ -28,4 +28,25 @@ This is a research program, not an established theory. It synthesizes work by Po
 
 ## Where to read more
 
-Start with `00-axioms.md`. Each subsequent numbered file develops one piece of the framework. `07-observational-tests.md` lists what would distinguish this framework from ΛCDM. `08-simulation-plan.md` lays out a tiered computational pathway.
+The monograph is written in LaTeX. Start with `chapters/01-axioms.tex`; each
+subsequent chapter develops one piece of the framework.
+`chapters/08-observational-tests.tex` lists what would distinguish this framework
+from ΛCDM, and `chapters/09-simulation-plan.tex` lays out a tiered computational
+pathway. `appendices/A-open-questions.tex` catalogs what we don't yet know.
+
+The pre-LaTeX markdown drafts are kept in `drafts/` for provenance.
+
+## Building
+
+Requires a TeX distribution with `latexmk` (e.g. `texlive-latex-extra`,
+`texlive-science`, `lmodern`).
+
+```bash
+make          # build book.pdf via latexmk
+make clean    # remove LaTeX aux files
+make distclean # also remove build/ and the sims venv
+```
+
+Layout: `book.tex` is the master document; `frontmatter/`, `chapters/`, and
+`appendices/` hold the content; `style/cartasis.sty` is the preamble;
+`bibliography/references.bib` holds citations; figures live in `figures/`.
