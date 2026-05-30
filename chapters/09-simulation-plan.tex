@@ -147,6 +147,28 @@ upgrades this to an inhomogeneous interior matched to an exterior Schwarzschild
 geometry, so that one figure shows a black hole from outside and an expanding
 cosmology from inside.
 
+\Cref{fig:bounce} is that minimum viable bounce, integrated for a radiation
+fluid. Where general relativity drives the same collapse to $a=0$ in finite
+time, the torsion term halts it: the density saturates at $\rhoc$, the Hubble
+rate passes smoothly through zero, and the universe re-expands. With
+$\rhoc \sim 10^{50}\,\mathrm{kg\,m^{-3}}$ the whole bounce lasts
+$\sim 4\times10^{-21}\,\mathrm{s}$. This is the central claim---no singularity,
+an inverse bubble forms---exhibited rather than asserted, in a few dozen lines
+(\texttt{sims/src/cartasis\_sims/bounce.py},
+\texttt{figures/scripts/ch09\_bounce.py}).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{bounce}
+  \caption{The Einstein--Cartan torsion bounce (Tier 1, radiation fluid),
+    integrated in dimensionless units ($8\pi G/3 = \rhoc = 1$). \emph{Left:} a
+    collapsing universe bounces at $a_{\min}$ (blue) where general relativity
+    would reach a singularity, $a\to0$ (red dashed). \emph{Right:} the density
+    saturates at the Cartasis density $\rhoc$ and the Hubble rate $H$ crosses
+    zero---collapse turning into expansion.}
+  \label{fig:bounce}
+\end{figure}
+
 \paragraph{Setup.}
 \begin{itemize}
   \item 1D spherical symmetry (radial coordinate $r$, time $t$).
