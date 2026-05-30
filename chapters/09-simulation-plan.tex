@@ -60,6 +60,33 @@ evil'') and the JWST galaxy-rotation asymmetry~\citep{shamir2025} should share a
 single axis. \textbf{Testing that alignment against existing catalogs is the
 single cheapest potentially-decisive measurement in the whole program.}
 
+\paragraph{First pass.} A curated set of well-sourced large-angle axes---the
+combined CMB axis of evil, the kinematic dipole, the cold spot, and the
+galaxy-spin asymmetry---is moderately concentrated: the orientation-tensor
+largest eigenvalue is $\tau_1 = 0.81$, with an (a-posteriori-inflated)
+Monte-Carlo isotropic probability $p \approx 0.05$ (\Cref{fig:axisalign}). The
+honest reading, however, cuts against an easy claim: the galaxy-spin
+axis~\citep{shamir2025} sits $\sim\!30^\circ$ from the CMB axis but
+$\sim\!0^\circ$ from the Galactic pole. A Galactic-pole axis is exactly what a
+Milky-Way classification systematic (dust, inclination bias) would produce, so
+the mundane explanation is not excluded. The parent-spin interpretation survives
+only if, once a proper all-sky dipole is fit, the galaxy-spin axis favours the
+\emph{CMB} axis over the Galactic pole. That is the crux the next data release
+must settle. Reproducible as
+\texttt{figures/scripts/ch08\_axis\_alignment.py}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{axis_alignment}
+  \caption{Large-angle anomaly axes in Galactic coordinates (each plotted with
+    its antipode, since these are headless axes). The CMB anomaly axes and the
+    galaxy-spin axis are moderately concentrated ($\tau_1=0.81$, isotropic
+    $p\approx0.05$, a-posteriori inflated), but the galaxy-spin axis coincides
+    with the Galactic pole---the chief systematic confound---rather than sitting
+    squarely on the CMB axis. The green circle marks the fitted principal axis.}
+  \label{fig:axisalign}
+\end{figure}
+
 \paragraph{Corner C --- ``CMB $=$ Hawking'' cannot mean the present horizon.}
 The Hawking temperature of the Hubble-sphere mass is
 $T_H = \hbar c^3/8\pi G M k_B \approx 1.3\times10^{-30}\,\mathrm{K}$, and (because
