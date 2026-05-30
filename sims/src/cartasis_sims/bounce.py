@@ -100,3 +100,31 @@ def simulate_gr_collapse(w: float = 1.0 / 3.0, a_init: float = 3.0,
 def physical_timescale(rho_C: float = 1.0e50) -> float:
     """Dimensionless time unit in seconds: 1 / sqrt(8 pi G rho_C / 3)."""
     return 1.0 / math.sqrt(8.0 * math.pi * k.G * rho_C / 3.0)
+
+
+def bounce_fwhm(sol: BounceSolution) -> float:
+    """Proper-time full width of the density peak at half its maximum.
+
+    Exact closed form: rho/rho_C = 1/2 at a = 2^{1/n}, and integrating
+    dtau = da/(a|H|) from the bounce out to that radius gives, with n = 3(1+w),
+
+        FWHM = (2/n) * integral_{1/2}^{1} u^{-3/2}(1-u)^{-1/2} du = 4/n.
+
+    (The leading small-amplitude estimate 2 sqrt(2)/n undershoots by sqrt(2).)
+    """
+    rho = sol.rho
+    t = sol.t
+    i = int(np.argmin(sol.a))           # density peak
+    half = sol.rho_max / 2.0
+
+    def cross(idxs):
+        # linear interpolation of the t where rho crosses `half`
+        for a, b in zip(idxs[:-1], idxs[1:]):
+            if (rho[a] - half) * (rho[b] - half) <= 0:
+                f = (half - rho[a]) / (rho[b] - rho[a])
+                return t[a] + f * (t[b] - t[a])
+        return math.nan
+
+    t_left = cross(range(i, -1, -1))
+    t_right = cross(range(i, len(t)))
+    return float(t_right - t_left)

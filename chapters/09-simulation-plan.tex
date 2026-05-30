@@ -197,6 +197,32 @@ Chapter~\ref{chap:baby}, made quantitative.
   \label{fig:oscollapse}
 \end{figure}
 
+\paragraph{Robustness across the equation of state.} The bounce is not special
+to one matter content. Sweeping the equation of state from dust ($w=0$) through
+radiation ($w=1/3$) to stiff ($w=1$), the bounce density is universal---$a_{\min}$
+and $\rho_{\max}=\rhoc$ are independent of $w$---and the peak expansion rate is
+exactly $\max|H| = \tfrac12\sqrt{8\pi G\rhoc/3}$ (because $\max_x x(1-x)=\tfrac14$).
+Only the bounce \emph{duration} varies, and by an exact law,
+\[
+  \Delta\tau_{\mathrm{FWHM}} = \frac{4}{n}\,\frac{1}{\sqrt{8\pi G\rhoc/3}},
+  \qquad n = 3(1+w),
+\]
+so stiffer matter gives a sharper bounce (\Cref{fig:sweep}). For
+$\rhoc \sim 10^{50}\,\mathrm{kg\,m^{-3}}$ the duration is a few
+$\times\,10^{-21}\,\mathrm{s}$ across the whole range. The central claim does not
+rest on a tuned equation of state.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{bounce_sweep}
+  \caption{Robustness of the bounce. \emph{Left:} for $w$ from dust to stiff the
+    scale factor always bounces at $a_{\min}$ ($\rho=\rhoc$); only the sharpness
+    changes. \emph{Right:} the bounce duration follows the exact law
+    $\Delta\tau_{\mathrm{FWHM}}=4/n$ (right axis: physical seconds for
+    $\rhoc=10^{50}\,\mathrm{kg\,m^{-3}}$).}
+  \label{fig:sweep}
+\end{figure}
+
 \paragraph{Setup.}
 \begin{itemize}
   \item 1D spherical symmetry (radial coordinate $r$, time $t$).
