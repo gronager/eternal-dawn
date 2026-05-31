@@ -60,6 +60,14 @@ produces it (`sims/src/cartasis_sims/`, figures in `figures/scripts/`).
   monotonically, but *Weyl/clumping* entropy cycles low→high→low and resets. SCT is
   "Penrose CCC made to branch." `cycle.py`.
 
+### The OG birth rate (partially pinned)
+- **β = λ·H_Λ⁴/c³.** Reinterpreted via the recursive cycle as a de Sitter nucleation
+  rate, the **prefactor is fixed by the observed dark energy** (~4e-97 m⁻³s⁻¹, one
+  attempt per Hubble 4-volume); only `λ = exp(-I)` (the ρ_C-crossing instanton
+  action, Q4) is free. De Sitter percolation `λ_crit ~ 0.24` (`I_crit ~ 1.4`) splits
+  the supraverse: **packed polygonal foam** (I<1.4) vs **dilute island universes /
+  eternal-inflation** (I>1.4). We are BHU1 either way. `birth_rate.py`.
+
 ### CMB (Tier 2) — observationally anchored
 - **Scale-invariant primordial spectrum from the bounce.** Mode evolution through
   the bounce gives `n_T = 3 − |2p−1|`, `p = 2/(1+3w)`; matter contraction (w=0)

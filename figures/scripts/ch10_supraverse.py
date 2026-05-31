@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
-r"""The supraverse, gravity-scaled and polygonal: a still frame of the lava lamp.
+r"""The supraverse, gravity-scaled and polygonal: a still frame of the foam.
 
 The mature foam is a Johnson-Mehl tessellation (void_foam.py): OGUs nucleate, grow
-at the causal speed, and impinge into curved polygons. Here it is rendered in colour
-as the "condensed void" -- chirality split into two hue families (matter warm,
-antimatter cool, inherited per lineage), each cell a gravity-scaled well (bright
-core, dark rim) with glowing Cartasis membranes between, and a hint of nesting
-(BHU children) in the larger cells. This is our origin, frozen for the page; the
-same construction animated is the supraverse screensaver.
+at the causal speed, and impinge into curved polygons. Rendered in grayscale -- no
+colour, only void and eternal structure: each cell a gravity-scaled well (bright
+core, dark rim), the Cartasis membranes between them toned by chirality (dark for
+matter lineages, light for antimatter, inherited), with a hint of nested BHU
+children in the larger cells. Our origin, frozen for the page.
 
 Renders figures/pdf/supraverse.pdf and a high-res PNG.
 """
@@ -17,7 +16,6 @@ import os
 
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.colors import hsv_to_rgb
 from matplotlib.patches import Circle
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -56,13 +54,8 @@ def main() -> None:
 
     labels, dmin = johnson_mehl(xs, ys, ts, grid, aspect)
 
-    # per-cell properties
-    matter = rng.random(N) > 0.5              # chirality, inherited per lineage
-    hue_jit = rng.uniform(-0.035, 0.035, N)
-    # matter: warm (red->gold ~0.02-0.11); antimatter: cool (teal->violet ~0.50-0.62)
-    base_hue = np.where(matter, rng.uniform(0.01, 0.11, N),
-                        rng.uniform(0.50, 0.64, N)) + hue_jit
-    sat = np.where(matter, rng.uniform(0.72, 0.92, N), rng.uniform(0.55, 0.78, N))
+    # per-cell properties: chirality (inherited per lineage), tones the membrane
+    matter = rng.random(N) > 0.5
 
     # normalise the radial distance within each cell -> gravity-scaled well
     cell_max = np.ones(N)
@@ -72,48 +65,51 @@ def main() -> None:
             cell_max[i] = max(dmin[m].max(), 1e-3)
     r = dmin / cell_max[labels]               # 0 at core, 1 at rim
 
-    H = base_hue[labels]
-    S = sat[labels] * (0.85 + 0.15 * r)       # a touch more saturated at the rim
-    V = 0.96 - 0.62 * r ** 1.3                # bright core, dark rim (the well)
+    # grayscale value: a luminous gravity well, bright core to dark rim,
+    # with a faint per-cell tonal jitter so the foam breathes
+    tone = rng.uniform(-0.05, 0.05, N)[labels]
+    V = 0.82 - 0.54 * r ** 1.3 + tone
+    V = np.clip(V, 0.12, 0.95)
 
-    # glowing Cartasis membranes: darken cell boundaries, then a thin bright lip
+    # Cartasis membranes: tone the cell boundaries by chirality
+    # (dark seam for matter lineages, light seam for antimatter)
     edge = np.zeros(labels.shape, dtype=bool)
     edge[:-1, :] |= labels[:-1, :] != labels[1:, :]
     edge[1:, :] |= labels[:-1, :] != labels[1:, :]
     edge[:, :-1] |= labels[:, :-1] != labels[:, 1:]
     edge[:, 1:] |= labels[:, :-1] != labels[:, 1:]
-    V = np.where(edge, 0.06, V)               # dark membrane gap
-
-    rgb = hsv_to_rgb(np.dstack([H % 1.0, np.clip(S, 0, 1), np.clip(V, 0, 1)]))
+    membrane_tone = np.where(matter[labels], 0.04, 0.96)
+    V = np.where(edge, membrane_tone, V)
 
     fig = plt.figure(figsize=(16, 9), facecolor="black")
     ax = fig.add_axes([0, 0, 1, 1])
-    ax.imshow(rgb, origin="lower", extent=(0, aspect, 0, 1), interpolation="bilinear")
+    ax.imshow(V, origin="lower", extent=(0, aspect, 0, 1), cmap="gray",
+              vmin=0.0, vmax=1.0, interpolation="bilinear")
     ax.set_xlim(0, aspect)
     ax.set_ylim(0, 1)
     ax.set_xticks([])
     ax.set_yticks([])
 
-    # a hint of nesting: BHU children as faint glowing rings in the larger cells
+    # a hint of nesting: BHU children as faint rings in the larger cells
     order = np.argsort(-cell_max)
     for i in order[:14]:
         cx, cy, cr = xs[i], ys[i], cell_max[i]
-        ring = "1.0" if matter[i] else "0.85"
-        for k in range(rng.integers(2, 5)):
+        ring = "0.05" if matter[i] else "0.97"
+        for _ in range(rng.integers(2, 5)):
             rho = cr * 0.55 * np.sqrt(rng.random())
             th = rng.random() * 2 * np.pi
             br = cr * rng.uniform(0.05, 0.12)
             ax.add_patch(Circle((cx + rho * np.cos(th), cy + rho * np.sin(th)), br,
-                                facecolor="none", edgecolor=ring, lw=0.5, alpha=0.35))
+                                facecolor="none", edgecolor=ring, lw=0.5, alpha=0.4))
 
     fig.text(0.022, 0.045, "THE SUPRAVERSE", color="white", fontsize=26,
              fontweight="bold", alpha=0.92, family="sans-serif")
     fig.text(0.022, 0.022,
              "gravity-scaled polygonal foam  ·  Johnson-Mehl cells (OGUs grown to "
-             "impingement)  ·  warm = matter, cool = antimatter lineages  ·  glowing "
-             "membranes are Cartasis  ·  our origin, one lit pixel among the "
-             "uncountably many",
-             color="0.85", fontsize=9.5, alpha=0.9, family="sans-serif")
+             "impingement)  ·  dark seams = matter, light seams = antimatter "
+             "lineages  ·  the seams are Cartasis  ·  no colour, only void and "
+             "eternal structure",
+             color="0.82", fontsize=9.5, alpha=0.9, family="sans-serif")
 
     out = os.path.join(PDF_DIR, "supraverse.pdf")
     fig.savefig(out, facecolor="black")

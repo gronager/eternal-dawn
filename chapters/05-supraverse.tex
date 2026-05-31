@@ -452,13 +452,49 @@ The rate of OG bounce nucleation depends on the vacuum-fluctuation spectrum at
 high energies (set by QFT), the Cartasis density threshold (set by
 Einstein--Cartan parameters), and the available supraverse spacetime volume.
 
-For our supraverse to contain even one universe like ours, the cumulative
-nucleation rate over supraverse history must be at least one per ``us-sized''
-mass scale. For the supraverse to contain many universes, the rate must be
-higher. The exact rate is calculable in principle from QFT vacuum-fluctuation
-statistics plus Einstein--Cartan thresholds. It is likely extremely small per
-unit spacetime volume, but the supraverse compensates by being effectively
-infinite.
+The recursive cycle (\Cref{sec:recursive-cycle}) lets us say more than ``calculable
+in principle.'' Since OGUs nucleate in the heat-dead de Sitter void of an older
+universe, $\beta$ is a \emph{de Sitter nucleation rate}, and its scale is set---not
+free---by the void's dark energy. Writing it per de Sitter horizon four-volume,
+\begin{equation}
+  \beta = \lambda\,\frac{H_\Lambda^4}{c^3},\qquad
+  H_\Lambda = H_0\sqrt{\Omega_\Lambda}\simeq1.8\times10^{-18}\,\mathrm{s^{-1}},
+  \label{eq:beta}
+\end{equation}
+the prefactor is fixed by the observed dark energy (by typicality the void's
+$\Lambda$ is $\sim$ours): $H_\Lambda^4/c^3\simeq4\times10^{-97}\,\mathrm{m^{-3}
+s^{-1}}$, one nucleation ``attempt'' per Hubble four-volume. The one remaining
+unknown is the dimensionless $\lambda=e^{-I}$, with $I$ the action of the
+$\rhoc$-crossing gravitational instanton (quantum gravity at the bounce,
+\Cref{app:openq})---but it carries a \emph{sharp critical value}. De Sitter bubble
+percolation~\citep{guth1983} sets $\lambda_{\mathrm{crit}}\simeq0.24$, an instanton
+action $I_{\mathrm{crit}}=-\ln\lambda_{\mathrm{crit}}\simeq1.4$, and that one number
+fixes the \emph{character} of the supraverse (\Cref{fig:birthrate}):
+\begin{itemize}
+  \item $I<1.4$ (a near-Planckian seed): OGUs nucleate faster than de Sitter
+    dilutes, \emph{percolate}, and tile the void into the packed polygonal foam that
+    coarsens (\Cref{sec:foam-size,sec:foam-dynamics}).
+  \item $I>1.4$ (a macroscopic seed): the void inflates between nucleations, so OGUs
+    stay isolated, round, and never impinge---a \emph{dilute} scatter of island
+    universes, the eternal-inflation regime, with no coarsening.
+\end{itemize}
+Either way we are a $\mathrm{BHU}_1$ inside an OGU---the internal black-hole channel
+is independent of how OGUs are spaced. So $\beta$ is pinned in scale (the dark-energy
+prefactor) and in its decisive structure ($I_{\mathrm{crit}}\simeq1.4$); only the
+bounce instanton $I$, and with it the packed-versus-dilute regime, remains open.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{birth_rate}
+  \caption{Pinning the OG birth rate. \emph{Left:} $\beta=\lambda H_\Lambda^4/c^3$;
+    the prefactor ($\sim4\times10^{-97}\,\mathrm{m^{-3}s^{-1}}$) is fixed by the
+    observed dark energy, leaving only the instanton factor $\lambda=e^{-I}$ free.
+    \emph{Right:} the mean OGU separation versus the instanton action $I$; the de
+    Sitter percolation threshold $I_{\mathrm{crit}}\simeq1.4$ splits a packed
+    polygonal foam (near-Planckian seed) from a dilute scatter of island universes
+    (macroscopic seed). Reproducible as \texttt{figures/scripts/ch05\_birthrate.py}.}
+  \label{fig:birthrate}
+\end{figure}
 
 \section{Genesis, growth, and the absence of hell}
 
