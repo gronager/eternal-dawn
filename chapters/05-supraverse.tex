@@ -679,19 +679,45 @@ over time, mass conserved, like grains in a metal or bubbles in a soap froth. Bo
 are far gentler than the initial runaway. So growth never quite stops; it
 decelerates from the $\dot M\sim c^3/2G$ rush of birth to a slow coarsening crawl.
 
-\paragraph{Does an OGU die?} Essentially never on its own. As a black hole of mass
-$M\sim10^{53}$--$10^{65}\,\mathrm{kg}$ its Hawking lifetime is
-$t_H = 5120\pi G^2M^3/\hbar c^4 \sim 10^{143}$--$10^{178}\,\mathrm{s}$---longer than
-any supraverse timescale by an absurd margin, so evaporation death is irrelevant.
-The \emph{interior} universe reaches its own heat death
-(\Cref{chap:timearrow}), but the OGU-as-hole persists from outside, and indeed
-keeps the dark sector flowing into its children (\Cref{chap:darksector}). An OGU
-``dies'' only by \emph{merging}---absorbed into a larger one, mass and contents
-conserved---which is coalescence, not destruction. So the foam is effectively
-immortal and slowly coarsening: nothing vanishes, cells merge into fewer, larger
-universes while new small ones nucleate in fresh void. That birth-versus-coarsening
-balance is the dynamical content of the supraverse equilibrium, and whether it
-reaches a true steady state or coarsens without bound is open (\Cref{app:openq}).
+\paragraph{Does an OGU die?} On any ordinary clock, no---but the intuition that
+\emph{Hawking must eventually take over once growth halts} is exactly right, and it
+turns out to be the engine of coarsening. In the packed foam there is no fresh void,
+so each OGU is bathed in its neighbours' Hawking radiation (and the void's own de
+Sitter horizon glow---both $\sim T_H$ of a horizon-mass hole,
+$\sim10^{-30}\,\mathrm{K}$, \Cref{chap:cartasis}). At that bath an OGU sits right at
+$M\simeq M_{\mathrm{crit}}$: balanced. But a black hole has \emph{negative} heat
+capacity ($T_H\propto1/M$), so the balance is \emph{unstable}. An OGU a touch larger
+than its neighbours is a touch colder, absorbs more than it emits, and grows; a
+touch smaller is hotter, emits more, shrinks---and shrinking makes it hotter still,
+a runaway to evaporation. So the foam coarsens by \emph{radiative siphoning}: the
+big, cold OGUs drink the radiation of the small, hot ones, which evaporate away into
+them (\Cref{fig:coarsening})---Ostwald ripening for universe-holes, the radiative
+twin of merger coalescence, conserving total mass while driving the foam toward
+fewer, larger universes. The catch is the clock: it runs on the Hawking time,
+$t_H = 5120\pi G^2M^3/\hbar c^4 \sim 10^{143}$--$10^{178}\,\mathrm{s}$ for OGU masses,
+so OGUs are immortal on any sub-Hawking timescale but \emph{not} eternal---a
+sub-average universe is, with cosmic patience, eaten by its big neighbour. The
+\emph{interior} heat-dies meanwhile (\Cref{chap:timearrow}); the hole persists,
+feeding its children's dark sector (\Cref{chap:darksector}), until it is itself
+merged or, if it drew the short straw, slowly siphoned away. Whether birth in fresh
+void balances this coarsening into a true steady state or the foam coarsens without
+bound is the open dynamical content of the supraverse equilibrium
+(\Cref{app:openq}).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{coarsening}
+  \caption{Radiative coarsening of the packed foam. \emph{Left:} a mean-field
+    Monte Carlo of OGUs sharing a Hawking bath---the big (cold) ones grow by
+    siphoning the radiation of the small (hot) ones, which evaporate and die (the
+    steps in the survivors' growth are neighbours dumping their mass into the bath),
+    over a few Hawking times. \emph{Right:} why---a black hole's negative heat
+    capacity makes the balance at $M_{\mathrm{bar}}$ unstable, so
+    $\mathrm{d}M/\mathrm{d}\tau\propto(M/M_{\mathrm{bar}})^4-1$ pushes the big to
+    grow and the small to evaporate. Reproducible as
+    \texttt{figures/scripts/ch05\_coarsening.py}.}
+  \label{fig:coarsening}
+\end{figure}
 
 \subsection{Infinitely many OGs; do they grow forever?}
 

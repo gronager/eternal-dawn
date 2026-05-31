@@ -46,8 +46,13 @@ produces it (`sims/src/cartasis_sims/`, figures in `figures/scripts/`).
   window (survival floor + centrifugal choking) gates genesis. `genesis.py`.
 - **Average OGU size = birth rate, via KJMA:** `M_avg ~ (c²/2G)(c/β)^{1/4}`; the void
   tiles into a Johnson–Mehl foam (impinged cells are polygons, not circles).
-  OGUs are effectively immortal (`t_H ~ 1e143–1e178 s`); they coarsen by merging,
-  not death. `void_foam.py`.
+  OGUs are effectively immortal (`t_H ~ 1e143–1e178 s`). `void_foam.py`.
+- **Packed-foam coarsening by radiative siphoning.** Once accretion halts, each OGU
+  sits at marginal Hawking balance (bath ~ neighbours' radiation ~ `T_dS ~ 1e-30 K`);
+  negative heat capacity makes it unstable, so big (cold) OGUs siphon small (hot)
+  ones, which evaporate into them — Ostwald ripening for universe-holes, on the
+  Hawking timescale. So OGUs are immortal on any ordinary clock but not eternal.
+  `void_foam.py` (`simulate_coarsening`).
 
 ### CMB (Tier 2) — observationally anchored
 - **Scale-invariant primordial spectrum from the bounce.** Mode evolution through

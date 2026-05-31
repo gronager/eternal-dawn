@@ -43,6 +43,32 @@ def test_ogus_are_effectively_immortal():
                         / vf.ogu_evaporation_lifetime(1e53), 8.0, rel_tol=1e-6)
 
 
+def test_foam_bath_mass_equal_masses():
+    # equal masses -> bath equivalent mass equals them (all at marginal balance)
+    assert math.isclose(vf.foam_bath_mass([1.0, 1.0, 1.0, 1.0]), 1.0, rel_tol=1e-9)
+
+
+def test_coarsening_grows_big_evaporates_small():
+    # negative-heat-capacity instability: above M_bar grow, below shrink
+    masses = np.array([0.7, 1.0, 1.5])
+    Mb = vf.foam_bath_mass(masses)
+    rate = vf.coarsening_rate(masses)
+    assert rate[masses > Mb][0] > 0.0          # big OGU grows
+    assert rate[masses < Mb][0] < 0.0          # small OGU evaporates
+
+
+def test_coarsening_conserves_mass_and_coarsens():
+    rng = np.random.default_rng(0)
+    m0 = rng.lognormal(0.0, 0.25, 12)
+    m0 /= m0.mean()
+    tau, M = vf.simulate_coarsening(m0, tau_max=4.0)
+    alive0, alive1 = (M[:, 0] > 0.02).sum(), (M[:, -1] > 0.05).sum()
+    assert alive1 < alive0                      # number drops (some die)
+    assert M[:, -1].max() > M[:, 0].max()       # the biggest grows
+    # surviving foam conserves mass to within the small dead residuals
+    assert abs(M[:, -1].sum() - M[:, 0].sum()) < 0.3
+
+
 def test_johnson_mehl_tessellation_tiles_the_box():
     labels, areas, _ = vf.johnson_mehl_2d(n_seeds=60, grid=120, seed=2)
     assert math.isclose(areas.sum(), 1.0, rel_tol=1e-6)     # cells fill the box
