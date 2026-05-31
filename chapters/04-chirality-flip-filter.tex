@@ -152,6 +152,130 @@ chirally. Adding one is a specific, testable modification, and it is the honest
 route to a calculable filter efficiency to compare against observation. Whether
 such a term is warranted is an open question, flagged as speculative.
 
+\section{A quantitative viability check: the chiral-vortical estimate}
+\label{sec:cve-estimate}
+
+The seed mechanism above is qualitative until one asks whether the
+rotating-bounce vorticity can source an asymmetry of the \emph{observed size},
+$\eta_{\mathrm{obs}}\simeq6.1\times10^{-10}$. The relevant transport is the
+chiral-vortical effect: a hot relativistic chiral plasma rotating with vorticity
+$\omega$ carries an axial current along its spin axis, $j^5\sim(T^2/6)\,\omega$,
+parity-odd and tied to the parent's rotation. The frozen-in bias scales as
+\begin{equation}
+  \eta \;\sim\; C\,\frac{\omega}{T},
+  \label{eq:cve-eta}
+\end{equation}
+with $C$ an $O(0.01\text{--}10)$ coefficient absorbing the anomaly normalisation
+and the sphaleron conversion efficiency. This is a \emph{scaling estimate with
+explicit assumptions}, not a derivation
+(\texttt{sims/cartasis\_sims/cve\_filter.py}; \texttt{notes/cve-filter.md}).
+
+\paragraph{The numbers.} At $\rhoc=10^{50}\,\mathrm{kg\,m^{-3}}$, the plasma
+temperature from $\rhoc c^2=(g_\star\pi^2/30)T^4$ with Standard-Model
+$g_\star=106.75$ is $T\simeq1.05\times10^{7}\,\mathrm{GeV}$---hot enough that
+electroweak \emph{sphalerons are active}, so the $B{+}L$-violating machinery
+baryogenesis needs is present. The natural bounce rate is
+$\sqrt{8\pi G\rhoc/3}\simeq2.4\times10^{20}\,\mathrm{s^{-1}}$, and the controlling
+small parameter at \emph{maximal} spin is
+\begin{equation}
+  \left.\frac{\omega}{T}\right|_{\max} \simeq 1.5\times10^{-11}.
+  \label{eq:cve-omegaT}
+\end{equation}
+Matching \eqref{eq:cve-eta} to $\eta_{\mathrm{obs}}$ then requires
+\begin{equation}
+  C\cdot f_\omega \;\simeq\; 41,
+  \label{eq:cve-need}
+\end{equation}
+where $f_\omega\le1$ is the spin fraction (\Cref{fig:cvefilter}).
+
+\paragraph{How to read the 41---and how not to.} It is tempting to call this ``a
+prediction within a factor of $41$ of the observed asymmetry.'' That overstates
+it. Equation~\eqref{eq:cve-need} is not a residual error left over after a
+prediction; it is the value the \emph{uncomputed} coefficient $C$ is required to
+supply. There is no derived $\eta$ here. What the estimate establishes is weaker
+but still real: the bare, parameter-free small number
+$\omega/T\sim10^{-11}$ lands within $\sim$1.6 orders of magnitude of
+$\eta_{\mathrm{obs}}$, when it could as easily have been $10^{-30}$ or $10^{+5}$.
+The mechanism is in the \emph{right ballpark}. But it \emph{generically
+undershoots}: since $f_\omega\le1$, Eq.~\eqref{eq:cve-need} demands $C\gtrsim41$,
+which sits at or \emph{above} the top of $C$'s nominal $O(0.01\text{--}10)$ band.
+Closing the gap needs near-maximal bounce vorticity \emph{and} an anomaly/sphaleron
+factor pushed to its optimistic edge.
+
+\paragraph{The keeper is directional, not numerical.} The robust output of
+\eqref{eq:cve-eta} is not the magnitude but the \emph{structure}: the asymmetry is
+sourced \emph{along the spin axis} and scales with bounce vorticity. This ties
+baryogenesis to the same axis that appears in the CMB low-multipole alignments and
+the galaxy-spin test (Chapter~\ref{chap:tests})---one axis, three phenomena. That
+qualitative link survives regardless of where $C$ lands.
+
+\paragraph{Why a bigger spin cannot rescue it (the OGU/BHU tension).} A natural
+hope is that the missing factor hides in the vorticity: pick a faster-spinning
+seed and $\omega/T$ climbs. It cannot, and the reason is sharp. The value in
+\eqref{eq:cve-omegaT} is already the \emph{maximal-spin ceiling}: $\omega$ is
+capped by the bounce rate $\sqrt{8\pi G\rhoc/3}$ (faster, and the centrifugal
+barrier halts collapse before $\rhoc$), so \emph{no} seed can exceed it. The
+likely vorticity is far below it. This creates a genuine tension with the
+inheritance picture of Section~\ref{sec:lineage-chirality}:
+\begin{itemize}
+  \item \textbf{If we were an OG universe} ($n=0$), our $\eta$ would be made at our
+    \emph{own} bounce---but a typical OG fluctuation has \emph{small} net vorticity
+    ($P_{\mathrm{birth}}$ peaked at $\omega=0$; Section~\ref{sec:spin-dist}), so
+    $f_\omega\ll1$ and the estimate undershoots by far more than $41$. It is
+    ``too wrong'' in the undershoot direction---and, independently, the
+    dark-matter\,$+$\,dark-energy anchor (Chapter~\ref{chap:supraverse}) already
+    says we are \emph{not} an OG universe ($n\ge1$).
+  \item \textbf{If we are a $\mathrm{BHU}_n$} ($n\ge1$), our parent black hole can
+    be near-extremal Kerr, so $f_\omega\to1$ \emph{at our own bounce}---but by the
+    CPT-even result our bounce is an \emph{amplifier, not a source}: that large spin
+    re-shapes an inherited bias, it does not manufacture one. The sourcing happened
+    upstream, at the OG seed, whose spin is capped and typically small.
+\end{itemize}
+So the magnitude is largest exactly where the framework forbids sourcing (the
+high-spin astrophysical bounces) and required exactly where the spin is smallest
+(the OG seed). Plugging the likely OG vorticity into \eqref{eq:cve-eta} therefore
+\emph{widens} the shortfall rather than closing it. The factor of $41$ must come
+from somewhere other than spin:
+\begin{enumerate}
+  \item \textbf{The coefficient $C$.} A real computation of the
+    gravitational/rotational contribution to the chiral anomaly in the bounce
+    metric, plus the sphaleron freeze-in before washout, could in principle deliver
+    $C\sim O(10\text{--}40)$. This is the honest place the factor could live---but
+    it is uncomputed, and $40$ is above the nominal estimate.
+  \item \textbf{The density $\rhoc$.} Since $\omega/T\propto\rhoc^{1/4}$, gaining
+    $41$ needs $\rhoc$ higher by $41^4\approx3\times10^{6}$, i.e.\
+    $\rhoc\sim3\times10^{56}\,\mathrm{kg\,m^{-3}}$. This runs the \emph{wrong way}:
+    the composition argument of \texttt{notes/rho-c-limits.md} ($\rhoc\propto
+    m_f^2$, lighter spin carriers past deconfinement) pushes $\rhoc$ \emph{down},
+    deepening the shortfall. A real tension to track, not a free lever.
+  \item \textbf{A parity-violating gravitational term.} The Holst (finite
+    Barbero--Immirzi) or Nieh--Yan coupling supplies the genuinely $P$-odd
+    ingredient a true filter needs, changing the mechanism rather than rescaling it.
+    This is the speculative route flagged above and in
+    \texttt{notes/rho-c-limits.md}.
+\end{enumerate}
+
+\paragraph{Verdict.} Viable, spin-tied, and probably needs help. The
+chiral-vortical estimate earns the directional claim outright and the
+order-of-magnitude claim honestly; it does \emph{not} yet predict
+$\eta\approx6\times10^{-10}$, and the missing factor of $\sim41$ is a debt owed to
+a calculation of $C$, not a small discrepancy already paid.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{cve_filter}
+  \caption{The chiral-vortical viability check at the rotating bounce. The bare
+    small parameter $\omega/T\sim10^{-11}$ (maximal spin, $\rhoc=10^{50}\,
+    \mathrm{kg\,m^{-3}}$) sits within $\sim$1.6 orders of the observed
+    $\eta_{\mathrm{obs}}\simeq6.1\times10^{-10}$: the mechanism is in the right
+    ballpark but generically undershoots, requiring $C\cdot f_\omega\simeq41$
+    (Eq.~\ref{eq:cve-need}). The maximal-spin value is a \emph{ceiling}---no seed
+    vorticity can exceed it---so the factor must come from the anomaly/sphaleron
+    coefficient $C$, not from a faster spin. Generated by
+    \texttt{figures/scripts/ch04\_cve\_filter.py}.}
+  \label{fig:cvefilter}
+\end{figure}
+
 \section{What survives, and what needs massage}
 
 It is worth being explicit about which downstream claims depend on the discarded
