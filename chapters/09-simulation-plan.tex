@@ -483,6 +483,43 @@ standard acoustics either way.
   \label{fig:acoustic}
 \end{figure}
 
+\paragraph{The peak heights.} Positions were the easy half; the \emph{heights} are
+the discriminating half, and they too follow from shared recombination physics. The
+controlling, computed quantity is the baryon loading
+$R=\tfrac34(\omega_b/\omega_\gamma)/(1+z_{\mathrm{rec}})\simeq0.62$: baryons add
+inertia to the photon--baryon fluid, so the effective-temperature monopole at last
+scattering, $\Theta_{\mathrm{eff}}=(1+R)\Psi\cos(kr_s)-R\Psi$, has deeper
+\emph{compressions} than \emph{rarefactions}---the odd peaks (1st, 3rd, 5th) are
+enhanced and the even peaks (2nd, 4th) suppressed. A Doppler term fills the troughs,
+Silk diffusion damps the tail, and radiation driving lifts the first peaks. Building
+that standard semi-analytic tight-coupling spectrum on the bounce's scale-invariant
+primordial input reproduces the Planck peak heights to tens of percent
+(\Cref{fig:cmb_peaks}), the single cleanest feature being the first-to-second peak
+height ratio, $\simeq2.2$, which \emph{measures} $\omega_b$. That is the link back to
+the rest of the framework: the heights demand a definite $\omega_b$ (from the
+inherited $\eta$, Chapter~\ref{chap:chirality}) and $\omega_c$ (the dark sector,
+Chapter~\ref{chap:darksector}), both of which \SCT\ sources independently. A full
+Boltzmann computation (CAMB/CLASS-class) refines the third and fourth peaks, which
+are sensitive to $\omega_c$; but at the semi-analytic level the decisive test is met
+---the bounce's spectrum, run through ordinary recombination, gives the observed
+peaks in both position and height. Reproducible as
+\texttt{figures/scripts/ch09\_cmb\_peaks.py}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{cmb_peaks}
+  \caption{CMB peak \emph{heights} from the bounce's scale-invariant spectrum.
+    \emph{Left:} a semi-analytic tight-coupling $D_\ell$---baryon-loaded acoustic
+    monopole, Doppler, radiation driving, and Silk damping---against the Planck peak
+    (filled) and trough (open) heights; the match is good to tens of percent, the
+    third and fourth peaks (sensitive to $\omega_c$) being where a Boltzmann code
+    refines it. \emph{Right:} the first-to-second peak height ratio versus the baryon
+    density; the observed ratio $\simeq2.2$ picks out $\omega_b\simeq0.0224$---the
+    value \SCT\ must source from the inherited $\eta$. Reproducible as
+    \texttt{figures/scripts/ch09\_cmb\_peaks.py}.}
+  \label{fig:cmb_peaks}
+\end{figure}
+
 \paragraph{Effort estimate.} 6--12 months for someone with
 cosmological-perturbation-theory background; $\sim 1000$--$3000$ lines of code
 building on Tier 1.

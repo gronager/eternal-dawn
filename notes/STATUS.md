@@ -77,9 +77,14 @@ produces it (`sims/src/cartasis_sims/`, figures in `figures/scripts/`).
   the bounce gives `n_T = 3 − |2p−1|`, `p = 2/(1+3w)`; matter contraction (w=0)
   ⇒ `n_T = 0` **exactly**, with no inflaton (validated <1% vs analytic). EC supplies
   the non-singular bounce the matter-bounce scenario otherwise lacks. `primordial.py`.
-- **Acoustic peaks reproduced.** Shared recombination physics: `r_s ≈ 142 Mpc`,
-  `θ_s ≈ 0.0102 rad`, peaks at `ℓ ≈ 230, 540, 850, 1150, 1460` vs Planck
-  `220, 540, 810, 1120, 1450` — a few percent. `acoustic.py`.
+- **Acoustic peak positions reproduced.** Shared recombination physics: `r_s ≈ 142
+  Mpc`, peaks at `ℓ ≈ 230, 540, 850, 1150, 1460` vs Planck — a few percent. `acoustic.py`.
+- **Acoustic peak heights reproduced (semi-analytic).** Baryon loading `R ≈ 0.62`
+  (computed) drives the odd/even alternation; a tight-coupling `D_ℓ` (monopole +
+  Doppler + driving + Silk damping) on the bounce's scale-invariant input matches the
+  Planck peak heights to tens of percent. The 1st/2nd ratio ≈ 2.2 **measures ω_b** —
+  which SCT sources from the inherited η; ω_c-sensitive 3rd/4th peaks need a Boltzmann
+  code. `cmb_peaks.py`.
 
 ### Dark sector (earlier work, in repo)
 - Dark energy as parent accretion confronts DESI DR2 (`dark_energy.py`); CMB-axis /
