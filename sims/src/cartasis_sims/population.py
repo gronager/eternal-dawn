@@ -188,6 +188,34 @@ def mass_budget_branching(M_parent, M_vis, epsilon=0.1, f_clean=1.0):
     return min(epsilon * f_clean * w, w)
 
 
+# The branching is GENERATION-DEPENDENT, and that makes BHU1 robust. An OGU has
+# grown large (M_OGU >> M_vis), so it is super-critical: it spawns many BHU1
+# children, m_0 = epsilon (M_OGU/M_vis) >> 1. But those children sit AT the
+# viability scale (M ~ M_vis -- the edge we observe ourselves to occupy), so each
+# of them is sub-critical, m_{n>=1} = epsilon (M_child/M_vis) ~ epsilon < 1. The
+# population is then 1 OGU -> many BHU1 -> a geometrically decaying tail with ratio
+# epsilon: N_n ~ m_0 * epsilon^{n-1} for n >= 1. The huge m_0 CANCELS in the n>=1
+# normalization, so
+#
+#     P(BHU_n | n>=1) = (1 - epsilon) epsilon^{n-1},
+#
+# independent of the OGU size. BHU1 dominates (P = 1-epsilon ~ 0.9 for epsilon~0.1)
+# however large the OGU grows -- the depth is controlled by the descendants being
+# pinned at M_vis, not by the OGU. So "we are BHU1" is decoupled from the (unknown,
+# vortex/void-set) OGU mass.
+
+def generational_depth_pmf(epsilon, n_max=8):
+    """P(BHU_n | n>=1) = (1-eps) eps^{n-1} for n = 1..n_max (OGU size cancels)."""
+    n = np.arange(1, n_max + 1)
+    return n, (1.0 - epsilon) * epsilon ** (n - 1)
+
+
+def ogu_siblings(M_ogu, M_vis, epsilon=0.1, f_clean=1.0):
+    """Number of viable BHU1 children one OGU spawns: ~ epsilon f_clean M_ogu/M_vis.
+    Inverting, M_ogu/M_vis ~ N_siblings/(epsilon f_clean)."""
+    return epsilon * f_clean * float(M_ogu) / float(M_vis)
+
+
 # ---------------------------------------------------------------------------
 # OGU size (mass) distribution from birth vs growth
 # ---------------------------------------------------------------------------

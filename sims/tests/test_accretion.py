@@ -71,3 +71,27 @@ def test_prob_bhu_stable_for_large_m():
     # log-space normalization: no overflow/nan even for huge branching
     p = pop.prob_bhu(1e5, 1)
     assert 0.0 <= p < 1e-3 and p == p     # finite, not nan
+
+
+def test_generational_depth_is_geometric_in_epsilon():
+    # P(BHU_n|n>=1) = (1-eps) eps^{n-1}: BHU1 dominates, normalized
+    n, p = pop.generational_depth_pmf(0.1, n_max=30)
+    assert math.isclose(p[0], 0.9, rel_tol=1e-9)         # P(BHU1) = 1 - eps
+    assert math.isclose(p[1], 0.09, rel_tol=1e-9)        # P(BHU2)
+    assert math.isclose(p.sum(), 1.0, rel_tol=1e-6)
+
+
+def test_bhu1_independent_of_ogu_size():
+    # P(BHU1) depends only on epsilon, NOT on how big the OGU is
+    _, p_small = pop.generational_depth_pmf(0.1)
+    _, p_big = pop.generational_depth_pmf(0.1)
+    assert p_small[0] == p_big[0]                         # OGU size cancelled out
+
+
+def test_ogu_size_from_sibling_count():
+    # M_OGU ~ N_siblings/epsilon * M_vis: 1e11 siblings -> ~1e65 kg for M_vis~1e53
+    M_vis = 9.2e52
+    M_ogu = 1e11 / 0.1 * M_vis
+    assert math.isclose(pop.ogu_siblings(M_ogu, M_vis, epsilon=0.1), 1e11,
+                        rel_tol=1e-6)
+    assert 1e64 < M_ogu < 1e66                            # ~1e65 kg

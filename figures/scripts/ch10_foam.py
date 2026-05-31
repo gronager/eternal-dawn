@@ -18,10 +18,10 @@ so the structure -- not colour -- carries the meaning, and print-safe:
 * Sizes: OGU radii are log-normal (defined median): births outrun runaway growth,
   so many small + few large. Nesting is self-similar at diameter ratio ~1/13
   (gravity-scaled, NOT the ~1e-12 mass ratio).
-* 'home' is marked deep in the foam. The framework's own result (Ch. 5) is that
-  we are NOT an OGU: dark matter + dark energy require a parent, so our depth is
-  n >= 1 -- a range, to be tightened by the DM/DE amplitudes and C. The drawn
-  depth is illustrative; the label says n>=1.
+* 'home' is marked as a BHU1 -- a direct child of an OGU. We are not an OGU (dark
+  matter + dark energy require a parent, so n >= 1), and the narrow viable band
+  makes descendant branching subcritical (m_{n>=1} ~ epsilon < 1), so the depth
+  tail is geometric and BHU1 dominates regardless of how large the OGU is (Ch. 5).
 
 Outputs figures/pdf/foam_wallpaper.pdf and a high-res PNG.
 """
@@ -154,24 +154,18 @@ def main() -> None:
     for o in ogus:
         draw_node(ax, o, drng)
 
-    # 'home' as deep as the foam allows (illustrative; true depth n>=1, a range)
-    fertile2 = [o for o in ogus if any(c.children for c in o.children)]
-    if fertile2:
-        home_ogu = max(fertile2, key=lambda o: o.r)
-        home_bpu = max((c for c in home_ogu.children if c.children),
-                       key=lambda c: c.r)
-        home = max(home_bpu.children, key=lambda c: c.r)
-    else:
-        home_ogu = max((o for o in ogus if o.children), key=lambda o: o.r)
-        home_bpu = max(home_ogu.children, key=lambda c: c.r)
-        home = home_bpu
+    # 'home' is a BHU1: a direct child of an OGU. The narrow viable band makes
+    # descendant branching subcritical (m_{n>=1} ~ epsilon < 1), so the depth tail
+    # is geometric and BHU1 dominates regardless of how big the OGU is (Ch. 5).
+    home_ogu = max((o for o in ogus if o.children), key=lambda o: o.r)
+    home = max(home_ogu.children, key=lambda c: c.r)
 
-    # magnifier inset zoomed on the home BPU
+    # magnifier inset zoomed on the home OGU, showing home among its siblings
     axm = fig.add_axes([0.655, 0.04, 0.33, 0.42])
     axm.set_facecolor("0.44")
-    pad = home_bpu.r * 1.6
-    axm.set_xlim(home_bpu.x - pad, home_bpu.x + pad)
-    axm.set_ylim(home_bpu.y - pad, home_bpu.y + pad)
+    pad = home_ogu.r * 1.35
+    axm.set_xlim(home_ogu.x - pad, home_ogu.x + pad)
+    axm.set_ylim(home_ogu.y - pad, home_ogu.y + pad)
     axm.set_xticks([])
     axm.set_yticks([])
     for s in axm.spines.values():
@@ -180,13 +174,13 @@ def main() -> None:
     draw_node(axm, home_ogu, np.random.default_rng(11))
     axm.plot([home.x], [home.y], marker="o", ms=5, color=BLACK,
              markeredgecolor=WHITE, markeredgewidth=0.8, zorder=20)
-    axm.annotate("home  ($n\\geq1$: not an OGU)", (home.x, home.y),
+    axm.annotate("home  (likely BHU1)", (home.x, home.y),
                  textcoords="offset points", xytext=(16, 14), color=BLACK,
                  fontsize=11, fontweight="bold", zorder=20,
                  arrowprops=dict(arrowstyle="-", color=BLACK, lw=1))
-    axm.set_title("magnify: home, a BH-universe nested inside an OGU",
+    axm.set_title("magnify: home, a BHU1 child of its OGU (one of many siblings)",
                   color=BLACK, fontsize=9, pad=3)
-    con = ConnectionPatch((home_bpu.x, home_bpu.y), (home_bpu.x, home_bpu.y),
+    con = ConnectionPatch((home_ogu.x, home_ogu.y), (home_ogu.x, home_ogu.y),
                           "data", "data", axesA=ax, axesB=axm,
                           color=BLACK, lw=0.8, alpha=0.5, ls=(0, (4, 3)))
     fig.add_artist(con)
