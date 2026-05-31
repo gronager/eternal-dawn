@@ -234,6 +234,76 @@ annihilation and form structure, $|\omega/T| > \eta_{\min}/C$. This is a one-ste
 \emph{birth filter on the OG seed} (Section~\ref{sec:spin-dist}), inherited by all
 descendants, not a condition re-imposed at every crossing.
 
+\subsection{What a hole eats: two families, and our parentage}
+\label{sec:accretion-eta}
+
+The sign of $\eta$ is strictly inherited, but its \emph{magnitude} is not a clean
+lineage invariant: it is set by \emph{what the parent hole ate}. Because the
+bounce is adiabatic ($D=1$; \Cref{sec:extruder}), entropy is conserved across the
+crossing, so the child does not regenerate its photons---it inherits the
+baryon-to-photon ratio of the accreted material itself:
+\begin{equation}
+  \eta_{\mathrm{child}} = \eta_{\mathrm{infall}} = b\,\eta_{\mathrm{parent}},
+  \qquad b \equiv \frac{\eta_{\mathrm{infall}}}{\eta_{\mathrm{cosmic}}},
+  \label{eq:eta-accretion}
+\end{equation}
+capped at $\eta\sim1$. Here $b$ is the baryon bias of the infall: $b=1$ for a fair
+cosmic sample (a horizon-scale hole, or a radiation-era primordial hole, which
+contain the cosmic ratio by construction); $b>1$ for concentrated-baryon
+accretion (stars and gas have few thermal photons per baryon), driving the child
+toward a baryon-rich, degenerate $\eta\to1$; $b<1$ for photon-biased accretion
+(void or intergalactic medium), giving a cleaner child. So a growing hole really
+does carry ``a different $\eta$ inside than how the parent was born,'' and the
+\emph{direction} of that drift is signed by the accretion bias.
+
+This splits each chiral lineage into \emph{two families}
+(\Cref{fig:accretion_depth}, left): a clean, photon-dominated family
+($\eta\ll1$, fed by fair or radiation-dominated capture) and a baryon-rich,
+degenerate family ($\eta\to1$, fed by stars and dense gas). Our universe is
+firmly in the clean family ($\eta\simeq6\times10^{-10}\simeq\eta_{\mathrm{cosmic}}$,
+i.e.\ $b\sim1$). That is a structural \emph{prediction about our parentage}: our
+progenitor hole accreted a fair cosmic sample---a horizon-scale or radiation-fed
+hole---not concentrated baryons. A star-fed hole ($b\sim10^{9}$) would have
+spawned a degenerate, baryon-saturated universe utterly unlike ours.
+
+\subsection{Are we likely BHU1 or BHU2?}
+\label{sec:bhu-depth}
+
+The robust anchor (\Cref{sec:notogu}) fixes $n\ge1$. How much deeper? Counting
+universes, generation $n$ holds $N_n\sim m^n$ of them, so
+$P(\mathrm{BHU}_n\mid n\ge1)\propto m^n$, where $m$ is the mean number of
+\emph{viable} children per universe. The answer is a clean dichotomy
+(\Cref{fig:accretion_depth}, right): for a \emph{subcritical} branching $m<1$ the
+distribution is geometric, $P(\mathrm{BHU}_n)=(1-m)m^{n-1}$, the population is
+shallow, and we are most likely $\mathrm{BHU}_1$; for $m>1$ the population is
+dominated by the deepest generation the supraverse has had time to grow, and being
+$\mathrm{BHU}_{1\text{--}2}$ is exponentially unlikely. The naive count cuts the
+hard way: a universe forms $\gtrsim10^{18}$ black holes, almost all super-critical
+and roughly half past the spin-survival threshold, so $m\sim10^{18}$ unless
+viability is far more restrictive than that---in which case we are surely
+\emph{deep}, not shallow. Shallowness therefore requires either a genuinely
+restrictive viability---e.g.\ only the fair-sample, clean-fed holes of
+\Cref{sec:accretion-eta} spawn universes like ours, the overwhelming majority
+making the baryon-rich family or sterile remnants---or a \emph{young} supraverse
+that has not had time to grow deep lineages (small truncation depth, entangled
+with the equilibrium-establishment question, \Cref{app:openq}). This is the live
+tension; only $n\ge1$ is settled by data.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{accretion_depth}
+  \caption{\emph{Left:} the adiabatic bounce makes the child's asymmetry equal to
+    that of the accreted material, $\eta_{\mathrm{child}}=b\,\eta_{\mathrm{parent}}$
+    (\Cref{eq:eta-accretion}), splitting each lineage into a clean,
+    photon-dominated family and a baryon-rich, degenerate one. Our
+    $\eta\simeq6\times10^{-10}$ places our progenitor at a fair-sample accretor
+    ($b\sim1$), not a star-fed one. \emph{Right:} given $n\ge1$,
+    $P(\mathrm{BHU}_n)\propto m^n$; we are likely $\mathrm{BHU}_{1\text{--}2}$ only
+    if the branching ratio is subcritical ($m<1$), otherwise the population is
+    deep. Reproducible as \texttt{figures/scripts/ch05\_accretion.py}.}
+  \label{fig:accretion_depth}
+\end{figure}
+
 \section{OG bounce nucleation rate}
 
 The rate of OG bounce nucleation depends on the vacuum-fluctuation spectrum at

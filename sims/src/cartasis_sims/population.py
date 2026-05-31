@@ -129,6 +129,33 @@ def depth_posterior(m, D, n_min=1, structure_decay=1.0):
 
 
 # ---------------------------------------------------------------------------
+# Explicit read-off: are we likely BHU1 or BHU2?
+# ---------------------------------------------------------------------------
+# Counting universes, generation n holds N_n ~ m^n of them, so given the robust
+# floor n >= 1 (we are not an OGU), P(BHU_n) ~ m^n / sum. For a SUBCRITICAL
+# branching m < 1 this is geometric, P(BHU_n) = (1-m) m^{n-1}: lineages die out,
+# the population is shallow, and we are most likely BHU1. For SUPERCRITICAL m > 1
+# the population is dominated by the deepest generation the supraverse has had
+# TIME to grow (truncation D), so we are almost surely deep and being BHU1-2 is
+# exponentially unlikely. The "are we shallow?" question therefore reduces to
+# whether the effective viable-children-per-universe m is below 1 -- or,
+# equivalently, whether the supraverse is too young (small D) to have grown deep.
+
+def prob_bhu(m, n, D=400):
+    """P(we are BHU_n | n >= 1) for branching ratio m and truncation depth D."""
+    ns = np.arange(1, D + 1, dtype=float)
+    w = m ** ns
+    w = w / w.sum()
+    return float(w[n - 1]) if 1 <= n <= D else 0.0
+
+
+def shallow_probability(m, D=400, n_max=2):
+    """P(we are within the first n_max generations | n >= 1): the chance we are
+    'BHU1 or BHU2' (n_max=2). Near 1 for strongly subcritical m, ~0 for m > 1."""
+    return float(sum(prob_bhu(m, n, D) for n in range(1, n_max + 1)))
+
+
+# ---------------------------------------------------------------------------
 # OGU size (mass) distribution from birth vs growth
 # ---------------------------------------------------------------------------
 # Births inject OGUs at small mass: the Cartasis-density fluctuation probability
