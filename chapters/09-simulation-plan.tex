@@ -1,0 +1,402 @@
+\chapter{Simulation Plan}
+\label{chap:sims}
+
+\section{Philosophy}
+
+The framework's strength is that it should be simulable from first principles.
+Rare large vacuum fluctuations, Einstein--Cartan bounces, and thermodynamic
+equilibrium are all computable problems. The path from ``interesting framework''
+to ``constrained by data'' runs through simulation.
+
+The simulation work is tiered. Each tier is a tractable project of definite
+scope; higher tiers build on lower ones. A small group could complete Tiers 1--2
+in a year; Tiers 3--4 are multi-year programs. Code lives in \texttt{sims/} and
+outputs in \texttt{sims/output/}.
+
+\section{Phase 0: Is the universe a black-hole interior?}
+\label{sec:phase0}
+
+Before any dynamical simulation, there is cheaper and more decisive work to do.
+The thesis at the foundation of everything else is that \emph{our universe is the
+interior of a (rotating) black hole}---an inverse bubble behind a Cartasis
+membrane. In the Copernican spirit, we do not assume this; we take the
+universe's \emph{measured} numbers and ask what they already imply. Four
+``corners'' need only arithmetic and existing catalogs, yet each ties an
+observed quantity to a black-hole property. \Cref{fig:firstlight} collects them;
+the calculation is reproducible as \texttt{figures/scripts/ch02\_bh\_first\_light.py}.
+
+\paragraph{Corner A --- flatness is the Schwarzschild condition.} For a
+Friedmann universe the critical density is $\rho_c = 3H^2/8\pi G$, and the mass
+inside the Hubble sphere of radius $R_H = c/H$ is
+$M = \tfrac{4}{3}\pi R_H^3\,\Omega\rho_c$. Its Schwarzschild radius is then
+\[
+  R_s = \frac{2GM}{c^2}
+      = \frac{2G}{c^2}\cdot\frac{4}{3}\pi\Big(\frac{c}{H}\Big)^{3}\Omega\,
+        \frac{3H^2}{8\pi G}
+      = \Omega\,\frac{c}{H} = \Omega\,R_H .
+\]
+So $R_s/R_H = \Omega$ \emph{identically}. The measured flatness
+$\Omega = 1.000 \pm 0.005$ is therefore numerically the statement that the
+observable universe sits at its own Schwarzschild radius---exactly what a
+black-hole interior requires.\sidenote{This is a necessary, not sufficient,
+condition: any critical-density FRW model satisfies it, and the interior
+Schwarzschild geometry is not literally FRW. It is the zeroth-order
+consistency check, not a proof.} With Planck values,
+$M \approx 9.2\times10^{52}\,\mathrm{kg}$ and $R_s/R_H = 1.000$.
+
+\paragraph{Corner B --- the spin is sub-extremal, and predicts an axis.} If the
+interior is Kerr-like, it carries a dimensionless spin $a^* = cJ/GM^2$. The
+largest \emph{causal} angular momentum of the Hubble-sphere mass, $J \sim McR_H$,
+gives
+\[
+  a^*_{\max} = \frac{cJ}{GM^2} = \frac{c^2 R_H}{GM} = \frac{2}{\Omega} \approx 2 ,
+\]
+of order unity. A realistic small net rotation therefore leaves the universe
+comfortably sub-extremal ($a^* < 1$), consistent with a genuine,
+cosmic-censored Kerr interior rather than a naked singularity. The decisive
+observational handle is direction, not magnitude: if the preferred axis is
+inherited from the parent's spin, the CMB low-multipole alignment (the ``axis of
+evil'') and the JWST galaxy-rotation asymmetry~\citep{shamir2025} should share a
+single axis. \textbf{Testing that alignment against existing catalogs is the
+single cheapest potentially-decisive measurement in the whole program.}
+
+\paragraph{First pass.} A curated set of well-sourced large-angle axes---the
+combined CMB axis of evil, the kinematic dipole, the cold spot, and the
+galaxy-spin asymmetry---is moderately concentrated: the orientation-tensor
+largest eigenvalue is $\tau_1 = 0.81$, with an (a-posteriori-inflated)
+Monte-Carlo isotropic probability $p \approx 0.05$ (\Cref{fig:axisalign}). The
+honest reading, however, cuts against an easy claim: the galaxy-spin
+axis~\citep{shamir2025} sits $\sim\!30^\circ$ from the CMB axis but
+$\sim\!0^\circ$ from the Galactic pole. A Galactic-pole axis is exactly what a
+Milky-Way classification systematic (dust, inclination bias) would produce, so
+the mundane explanation is not excluded. The parent-spin interpretation survives
+only if, once a proper all-sky dipole is fit, the galaxy-spin axis favours the
+\emph{CMB} axis over the Galactic pole. That is the crux the next data release
+must settle. Reproducible as
+\texttt{figures/scripts/ch08\_axis\_alignment.py}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{axis_alignment}
+  \caption{Large-angle anomaly axes in Galactic coordinates (each plotted with
+    its antipode, since these are headless axes). The CMB anomaly axes and the
+    galaxy-spin axis are moderately concentrated ($\tau_1=0.81$, isotropic
+    $p\approx0.05$, a-posteriori inflated), but the galaxy-spin axis coincides
+    with the Galactic pole---the chief systematic confound---rather than sitting
+    squarely on the CMB axis. The green circle marks the fitted principal axis.}
+  \label{fig:axisalign}
+\end{figure}
+
+\paragraph{Corner C --- ``CMB $=$ Hawking'' cannot mean the present horizon.}
+The Hawking temperature of the Hubble-sphere mass is
+$T_H = \hbar c^3/8\pi G M k_B \approx 1.3\times10^{-30}\,\mathrm{K}$, and (because
+$R_s = R_H$) it equals exactly half the present cosmological-horizon
+Gibbons--Hawking temperature, $T_H = \tfrac12\,\hbar H/2\pi k_B$. Both are
+$\sim\!30$ orders of magnitude below the $2.7255\,\mathrm{K}$ CMB. The honest
+consequence: the CMB is \emph{not} present-day horizon radiation. The
+identification can only work as parent-horizon radiation emitted near the bounce
+(hot at emission) and redshifted by the internal expansion. This sharpens what a
+successful calculation must deliver---a spectrum, not just a temperature---and
+hands the hard part to Tier~2.
+
+\paragraph{Corner D --- the dark sector fixes a single filter number.} If dark
+matter is filter-rejected counterpart matter, the dark-matter-to-baryon ratio is
+$(1-f)/f = \omega_c/\omega_b$, so the membrane pass-fraction is
+$f = \omega_b/(\omega_b+\omega_c)$. Planck's $\omega_c/\omega_b \approx 5.4$ gives
+$f \approx 0.157 \approx 1/6$. Any Einstein--Cartan filter model must reproduce
+this one number; it is the tightest quantitative target the membrane physics
+faces.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{bh_first_light}
+  \caption{Phase-0 consistency checks. \emph{Left:} the Hawking temperature
+    $T_H(M)$; the observable universe lands $\sim\!30$ orders of magnitude below
+    the CMB, so the CMB cannot be present-horizon radiation. \emph{Right:} the
+    dimensionless black-hole identities read straight off Planck cosmology---
+    $R_s/R_H=\Omega\approx1$, maximal spin $a^*_{\max}\approx2$, and membrane
+    filter $f\approx0.16$.}
+  \label{fig:firstlight}
+\end{figure}
+
+\paragraph{Recommended order.} Do Corner~A and~B first (an afternoon, plus one
+catalog-alignment analysis), then C and D as supporting consistency relations.
+Only then move to the dynamical core below: Phase~0 establishes that the
+\emph{kinematics} are consistent with a black-hole interior; the tiers establish
+the \emph{mechanism}.
+
+\section{Tier 1: Single-bounce Einstein--Cartan dynamics}
+
+\paragraph{Goal.} Numerically evolve a spherical collapse of fermionic matter
+through the bounce. Output: complete characterization of the bounce as a function
+of input parameters.
+
+\paragraph{Minimal model.} The cheapest dynamical demonstration is homogeneous:
+a Weyssenhoff spin fluid in Einstein--Cartan obeys a modified Friedmann equation
+in which the averaged spin contributes a negative quadratic term,
+\[
+  \Big(\frac{\dot a}{a}\Big)^2
+    = \frac{8\pi G}{3}\,\rho\Big(1 - \frac{\rho}{\rhoc}\Big),
+\]
+so the expansion rate vanishes and reverses at $\rho = \rhoc$: a bounce, not a
+singularity. Integrating this single ODE (with the continuity equation for
+$\rho(a)$) and showing $a(t)$ reaching a finite minimum at $\rhoc$ is the
+\emph{minimum viable bounce}---a few dozen lines, and the first time the central
+claim is exhibited rather than asserted. The spherical-collapse code below
+upgrades this to an inhomogeneous interior matched to an exterior Schwarzschild
+geometry, so that one figure shows a black hole from outside and an expanding
+cosmology from inside.
+
+\Cref{fig:bounce} is that minimum viable bounce, integrated for a radiation
+fluid. Where general relativity drives the same collapse to $a=0$ in finite
+time, the torsion term halts it: the density saturates at $\rhoc$, the Hubble
+rate passes smoothly through zero, and the universe re-expands. With
+$\rhoc \sim 10^{50}\,\mathrm{kg\,m^{-3}}$ the whole bounce lasts
+$\sim 4\times10^{-21}\,\mathrm{s}$. This is the central claim---no singularity,
+an inverse bubble forms---exhibited rather than asserted, in a few dozen lines
+(\texttt{sims/src/cartasis\_sims/bounce.py},
+\texttt{figures/scripts/ch09\_bounce.py}).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{bounce}
+  \caption{The Einstein--Cartan torsion bounce (Tier 1, radiation fluid),
+    integrated in dimensionless units ($8\pi G/3 = \rhoc = 1$). \emph{Left:} a
+    collapsing universe bounces at $a_{\min}$ (blue) where general relativity
+    would reach a singularity, $a\to0$ (red dashed). \emph{Right:} the density
+    saturates at the Cartasis density $\rhoc$ and the Hubble rate $H$ crosses
+    zero---collapse turning into expansion.}
+  \label{fig:bounce}
+\end{figure}
+
+\paragraph{Outside vs.\ inside (Oppenheimer--Snyder with a bounce).} Gluing this
+interior to an exterior Schwarzschild vacuum---the 1939 Oppenheimer--Snyder
+construction, now with the torsion bounce replacing the singularity---shows both
+faces at once (\Cref{fig:oscollapse}). By Birkhoff's theorem the exterior is
+exactly Schwarzschild, so a distant observer watches the surface \emph{freeze} at
+the horizon (Schwarzschild time $t\to\infty$ as the areal radius $R\to r_s$) and
+its light redshift to black: a black hole. Inside, the dust reaches $\rhoc$ at a
+tiny areal radius $R_{\min}$, bounces, and re-expands. For the observable
+universe's mass the bounce radius is $R_{\min}\approx 6\,\mathrm{m}$ (a proper
+volume $\sim 10^{3}\,\mathrm{m^3}$) against a horizon
+$r_s\approx 1.4\times10^{26}\,\mathrm{m}$---so $R_{\min}/r_s \sim 4\times10^{-26}$.
+The new universe is born microscopic, hidden deep behind the parent's horizon,
+and only later inflates to its $\sim\!46$\,Gly extent: the Tardis effect of
+Chapter~\ref{chap:baby}, made quantitative.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{os_collapse}
+  \caption{Oppenheimer--Snyder collapse with a torsion-bounce interior.
+    \emph{Left:} the surface's areal radius collapses through the horizon and
+    bounces at $R_{\min}$ (blue) where general relativity reaches a singularity
+    (red dashed). \emph{Right:} from outside, the surface freezes at the horizon
+    ---Schwarzschild time $t\to\infty$ and surface redshift $1+z\to\infty$ as
+    $R\to r_s$. A black hole from outside; a bouncing, re-expanding cosmology
+    from inside.}
+  \label{fig:oscollapse}
+\end{figure}
+
+\paragraph{Robustness across the equation of state.} The bounce is not special
+to one matter content. Sweeping the equation of state from dust ($w=0$) through
+radiation ($w=1/3$) to stiff ($w=1$), the bounce density is universal---$a_{\min}$
+and $\rho_{\max}=\rhoc$ are independent of $w$---and the peak expansion rate is
+exactly $\max|H| = \tfrac12\sqrt{8\pi G\rhoc/3}$ (because $\max_x x(1-x)=\tfrac14$).
+Only the bounce \emph{duration} varies, and by an exact law,
+\[
+  \Delta\tau_{\mathrm{FWHM}} = \frac{4}{n}\,\frac{1}{\sqrt{8\pi G\rhoc/3}},
+  \qquad n = 3(1+w),
+\]
+so stiffer matter gives a sharper bounce (\Cref{fig:sweep}). For
+$\rhoc \sim 10^{50}\,\mathrm{kg\,m^{-3}}$ the duration is a few
+$\times\,10^{-21}\,\mathrm{s}$ across the whole range. The central claim does not
+rest on a tuned equation of state.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{bounce_sweep}
+  \caption{Robustness of the bounce. \emph{Left:} for $w$ from dust to stiff the
+    scale factor always bounces at $a_{\min}$ ($\rho=\rhoc$); only the sharpness
+    changes. \emph{Right:} the bounce duration follows the exact law
+    $\Delta\tau_{\mathrm{FWHM}}=4/n$ (right axis: physical seconds for
+    $\rhoc=10^{50}\,\mathrm{kg\,m^{-3}}$).}
+  \label{fig:sweep}
+\end{figure}
+
+\paragraph{Setup.}
+\begin{itemize}
+  \item 1D spherical symmetry (radial coordinate $r$, time $t$).
+  \item Initial conditions: a uniform ball of matter at moderate density,
+    slightly overdense to drive gravitational collapse.
+  \item Matter modeled as a Weyssenhoff fluid: a perfect fluid with spin density
+    (semiclassical treatment of fermion spin in the continuous limit).
+  \item Evolution: Einstein--Cartan field equations with torsion sourced by spin
+    density.
+  \item Tracking: density, pressure, spin density, metric components, and torsion
+    components as functions of $r$ and $t$.
+\end{itemize}
+
+\paragraph{Numerical method.} A finite-difference scheme on a radial grid
+($\sim 10^3$ to $10^4$ points), with adaptive mesh refinement near the bounce
+(where gradients become extreme), implicit time stepping for stability near peak
+density, and conservation checks (total mass--energy, total spin, total particle
+number).
+
+\paragraph{Expected output.} The bounce happens at $\rho \sim \rhoc \sim
+10^{50}\,\mathrm{kg\,m^{-3}}$ (verified); the bounce timescale in proper time;
+the bounce duration and profile shape; the maximum density reached as a function
+of initial conditions; the equation of state through the bounce; and the energy
+balance (kinetic energy in expansion vs.\ energy contained in spin/torsion
+fields).
+
+\paragraph{Tools.} Python with NumPy/SciPy for prototyping (optionally Julia for
+performance), standard ODE solvers (RK4, implicit methods), custom grid handling
+and AMR, and plotting with matplotlib.
+
+\paragraph{Effort estimate.} 2--3 months for a competent graduate student;
+$\sim 500$--$1500$ lines of code; validation against existing single-bounce
+papers (Brandt, Magueijo, Pop\l{}awski~\citep{poplawski2012,poplawski2016}).
+
+\paragraph{Status of existing work.} Several authors have done pieces of this. No
+one has produced a clean, well-documented reference implementation. \emph{A
+valuable side-output of this tier is producing such a reference implementation.}
+
+\section{Tier 2: Perturbation evolution through the bounce}
+
+\paragraph{Goal.} Take the output of Tier 1 (a clean bounce profile) and evolve
+cosmological perturbations through it. Output: the primordial power spectrum from
+the bounce, comparable to CMB observations.
+
+\paragraph{Setup.} Start with the Tier 1 spherical bounce background; add linear
+perturbations to the metric and matter fields; evolve them using linearized
+Einstein--Cartan equations; track the power spectrum of scalar, vector, and
+tensor modes through the bounce; and compute predictions for CMB observables (the
+scalar spectral index $n_s$, the tensor-to-scalar ratio $r$, the running of the
+spectral index, and non-Gaussianities).
+
+\paragraph{Numerical method.} Mode-by-mode evolution in Fourier space;
+long-wavelength modes treated as classical fields and short-wavelength modes
+quantum-mechanically (mode functions); Bunch--Davies-like initial conditions at
+large negative time (deep in collapse); modes tracked through the bounce and into
+post-bounce expansion.
+
+\paragraph{Expected output.} The primordial power-spectrum amplitude and shape,
+the spectral tilt, and the tensor-to-scalar ratio, compared to Planck CMB
+observations ($n_s = 0.965 \pm 0.004$, $r < 0.06$ upper
+limit)~\citep{planck2018} and to $\Lambda$CDM $+$ inflation predictions.
+
+\paragraph{Decisive test.} If the bounce produces a near-scale-invariant spectrum
+with $n_s \approx 0.96$ and $r$ within observational bounds, \textbf{the
+framework is observationally viable.} If the spectrum is dramatically different,
+the framework fails this test. This is the central calculational challenge for
+\SCT. Existing work on bounce cosmologies (loop quantum cosmology, ekpyrotic
+models) provides templates for similar calculations~\citep{ashtekar2006}.
+
+\paragraph{Effort estimate.} 6--12 months for someone with
+cosmological-perturbation-theory background; $\sim 1000$--$3000$ lines of code
+building on Tier 1.
+
+\section{Tier 3: Chirality dynamics through the bounce}
+
+\paragraph{Goal.} Quantify the flip $+$ filter mechanism. Predict the chirality
+bias of a baby universe given the parent's properties.
+
+\paragraph{Setup.} Use the Tier 1 bounce background; include fermion content
+explicitly (not just a Weyssenhoff fluid); track baryon number, lepton number,
+and chiral currents through the bounce; include electroweak physics at
+temperatures above the EW scale (sphaleron processes); compute the filter
+efficiency for chirality; and compute net baryon-number production/preservation.
+
+\paragraph{Decisive tests.} Does the framework predict
+$\eta = n_B/n_\gamma \sim 6 \times 10^{-10}$? Does it predict a
+dark-matter-to-baryon ratio $\sim 5$? Are these robust to parameter choices, or
+do they require fine-tuning?
+
+\paragraph{Effort estimate.} 12--24 months; significant theoretical work in
+addition to numerical; coupling Einstein--Cartan to the Standard Model is
+non-trivial.
+
+\section{Tier 4: Supraverse population statistics}
+
+\paragraph{Goal.} Simulate the full supraverse: many vacuum fluctuations
+producing OG bounces, each seeding lineages of descendant universes. Compute
+equilibrium distributions of universe parameters; check that observer-supporting
+universes cluster near our observed parameters.
+
+\paragraph{Setup.} Treat the supraverse as a stochastic process: vacuum
+fluctuations produce OG bounces at random locations; each OG bounce seeds a
+lineage; each universe evolves cosmologically and produces descendants through
+internal black-hole formation; track populations across many generations; and
+compute distributions of universe mass, age, baryon asymmetry, and chirality
+lineage depth.
+
+\paragraph{Decisive tests.} An equilibrium distribution exists and is computable;
+observer-supporting universes cluster around some peak; and our observed
+parameters sit near the peak (validating the fine-tuning resolution).
+
+\paragraph{Effort estimate.} A multi-year project, several people; requires
+Tiers 1--3 as input. Output: the most comprehensive cosmological prediction the
+framework can make.
+
+\section{Tier 5: Direct observation comparisons}
+
+\paragraph{Goal.} Use the simulations to make specific predictions for
+observational programs (Planck, DESI, Euclid, LiteBIRD, JWST, etc.) and compare
+directly: a precise CMB spectrum shape including specific deviations from
+$\Lambda$CDM; large-scale-structure clustering with dark matter as parent
+influence; the Hubble parameter at different redshifts; galaxy-rotation asymmetry
+magnitude from parent rotation; and the dark-energy evolution trajectory.
+
+\paragraph{Decisive tests.} The framework is genuinely tested against existing
+and forthcoming observational data. Each prediction either matches or does not.
+
+\paragraph{Effort estimate.} Each comparison is its own project; a multi-decade
+research program at full scope.
+
+\section{Minimum viable project}
+
+If we want one project that demonstrates the framework's viability:
+\textbf{Tier 2 (perturbation through bounce) with a focus on the CMB power
+spectrum.} This is decisive---either the bounce reproduces something close to the
+observed CMB spectrum or it does not. The result is publishable in either case.
+The effort is bounded at $\sim 12$ months, and the required expertise (numerical
+relativity $+$ cosmological perturbation theory) is widely available. This should
+be the first priority for any simulation effort.
+
+\section{Visualization parallel track}
+
+Alongside the physics simulations, the visualization work
+(Chapter~\ref{chap:viz}) can proceed independently. It does not require Tier 2
+outputs to start---it can begin with simpler models of supraverse structure and
+refine as physics simulations produce better inputs. The visualization track is
+more accessible and might be the right place for someone with
+computational/graphics interests to start.
+
+\section{Tooling}
+
+\paragraph{Languages.} Python (prototyping, plotting, analysis; default for
+Tier 1); Julia (performance-sensitive numerics; optional for Tiers 1--2,
+advisable for Tiers 3--4); C++ with the Einstein Toolkit (if existing numerical
+relativity infrastructure is leveraged---heavy but well-tested).
+
+\paragraph{Libraries.} NumPy, SciPy, matplotlib (Python); DifferentialEquations.jl
+(Julia); Einstein Toolkit, GRChombo (numerical relativity); CAMB or CLASS (CMB
+power spectrum, for comparison to standard predictions).
+
+\paragraph{Hardware.} Tiers 1--2: workstation or single-node cluster
+($\sim$ hours--days). Tier 3: small cluster ($\sim$ days--weeks). Tier 4:
+significant cluster resources ($\sim$ weeks--months). Tier 5: depends on the
+specific calculations.
+
+\paragraph{Storage.} Simulations should produce reproducible outputs in
+standardized formats (HDF5 preferred); visualization data should be portable
+across plotting backends; code in git, with versioning of major releases.
+
+\section{Reproducibility}
+
+All simulation code should be open source from the start, documented well enough
+that others can reproduce results, validated against analytic limits where they
+exist, and tested for numerical convergence (refine grid, check stability). The
+point is not to ``prove'' \SCT through simulations---the point is to make the
+framework testable. Reproducible code lets others check, extend, and challenge
+results.

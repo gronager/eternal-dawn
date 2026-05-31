@@ -1,0 +1,5 @@
+dataset,w0,w0_err,wa,wa_err,sigma_LCDM
+DESI+CMB,-0.42,0.21,-1.75,0.58,3.1
+DESI+CMB+Pantheon+,-0.838,0.055,-0.62,0.22,2.8
+DESI+CMB+Union3,-0.667,0.088,-1.09,0.31,3.8
+DESI+CMB+DESY5,-0.752,0.057,-0.86,0.22,4.2

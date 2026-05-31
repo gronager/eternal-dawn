@@ -1,47 +1,59 @@
 # Simulations
 
-This directory holds simulation code and outputs.
+Calculation and simulation code for Supraverse Cartasis Theory. Python package
+`cartasis_sims` (src layout) plus figure scripts under `../figures/scripts/`.
 
-## Structure
+## Layout
 
 ```
 sims/
-├── tier1-single-bounce/        # 1D spherical Einstein-Cartan collapse
-├── tier2-perturbations/        # Perturbation evolution through bounce
-├── tier3-chirality/            # Flip + filter dynamics
-├── tier4-supraverse/           # Population statistics
-├── visualization/              # Conformal mapping and rendering
-└── output/                     # Generated plots, data files
+├── pyproject.toml
+├── src/cartasis_sims/
+│   ├── constants.py      # SI constants + Planck 2018 cosmology
+│   └── blackhole.py      # Phase-0 "universe = black-hole interior" identities
+├── tests/                # pytest
+└── output/               # generated results (gitignored)
 ```
 
-## Getting started
-
-For Tier 1 (first project), start with:
+## Setup and run
 
 ```bash
-cd tier1-single-bounce
-python -m venv venv
-source venv/bin/activate
-pip install numpy scipy matplotlib
+cd sims
+uv venv && uv pip install -e ".[dev]"
+.venv/bin/pytest -q                       # tests/test_identities.py
+.venv/bin/python ../figures/scripts/ch02_bh_first_light.py
 ```
 
-Then implement the spherical bounce as described in `../08-simulation-plan.md`.
+Or from the project root: `make sim-test` and `make figures`.
 
-## References
+## Phase 0 — establishing universe == black-hole interior (see Ch. 9)
 
-Key papers to read before implementing:
+`blackhole.py` implements the cheap, decisive consistency checks that anchor the
+core thesis, in the Copernican spirit (derive from the world's measured numbers):
 
-- Poplawski, “Cosmology with torsion” series
-- Magueijo et al., “Bouncing universes” papers
-- Bojowald, loop quantum cosmology bounce calculations (for perturbation analysis)
-- Einstein Toolkit documentation (for general numerical relativity context)
+| corner | result (Planck 2018) | meaning |
+|--------|----------------------|---------|
+| A | `R_s/R_H = Ω = 1.000` | flat universe sits at its Schwarzschild radius |
+| B | `a*_max = 2/Ω ≈ 2`    | order-unity max spin → realistic spin is sub-extremal Kerr |
+| C | `T_H ≈ 1.3e-30 K` (= ½ T_GH) | 30 orders below CMB → CMB ≠ present-horizon radiation |
+| D | `f = ω_b/(ω_b+ω_c) ≈ 0.157` | membrane filter pass-fraction if DM = rejected matter |
 
-## Reproducibility requirements
+Running the script prints the table, writes `output/first_light.{txt,json}`, and
+renders `../figures/pdf/bh_first_light.pdf`.
 
-All simulations should:
+## Planned tiers (Ch. 9)
 
-1. Be in version control from the start
-1. Save inputs (parameter files) alongside outputs
-1. Be tested against analytic limits where applicable
-1. Pass numerical convergence checks (refine grid, verify stability)
-1. Generate plots with matplotlib/Makie that are saved as both raw data (NPZ/HDF5) and figures (PNG/PDF)
+1. **Tier 1 — single-bounce Einstein–Cartan dynamics.** Minimal model: the
+   modified Friedmann equation `H² = (8πG/3) ρ (1 − ρ/ρ_C)`, which bounces at
+   `ρ_C` instead of reaching a singularity. Then spherical (Weyssenhoff-fluid)
+   collapse matched to an exterior Schwarzschild geometry: a black hole from
+   outside, an expanding cosmology from inside.
+2. **Tier 2 — perturbations through the bounce** → primordial spectrum / CMB.
+3. **Tier 3 — chirality (flip/filter)** → η and dark-matter ratio.
+4. **Tier 4 — supraverse population statistics.**
+
+## Reproducibility
+
+Version-controlled, parameter files alongside outputs, validated against analytic
+limits, convergence-checked. Outputs in `output/` (gitignored); commit figure
+PDFs under `../figures/pdf/` so the book builds without re-running Python.
