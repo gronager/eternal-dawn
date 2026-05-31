@@ -65,6 +65,14 @@ def birth_rate_for_mass(M_avg: float) -> float:
     return 3.0 / (np.pi * k.c**3 * t**4)
 
 
+def ogu_evaporation_lifetime(M: float) -> float:
+    """Hawking evaporation time of an OGU, 5120 pi G^2 M^3/(hbar c^4) [s]. For
+    OGU masses (1e53-1e65 kg) this is ~1e143-1e178 s -- astronomically longer than
+    any supraverse timescale, so OGUs do not die by evaporation; they only coarsen
+    by merging."""
+    return 5120.0 * np.pi * k.G**2 * M**3 / (k.hbar * k.c**4)
+
+
 def johnson_mehl_2d(n_seeds: int = 60, grid: int = 240, t_max: float = 1.0,
                     speed: float = 1.0, seed: int = 0):
     """2D Johnson--Mehl tessellation of the foam (unit box, periodic-free).

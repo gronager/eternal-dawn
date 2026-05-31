@@ -33,6 +33,16 @@ def test_char_size_is_horizon_of_fill_time():
                         k.c**2 * vf.char_size(b) / (2 * k.G), rel_tol=1e-9)
 
 
+def test_ogus_are_effectively_immortal():
+    # Hawking lifetime of OGU masses dwarfs any supraverse timescale -> no
+    # evaporation death; OGUs only coarsen by merging.
+    assert vf.ogu_evaporation_lifetime(9.2e52) > 1e140      # our-mass: ~1e143 s
+    assert vf.ogu_evaporation_lifetime(1e65) > 1e170        # ~1e178 s
+    # scales as M^3
+    assert math.isclose(vf.ogu_evaporation_lifetime(2e53)
+                        / vf.ogu_evaporation_lifetime(1e53), 8.0, rel_tol=1e-6)
+
+
 def test_johnson_mehl_tessellation_tiles_the_box():
     labels, areas, _ = vf.johnson_mehl_2d(n_seeds=60, grid=120, seed=2)
     assert math.isclose(areas.sum(), 1.0, rel_tol=1e-6)     # cells fill the box
