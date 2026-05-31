@@ -143,6 +143,7 @@ def depth_posterior(m, D, n_min=1, structure_decay=1.0):
 
 def prob_bhu(m, n, D=400):
     """P(we are BHU_n | n >= 1) for branching ratio m and truncation depth D."""
+    D = min(int(D), 100000)              # guard against huge-D array allocation
     ns = np.arange(1, D + 1, dtype=float)
     w = m ** ns
     w = w / w.sum()

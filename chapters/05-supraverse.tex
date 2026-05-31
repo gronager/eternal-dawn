@@ -304,6 +304,62 @@ tension; only $n\ge1$ is settled by data.
   \label{fig:accretion_depth}
 \end{figure}
 
+\subsection{Growth, depletion, and the depth dial}
+\label{sec:growth-depth}
+
+What sets the branching depth is how fast a hole grows into a universe and spawns
+the next generation. The dynamics are nearly parameter-free. A hole of mass $M$ in
+a void bath at temperature $T_{\mathrm{bath}}$ emits Hawking radiation at $T_H$ and
+absorbs the bath through the same area, so the net rate is the Hawking power times
+the temperature contrast,
+\begin{equation}
+  \dot M = \frac{P_H}{c^2}\!\left[\Big(\frac{M}{M_{\mathrm{crit}}}\Big)^{4}-1\right],
+  \qquad M_{\mathrm{crit}}=\frac{\hbar c^3}{8\pi G k_B T_{\mathrm{bath}}},
+  \label{eq:growth}
+\end{equation}
+so below $M_{\mathrm{crit}}$ the hole evaporates and above it the bath wins and it
+runs away as $\dot M\sim M^2$---the Bondi exponent $g=2$ behind the
+$n(M)\sim M^{-2}$ mass law of \Cref{sec:notogu}. In units $x=M/M_{\mathrm{crit}}$,
+$t'=t/\tau_0$ with $\tau_0=3\,t_{\mathrm{Hawking}}(M_{\mathrm{crit}})$, the law is
+universal, $\mathrm{d}x/\mathrm{d}t'=(x^4-1)/x^2$. The runaway is \emph{fast}---a
+finite-time blow-up at $t'\!\sim\!1/x_0$---so slow bath cooling cannot regulate it;
+the physical brake is \emph{depletion}: the hole eats its local causal patch, the
+source shuts off, and the mass freezes at $M_{\mathrm{final}}\sim$ the patch mass
+(\Cref{fig:growth}, left). This answers the runaway worry of
+\Cref{app:openq}: universe-holes do not grow without bound, they grow to their
+patch and stop.
+
+The growth time is therefore $\tau_{\mathrm{gen}}\sim\tau_0\propto
+M_{\mathrm{crit}}^3\propto T_{\mathrm{bath}}^{-3}$, and a supraverse of age
+$T_{\mathrm{supra}}$ has grown at most $D_{\max}=T_{\mathrm{supra}}/
+\tau_{\mathrm{gen}}$ generations. This is a hard cap on our depth, set entirely by
+the void bath temperature (\Cref{fig:growth}, right). It closes the population loop
+of \Cref{sec:bhu-depth}: if the void is too cold the foam is sterile (no BHU forms
+in the available time)---\emph{excluded, because we are a BHU}, which already puts
+a lower bound on $T_{\mathrm{bath}}$; a Goldilocks $T_{\mathrm{bath}}\sim10^{12}\,
+\mathrm{K}$ (for a Hubble-aged supraverse) gives $D_{\max}\sim1$, forcing us to be
+$\mathrm{BHU}_1$ and matching the shallow reading; a hotter void or an older
+supraverse gives $D_{\max}\gg1$ and the depth reverts to the branching ratio $m$
+(deep). The honest upshot: ``are we $\mathrm{BHU}_{1\text{--}2}$?'' is now a sharp
+function of two unknowns---the void temperature and the supraverse age (\Cref{app:openq})---
+rather than a guess, and our existence as $n\ge1$ already excludes the cold,
+sterile corner. Reproducible as \texttt{figures/scripts/ch05\_growth.py}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{growth}
+  \caption{\emph{Left:} growth trajectories from \eqref{eq:growth}. In a static
+    bath the hole runs away (finite-time blow-up); depleting a finite local patch
+    freezes it at $M_{\mathrm{final}}\sim$ the patch mass---the regulator that
+    keeps universe-holes finite. \emph{Right:} the maximum generation depth
+    $D_{\max}=T_{\mathrm{supra}}/\tau_{\mathrm{gen}}$ versus the void bath
+    temperature ($\tau_{\mathrm{gen}}\propto T_{\mathrm{bath}}^{-3}$), for two
+    supraverse ages. Below the sterile line no BHU forms (excluded by our
+    existence); a narrow band gives the forced-shallow $\mathrm{BHU}_{1\text{--}2}$;
+    above it the depth is large and set by the branching ratio.}
+  \label{fig:growth}
+\end{figure}
+
 \section{OG bounce nucleation rate}
 
 The rate of OG bounce nucleation depends on the vacuum-fluctuation spectrum at
