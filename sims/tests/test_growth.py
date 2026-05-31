@@ -38,6 +38,16 @@ def test_generation_time_scales_as_inverse_T_cubed():
     assert math.isclose(r, 1e3, rel_tol=0.05)
 
 
+def test_causal_rate_integrates_to_horizon_mass():
+    # the causal cap c^3/2G times age = the horizon mass: the two models agree
+    from cartasis_sims import genesis as gen
+    t = 1e6 * gen.HUBBLE_TIME_S
+    assert math.isclose(g.causal_growth_rate() * t, gen.horizon_mass(t),
+                        rel_tol=1e-9)
+    # the rate is ~ a few trillion solar masses per year
+    assert 1e12 < g.causal_growth_rate() * 3.156e7 / 1.989e30 < 1e13
+
+
 def test_max_depth_increases_with_temperature_and_age():
     age = 4.35e17
     assert g.max_depth(age, 1e13) > g.max_depth(age, 1e12)

@@ -22,12 +22,26 @@ universal:
 
 Below x = 1 (M < M_crit) the hole evaporates; above it the bath wins and the hole
 runs away as dM/dt ~ M^2 (Bondi-like, g = 2 -- this is the exponent behind the
-n(M) ~ M^{-2} OGU mass power law in population.py). The runaway is FAST: a finite-
-time blow-up at t' ~ 1/x0, so slow bath cooling cannot regulate it -- it is
-runaway-or-evaporate. The physical regulator is DEPLETION: the hole eats its
-local causal patch of the void, the source shuts off, and growth freezes at a
-final mass ~ the patch mass. That sets both the high-mass cutoff M_max and the
-generation time tau_gen ~ tau0.
+n(M) ~ M^{-2} OGU mass power law in population.py). The runaway LOOKS like a
+finite-time blow-up, but it cannot blow up: CAUSALITY caps it. A hole cannot
+accrete matter outside its causal horizon, so dM/dt saturates at the rate the
+horizon mass itself grows,
+
+    dM/dt <= c^3/(2G) ~ 2e35 kg/s ~ 3e12 Msun/yr  (causal_growth_rate),
+
+and thereafter the hole grows STEADILY, M ~ c^3 t/(2G) (the horizon-mass law of
+genesis.py). Whether it ever stops then depends on the environment, and the two
+regulators part here:
+
+  * Infinite void (an OGU): fresh vacuum perpetually crosses into the growing
+    horizon, so it never runs out -- rate-limited and unbounded, M ~ c^3 t/(2G).
+  * Finite parent (an internal hole): the parent's dark-energy expansion carries
+    matter beyond reach faster than the hole can eat, so it DEPLETES its accessible
+    patch and freezes at M_final ~ patch mass -- "runs out of nothing."
+
+The depletion model below is the finite-environment (descendant) case; the causal
+rate and genesis.py give the infinite-void (OGU) case. tau_gen ~ tau0 still sets
+the generation time and the high-mass cutoff M_max for the finite case.
 
 Depth. Each generation needs ~tau_gen to grow up and spawn the next, so a
 supraverse of age T_supra has grown at most D_max = T_supra/tau_gen generations.
@@ -46,6 +60,12 @@ import numpy as np
 from scipy.integrate import solve_ivp
 
 from . import constants as k
+
+
+def causal_growth_rate() -> float:
+    """Max accretion rate set by causality: c^3/(2G) [kg/s]. A hole cannot eat
+    matter outside its horizon, so dM/dt saturates here and M ~ c^3 t/(2G)."""
+    return k.c**3 / (2.0 * k.G)
 
 
 def m_crit(T_bath: float) -> float:
