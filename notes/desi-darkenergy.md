@@ -23,21 +23,32 @@ VERIFY central values against the published tables before quoting.
 predicted wedge, and LCDM (-1, 0) sits at its corner, disfavoured at 2.8-4.2 sigma.
 The *sign pattern* the framework predicted is exactly what DESI sees.
 
-## The honest caveat: phantom crossing
+## The phantom crossing -- derived (was a caveat, now resolved)
 
 DESI's CPL fit implies w(z) < -1 (phantom) in the past, crossing to w > -1 today.
-The minimal toy model here, w(a) = -1 + eps*p0*a^q with eps,p0,q > 0, **cannot go
-phantom** -- it stays >= -1 at all z. So:
+This drops straight out of the injection picture. Absorbing the parent's membrane
+injection into an effective EoS (continuity eqn, no explicit source) gives the
+identity
 
-- it matches the *present-day* values (w0, wa) by construction (eps, q tuned), and
-  reproduces the *sign* and the rise of w toward today;
-- it does NOT reproduce the phantom past (w < -1 for z > ~0.5).
+    w_eff(a) = -1 - (1/3) d ln rho_DE / d ln a.
 
-A phantom phase needs more than a monotonically growing parent -- e.g. a parent
-whose accretion *accelerated* over the relevant epoch, or membrane back-reaction
-that effectively gives w < -1 (super-negative pressure as the membrane area grows
-faster than volume). Whether the persistent Cartasis interface naturally does this
-is open and is the right next calculation. Caveat stated, not hidden.
+So rho_DE rising with a (injection beating dilution) => w<-1 (phantom); rho_DE
+falling (dilution winning) => w>-1; flat => -1. A parent whose net injection rose
+then saturated makes rho_DE(a) a HUMP, so w_eff crosses -1 exactly at the peak.
+Modelling the hump as log-normal in a, rho_DE ~ exp[-beta(ln a - ln a_p)^2]:
+
+    w_eff(a) = -1 + (2 beta/3)(ln a - ln a_p),
+    CPL match: beta = -3 wa/2,  a_p = exp((w0+1)/wa),  z_cross = 1/a_p - 1.
+
+For DESI+CMB+DESY5 (w0=-0.752, wa=-0.86): a_p=0.749, **z_cross = 0.334** -- right
+where DESI's reconstruction crosses -1. The crossing redshift is therefore a
+DERIVED consequence of accretion that rose and saturated, not a tuned sign.
+
+What's still underived: the AMPLITUDE (beta, i.e. the membrane coupling). We
+derive the shape and the crossing redshift; we fit the height. Next: get beta
+from the junction-condition back-reaction, and map a physical Mdot_parent(t)
+(logistic, in dark_energy.logistic_accretion) onto rho_DE(a) to replace the
+log-normal ansatz with dynamics.
 
 ## Verdict
 

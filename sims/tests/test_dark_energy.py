@@ -45,3 +45,34 @@ def test_filter_fraction_one_sixth():
 def test_m_crit_in_cmb_is_sub_lunar():
     m = de.m_crit_growth(2.725)
     assert 1e22 < m < 1e23          # ~0.6 lunar masses -> all astrophysical BHs grow
+
+
+def test_injection_model_crosses_phantom():
+    # peaked injection: w<-1 in the past (a<a_p), w>-1 today (a>a_p)
+    inj = de.injection_from_cpl(-0.752, -0.86)
+    a_p = inj["a_p"]
+    assert de.w_eff_injection(0.5 * a_p, a_p, inj["beta"]) < -1.0   # phantom past
+    assert de.w_eff_injection(1.0, a_p, inj["beta"]) > -1.0         # today
+    assert 0 < inj["z_cross"] < 1.5                                 # sensible crossing
+
+
+def test_injection_from_cpl_recovers_w0_wa():
+    w0_t, wa_t = -0.752, -0.86
+    inj = de.injection_from_cpl(w0_t, wa_t)
+    # check the model reproduces w0 at a=1 exactly
+    w0 = de.w_eff_injection(1.0, inj["a_p"], inj["beta"])
+    assert math.isclose(float(w0), w0_t, rel_tol=1e-6)
+
+
+def test_rho_de_peaks_at_ap():
+    a = np.linspace(0.2, 1.2, 400)
+    a_p, beta = 0.75, 1.3
+    rho = de.rho_de_injection(a, a_p, beta)
+    assert math.isclose(a[np.argmax(rho)], a_p, abs_tol=0.01)
+
+
+def test_logistic_accretion_monotone_saturating():
+    a = np.linspace(0.05, 1.0, 50)
+    M = de.logistic_accretion(a)
+    assert np.all(np.diff(M) > 0)          # monotone growth
+    assert M[-1] < 1.0 and M[-1] > M[0]    # saturating toward m_inf

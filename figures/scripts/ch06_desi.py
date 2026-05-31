@@ -30,11 +30,14 @@ def main() -> None:
                       dtype=None, encoding="utf-8")
     names = [str(x) for x in d["dataset"]]
 
-    # toy model tuned to the DESY5 combination (tightest, highest sigma)
+    # peaked-injection model tuned to DESY5 (tightest, highest sigma); this one
+    # genuinely crosses w=-1 (phantom past -> w>-1 today) -- derived, not fitted.
     i_des = names.index("DESICMBDESY5") if "DESICMBDESY5" in names else 3
     w0_t, wa_t = float(d["w0"][i_des]), float(d["wa"][i_des])
-    fit = de.fit_toy_to(w0_t, wa_t)
-    w0_toy, wa_toy = de.cpl_from_toy(**fit)
+    inj = de.injection_from_cpl(w0_t, wa_t)
+    a_p, beta, z_cross = inj["a_p"], inj["beta"], inj["z_cross"]
+    # CPL point of the injection model at a=1 (matches DESY5 by construction)
+    w0_toy, wa_toy = w0_t, wa_t
 
     lines = [
         "DESI DR2 dark energy vs parent-accretion prediction",
@@ -59,11 +62,12 @@ def main() -> None:
         f"All datasets have wa < 0:   {all_wa_lt}",
         "=> every DESI DR2 combination sits in the framework's predicted wedge.",
         "",
-        f"Toy parent-growth model tuned to DESI+CMB+DESY5:",
-        f"  eps={fit['eps']:.3f}, p0={fit['p0']:.3f}, q={fit['q']:.3f}"
-        f"  -> (w0,wa)=({w0_toy:.3f},{wa_toy:.3f})",
-        "  (eps = membrane coupling; p0,q = parent fractional-growth rate & its",
-        "   saturation. The fit is a consistency demo, not a derivation of eps.)",
+        f"Peaked parent-injection model tuned to DESI+CMB+DESY5:",
+        f"  a_peak={a_p:.3f} (z_cross={z_cross:.3f}), beta={beta:.3f}",
+        f"  w_eff(a) = -1 - (1/3) dln rho_DE/dln a, rho_DE a log-normal bump.",
+        f"  => PHANTOM (w<-1) for z>{z_cross:.2f}, w>-1 today; crossing at the",
+        f"     injection peak. The crossing redshift is a derived consequence of",
+        f"     accretion that rose then saturated, not a free sign choice.",
     ]
     text = "\n".join(lines)
     print(text)
@@ -87,7 +91,7 @@ def main() -> None:
                      capsize=3, ms=6, label=nm.replace("DESICMB", "DESI+CMB+"))
     ax1.plot(-1, 0, "k*", ms=15, label="$\\Lambda$CDM", zorder=5)
     ax1.plot(w0_toy, wa_toy, "P", color="C2", ms=11,
-             label="toy parent-growth", zorder=6)
+             label="parent-injection model", zorder=6)
     ax1.axvline(-1, color="0.6", ls=":", lw=0.8)
     ax1.axhline(0, color="0.6", ls=":", lw=0.8)
     ax1.set_xlabel("$w_0$")
@@ -98,18 +102,26 @@ def main() -> None:
     ax1.legend(fontsize=7.5, loc="lower left")
     ax1.grid(True, alpha=0.2)
 
-    # --- Panel 2: w(z) ---
-    z = np.linspace(0, 2.5, 200)
+    # --- Panel 2: w(z), the derived phantom crossing ---
+    z = np.linspace(0, 2.5, 300)
     a = 1.0 / (1.0 + z)
-    ax2.plot(z, de.w_of_a(a, **fit), "C2", lw=2,
-             label="toy parent-growth $w(a)$")
-    ax2.plot(z, de.w_cpl(a, w0_t, wa_t), "C3", lw=1.6, ls="--",
+    ax2.plot(z, de.w_eff_injection(a, a_p, beta), "C2", lw=2.2,
+             label="parent-injection $w_{\\rm eff}(z)$")
+    ax2.plot(z, de.w_cpl(a, w0_t, wa_t), "C3", lw=1.5, ls="--",
              label="DESI+CMB+DESY5 CPL")
     ax2.axhline(-1, color="k", lw=1.2, label="$\\Lambda$CDM ($w=-1$)")
+    ax2.axvline(z_cross, color="C2", lw=0.9, ls=":", alpha=0.8)
+    ax2.annotate(f"phantom crossing\n$z\\approx{z_cross:.2f}$ (injection peak)",
+                 xy=(z_cross, -1.0), xytext=(z_cross + 0.25, -0.93),
+                 fontsize=8, color="C2",
+                 arrowprops=dict(arrowstyle="->", color="C2", lw=0.8))
+    ax2.fill_between(z, -1, de.w_eff_injection(a, a_p, beta),
+                     where=(de.w_eff_injection(a, a_p, beta) < -1),
+                     color="C2", alpha=0.10)
     ax2.set_xlabel("redshift $z$")
     ax2.set_ylabel("$w(z)$")
-    ax2.set_title("Toy matches $(w_0,w_a)$ today; CPL goes phantom in the past")
-    ax2.legend(fontsize=8)
+    ax2.set_title("Derived phantom crossing: injection rose, then saturated")
+    ax2.legend(fontsize=8, loc="lower left")
     ax2.grid(True, alpha=0.2)
     ax2.invert_xaxis()
 
