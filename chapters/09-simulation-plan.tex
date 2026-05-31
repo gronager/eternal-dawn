@@ -261,6 +261,81 @@ papers (Brandt, Magueijo, Pop\l{}awski~\citep{poplawski2012,poplawski2016}).
 one has produced a clean, well-documented reference implementation. \emph{A
 valuable side-output of this tier is producing such a reference implementation.}
 
+\section{Tier 1c: The extruder---the bounce entropy budget}
+\label{sec:extruder}
+
+\emph{Universes are not born, they are extruded.} The membrane does not sort a
+pre-existing population; it compresses parent material to $\rhoc$ and extrudes a
+new interior through it, like material forced through a die
+(Chapter~\ref{chap:chirality}, Section~\ref{sec:remnant}). Because sphalerons
+conserve $B{-}L$, the parent's net $B{-}L$ passes through as a protected remnant
+and the baby \emph{inherits} its parent's asymmetry, $\eta_{\mathrm{baby}} =
+\eta_{\mathrm{parent}}/D$, where $D = S_{\mathrm{after}}/S_{\mathrm{before}}\ge1$
+is the entropy multiplied across the crossing. The entire
+magnitude-and-lineage question (does a descendant keep the $\sim$1\,ppb its
+parent made? do lineages stay chirally pure?) reduces to this one number $D$,
+bracketed between $D=1$ (adiabatic inheritance) and the horizon-saturating
+$D=S_{\mathrm{BH}}/S_{\mathrm{rad}}\sim10^{49}$ (which would crush $\eta$ to
+$\sim10^{-59}$, contrary to observation). This tier \emph{computes} $D$ from the
+bounce dynamics rather than guessing it.
+
+\paragraph{Method.} Entropy is generated only by irreversibility; the homogeneous
+perfect-fluid bounce is exactly reversible. Switch on dissipation as a bulk
+viscosity $\zeta = \tilde\zeta\,s$ ($\tilde\zeta$ dimensionless, $s$ the entropy
+density). The Eckart entropy production of a bulk-viscous FRW fluid is
+$\mathrm{d}\ln S/\mathrm{d}\tau = \zeta(3H)^2/(sT) = 9\tilde\zeta\,H^2/T$, so
+across the bounce
+\begin{equation}
+  \ln D = 9\,\tilde\zeta\,\frac{\Omega_{\mathrm{bounce}}}{T_{\mathrm{bounce}}}\,J,
+  \qquad J = \int H_{\mathrm{dim}}^2\,a\;\mathrm{d}\tau_{\mathrm{dim}},
+  \label{eq:lnD}
+\end{equation}
+with $\Omega_{\mathrm{bounce}}=\sqrt{8\pi G\rhoc/3}$ and $J\simeq1.38$ a pure
+number read off the dimensionless bounce of \Cref{fig:bounce}.
+
+\paragraph{Result---the extruder is adiabatic.} The prefactor
+$\Omega_{\mathrm{bounce}}/T_{\mathrm{bounce}}\simeq1.5\times10^{-11}$ is
+\emph{the same} small parameter $\omega/T$ that limits the chiral-vortical
+estimate (Chapter~\ref{chap:chirality}): the bounce is far too fast to
+thermalize. Even an $O(1)$ bulk viscosity gives $D-1\sim10^{-10}$, and a
+conformal radiation fluid has $\zeta=0$ identically, so $D=1$ exactly. Reaching
+the horizon-saturating limit would require $\tilde\zeta\sim10^{12}$---unphysical
+by a dozen orders of magnitude (\Cref{fig:extruder}). The conclusion is sharp:
+$D=1$ to roughly one part in $10^{11}$, so $\eta_{\mathrm{baby}}=
+\eta_{\mathrm{parent}}$. Inheritance is robust, the horizon-saturating branch is
+dynamically out of reach, and the factor-of-$41$ shortfall is the
+original-generation universe's problem alone---every descendant simply carries
+down the asymmetry made once at the top, with the founder's chiral sign
+protected (pure lineages). Reproducible as
+\texttt{sims/src/cartasis\_sims/extruder.py} and
+\texttt{figures/scripts/ch09\_extruder.py}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{extruder}
+  \caption{The extruder: entropy budget of the bounce. \emph{Left:} the Eckart
+    entropy-production kernel $H^2a$ (green, area $=J\simeq1.38$) peaks on the
+    \emph{shoulders} of the bounce and vanishes at the turnaround $H=0$; the
+    total generated is tiny. \emph{Right:} the entropy dilution $D-1$ versus bulk
+    viscosity $\tilde\zeta$. Across the entire physical range ($\tilde\zeta
+    \lesssim1$, shaded) the bounce is adiabatic ($D-1\lesssim10^{-10}$), so
+    $\eta_{\mathrm{baby}}=\eta_{\mathrm{parent}}/D\approx\eta_{\mathrm{parent}}$:
+    descendants inherit their parent's $\sim$1\,ppb. Reaching the
+    horizon-saturating $D_{\max}\sim10^{49}$ (dashed) would demand
+    $\tilde\zeta\sim10^{12}$.}
+  \label{fig:extruder}
+\end{figure}
+
+\paragraph{What this tier does \emph{not} yet settle.} This is the homogeneous
+channel. Inhomogeneous shear, shocks, and gravitational particle production at
+the bounce are separate entropy sources not captured by an Eckart bulk
+viscosity. The same timescale argument suppresses anything sourced by
+gradients\,$\times$\,(bounce time) by the same $\sim10^{-11}$ unless the
+gradients are trans-thermal---but verifying that is exactly what the
+inhomogeneous Tier~1 collapse above is for. Pinning $D$ at the few-percent level,
+including particle production, is the cleanest near-term calculation bearing on
+the asymmetry (Appendix~\ref{app:openq}, Q16a).
+
 \section{Tier 2: Perturbation evolution through the bounce}
 
 \paragraph{Goal.} Take the output of Tier 1 (a clean bounce profile) and evolve
