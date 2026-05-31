@@ -496,6 +496,71 @@ bounce instanton $I$, and with it the packed-versus-dilute regime, remains open.
   \label{fig:birthrate}
 \end{figure}
 
+\subsection{Computing the instanton action---and the verdict}
+\label{sec:instanton}
+
+The action $I$ is not merely ``calculable in principle''; the de Sitter framework
+hands us a closed form. OG nucleation is an \emph{upward} fluctuation in the void: a
+patch of cold vacuum ($\rho_\Lambda\sim10^{-27}\,\mathrm{kg\,m^{-3}}$) must spike to
+$\rhoc\sim10^{50}\,\mathrm{kg\,m^{-3}}$ and bounce. In de Sitter at temperature
+$T_{\mathrm{dS}}=\hbar H_\Lambda/2\pi k_B$ the rate of creating a mass $M$ is the
+Boltzmann factor $e^{-Mc^2/k_BT_{\mathrm{dS}}}$, and that exponent \emph{equals} the
+cosmological-horizon entropy deficit of inserting $M$ (the rigorous de Sitter
+identity $2\pi Mc^2/\hbar H = \pi r_{\mathrm{dS}} r_s/\ell_p^2$). So
+\begin{equation}
+  I = \frac{2\pi M_{\mathrm{seed}}\,c^2}{\hbar H_\Lambda},
+  \label{eq:instanton}
+\end{equation}
+and the only input is the lightest seed that can actually bounce. A blob at $\rhoc$
+bounces as a universe only if it is self-gravitating, $R_s\simeq R$, which fixes
+$R\sim c/\Omega_{\mathrm{bounce}}$ and
+$M_{\mathrm{seed}}=c^3/(2G\Omega_{\mathrm{bounce}})\sim9\times10^{14}\,\mathrm{kg}$
+(a lighter blob has $R_s\ll R$, no horizon, and disperses).
+
+Plugging in gives the answer (\Cref{fig:instanton}):
+\begin{equation}
+  I \;\sim\; 2.5\times10^{84} \;\gg\; I_{\mathrm{crit}}\simeq1.4 .
+\end{equation}
+The margin is eighty-four orders of magnitude---no semiclassical correction, no
+factor-of-ten ambiguity in the seed, can close it. To reach $I_{\mathrm{crit}}$ one
+would need a seed of $\sim5\times10^{-70}\,\mathrm{kg}$ (sub-Planckian by sixty
+orders, unable to bounce) or a void at $\sim10^{54}\,\mathrm{K}$ (the actual void is
+at $10^{-30}\,\mathrm{K}$). \textbf{So $\lambda=e^{-I}$ is, for all purposes, zero,
+and the supraverse is firmly in the \emph{dilute} regime}: OGUs are isolated, round,
+eternal-inflation-like island universes, astronomically far apart---\emph{not} a
+percolating polygonal foam.
+
+\paragraph{What this revises, and what it leaves standing.} Honesty demands the
+admission: the packed-foam constructions---the average OGU size by impingement
+(\Cref{sec:foam-size}), the radiative coarsening (\Cref{sec:foam-dynamics}), the
+polygonal render of \Cref{chap:viz}---are the \emph{percolating limit}, and the
+computation says that limit is not realised. The physical supraverse is dilute. What
+survives untouched is everything that does not depend on OGU spacing: we are a
+$\mathrm{BHU}_1$ inside an OGU (the internal black-hole channel is independent of how
+OGUs are scattered); the recursive cycle still closes (each isolated island
+heat-dies and seeds its own dilute scatter, \Cref{sec:recursive-cycle}); the
+horizon-mass growth $M_{\mathrm{OGU}}\sim c^3t/2G$ and the dark-energy-pinned
+prefactor stand. And the dilute verdict \emph{vindicates} an earlier reading: a
+well-separated universe is round, not polygonal (\Cref{sec:foam-size})---which is
+exactly what isolated island universes are. The framework thus lands, by
+computation, in the eternal-inflation family: a sparse, ever-inflating scatter of
+recursive island universes, each a Cartasis bounce.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{instanton}
+  \caption{Computing the OG-nucleation instanton action, $I=2\pi M_{\mathrm{seed}}
+    c^2/\hbar H_\Lambda$ (\Cref{eq:instanton}). \emph{Left:} $I$ versus seed mass;
+    any seed massive enough to bounce ($M_{\mathrm{seed}}\sim10^{15}\,\mathrm{kg}$,
+    the self-gravitating minimum) gives $I\sim10^{84}\gg I_{\mathrm{crit}}\simeq1.4$,
+    the $I_{\mathrm{crit}}$ seed being sub-Planckian and unable to bounce.
+    \emph{Right:} $I$ versus void temperature; the cold de Sitter void
+    ($\sim10^{-30}\,\mathrm{K}$) is eighty-four orders too cold to percolate. The
+    verdict is robust: a dilute, eternal-inflation-like supraverse of isolated
+    island universes. Reproducible as \texttt{figures/scripts/ch05\_instanton.py}.}
+  \label{fig:instanton}
+\end{figure}
+
 \section{Genesis, growth, and the absence of hell}
 
 \subsection{No hell upward}

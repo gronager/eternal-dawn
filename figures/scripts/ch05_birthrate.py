@@ -27,7 +27,7 @@ os.makedirs(OUT_DIR, exist_ok=True)
 def main() -> None:
     pref = br.nucleation_prefactor()
     H_L = br.hubble_lambda()
-    I_crit = br.instanton_action(br.LAMBDA_CRIT)
+    I_crit = br.instanton_action_value(br.LAMBDA_CRIT)
 
     lines = [
         "Pinning the OG birth rate beta (as a de Sitter nucleation rate)",
@@ -41,7 +41,7 @@ def main() -> None:
         "    lambda   I=-ln(lam)   beta[/m^3/s]    sep[R_H]    regime",
     ]
     for lam in (1.0, br.LAMBDA_CRIT, 1e-3, 1e-20):
-        lines.append(f"    {lam:.0e}    {br.instanton_action(lam):5.1f}     "
+        lines.append(f"    {lam:.0e}    {br.instanton_action_value(lam):5.1f}     "
                      f"{br.beta(lam):.2e}   {br.ogu_separation_hubble(lam):.1e}    "
                      f"{'packed' if br.percolates(lam) else 'dilute'}")
     lines += [

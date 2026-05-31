@@ -60,13 +60,17 @@ produces it (`sims/src/cartasis_sims/`, figures in `figures/scripts/`).
   monotonically, but *Weyl/clumping* entropy cycles low→high→low and resets. SCT is
   "Penrose CCC made to branch." `cycle.py`.
 
-### The OG birth rate (partially pinned)
-- **β = λ·H_Λ⁴/c³.** Reinterpreted via the recursive cycle as a de Sitter nucleation
-  rate, the **prefactor is fixed by the observed dark energy** (~4e-97 m⁻³s⁻¹, one
-  attempt per Hubble 4-volume); only `λ = exp(-I)` (the ρ_C-crossing instanton
-  action, Q4) is free. De Sitter percolation `λ_crit ~ 0.24` (`I_crit ~ 1.4`) splits
-  the supraverse: **packed polygonal foam** (I<1.4) vs **dilute island universes /
-  eternal-inflation** (I>1.4). We are BHU1 either way. `birth_rate.py`.
+### The OG birth rate, and the instanton (computed -> dilute supraverse)
+- **β = λ·H_Λ⁴/c³.** Via the recursive cycle, a de Sitter nucleation rate; the
+  **prefactor is pinned by the observed dark energy** (~4e-97 m⁻³s⁻¹). `birth_rate.py`.
+- **The instanton action is computed: I ~ 2.5e84.** OG nucleation is an upward de
+  Sitter fluctuation, so `I = 2π M_seed c²/ℏH_Λ` (Boltzmann = horizon-entropy
+  deficit), with the minimal self-gravitating bounce seed `M_seed ~ 9e14 kg`. This is
+  **84 orders above the percolation threshold I_crit ~ 1.4** (robust). So `λ ≈ 0` and
+  **the supraverse is DILUTE** — isolated, round, eternal-inflation-like island
+  universes, NOT a packed foam. The packed-foam constructions (avg size, coarsening,
+  polygonal render) are the non-realised percolating limit; BHU1, the recursive
+  cycle, and `M_OGU ~ c³t/2G` survive. `birth_rate.py` (`seed_instanton_action`).
 
 ### CMB (Tier 2) — observationally anchored
 - **Scale-invariant primordial spectrum from the bounce.** Mode evolution through
