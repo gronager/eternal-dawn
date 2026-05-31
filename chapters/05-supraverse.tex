@@ -277,17 +277,48 @@ $P(\mathrm{BHU}_n\mid n\ge1)\propto m^n$, where $m$ is the mean number of
 distribution is geometric, $P(\mathrm{BHU}_n)=(1-m)m^{n-1}$, the population is
 shallow, and we are most likely $\mathrm{BHU}_1$; for $m>1$ the population is
 dominated by the deepest generation the supraverse has had time to grow, and being
-$\mathrm{BHU}_{1\text{--}2}$ is exponentially unlikely. The naive count cuts the
-hard way: a universe forms $\gtrsim10^{18}$ black holes, almost all super-critical
-and roughly half past the spin-survival threshold, so $m\sim10^{18}$ unless
-viability is far more restrictive than that---in which case we are surely
-\emph{deep}, not shallow. Shallowness therefore requires either a genuinely
-restrictive viability---e.g.\ only the fair-sample, clean-fed holes of
-\Cref{sec:accretion-eta} spawn universes like ours, the overwhelming majority
-making the baryon-rich family or sterile remnants---or a \emph{young} supraverse
-that has not had time to grow deep lineages (small truncation depth, entangled
-with the equilibrium-establishment question, \Cref{app:openq}). This is the live
-tension; only $n\ge1$ is settled by data.
+$\mathrm{BHU}_{1\text{--}2}$ is exponentially unlikely. So everything turns on
+whether $m$ is below or above one.
+
+It is tempting to put $m$ enormous---a universe forms $\gtrsim10^{18}$ black holes,
+almost all super-critical---and conclude we are surely deep. But that
+\emph{double-counts}: a stellar hole ($\sim10\,M_\odot$) makes a $\sim10^{31}\,
+\mathrm{kg}$ child, a tiny, structureless universe far below the viability mass
+$M_{\mathrm{vis}}$. \emph{Viable} children need near-Hubble-mass progenitor holes,
+and mass conservation allows only $\sim M_{\mathrm{parent}}/M_{\mathrm{vis}}$ of
+those: a universe simply has not got the mass to make $10^{18}$ universe-sized
+children. The branching ratio is therefore
+\begin{equation}
+  m = \epsilon\,f_{\mathrm{clean}}\,\frac{M_{\mathrm{parent}}}{M_{\mathrm{vis}}},
+  \label{eq:m-massbudget}
+\end{equation}
+with $\epsilon$ the fraction of the parent's mass reaching viable-size holes and
+$f_{\mathrm{clean}}$ the fraction that accrete a fair ($b\sim1$) sample and so stay
+in our clean family. The viable band is \emph{narrow on both axes at once}: the big
+horizon-scale holes that clear the size cut are the very ones that contain a fair
+cosmic sample (\Cref{sec:accretion-eta}), so size and cleanliness select the same
+rare holes. If the band is narrow---$M_{\mathrm{vis}}\sim$ our mass, the edge we
+appear to sit at, so $M_{\mathrm{parent}}/M_{\mathrm{vis}}\sim O(1)$---then
+$m\sim\epsilon<1$: subcritical, shallow, and we are most likely $\mathrm{BHU}_1$
+(\Cref{fig:viable_band}). Only a \emph{wide} band ($M_{\mathrm{vis}}\ll
+M_{\mathrm{parent}}$) gives $m\gg1$ and a deep population. Narrowness, not a young
+supraverse, is the natural route to shallowness---and it follows from mass
+conservation plus the single viability scale we already seem to sit near. Only
+$n\ge1$ is settled by data, but a narrow viable band makes
+$\mathrm{BHU}_{1\text{--}2}$ the expectation rather than a surprise.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{viable_band}
+  \caption{The branching ratio from the mass budget, \eqref{eq:m-massbudget}.
+    \emph{Left:} viable children need near-Hubble-mass holes, so $m$ is capped at
+    $M_{\mathrm{parent}}/M_{\mathrm{vis}}$ (not $\sim10^{18}$); a narrow viable band
+    ($w=M_{\mathrm{parent}}/M_{\mathrm{vis}}\sim O(1)$, where we appear to sit)
+    gives $m<1$. \emph{Right:} the resulting depth probabilities---narrow band
+    $\Rightarrow$ shallow ($\mathrm{BHU}_{1\text{--}2}$), wide band $\Rightarrow$
+    deep. Reproducible as \texttt{figures/scripts/ch05\_band.py}.}
+  \label{fig:viable_band}
+\end{figure}
 
 \begin{figure}[t]
   \centering
@@ -327,7 +358,11 @@ the physical brake is \emph{depletion}: the hole eats its local causal patch, th
 source shuts off, and the mass freezes at $M_{\mathrm{final}}\sim$ the patch mass
 (\Cref{fig:growth}, left). This answers the runaway worry of
 \Cref{app:openq}: universe-holes do not grow without bound, they grow to their
-patch and stop.
+patch and stop. The cause of death is mundane and faintly comic---the hole exhausts
+the vacuum fluctuations within reach and starves. A universe-engine fed by the void
+dies, in the end, of depletion: it runs out of nothing. That the ground state of an
+infinite quantum vacuum is, to a black hole, a finite and exhaustible local
+resource is the quiet engine behind the whole foam.
 
 The growth time is therefore $\tau_{\mathrm{gen}}\sim\tau_0\propto
 M_{\mathrm{crit}}^3\propto T_{\mathrm{bath}}^{-3}$, and a supraverse of age

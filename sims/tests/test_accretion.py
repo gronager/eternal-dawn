@@ -46,3 +46,28 @@ def test_supercritical_branching_is_deep():
 def test_shallow_probability_decreases_with_m():
     vals = [pop.shallow_probability(m) for m in (0.1, 0.5, 0.9, 1.2)]
     assert vals[0] > vals[1] > vals[2] > vals[3]
+
+
+def test_mass_budget_branching_caps_and_scales():
+    # m = eps f_clean (M_parent/M_vis), capped at the conservation limit
+    assert math.isclose(pop.mass_budget_branching(100, 1, 0.1, 1.0), 10.0)
+    assert pop.mass_budget_branching(1e9, 1, 0.1, 1.0) <= 1e9   # cap respected
+    # equal masses, efficiency 1 -> exactly one viable child (critical)
+    assert math.isclose(pop.mass_budget_branching(1, 1, 1.0, 1.0), 1.0)
+
+
+def test_narrow_band_is_shallow_wide_band_is_deep():
+    # narrow band (viable ~ our size, w ~ few) -> m < 1 -> shallow
+    m_narrow = pop.mass_budget_branching(3.0, 1.0, 0.1, 1.0)
+    assert m_narrow < 1.0
+    assert pop.shallow_probability(m_narrow) > 0.8
+    # wide band (M_vis << M_parent) -> m >> 1 -> deep
+    m_wide = pop.mass_budget_branching(1e4, 1.0, 0.1, 1.0)
+    assert m_wide > 1.0
+    assert pop.shallow_probability(m_wide) < 1e-3
+
+
+def test_prob_bhu_stable_for_large_m():
+    # log-space normalization: no overflow/nan even for huge branching
+    p = pop.prob_bhu(1e5, 1)
+    assert 0.0 <= p < 1e-3 and p == p     # finite, not nan

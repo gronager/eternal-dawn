@@ -144,16 +144,48 @@ def depth_posterior(m, D, n_min=1, structure_decay=1.0):
 def prob_bhu(m, n, D=400):
     """P(we are BHU_n | n >= 1) for branching ratio m and truncation depth D."""
     D = min(int(D), 100000)              # guard against huge-D array allocation
+    if not (1 <= n <= D):
+        return 0.0
     ns = np.arange(1, D + 1, dtype=float)
-    w = m ** ns
-    w = w / w.sum()
-    return float(w[n - 1]) if 1 <= n <= D else 0.0
+    logw = ns * np.log(m)                # stable: normalize in log space
+    logw -= logw.max()
+    w = np.exp(logw)
+    return float(w[n - 1] / w.sum())
 
 
 def shallow_probability(m, D=400, n_max=2):
     """P(we are within the first n_max generations | n >= 1): the chance we are
     'BHU1 or BHU2' (n_max=2). Near 1 for strongly subcritical m, ~0 for m > 1."""
     return float(sum(prob_bhu(m, n, D) for n in range(1, n_max + 1)))
+
+
+# ---------------------------------------------------------------------------
+# Where m actually comes from: the mass-budget cap (the narrow viable band)
+# ---------------------------------------------------------------------------
+# The naive "every black hole is a child, so m ~ 1e18" double-counts: a stellar
+# hole (~10 Msun) makes a ~1e31 kg child, a tiny structureless universe far below
+# the viability mass M_vis. VIABLE children need near-Hubble-mass progenitor holes,
+# and mass conservation caps how many of those one universe of mass M_parent can
+# make at M_parent / M_vis. So the branching ratio is
+#
+#     m = epsilon * f_clean * (M_parent / M_vis),
+#
+# with epsilon the fraction of the parent's mass that ends up in viable-size holes
+# and f_clean the fraction of those that accrete a fair (b~1) sample and so stay in
+# our clean, photon-dominated family (Ch.5: the big horizon-scale holes that meet
+# the size cut are the SAME ones that contain a fair cosmic sample, so the size and
+# cleanliness cuts select together). The viable band is therefore narrow on BOTH
+# axes at once: w = M_parent/M_vis is small. If w ~ O(1) (viable ~ our size, the
+# edge we appear to sit at) then m ~ O(epsilon) < 1 -- subcritical, shallow, and we
+# are most likely BHU1. Only a WIDE band (M_vis << M_parent, w >> 1) gives m >> 1
+# and a deep population. This is a far more natural route to shallowness than a
+# young supraverse: it follows from mass conservation plus a narrow viability band.
+
+def mass_budget_branching(M_parent, M_vis, epsilon=0.1, f_clean=1.0):
+    """Branching ratio from the mass budget: m = epsilon f_clean (M_parent/M_vis),
+    capped at the conservation limit M_parent/M_vis."""
+    w = float(M_parent) / float(M_vis)
+    return min(epsilon * f_clean * w, w)
 
 
 # ---------------------------------------------------------------------------
