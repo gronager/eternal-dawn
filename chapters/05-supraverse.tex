@@ -595,6 +595,77 @@ what gives the islands room to be round; the dilution makes that room enormous. 
 the honest ``true to scale'' wallpaper is mostly void---which is, after all, what an
 elegant theory of an eternal structured vacuum should look like.
 
+\subsection{An OGU is a timeline: saturation, evaporation, and a mortal fractal}
+\label{sec:recursion-depth}
+
+An OGU is not merely a universe; it is a \emph{timeline}---it grows, hosts an
+internal history, and eventually ends. Three questions close the recursive picture:
+does it grow forever, does the membrane ever disappear, and is the nesting literally
+infinite?
+
+\paragraph{Saturation.} Growth stops, and thermodynamics says exactly where. A black
+hole's Hawking temperature $T_{\mathrm{BH}}=\hbar c^3/8\pi GMk_B$ falls as it grows,
+while the void it sits in has a floor temperature
+$T_{\mathrm{dS}}=\hbar H_\Lambda/2\pi k_B$. They equalise at
+\begin{equation}
+  M_{\mathrm{eq}} = \frac{c^3}{4GH_\Lambda} \simeq 6\times10^{52}\,\mathrm{kg}
+  \;\sim\; M_{\mathrm{Nariai}} \;\sim\; \text{a Hubble mass},
+  \label{eq:Meq}
+\end{equation}
+where the OGU is in thermal equilibrium with its own cosmological horizon: no net
+flux, growth halts (\Cref{fig:recursion}, left). So an OGU saturates at $\sim$a
+Hubble mass---our own universe's mass---rather than growing without bound. Dark
+energy both starts the growth (negative heat capacity) and ends it (the de Sitter
+floor): the OGU grows until it \emph{is} as cold as the void around it.
+
+\paragraph{The membrane is mortal---but long-lived.} At saturation
+$T_{\mathrm{BH}}\simeq T_{\mathrm{dS}}$, so the OGU sits in unstable equilibrium and
+then slowly evaporates, on the Hawking time $t_{\mathrm{evap}}\sim5120\pi G^2
+M^3/\hbar c^4 \sim 10^{142}\,\mathrm{s}$. So no, the Cartasis membrane does not last
+forever---it evaporates---but it does so \emph{astronomically} long after it
+saturates, and \emph{long before} it could ever touch a neighbour (which lies
+$\sim e^{I/4}$ horizons away, utterly out of causal reach, \Cref{sec:instanton}).
+The membrane is finite-lived; it persists $\sim10^{142}\,\mathrm{s}$, then returns to
+the void. Your guess was right: it Hawking-evaporates before touching anything.
+
+\paragraph{A mortal fractal, not an infinite nesting.} The timescale hierarchy makes
+the recursion well-defined (\Cref{fig:recursion}, right): an OGU grows in $\sim$1
+Hubble time, its interior reaches heat death and seeds sub-OGUs every recursion
+``tick'' $\sim10^{108}\,\mathrm{s}$ (the interior's black-hole-evaporation era), and
+the membrane survives $\sim10^{142}\,\mathrm{s}$---so each OGU hosts
+\begin{equation}
+  N_{\mathrm{cycles}} \sim \frac{t_{\mathrm{evap}}}{t_{\mathrm{tick}}}
+  \sim 10^{34}
+\end{equation}
+full recursive interior cycles before its own membrane evaporates. This answers the
+deepest version of the question---``recursive timelines inside each other forever, or
+pulsating in the flat void?''---and the answer is \emph{both, cleanly}. Every
+membrane is mortal, so no single branch nests literally forever; but new OGUs
+nucleate without end, both in the flat void \emph{and} inside every heat-dead
+interior, so the tree is eternal and ever-expanding even though every node dies. It
+is a fractal of \emph{finite, pulsating timelines}---not an actual infinity of nested
+membranes. When an OGU finally evaporates, its interior (by then a heat-dead de
+Sitter void hosting its own scatter of sub-OGUs) simply rejoins the flat void it came
+from---mass and information returned, that branch's cycle closed, while countless
+others continue. The void is the one truly eternal, flat substrate; everything within
+it is a mortal, recursive, pulsating bubble.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{recursion}
+  \caption{The OGU as a finite-lived recursive timeline. \emph{Left:} the Hawking
+    temperature $T_{\mathrm{BH}}\propto1/M$ falls as the OGU grows until it meets the
+    void's de Sitter floor $T_{\mathrm{dS}}$ at $M_{\mathrm{eq}}\sim$ a Hubble mass
+    (\Cref{eq:Meq})---thermal equilibrium with its own horizon, where growth
+    saturates and slow evaporation begins. \emph{Right:} the timescale ladder, each
+    step vastly longer than the last---grow ($\sim10^{18}\,$s) $\ll$ interior
+    recursion tick ($\sim10^{108}\,$s) $\ll$ membrane lifetime ($\sim10^{142}\,$s,
+    $\sim10^{34}$ interior cycles) $\ll$ neighbour distance ($e^{I/4}$ horizons,
+    never reached). Every node is mortal; the tree is eternal. Reproducible as
+    \texttt{figures/scripts/ch05\_recursion.py}.}
+  \label{fig:recursion}
+\end{figure}
+
 \section{Genesis, growth, and the absence of hell}
 
 \subsection{No hell upward}
