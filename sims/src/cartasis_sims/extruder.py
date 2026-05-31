@@ -121,3 +121,96 @@ def inherited_eta(zeta_tilde: float, eta_parent: float = cve.ETA_OBS,
                   res: ExtruderResult | None = None, **kw) -> float:
     """eta_baby = eta_parent / D for the dynamically-computed dilution D."""
     return cve.inherited_eta(eta_parent, dilution_factor(zeta_tilde, res, **kw))
+
+
+# ----------------------------------------------------------------------------
+# Inhomogeneous shear channel.
+#
+# The homogeneous channel above used a bulk viscosity (sourced by the expansion
+# theta = 3H). The worry is the *shear*: an anisotropic/inhomogeneous collapse
+# carries a shear scalar sigma whose energy density redshifts as a stiff fluid,
+# rho_sigma ~ a^-6, so it grows FASTER than radiation (a^-4) and comes to
+# dominate the approach to the bounce (the BKL/Mixmaster regime). In plain GR
+# that drives sigma^2/T -> infinity and the shear-viscous entropy production
+# DIVERGES at the singularity. The question is what the Einstein--Cartan bounce
+# does to it.
+#
+# Minimal model: a Bianchi-I-like mean scale factor with the torsion cap on the
+# TOTAL effective density (dimensionless rho_C = 1, 8 pi G/3 = 1, a_min = 1):
+#
+#     rho_tot(a) = (1 - f_sigma) a^-n + f_sigma a^-6,    n = 3(1+w),
+#     H^2 = rho_tot (1 - rho_tot),
+#
+# where f_sigma is the shear fraction of the density AT the bounce (a = 1):
+# f_sigma = 0 is the isotropic bounce, f_sigma -> 1 a maximally shear-dominated
+# one. The shear-viscous (Eckart) entropy production is d ln S/dtau = 2 eta~ sigma^2/T
+# with sigma^2 proportional to rho_sigma = f_sigma a^-6, so
+#
+#     ln D_shear = 2 eta~ (Omega_bounce/T_bounce) J_shear,
+#     J_shear = int rho_sigma(a) a dtau   (a pure number, O(1-10)).
+#
+# The SAME prefactor Omega/T ~ 1e-11 appears, because the torsion cap bounds the
+# shear at the bounce scale (sigma <~ Omega): the bounce is fast in thermal
+# units whatever drives it. So even a maximally shear-dominated, KSS-viscous
+# bounce stays adiabatic, and the same torsion that removes the singularity also
+# tames the BKL entropy divergence.
+# ----------------------------------------------------------------------------
+
+def _rho_tot(a, f_sigma: float, n: float):
+    return (1.0 - f_sigma) * a**(-n) + f_sigma * a**(-6.0)
+
+
+def _rho_tot_prime(a, f_sigma: float, n: float):
+    return (-n * (1.0 - f_sigma) * a**(-n - 1.0)
+            - 6.0 * f_sigma * a**(-7.0))
+
+
+def simulate_anisotropic_bounce(f_sigma: float = 0.5, w: float = 1.0 / 3.0,
+                                tau_max: float = 30.0, n_points: int = 8000):
+    """Integrate the shear-augmented torsion bounce outward from a_min = 1.
+
+    Returns (tau, a, H, rho_sigma) on the expansion branch; the collapse branch
+    is its mirror image, so entropy integrals over the full bounce are 2x this.
+    """
+    from scipy.integrate import solve_ivp
+
+    n = 3.0 * (1.0 + w)
+
+    def rhs(tau, y):
+        a, v = y
+        rt = _rho_tot(a, f_sigma, n)
+        F = rt * (1.0 - rt)
+        Fp = _rho_tot_prime(a, f_sigma, n) * (1.0 - 2.0 * rt)
+        a_dd = a * F + 0.5 * a**2 * Fp
+        return [v, a_dd]
+
+    sol = solve_ivp(rhs, (0.0, tau_max), [1.0, 0.0],
+                    t_eval=np.linspace(0.0, tau_max, n_points),
+                    rtol=1e-10, atol=1e-12, method="DOP853")
+    a = sol.y[0]
+    H = sol.y[1] / a
+    rho_sigma = f_sigma * a**(-6.0)
+    return sol.t, a, H, rho_sigma
+
+
+def shear_entropy_integral(f_sigma: float = 0.5, w: float = 1.0 / 3.0,
+                           tau_max: float = 30.0, n_points: int = 8000) -> float:
+    r"""J_shear = \int rho_sigma a dtau over the full bounce (= 2x expansion)."""
+    tau, a, H, rho_sigma = simulate_anisotropic_bounce(f_sigma, w, tau_max,
+                                                        n_points)
+    return 2.0 * float(np.trapezoid(rho_sigma * a, tau))
+
+
+def shear_ln_dilution(eta_tilde: float, f_sigma: float = 0.5,
+                      rho_C: float = 1.0e50, w: float = 1.0 / 3.0,
+                      **kw) -> float:
+    """ln D from shear viscosity eta_s = eta_tilde * s across the bounce."""
+    T_b = cve.bounce_temperature_GeV(rho_C)
+    Om = cve.bounce_rate_GeV(rho_C)
+    J = shear_entropy_integral(f_sigma, w, **kw)
+    return 2.0 * eta_tilde * (Om / T_b) * J
+
+
+def shear_dilution_factor(eta_tilde: float, f_sigma: float = 0.5, **kw) -> float:
+    return float(np.exp(shear_ln_dilution(eta_tilde, f_sigma, **kw)))
+

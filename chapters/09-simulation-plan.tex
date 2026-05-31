@@ -326,15 +326,52 @@ protected (pure lineages). Reproducible as
   \label{fig:extruder}
 \end{figure}
 
-\paragraph{What this tier does \emph{not} yet settle.} This is the homogeneous
-channel. Inhomogeneous shear, shocks, and gravitational particle production at
-the bounce are separate entropy sources not captured by an Eckart bulk
-viscosity. The same timescale argument suppresses anything sourced by
-gradients\,$\times$\,(bounce time) by the same $\sim10^{-11}$ unless the
-gradients are trans-thermal---but verifying that is exactly what the
-inhomogeneous Tier~1 collapse above is for. Pinning $D$ at the few-percent level,
-including particle production, is the cleanest near-term calculation bearing on
-the asymmetry (Appendix~\ref{app:openq}, Q16a).
+\paragraph{The inhomogeneous shear channel.} The obvious objection to a
+homogeneous, bulk-viscous estimate is shear. An anisotropic collapse carries a
+shear scalar $\sigma$ whose energy density redshifts as a stiff fluid,
+$\rho_\sigma\propto a^{-6}$, so it outgrows radiation ($a^{-4}$) and comes to
+dominate the approach to the bounce---the BKL/Mixmaster regime. In plain general
+relativity this drives $\sigma^2/T\to\infty$ and the shear-viscous entropy
+production \emph{diverges} at the singularity. The Einstein--Cartan bounce changes
+the conclusion. Adding $\rho_\sigma$ to the capped Friedmann equation,
+$H^2=\rho_{\mathrm{tot}}(1-\rho_{\mathrm{tot}})$ with $\rho_{\mathrm{tot}}=
+(1-f_\sigma)a^{-n}+f_\sigma a^{-6}$ and $f_\sigma$ the shear fraction at the
+bounce, the torsion cap bounds the \emph{total} density---and hence the
+shear---at $\rhoc$ (\Cref{fig:shear}, left): the shear is bounced too, instead of
+running away. The entropy integral $J_{\mathrm{shear}}=\int\rho_\sigma\,a\,
+\mathrm{d}\tau$ therefore stays $O(1)$ even for a maximally shear-dominated bounce
+($f_\sigma\to1$), so $\ln D_{\mathrm{shear}}=2\tilde\eta(\Omega_{\mathrm{bounce}}/
+T_{\mathrm{bounce}})J_{\mathrm{shear}}$ carries the \emph{same} $\sim10^{-11}$
+prefactor and $D-1\lesssim10^{-10}$ across the whole anisotropy range
+(\Cref{fig:shear}, right). The same torsion that removes the singularity tames the
+BKL entropy divergence: inheritance survives the inhomogeneous channel too.
+Reproducible as \texttt{figures/scripts/ch09\_shear.py}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{shear}
+  \caption{The shear channel of the extruder. \emph{Left:} a shear-dominated
+    bounce ($f_\sigma=0.9$). The shear $\sigma^2\propto a^{-6}$ would diverge at a
+    GR singularity (BKL); the torsion cap bounds it at $\rhoc$ and bounces it,
+    keeping the entropy kernel $\sigma^2a$ (shaded) finite. \emph{Right:} the
+    entropy dilution $D-1$ versus the bounce shear fraction $f_\sigma$, for shear
+    viscosities at the KSS bound $\tilde\eta=1/4\pi$ and at $\tilde\eta=1$. It
+    stays below $\sim10^{-10}$ all the way to a shear-dominated bounce---a dozen
+    orders below the horizon-saturating $D_{\max}$---so $\eta_{\mathrm{baby}}=
+    \eta_{\mathrm{parent}}$ regardless.}
+  \label{fig:shear}
+\end{figure}
+
+\paragraph{What this tier does \emph{not} yet settle.} Both the homogeneous and
+the shear channels are covered by Eckart viscosities on a still-simplified
+background; gravitational particle production at the bounce is a separate entropy
+source not captured here. The same timescale argument suppresses anything sourced
+by gradients\,$\times$\,(bounce time) by the same $\sim10^{-11}$ unless the
+gradients are trans-thermal, but a full inhomogeneous collapse (the Tier~1 code
+above) carrying its own entropy accounting is what would confirm it. Pinning $D$
+at the few-percent level, particle production included, is the cleanest near-term
+calculation bearing on the asymmetry (\Cref{app:openq}, Q16a); the
+results so far make $D=1$ the strongly favoured answer.
 
 \section{Tier 2: Perturbation evolution through the bounce}
 

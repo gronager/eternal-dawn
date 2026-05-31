@@ -46,3 +46,36 @@ def test_ln_dilution_linear_in_viscosity():
     res = ex.analyze(w=1.0 / 3.0)
     assert math.isclose(ex.ln_dilution(2.0, res), 2.0 * ex.ln_dilution(1.0, res),
                         rel_tol=1e-9)
+
+
+# --- inhomogeneous shear channel -------------------------------------------
+
+def test_isotropic_limit_has_no_shear_entropy():
+    # f_sigma = 0 means no shear -> no shear-viscous entropy
+    assert ex.shear_entropy_integral(0.0) == 0.0
+    assert ex.shear_dilution_factor(1.0, 0.0) == 1.0
+
+
+def test_anisotropic_bounce_caps_shear_at_rho_C():
+    # the torsion cap bounds the shear density at rho_C (=1): no BKL divergence
+    tau, a, H, rho_sigma = ex.simulate_anisotropic_bounce(f_sigma=0.9)
+    assert a.min() >= 1.0 - 1e-6           # bounce at a_min = 1
+    assert rho_sigma.max() <= 0.9 + 1e-9   # sigma^2 <= f_sigma at the bounce
+
+
+def test_shear_integral_stays_order_unity_even_dominated():
+    # J_shear is O(1-10) all the way to a shear-dominated bounce (no blow-up)
+    for fs in (0.1, 0.5, 0.9, 0.99):
+        assert 0.0 < ex.shear_entropy_integral(fs) < 10.0
+
+
+def test_shear_channel_is_adiabatic():
+    # even maximally shear-dominated + KSS viscosity leaves D-1 below ~1e-9
+    assert ex.shear_dilution_factor(1.0 / (4.0 * math.pi), 0.99) - 1.0 < 1e-9
+    assert ex.shear_dilution_factor(1.0, 0.99) - 1.0 < 1e-9
+
+
+def test_shear_dilution_grows_with_anisotropy():
+    # more shear -> more (but still tiny) entropy production
+    assert (ex.shear_dilution_factor(1.0, 0.9)
+            > ex.shear_dilution_factor(1.0, 0.1))
