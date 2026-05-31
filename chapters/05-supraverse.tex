@@ -609,6 +609,48 @@ from where we sit.
   \label{fig:genesis}
 \end{figure}
 
+\subsection{The foam, and the average OGU size}
+\label{sec:foam-size}
+
+An individual OGU never runs out (\Cref{sec:growth-depth}), but the
+\emph{population} does: OGUs nucleate throughout the void and grow at the causal
+speed until they \emph{impinge} on their neighbours, tiling the void into a foam.
+That collective ``running out of nothing'' fixes a characteristic cell size, and
+hence an average OGU mass, in terms of the one number we still lack---the birth
+rate. This is the Kolmogorov--Johnson--Mehl--Avrami problem: with OGUs nucleating
+at rate $\beta$ (per comoving 3-volume per time) and each growing a horizon of
+radius $R=c(t-t_{\mathrm{birth}})$, the void fills at
+$t_{\mathrm{fill}}=(3/\pi\beta c^3)^{1/4}$, the characteristic cell radius is
+$L\sim c\,t_{\mathrm{fill}}\sim(c/\beta)^{1/4}$, and the average OGU mass is the
+horizon mass at impingement,
+\begin{equation}
+  M_{\mathrm{avg}}\;\sim\;\frac{c^3 t_{\mathrm{fill}}}{2G}
+  \;\sim\;\frac{c^2}{2G}\Big(\frac{c}{\beta}\Big)^{1/4}.
+  \label{eq:foam-mass}
+\end{equation}
+Frequent births tile the void into many small universes; rare births let each grow
+large before impinging (\Cref{fig:voidfoam}). So ``how big is the average OGU''
+\emph{is} ``how often is one born''---the OG nucleation rate of
+\Cref{sec:notogu} above, the single unknown $\beta$ to which the OGU mass and the
+supraverse age both reduce. Pin $\beta$ (or measure one OGU's size) and the whole
+foam scale follows. The Johnson--Mehl tessellation also settles the shape question
+of \Cref{chap:viz}: impinged cells are curved polygons, not circles---only an
+isolated, not-yet-impinged OGU is round, so circular bubbles in the foam map mark
+universes still far from their neighbours.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{void_foam}
+  \caption{\emph{Left:} the condensed void as a Johnson--Mehl foam---OGUs nucleate,
+    grow at the causal speed $c$, and impinge, tiling the void into curved polygons
+    (an isolated young OGU would be round). \emph{Right:} the average OGU mass set
+    by the birth rate, \eqref{eq:foam-mass}: rarer births give fewer, larger
+    universes. Our OGU's plausible mass range ($10^{54}$--$10^{65}\,\mathrm{kg}$,
+    \Cref{sec:vortex-genesis}) maps to a band of birth rates. Reproducible as
+    \texttt{figures/scripts/ch05\_voidfoam.py}.}
+  \label{fig:voidfoam}
+\end{figure}
+
 \subsection{Infinitely many OGs; do they grow forever?}
 
 By Axiom~\ref{ax:qm} plus infinity, the supraverse nucleates \emph{infinitely

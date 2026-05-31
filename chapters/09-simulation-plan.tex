@@ -447,6 +447,42 @@ inflation---is cleared. Reproducible as
   \label{fig:primordial}
 \end{figure}
 
+\paragraph{Toward the acoustic peaks.} With a near-scale-invariant primordial
+spectrum in hand, the acoustic peaks follow from \emph{shared} physics. The peaks
+are pre-recombination baryon--photon sound waves frozen at last scattering, and
+\SCT\ runs the entire post-bounce hot Big Bang exactly as $\Lambda$CDM does---same
+plasma, same recombination at $z\simeq1090$, same sound horizon---so it inherits
+the peaks rather than having to re-derive them. The acoustic scale is set by the
+comoving sound horizon $r_s=\int_{z_{\mathrm{rec}}}^{\infty}c_s/H\,\mathrm{d}z$ and
+the distance to last scattering $D_C$, giving $\theta_s=r_s/D_C$ and peak
+multipoles $\ell_n\simeq(n-\tfrac14)\pi/\theta_s$. Evaluated on the standard
+post-bounce background this returns $r_s\simeq142\,\mathrm{Mpc}$,
+$\theta_s\simeq0.0102\,\mathrm{rad}$, and a peak series
+$\ell_n\simeq230,\,540,\,850,\,1150,\,1460$---matching the observed Planck peaks
+($220,\,540,\,810,\,1120,\,1450$) to a few percent (\Cref{fig:acoustic}). The
+hard, decisive number---the acoustic scale---is reproduced; what remains is the
+full Boltzmann computation of peak \emph{heights} (sensitive to $\omega_b$,
+$\omega_c$, and the precise primordial tilt and amplitude). The
+``CMB $=$ parent Hawking radiation'' identification (Chapter~\ref{chap:darksector})
+is consistent with this: it concerns the \emph{origin} of the thermal plasma at the
+bounce/horizon surface, not a replacement for recombination---the peaks arise from
+standard acoustics either way.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{acoustic}
+  \caption{\emph{Left:} a schematic CMB temperature spectrum---the bounce's
+    scale-invariant primordial input times a damped acoustic transfer---with the
+    observed Planck peak multipoles marked (dotted); the peaks ride at the right
+    places. \emph{Right:} the \SCT-computed peak positions
+    $\ell_n=(n-\tfrac14)\pi/\theta_s$, from the sound horizon $r_s\simeq142\,
+    \mathrm{Mpc}$, against the Planck peaks---on the $1{:}1$ line, because the
+    pre-recombination acoustics are shared with $\Lambda$CDM. The schematic
+    spectrum is illustrative; the peak \emph{positions} are the physics.
+    Reproducible as \texttt{figures/scripts/ch09\_acoustic.py}.}
+  \label{fig:acoustic}
+\end{figure}
+
 \paragraph{Effort estimate.} 6--12 months for someone with
 cosmological-perturbation-theory background; $\sim 1000$--$3000$ lines of code
 building on Tier 1.
