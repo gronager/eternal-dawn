@@ -64,15 +64,19 @@ def main() -> None:
         "MASS: births ~exp(-M/M0); growth Mdot~M^g => n(M)~M^{-g} (power law).",
         f"  Bondi g=2 and Eddington g=1 shown; viability edge M_vis={M_vis}.",
         f"  Observer-bearing universes peak at M ~ {M_us:.1f} (just above M_vis):",
-        "  we sit near the viability optimum, not the rare massive tail.",
+        "  the framework PREDICTS we sit near the viability optimum, not the rare",
+        "  massive tail. (We cannot independently measure our OGU mass yet, so this",
+        "  is a prediction, not a fitted match.)",
         "",
         "SPIN: P_birth Gaussian at 0 (low spin likeliest); baryogenesis needs",
         f"  |omega|>omega_min={wmin} (eta = C|omega|/T > eta_min), else sterile.",
         f"  Sterile (sub-threshold, evaporating) fraction of seeds: {sterile:.2f}.",
-        f"  Viable/observer spin peaks just above threshold at omega ~ {w_peak:.2f}:",
-        "  viable universes are LOW-purity, just past hellish.  Our small eta",
-        "  (~1e-9..1e-8) places us at that low-spin edge -- compare to any net",
-        "  rotation of our universe (galaxy-spin handedness, CMB axis hints).",
+        f"  Viable/observer spin peaks just above threshold at omega ~ {w_peak:.2f}",
+        "  (in sigma units, with omega_min/sigma chosen by hand): viable universes",
+        "  are LOW-purity, just past hellish. This is a SHAPE prediction. Our small",
+        "  eta (~1e-9..1e-8) is QUALITATIVELY consistent (we are low-purity), but the",
+        "  marker is the model peak, NOT an independent measurement -- a spot-on test",
+        "  needs C, sigma, eta_min pinned so eta can be predicted in absolute units.",
     ]
     text = "\n".join(lines)
     print(text)
@@ -90,7 +94,7 @@ def main() -> None:
     ax1.annotate("viability edge\n(astrophysics, BHs)", xy=(M_vis, 3e-3),
                  xytext=(M_vis * 1.4, 2e-2), fontsize=7.5, color="C3",
                  arrowprops=dict(arrowstyle="->", color="C3", lw=0.8))
-    ax1.plot([M_us], [1.0], "kv", ms=9, label="$\\sim$ our universe")
+    ax1.plot([M_us], [1.0], "kv", ms=9, label="model: typical observer")
     ax1.set_xlabel("OGU mass $M$  (birth-scale units)")
     ax1.set_ylabel("relative number $n(M)$")
     ax1.set_ylim(1e-5, 2)
@@ -107,7 +111,8 @@ def main() -> None:
                  xy=(wmin * 0.5, 0.5), xytext=(wmin * 0.15, 0.62),
                  fontsize=7.5, color="C3")
     ax2.axvline(wmin, color="C3", lw=1.0, ls=":")
-    ax2.plot([w_peak], [1.0], "kv", ms=9, label="$\\sim$ our universe (small $\\eta$)")
+    ax2.plot([w_peak], [1.0], "kv", ms=9,
+             label="model: typical viable\nuniverse (low purity)")
     ax2.set_xlabel("OG seed net vorticity $|\\omega|$  ($\\sigma$ units)")
     ax2.set_ylabel("relative probability")
     ax2.set_title("Spin: low likeliest, but needs $\\omega>\\omega_{\\min}$ to live")
