@@ -30,6 +30,11 @@ build/
 # but not the preview rasters
 figures/pdf/*.png
 
+# Track the built monograph so it is downloadable from the repo. No git-lfs is
+# available here; ~1 MB is fine for git and is consistent with committing the
+# figure PDFs above. Rebuilt by `make`; refresh before committing.
+!/book.pdf
+
 # Python / sims
 __pycache__/
 *.pyc

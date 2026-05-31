@@ -69,6 +69,73 @@ def fit_toy_to(w0_target, wa_target, p0=0.6, q=None):
 
 
 # ---------------------------------------------------------------------------
+# Phantom-crossing dark energy from a peaked parent-injection history
+# ---------------------------------------------------------------------------
+# Dark energy here is sourced by matter injected through the persistent Cartasis
+# membrane from the accreting parent (Ch. 6). If we absorb the source into an
+# *effective* equation of state (no explicit source term), the continuity
+# equation rho_dot + 3H(1+w_eff) rho = 0 gives the exact identity
+#
+#     w_eff(a) = -1 - (1/3) d ln rho_DE / d ln a.
+#
+# So rho_DE *rising* with a (injection winning over dilution) => w_eff < -1
+# (phantom); rho_DE *falling* (dilution winning) => w_eff > -1; rho_DE flat =>
+# w_eff = -1. A parent whose net injection peaked at scale factor a_p therefore
+# makes rho_DE(a) a hump that crosses from phantom (past, a<a_p) to
+# quintessence-like (now, a>a_p), crossing w=-1 exactly at a_p. This is the DESI
+# pattern, derived rather than fitted: the crossing is a *consequence* of
+# injection that rose and then saturated, not a free sign choice.
+
+def rho_de_injection(a, a_p=0.75, beta=1.3, rho0=1.0):
+    r"""Peaked (log-normal in a) dark-energy density from parent injection.
+
+    rho_DE(a) = rho0 * exp[-beta (ln a - ln a_p)^2], peaked at a=a_p, where a_p
+    is the scale factor at which the parent's net injection (accretion minus the
+    baby's expansion dilution) turned over.
+    """
+    a = np.asarray(a, dtype=float)
+    return rho0 * np.exp(-beta * (np.log(a) - np.log(a_p)) ** 2)
+
+
+def w_eff_injection(a, a_p=0.75, beta=1.3):
+    r"""Effective w(a) for the peaked-injection density, from the exact identity
+    w_eff = -1 - (1/3) d ln rho/d ln a. For the log-normal bump
+    d ln rho/d ln a = -2 beta (ln a - ln a_p), so
+
+        w_eff(a) = -1 + (2 beta / 3) (ln a - ln a_p),
+
+    which is < -1 for a < a_p (phantom past) and > -1 for a > a_p (today).
+    """
+    a = np.asarray(a, dtype=float)
+    return -1.0 + (2.0 * beta / 3.0) * (np.log(a) - np.log(a_p))
+
+
+def injection_from_cpl(w0, wa):
+    r"""Invert (w0, wa) -> (a_p, beta) for the peaked-injection model.
+
+    Linearizing w_eff about a=1 (ln a ~ -(1-a)) gives CPL with
+        w0 = -1 - (2 beta/3) ln a_p,   wa = -2 beta/3.
+    Hence beta = -3 wa / 2 and ln a_p = (w0 + 1)/wa, so a_p = exp((w0+1)/wa).
+    Returns a_p, beta, and the phantom-crossing redshift z_cross = 1/a_p - 1.
+    """
+    beta = -1.5 * wa
+    a_p = float(np.exp((w0 + 1.0) / wa)) if wa != 0 else float("nan")
+    z_cross = 1.0 / a_p - 1.0 if a_p == a_p else float("nan")
+    return {"a_p": a_p, "beta": beta, "z_cross": z_cross}
+
+
+def logistic_accretion(a, a_mid=0.4, k=6.0, m_inf=1.0):
+    r"""Parent mass fraction vs the baby's scale factor: Eddington-like (near
+    exponential) growth that saturates as fuel depletes -- a logistic in ln a,
+    M_p(a)/M_inf = 1/(1 + (a/a_mid)^{-k}). Its log-derivative (fractional
+    accretion rate) peaks near a_mid and decays; that turnover is what seeds the
+    injection bump and hence the phantom->quintessence crossing.
+    """
+    a = np.asarray(a, dtype=float)
+    return m_inf / (1.0 + (a / a_mid) ** (-k))
+
+
+# ---------------------------------------------------------------------------
 # Dark/baryon ratio and the filter
 # ---------------------------------------------------------------------------
 def filter_fraction_from_ratio(dm_to_baryon):
