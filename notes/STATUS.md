@@ -53,6 +53,12 @@ produces it (`sims/src/cartasis_sims/`, figures in `figures/scripts/`).
   ones, which evaporate into them — Ostwald ripening for universe-holes, on the
   Hawking timescale. So OGUs are immortal on any ordinary clock but not eternal.
   `void_foam.py` (`simulate_coarsening`).
+- **The recursive cycle (speculative).** A heat-dead OGU's smooth de Sitter far
+  future is a low-Weyl-entropy void that nucleates the next foam of OGUs — the void
+  is not primordial but the asymptotic state every universe reaches. The apparent
+  paradox (heat death = max entropy) is resolved by Penrose: *total* entropy rises
+  monotonically, but *Weyl/clumping* entropy cycles low→high→low and resets. SCT is
+  "Penrose CCC made to branch." `cycle.py`.
 
 ### CMB (Tier 2) — observationally anchored
 - **Scale-invariant primordial spectrum from the bounce.** Mode evolution through
