@@ -66,6 +66,33 @@ def rmin_over_rs(M: float, rho_C: float = 1.0e50) -> float:
     return r_min(M, rho_C) / r_schwarzschild(M)
 
 
+# ---------------------------------------------------------------------------
+# Time budget for a clock's journey: in past the horizon, to the bounce, and
+# (its information) back out via Hawking evaporation.
+# ---------------------------------------------------------------------------
+def infall_proper_time(M: float) -> float:
+    """Proper time from horizon to centre for radial infall ~ pi G M / c^3.
+
+    This is the clock's OWN elapsed time from crossing the horizon to the bounce
+    (R_min << r_s, so essentially to the centre). Scales as M.
+    """
+    return math.pi * k.G * M / k.c**3
+
+
+def darkening_time(M: float) -> float:
+    """Exterior light-crossing / redshift e-folding time r_s/c = 2GM/c^3.
+
+    The timescale over which the collapsing surface freezes and dims to black as
+    seen from outside. Scales as M.
+    """
+    return 2.0 * k.G * M / k.c**3
+
+
+def hawking_time(M: float) -> float:
+    """Hawking evaporation time 5120 pi G^2 M^3 / (hbar c^4). Scales as M^3."""
+    return 5120.0 * math.pi * k.G**2 * M**3 / (k.hbar * k.c**4)
+
+
 def exterior_geodesic(R0_over_rs: float, n: int = 2000, eps: float = 1e-3):
     """Schwarzschild time t(R) and redshift (1+z)(R) for the infalling surface.
 
