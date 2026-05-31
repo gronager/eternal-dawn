@@ -537,6 +537,64 @@ the growing universe-holes \emph{is} the condensation that makes the foam its
 equilibrium. From inside a baby universe this continuous biased injection is the
 dark sector (Chapter~\ref{chap:darksector}).
 
+\subsection{Vortex entrainment and the OGU mass}
+\label{sec:vortex-genesis}
+
+What \emph{drives} that growth from a bare seed, and what fixes how big an OGU
+gets? The rotation does both. A spinning bounce drags inertial frames
+(Lense--Thirring, $\Omega_{\mathrm{drag}}\sim 2GJ/c^2r^3$): the throat is a
+gravitational \emph{vortex} that spins up and draws in the surrounding void---the
+rotational analogue of Bondi capture, and the concrete meaning of the seed
+``pumping'' primordial matter from the void into the new universe. The pump has a
+\emph{spin window} (\Cref{fig:genesis}, right). Below
+$f_{\min}=\eta_{\min}/[C\,(\Omega_{\mathrm{bounce}}/T)]$ (the spin fraction
+$f=\omega/\Omega_{\mathrm{bounce}}$) the chiral-vortical asymmetry is too small to
+survive annihilation---a sterile seed that pumps nothing. Near extremal ($f\to1$)
+the centrifugal barrier chokes radial inflow: matter circularises instead of
+falling in. So entrainment is most efficient at an intermediate \emph{sweet spot},
+which is precisely the productivity factor of the observed-spin distribution
+(\Cref{sec:spin-dist}).
+
+The entrained mass is then set by a horizon argument, not by bookkeeping the
+inflow. The vortex reaches the void within its causal radius $R\sim ct$, and a
+patch of radius $ct$ holds at most the mass whose Schwarzschild radius equals
+$ct$, $M_{\mathrm{horizon}}=c^3t/2G$. If the void is at least critically dense
+($\rho_{\mathrm{void}}\ge\rho_{\mathrm{crit}}(t)=3/8\pi G t^2$---a
+\emph{condensed} void), the patch fills and collapses to that horizon mass: the OGU
+becomes a horizon-scale hole and
+\begin{equation}
+  M_{\mathrm{OGU}}\;\sim\;\frac{c^3\,t}{2G},
+  \label{eq:ogu-mass}
+\end{equation}
+set by its \emph{age}, not the void density. (For a sub-critical void it is
+density-limited and smaller.) This is the same ``universe $=$ its own Schwarzschild
+radius'' identity that opened the program (\Cref{chap:sims}), now read as a growth
+law: an OGU grows until it \emph{is} the black hole of its causal patch. So the OGU
+mass measures the supraverse age (\Cref{fig:genesis}, left)---$\sim$our mass at one
+Hubble time, $\sim10^{65}\,\mathrm{kg}$ at $\sim10^{12}$ Hubble times. Its sibling
+count follows, $N_{\mathrm{sib}}\sim\epsilon\,M_{\mathrm{OGU}}/M_{\mathrm{vis}}$, so
+a $10^{65}\,\mathrm{kg}$ OGU has $\sim10^{11}$ universes like ours. Crucially this
+leaves our depth untouched: a bigger OGU just means more siblings, and we are BHU1
+either way (\Cref{sec:ogu-size}). The OGU mass is therefore genuinely
+\emph{open}---it tracks the (unknown) supraverse age---but it is no longer
+mysterious: \eqref{eq:ogu-mass} ties it to one number, and decouples it cleanly
+from where we sit.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{genesis}
+  \caption{\emph{Left:} the entrained OGU mass is the horizon mass of its causal
+    patch, $M_{\mathrm{OGU}}\sim c^3 T_{\mathrm{supra}}/2G$ (\Cref{eq:ogu-mass}):
+    our mass at one Hubble time, $\sim10^{65}\,\mathrm{kg}$ (and $\sim10^{11}$
+    siblings) at $\sim10^{12}$ Hubble times; a sub-critical void gives less.
+    \emph{Right:} the vortex pump has a spin window---a survival floor $f_{\min}$
+    below (sterile) and centrifugal choking near extremal above---so genesis
+    favours an intermediate spin sweet spot. The headline mass relation is robust;
+    the efficiency shape is illustrative. Reproducible as
+    \texttt{figures/scripts/ch05\_genesis.py}.}
+  \label{fig:genesis}
+\end{figure}
+
 \subsection{Infinitely many OGs; do they grow forever?}
 
 By Axiom~\ref{ax:qm} plus infinity, the supraverse nucleates \emph{infinitely
