@@ -338,15 +338,47 @@ rotating parent.
 \paragraph{Tests.} Next-generation CMB experiments (CMB-S4, LiteBIRD) will
 improve constraints on the CMB spectrum and polarization by orders of magnitude.
 
-\subsection{Cosmic neutrino background structure}
+\subsection{The neutrino sector's unmatched number}
+\label{sec:lepton-asymmetry}
 
-The cosmic neutrino background (C$\nu$B) is predicted by standard cosmology but
-not yet directly observed. If observed (PTOLEMY-class experiments): a pure-flip
-framework predicts left-handed neutrinos in our convention; a strong-filter
-framework predicts a fewer-than-expected antineutrino-like component; standard
-cosmology predicts approximately equal $\nu$ and $\bar\nu$.
-\paragraph{Tests.} Direct C$\nu$B detection is decades away with current
-technology, but is being actively pursued.
+The baryon-to-photon ratio $\eta\simeq6.1\times10^{-10}$ is among the
+best-measured numbers in cosmology and, in \SCT, doubly anchored
+(\Cref{sec:eta-anchored}). Its lepton-sector counterpart---the net
+neutrino--antineutrino excess of the cosmic neutrino background---is almost
+\emph{entirely unmeasured}, and that mismatch is itself a test the framework
+speaks to sharply.
+
+In standard cosmology the lepton asymmetry is usually \emph{assumed} comparable
+to the baryon asymmetry, but it is not measured to be: big-bang nucleosynthesis
+plus the CMB bound the common neutrino degeneracy parameter only to
+$|\xi_\nu|\lesssim0.04$~\citep{oldengott2017}, where $\xi_\nu\equiv\mu_\nu/T_\nu$.
+That ceiling permits a relic neutrino--antineutrino asymmetry up to $\sim$$10^{7}$
+times the baryon asymmetry---a vast, unprobed window in which a lepton-only
+asymmetry could hide.
+
+\SCT\ predicts the window is \emph{empty}. The seed bias is inherited and then
+processed at the bounce by electroweak sphalerons, which
+Chapter~\ref{chap:chirality} shows are \emph{active} there
+($T\sim10^{7}\,\mathrm{GeV}\gg$ the $\sim$$130\,\mathrm{GeV}$ freeze-out). In
+equilibrium sphalerons conserve $B{-}L$ but lock baryon and lepton number into a
+fixed ratio; for the Standard Model ($3$ generations, one Higgs doublet)
+$B=\tfrac{28}{79}(B{-}L)$ and $L=-\tfrac{51}{79}(B{-}L)$, so
+$|L/B|=\tfrac{51}{28}\simeq1.8$. The lepton asymmetry is therefore the \emph{same
+order} as the baryon asymmetry, not enhanced, and the relic degeneracy is
+$\xi_\nu\sim\eta\sim4\times10^{-9}$---about $10^{7}$ below the current ceiling and
+indistinguishable from zero. \SCT\ has no large primordial lepton asymmetry to
+spend.
+
+\paragraph{Tests.} A \emph{measured} large primordial lepton asymmetry
+($\xi_\nu\gtrsim10^{-2}$) would require a lepton-number source acting \emph{after}
+sphaleron freeze-out, which the inherit-then-sphaleron-process picture does not
+supply; it would disfavour \SCT's account of the asymmetry. A null result
+($\xi_\nu$ consistent with $\sim\eta$) is a weak confirmation. Improved BBN$+$CMB
+analyses tighten $\xi_\nu$ now; direct C$\nu$B detection (PTOLEMY-class
+experiments) is decades away but actively pursued, and would additionally probe
+the handedness content---a pure-continuation (Road~A) lineage carries our
+matter neutrinos, with no antineutrino-like excess from a $CPT$ mirror.
+Reproducible as \texttt{sims/src/cartasis\_sims/lepton\_asymmetry.py}.
 
 \subsection{Primordial gravitational waves}
 
