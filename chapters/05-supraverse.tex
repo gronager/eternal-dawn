@@ -71,6 +71,57 @@ descendants, and eventually evaporate via parent Hawking processes. New OG
 universes nucleate from vacuum fluctuations. The supraverse maintains its
 statistical distribution across all this dynamics.
 
+\subsection{The void as a maximum-entropy eigenstate}
+\label{sec:void-eigenstate}
+
+The cleanest way to state ``the stable state of the void'' is as a variational
+problem---an eigenequation for the equilibrium configuration---and solving it sharpens
+the picture above in a way worth making explicit. With a positive cosmological
+constant, the generalised entropy of a region is the sum of its horizon areas,
+$S=(A_{\mathrm{bh}}+A_{\mathrm{cosmo}})/4\ell_p^2$ (Gibbons--Hawking). Maximising it
+over what the void may contain gives a perhaps-surprising answer: the maximum is
+\emph{empty} de Sitter space. Inserting any mass shrinks the cosmological horizon
+faster than it grows a black-hole horizon, so the total \emph{drops}; the
+Schwarzschild--de Sitter sum is largest at zero mass. The eigenstate---the genuinely
+stable, maximum-entropy state---is therefore the empty de Sitter vacuum, with the
+Gibbons--Hawking entropy
+\begin{equation}
+  S_{\mathrm{dS}} = \frac{\pi c^5}{\hbar G H_\Lambda^2}
+  \;\approx\; 3\times10^{122}\,k_B .
+\end{equation}
+
+This does not contradict the Penrose argument above; it refines it. The clumping
+intuition (uniform $\to$ clumped $\to$ black holes raises gravitational entropy) is
+what governs which way an \emph{already-present} overdensity evolves---it is why a
+fluctuation that has reached $\rhoc$ proceeds to bounce rather than disperse. But the
+global maximum, the eigenstate of the whole void, is the empty vacuum. The two are
+consistent: structure is locally entropy-increasing once seeded, yet globally
+entropy-costly to seed.
+
+\paragraph{So OGUs are not the eigenstate---they are its fluctuation spectrum.}
+The probability of a fluctuation that inserts an OGU is the Einstein/Boltzmann weight
+of its entropy \emph{deficit}, $P\sim e^{\Delta S}$ with $\Delta S<0$, and that deficit
+is
+\begin{equation}
+  \Delta S(M) \;=\; S_{\mathrm{SdS}}(M) - S_{\mathrm{dS}}
+  \;\simeq\; -\,\frac{2\pi M c^2}{\hbar H_\Lambda} \;=\; -\,I,
+\end{equation}
+\emph{exactly} the OG-nucleation instanton action of Section~\ref{sec:instanton}. The
+thermodynamic eigenequation and the nucleation instanton are one statement: the de
+Sitter Boltzmann suppression $\lambda=e^{-I}$ is precisely the horizon-entropy cost of
+the fluctuation. This unifies three results already obtained: the supraverse is
+\emph{dilute} because empty is the maximum, so each OGU is a rare entropy debt
+($I\gg I_{\mathrm{crit}}$, Section~\ref{sec:instanton}); the birth rate $\beta$ carries
+the weight $e^{-I}$ of that debt; and the recursive cycle closes because each
+heat-dead interior relaxes \emph{back} to the empty-de-Sitter eigenstate (low Weyl,
+maximal entropy) before re-fluctuating---the eigenstate is also the attractor
+(Section~\ref{sec:recursive-cycle}). The variational principle does not by itself fix
+the seed mass (that is set by $\rhoc$ and the bounce condition), but it is the
+organizing statement the equilibrium picture was implicitly using: \emph{the
+supraverse is a maximum-entropy void wearing the sparsest dusting of structure that
+thermodynamics permits}. Reproducible as
+\texttt{sims/src/cartasis\_sims/void\_eigenstate.py}.
+
 \section{Universe size distribution}
 
 \subsection{Birth versus growth}
