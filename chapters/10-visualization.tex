@@ -185,6 +185,50 @@ this one is our origin. Reproducible as
   \label{fig:supraverse}
 \end{figure}
 
+\subsection{What ``gravity-scaled'' means, computed---and the two-tier wallpaper}
+\label{sec:gravity-scaled}
+
+It pays to make the conformal map precise, because doing so changes the wallpaper's
+verdict in an instructive way. Gravity-scaling renders objects of vastly different
+physical size but comparable gravitational weight at comparable visual size by
+rescaling each as if it had a common reference density $\rho_{\mathrm{ref}}$ (water,
+say): a mass $M$ gets a gravity-scaled radius $R_{\mathrm{gs}}=(3M/4\pi
+\rho_{\mathrm{ref}})^{1/3}$, magnified relative to its true size by
+$\mu=(\rho/\rho_{\mathrm{ref}})^{1/3}$. The reference density cancels in any \emph{ratio}
+of scaled radii, so the map is well-defined---only relative densities matter
+(\Cref{fig:gravityscale}).
+
+The result is two-tier, and the boundary is exactly the identity that defines a
+universe. An OGU is a horizon-mass black hole, so its \emph{mean} density over its
+Schwarzschild volume equals the cosmic critical density---which is $\sim$the void's
+dark-energy density (the $R_s=R_H$ relation, $\Omega\approx1$, of Phase~0). Hence
+$\rho_{\mathrm{OGU}}/\rho_{\mathrm{void}}\sim1$ and the OGU's gravity-scaling
+magnification is $\mu\simeq1$: \emph{an OGU is not magnified relative to its void.}
+At the OGU/void level, gravity-scaled coordinates \emph{equal} true coordinates, the
+dilute scatter survives the scaling intact, and the wallpaper is honestly near-empty
+in either system---OGUs remain tiny, round, and $\sim e^{I/4}$ horizons apart. One
+level down it is the opposite: an astrophysical black hole is $\sim10^{17}\,
+\mathrm{kg\,m^{-3}}$, denser than its host universe by factors that make
+$\mu\sim10^{9}$--$10^{14}$, so gravity-scaling blows these otherwise-invisible compact
+objects up until the nested next-generation structure becomes visible. \emph{That} is
+where the conformal map earns its name. So the honest gravity-scaled supraverse is a
+near-empty dilute scatter of OGUs, each a richly magnified nest within---and the
+two-tier behaviour is itself a consequence of ``a universe is its own Schwarzschild
+radius.'' Reproducible as \texttt{figures/scripts/ch10\_gravity\_scale.py}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{gravity_scale}
+  \caption{Gravity-scaling magnification $\mu=(\rho/\rho_{\mathrm{ref}})^{1/3}$.
+    \emph{Left:} an OGU (horizon mass, mean density $=$ cosmic) sits at $\mu\simeq1$---
+    gravity-scaled coordinates equal true coordinates at the OGU/void level---while
+    astrophysical black holes, far denser than their host universe, magnify by
+    $10^{9}$--$10^{14}$. \emph{Right:} the black-hole mean density ($\propto M^{-2}$)
+    crosses the cosmic/void line precisely at the horizon mass, which is \emph{why} an
+    OGU scales to unity (the $R_s=R_H$ identity).}
+  \label{fig:gravityscale}
+\end{figure}
+
 \Cref{fig:dilute} is the honest counterpart: the dilute supraverse the instanton
 computation selects (Chapter~\ref{chap:supraverse}, Section~\ref{sec:instanton}),
 shown gravity-scaled so it can be seen at all. Because the vacuum has weight

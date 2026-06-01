@@ -180,6 +180,16 @@ produces it (`sims/src/cartasis_sims/`, figures in `figures/scripts/`).
   Correction logged: **spin does NOT set generation** (orthogonal); a shared-axis null
   leaves BHU1 untouched, it only says our progenitor hole was low-spin.
 
+### Gravity-scaled coordinates (the wallpaper, made precise)
+- **Two-tier magnification** (`gravity_scale.py`, Ch10). Gravity-scale each object to a
+  reference density; magnification μ=(ρ/ρ_ref)^⅓, ρ_ref cancels in ratios. **An OGU is
+  a horizon-mass hole → mean density = cosmic = void density (R_s=R_H), so μ≈1**:
+  gravity-scaled coords *equal* true coords at the OGU/void level, the dilute scatter
+  survives, the wallpaper is honestly near-empty either way. Astrophysical BHs are
+  ~1e9–1e14× denser than their universe → hugely magnified — *that's* where the
+  conformal map does work (nested structure shows). The two-tier behaviour follows from
+  "a universe is its own Schwarzschild radius."
+
 ### Big picture
 - **"From what we observe, we must exist" (epistemic Copernicus).** Ch1 synthesis:
   three measured-on-Earth ingredients (fluctuating vacuum, gravity, spin→torsion) plus
