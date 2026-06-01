@@ -122,6 +122,19 @@ produces it (`sims/src/cartasis_sims/`, figures in `figures/scripts/`).
   still climbing in — gravity leads light. The dark sector is a *rate*: dark matter ~
   accumulated projected parent mass, dark energy ~ d/dt of its growth.
 
+### Spin, chirality, and eta (what is true/observable)
+- **Spin is local; chirality is inherited** (`spin_eta.py`, Ch8 sec:spin-local). Only
+  the chirality *sign* (matter/antimatter) is inherited down a lineage (pure lineages).
+  A BHU's *spin* (magnitude + axis) is its own progenitor hole's Kerr spin, re-drawn
+  each generation — so `spin_us ≠ spin_OGU`. "OGU spin in a narrow band" is true as a
+  derived *shape* (viable seeds just above threshold), not pinned in absolute units.
+  The observable from our spin is a *preferred axis* (CMB axis-of-evil = galaxy-spin
+  handedness).
+- **η is doubly anchored** (`spin_eta.py`). CMB (ω_b → η₁₀=6.13) and BBN deuterium
+  (D/H → η₁₀=6.10) agree to ~1% — two independent probes. The parent-Hawking CMB
+  reading concerns only the plasma's *origin* and leaves BBN untouched, so η ≈ 6.1e-10
+  is secure. In SCT it's the parent debris dragged through the extrusion.
+
 ### Big picture
 - **"From what we observe, we must exist" (epistemic Copernicus).** Ch1 synthesis:
   three measured-on-Earth ingredients (fluctuating vacuum, gravity, spin→torsion) plus
