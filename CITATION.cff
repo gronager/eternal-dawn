@@ -1,0 +1,33 @@
+cff-version: 1.2.0
+title: "Dawn of Eternity: Supraverse Cartasis Theory"
+message: "If you use this work, please cite it using these metadata."
+type: software
+authors:
+  - given-names: Michael
+    family-names: Gronager
+    # Add your ORCID here once registered (https://orcid.org), e.g.:
+    # orcid: "https://orcid.org/0000-0000-0000-0000"
+abstract: >-
+  A continuous, conservative cosmology from minimal axioms (quantum mechanics,
+  special relativity, Einstein-Cartan gravity, an infinite quantum vacuum).
+  Rare vacuum fluctuations reach the Cartasis density and bounce rather than
+  forming singularities, extruding baby universes through a Cartasis membrane;
+  the supraverse condenses into an eternal, recursive population of universes.
+  The monograph plus a fully reproducible simulation/figure pipeline: every
+  number and figure regenerates from the code (make figures; make).
+keywords:
+  - cosmology
+  - Einstein-Cartan gravity
+  - torsion bounce
+  - black hole cosmology
+  - baryogenesis
+  - dark matter
+  - dark energy
+  - cosmic microwave background
+  - supraverse
+license: CC-BY-4.0
+repository-code: "https://github.com/gronager/cartasis"
+# Fill in after the Zenodo deposit mints a DOI:
+# doi: "10.5281/zenodo.XXXXXXX"
+# version: "0.1.0"
+# date-released: "2026-06-01"
