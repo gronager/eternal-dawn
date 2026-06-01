@@ -145,6 +145,15 @@ produces it (`sims/src/cartasis_sims/`, figures in `figures/scripts/`).
   strong SCT evidence, stays on Galactic pole → falsified. Cheapest decisive test
   (Euclid/Rubin), no new physics.
 
+### The lumpiness ladder (a third generation indicator)
+- **Inhomogeneity accumulates across membranes** (`lumpiness.py`, Ch6). void (smooth)
+  → OGU (minimal; = ΛCDM smooth-start, so "ΛCDM predicts an OGU") → BHU1 (us; biggest
+  jump, parent's lumpiness first appears) → … → fixed point, via `L_n² = a² + (bL_{n-1})²`.
+  The observable: ultra-large structures (Giant Arc ~1 Gly, Big Ring ~0.4 Gpc, Sloan
+  Great Wall, KBC void) exceed the ~260 Mpc homogeneity scale — the *inherited rung*,
+  evidence we are a BHU (n≥1). A **third** generation-depth indicator alongside DM+DE.
+  Direction is robust; (a,b) not yet derived from membrane projection.
+
 ### Universe types & why OGUs have no observers
 - **OGUs are structure-poor → observer-free** (`universe_feel.py`, Ch8). An OGU has no
   parent → no projected dark matter → baryon-only growth from a Silk-damped seed →
