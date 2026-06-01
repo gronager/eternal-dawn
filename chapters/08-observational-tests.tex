@@ -68,33 +68,61 @@ bias) by a log-likelihood ratio
   \label{eq:axis-llr}
 \end{equation}
 with $\theta_{\mathrm{SCT}},\theta_{\mathrm{sys}}$ the acute separations of the
-measured axis from the two candidate poles. The two poles are only $\simeq30^\circ$
-apart, so the test is entirely a question of precision (\Cref{fig:sharedaxis}). At
-the current geometry---galaxy axis $\sim\!30^\circ$ from the CMB axis but
-$\sim\!0^\circ$ from the Galactic pole---\eqref{eq:axis-llr} favours the
-\emph{systematic} decisively (odds $\sim\!10^{8}\!:\!1$ at $\sigma=5^\circ$); the
-asymmetry we have is Milky-Way contamination, not a cosmic axis. But the same formula
-shows what settles it: a de-confounded, all-sky, mirror-validated handedness map
-measuring the spin axis to $\sigma\lesssim10^\circ$ \emph{decides} between the two
-poles at $>\!100\!:\!1$. If that axis lands on the CMB axis, it is strong evidence for
-a parent-imprinted spin; if it stays on the Galactic pole at that precision, the
-parent-spin prediction is falsified. This is the cheapest decisive test in the
-program---archival plus near-future survey data (Euclid, Rubin/LSST), no new physics
----and the framework states plainly which way each outcome cuts. Reproducible as
+measured axis from the two candidate poles. The two candidate poles---the CMB axis and
+the Galactic pole---are only $\simeq30^\circ$ apart, so whether the data can tell them
+apart is entirely a question of measurement precision (\Cref{fig:sharedaxis}): with a
+spread $\sigma\sim30^\circ$ the poles are unresolved, while $\sigma\lesssim10^\circ$
+separates them at $>\!100\!:\!1$ odds. The ``$30^\circ$ versus $10^\circ$'' is just
+this---the targets sit $30^\circ$ apart, so the aim must be $\sim\!10^\circ$. At the
+current geometry---galaxy axis $\sim\!30^\circ$ from the CMB axis but $\sim\!0^\circ$
+from the Galactic pole---\eqref{eq:axis-llr} sits on the Galactic-pole side, i.e.\ the
+present asymmetry is most likely Milky-Way contamination, not a cosmic axis.
+
+\paragraph{What the outcomes actually mean (a calibrated claim).} It is important
+\emph{not} to overstate this test, because spin is local and most viable universes are
+expected to be \emph{low}-spin (the seed-vorticity distribution peaks just above the
+survival threshold, Chapter~\ref{chap:supraverse}, Section~\ref{sec:spin-dist}). So a
+quiet sky---no significant galaxy-spin axis---is the \emph{typical} expectation, not a
+failure. The three outcomes are therefore asymmetric:
+\begin{itemize}
+  \item \textbf{Confirmation (strong):} a clean, de-confounded galaxy-spin axis that
+    \emph{agrees} with the CMB anomaly axis. One shared cosmic axis across independent
+    probes is exactly the parent-spin imprint, and hard to fake.
+  \item \textbf{Falsification (strong):} two clean, statistically significant
+    axes---galaxies and CMB---that point in \emph{different} directions. A single
+    parent spin cannot imprint two disagreeing axes, so this would break the
+    parent-spin prediction outright.
+  \item \textbf{Inconclusive (the likely near-term case):} a null, or an axis that
+    tracks the Galactic pole. This is consistent both with a low-spin parent (the
+    typical case) and with systematics, and so neither confirms nor refutes---it just
+    fails to resolve. The current Galactic-pole result is of this kind: a non-detection
+    of cosmic signal, not a disproof.
+\end{itemize}
+So the test is genuinely \emph{confirmatory}---it can light up and strongly support
+the framework---and only weakly disconfirmatory unless two clean axes actively
+disagree. Crucially, it bears on \emph{one} prediction only (the parent-spin axis) and
+on \emph{nothing else} in the framework: the bounce, our $\mathrm{BHU}_1$ placement,
+the CMB peaks (set by $\omega_b,\omega_c,n_s$, not spin), the dark sector, and the
+doubly-anchored $\eta$ all stand regardless of how the axis comes out. This remains the
+cheapest test that could \emph{confirm} a uniquely-\SCT\ signature---archival plus
+near-future survey data (Euclid, Rubin/LSST), no new physics. Reproducible as
 \texttt{figures/scripts/ch08\_shared\_axis.py}.
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\textwidth]{shared_axis}
-  \caption{The decisive shared-axis test as a two-hypothesis comparison.
-    \emph{Left:} posterior odds (SCT\,:\,systematic) versus the precision $\sigma$ to
-    which the galaxy-spin axis is measured. With today's geometry (axis on the
-    Galactic pole) the odds favour the systematic (red); a de-confounded measurement
-    with the axis on the CMB axis would favour \SCT\ (blue); either way $\sigma
-    \lesssim10^\circ$ is needed to decide. \emph{Right:} because the candidate poles
-    are only $\sim30^\circ$ apart, the required precision is $\sim10^\circ$---closer
-    poles would demand sharper data. The discriminant is whether a well-measured spin
-    axis favours the CMB axis or the Galactic pole.}
+  \caption{The shared-axis test as a two-hypothesis comparison---a
+    \emph{precision} question, since the candidate poles are close.
+    \emph{Left:} posterior odds (CMB axis\,:\,Galactic pole) versus the precision
+    $\sigma$ to which the galaxy-spin axis is measured. With today's geometry (axis on
+    the Galactic pole) the odds favour the systematic (red); a de-confounded
+    measurement with the axis on the CMB axis would favour \SCT\ (blue); either way
+    $\sigma\lesssim10^\circ$ is needed to resolve the two. \emph{Right:} because the
+    candidate poles are only $\sim30^\circ$ apart, the required precision is
+    $\sim10^\circ$---closer poles would demand sharper data. A null or a Galactic-pole
+    result is \emph{inconclusive} (a low-spin parent is the typical case); the strong
+    outcomes are a galaxy axis that \emph{agrees} with the CMB axis (confirmation) or
+    two clean axes that \emph{disagree} (falsification).}
   \label{fig:sharedaxis}
 \end{figure}
 
@@ -132,6 +160,51 @@ against other cosmologies). Reproducible as \texttt{figures/scripts/ch08\_census
     cell (matter, clean; blue) holds $\sim$40\% of all viable observers, with an
     identical antimatter CPT twin. Our footprint is the typical, dominant cell.}
   \label{fig:census}
+\end{figure}
+
+\paragraph{Why the census has no OGU observers (and what other universes feel like).}
+The census places observers only in $\mathrm{BHU}_n$ cells, never in the
+original-generation universes at the root of each lineage. This is a prediction, not
+an omission, and it sharpens the Copernican story (\Cref{fig:universefeel}). An OGU
+forms directly from a void fluctuation: it has \emph{no parent}, hence no mass
+projected through a membrane, hence---in this framework---\emph{no dark matter} (which
+is exactly the parent's projected influence, Chapter~\ref{chap:darksector}) and no
+inherited large-scale lumpiness. But cold dark matter is what lets structure form: it
+grows from matter--radiation equality rather than only from recombination, and from an
+un-damped seed rather than the Silk-damped baryon one. Anchoring to our own universe as
+the marginal case, a baryon-only OGU clears only $\sim$1\% of the collapse threshold---
+its rare density peaks never reach $\delta\sim1$, so it builds essentially no galaxies,
+stars, or planets. An OGU is therefore good at exactly \emph{one} thing---making the
+occasional rare black hole, and so seeding the next generation---and almost nothing
+else: it stays nearly homogeneous, a smooth slowly-expanding gas. So there is a
+\emph{second}, independent reason we are not an OGU: beyond the fact that we
+\emph{observe} dark matter and dark energy (which an OGU lacks,
+Chapter~\ref{chap:supraverse}), an OGU could not have hosted us in the first place.
+
+The same accretion-family axis explains what the \emph{other} non-empty cells feel
+like. A baryon-rich universe (the degenerate family, $\eta\to1$) has of order one
+photon per baryon rather than the $\sim\!10^{9}$ of our clean cosmos: it has no
+radiation era and no recognisable CMB, its gas cools and fragments at once into a fast
+collapse to compact objects, and it is a short-lived degenerate furnace rather than a
+place that lingers for billions of years at star-and-planet temperatures---almost
+certainly sterile. Our universe sits at the opposite extreme: clean, photon-bathed,
+slow, and dark-matter-scaffolded. Observers are thus confined to a narrow stripe of
+the type space---clean-family $\mathrm{BHU}_n$, never the OGU root, never the
+degenerate tail---and that stripe is exactly our footprint. Reproducible as
+\texttt{figures/scripts/ch08\_universe\_feel.py}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{universe_feel}
+  \caption{What other universe types are like. \emph{Left:} along the accretion-family
+    axis, photons per baryon $1/\eta$---our clean cosmos ($\eta\sim$1\,ppb) is
+    photon-bathed and slow, while a baryon-rich one ($\eta\to1$) has no radiation era
+    and collapses fast into a degenerate, sterile furnace. \emph{Right:} structure
+    growth normalised to our universe---an OGU, having no parent and so no dark matter,
+    grows baryon-only and clears only $\sim$1\% of the collapse bar, forming no
+    galaxies. Observers live in clean-family $\mathrm{BHU}_n$ only; the OGU root and the
+    degenerate tail are empty by prediction.}
+  \label{fig:universefeel}
 \end{figure}
 
 \subsection{``Axis of evil'' in the CMB}
@@ -371,9 +444,12 @@ framework.
 \section{What would falsify \SCT?}
 
 \begin{enumerate}
-  \item \textbf{No preferred axis in galaxy rotations at higher precision.} If
-    Shamir's effect goes away with larger samples, the parent-rotation imprint is
-    disfavored.
+  \item \textbf{Two clean cosmic axes that disagree.} If a de-confounded galaxy-spin
+    axis and the CMB anomaly axis are both significant but point in \emph{different}
+    directions, a single parent spin cannot have imprinted them, and the parent-spin
+    prediction fails. (A mere \emph{absence} of a galaxy-spin axis does \emph{not}
+    falsify it: most universes are expected to be low-spin, so a quiet sky is the
+    typical case---see Section~\ref{sec:spin-local}.)
   \item \textbf{Dark-matter particle detection.} If a fundamental dark-matter
     particle is detected, the geometric interpretation fails.
   \item \textbf{Dark energy proven constant.} If DESI and successors confirm

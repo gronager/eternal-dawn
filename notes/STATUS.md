@@ -145,6 +145,16 @@ produces it (`sims/src/cartasis_sims/`, figures in `figures/scripts/`).
   strong SCT evidence, stays on Galactic pole → falsified. Cheapest decisive test
   (Euclid/Rubin), no new physics.
 
+### Universe types & why OGUs have no observers
+- **OGUs are structure-poor → observer-free** (`universe_feel.py`, Ch8). An OGU has no
+  parent → no projected dark matter → baryon-only growth from a Silk-damped seed →
+  clears only ~1% of the collapse bar → no galaxies. A *second* independent reason we
+  are a BHU, not an OGU (beyond observing DM+DE). OGUs make rare black holes and
+  almost nothing else. Baryon-rich BHUs (η→1): ~1 photon/baryon, no radiation era,
+  fast degenerate collapse, sterile. Observers live in clean-family BHU_n only — our
+  footprint. (Calibrated/comparative, anchored to our universe; not an absolute
+  collapse computation.)
+
 ### The population census (our footprint)
 - **Census of viable observers** (`census.py`, Ch8). Three independent axes:
   generation (geometric, ~90% BHU1), chirality (50/50 by CPT), family (clean vs
