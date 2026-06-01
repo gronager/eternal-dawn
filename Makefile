@@ -17,16 +17,24 @@ pdf:
 figures: sim-install
 	@for f in $(FIGSCRIPTS); do echo ">> $$f"; $(PYTHON) $$f || exit 1; done
 
-# EPUB3 via LaTeXML. latexmlc converts math to MathML and rasterises the
-# \includegraphics PDFs (needs Ghostscript/ImageMagick on PATH). Install LaTeXML
-# with e.g. 'cpanm LaTeXML' or your distro's 'latexml' package.
+# EPUB3 via pandoc. Pandoc reads the LaTeX directly and embeds the figures as PNGs
+# (EPUB cannot carry PDF images), resolving them from figures/pdf/ with the .png
+# twins that the figure scripts already produce alongside each .pdf. Install pandoc
+# from your package manager (apt/brew 'pandoc') -- a single binary, no TeX needed.
+# Run `make figures` first if any figure PNGs are missing.
 epub:
-	@command -v latexmlc >/dev/null 2>&1 || { \
-		echo "latexmlc not found. Install LaTeXML (e.g. 'cpanm LaTeXML' or apt/brew 'latexml'),"; \
-		echo "plus Ghostscript/ImageMagick for figure conversion."; exit 1; }
+	@command -v pandoc >/dev/null 2>&1 || { \
+		echo "pandoc not found. Install it (apt/brew 'pandoc') -- a single binary."; \
+		exit 1; }
 	@mkdir -p $(BUILD)
-	latexmlc $(MAIN).tex --dest=$(BUILD)/$(MAIN).epub \
-		--splitat=chapter --timeout=600
+	pandoc $(MAIN).tex --from=latex --to=epub3 \
+		--resource-path=.:figures/pdf --default-image-extension=png \
+		--mathml --toc --toc-depth=2 \
+		--metadata title="Dawn of Eternity" \
+		--metadata author="Michael Gronager" \
+		--metadata lang=en \
+		-o $(BUILD)/$(MAIN).epub
+	@echo "wrote $(BUILD)/$(MAIN).epub ($$(du -h $(BUILD)/$(MAIN).epub | cut -f1))"
 
 sim-install: $(VENV)
 $(VENV):

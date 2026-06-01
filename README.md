@@ -44,9 +44,14 @@ Requires a TeX distribution with `latexmk` (e.g. `texlive-latex-extra`,
 
 ```bash
 make          # build book.pdf via latexmk
+make epub     # build build/book.epub via pandoc (needs `pandoc`; run `make figures` first)
 make clean    # remove LaTeX aux files
 make distclean # also remove build/ and the sims venv
 ```
+
+The EPUB embeds the figures as PNGs (EPUB cannot carry PDF images), using the `.png`
+twins the figure scripts produce alongside each `.pdf`; custom macros from
+`style/cartasis.sty` are resolved by pandoc, so no raw LaTeX leaks into the text.
 
 Layout: `book.tex` is the master document; `frontmatter/`, `chapters/`, and
 `appendices/` hold the content; `style/cartasis.sty` is the preamble;
