@@ -26,15 +26,14 @@ epub:
 	@command -v pandoc >/dev/null 2>&1 || { \
 		echo "pandoc not found. Install it (apt/brew 'pandoc') -- a single binary."; \
 		exit 1; }
-	@mkdir -p $(BUILD)
 	pandoc $(MAIN).tex --from=latex --to=epub3 \
 		--resource-path=.:figures/pdf --default-image-extension=png \
 		--mathml --toc --toc-depth=2 \
 		--metadata title="Dawn of Eternity" \
 		--metadata author="Michael Gronager" \
 		--metadata lang=en \
-		-o $(BUILD)/$(MAIN).epub
-	@echo "wrote $(BUILD)/$(MAIN).epub ($$(du -h $(BUILD)/$(MAIN).epub | cut -f1))"
+		-o $(MAIN).epub
+	@echo "wrote $(MAIN).epub ($$(du -h $(MAIN).epub | cut -f1)) -- tracked, downloadable from the repo"
 
 sim-install: $(VENV)
 $(VENV):
@@ -51,7 +50,7 @@ hash:
 	@echo "# generated: $$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> MANIFEST.sha256
 	@echo "# git commit: $$(git rev-parse HEAD 2>/dev/null || echo none)" >> MANIFEST.sha256
 	@echo "# author: Michael Gronager" >> MANIFEST.sha256
-	@find book.pdf book.tex CLAUDE.md README.md CITATION.cff LICENSE.md \
+	@find book.pdf book.epub book.tex CLAUDE.md README.md CITATION.cff LICENSE.md \
 		frontmatter chapters appendices style bibliography \
 		figures/scripts figures/pdf sims/src sims/tests notes \
 		-type f \( -name '*.tex' -o -name '*.py' -o -name '*.pdf' -o -name '*.bib' \

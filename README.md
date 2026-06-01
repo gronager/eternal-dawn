@@ -44,7 +44,7 @@ Requires a TeX distribution with `latexmk` (e.g. `texlive-latex-extra`,
 
 ```bash
 make          # build book.pdf via latexmk
-make epub     # build build/book.epub via pandoc (needs `pandoc`; run `make figures` first)
+make epub     # build book.epub via pandoc (needs `pandoc`; run `make figures` first)
 make clean    # remove LaTeX aux files
 make distclean # also remove build/ and the sims venv
 ```

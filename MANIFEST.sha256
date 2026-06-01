@@ -1,11 +1,11 @@
 # Dawn of Eternity -- provenance manifest
-# generated: 2026-06-01T09:46:00Z
-# git commit: 46d55cda81cd68ec1e82d11aeac2bdb55a533806
+# generated: 2026-06-01T09:49:42Z
+# git commit: 95248522db03493005604473d5eb6df9b09fbc4b
 # author: Michael Gronager
 b5e69122061fd395bcfcc76cc48ae6b3eb0f85d7c28051fa6c86a726f4538036  CITATION.cff
 f4867626b36b80a03258ee24ea2d54060d8f7ba980a4f89f214f759de5159e18  CLAUDE.md
 56f3433cbd89a8b9b21772461986620296ad1d51503dddef76495eff63ef8264  LICENSE.md
-3fc4ab41ec3ebc52fc443608ad088a8853e67de9bfe5993f3b59b1ed5f18fee7  README.md
+f12c0f72bf2b3f6122277b8d6360a35512e315679b480fca9865023f3f44ed3d  README.md
 4b16993b1066f147505037cba3ce00ddfc0843e9d00ae0721199bbf810e17a7f  appendices/A-open-questions.tex
 a4a5b36dc7ed60c465d53de80ebc3f1d2a01a21710770893c824ae0f89010dfa  bibliography/references.bib
 6718a788ad6ab0ca64ac58143a5d6e0ca1b55290de646da119ccd473a27e4a05  book.pdf
