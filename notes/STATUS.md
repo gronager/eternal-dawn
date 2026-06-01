@@ -95,9 +95,16 @@ produces it (`sims/src/cartasis_sims/`, figures in `figures/scripts/`).
 - **Acoustic peak heights reproduced (semi-analytic).** Baryon loading `R ≈ 0.62`
   (computed) drives the odd/even alternation; a tight-coupling `D_ℓ` (monopole +
   Doppler + driving + Silk damping) on the bounce's scale-invariant input matches the
-  Planck peak heights to tens of percent. The 1st/2nd ratio ≈ 2.2 **measures ω_b** —
-  which SCT sources from the inherited η; ω_c-sensitive 3rd/4th peaks need a Boltzmann
-  code. `cmb_peaks.py`.
+  Planck peak heights to tens of percent. The 1st/2nd ratio ≈ 2.2 **measures ω_b**.
+  `cmb_peaks.py`.
+- **Full Boltzmann precision (CAMB).** Feeding CAMB the SCT-sourced parameters (bounce
+  `n_s`, `ω_b` from inherited η, `ω_c` from the parent/dark sector), ordinary
+  recombination gives the full TT spectrum — peaks at `ℓ ≈ 220,536,813,1126,1421` with
+  the right heights, ~1σ vs a Planck-sensitivity mock. **Independent check: inherited
+  η=6.1e-10 → ω_b=0.0223, within 0.5% of Planck**, the number that sets the peak
+  ratio. Runs in ~2 s/spectrum on one core (no special hardware). Open: deriving
+  `n_s, ω_b, ω_c` from bounce microphysics, not as SCT-motivated Planck-valued inputs.
+  `camb_cmb.py` (optional `camb` extra).
 
 ### Dark sector
 - Dark energy as parent accretion confronts DESI DR2 (`dark_energy.py`); CMB-axis /

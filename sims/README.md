@@ -22,7 +22,14 @@ cd sims
 uv venv && uv pip install -e ".[dev]"
 .venv/bin/pytest -q                       # tests/test_identities.py
 .venv/bin/python ../figures/scripts/ch02_bh_first_light.py
+
+# optional: the precision CMB pass (Boltzmann), ~2 s/spectrum, no special hardware
+uv pip install -e ".[camb]"               # or: uv pip install camb
+.venv/bin/python ../figures/scripts/ch09_camb.py
 ```
+
+The `camb` extra is optional; the CAMB tests skip cleanly when it is absent, so the
+core suite stays dependency-light.
 
 Or from the project root: `make sim-test` and `make figures`.
 
