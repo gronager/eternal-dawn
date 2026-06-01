@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
-r"""The dilute supraverse, true to scale: round islands in a weighted void.
+r"""The dilute supraverse, gravity-scaled: round islands in a weighted void.
+
+NOTE ON SCALE. This is a GRAVITY-SCALED (conformal) rendering -- the same non-linear
+map (Ch.10) that shows physically multiscale nested universes at comparable visual
+size so the foam is legible. It is NOT linear "true to scale": in the dilute regime
+(instanton action I ~ 1e84) neighbouring OGUs sit ~ e^{I/4} cosmological horizons
+apart, so a literally linear frame would be uniform void with at most a single
+infinitesimal dot. The island radii and separations here are illustrative (chosen for
+visibility); what IS physical is the qualitative content -- isolated, round (slightly
+oblate), well-separated discs in a weighted void that dominates, never packed polygons.
 
 The instanton verdict (I >> I_crit) puts us in the dilute regime: OGUs are isolated,
 round, and astronomically far apart. The vacuum has weight (rho_Lambda ~ 6e-27 kg/m^3),
@@ -120,11 +129,12 @@ def main() -> None:
     fig.text(0.022, 0.05, "THE DILUTE SUPRAVERSE", color=WHITE, fontsize=24,
              fontweight="bold", alpha=0.95)
     fig.text(0.022, 0.025,
-             f"true to scale: the void weighs $\\rho_\\Lambda\\approx${vs.vacuum_density():.0e}"
-             " kg/m$^3$ (~3 protons/m$^3$), so it occupies real space -- universes are "
-             "isolated flat discs (slightly oblate from spin), not polygons; the void "
-             "dominates, and they sit $\\sim e^{I/4}$ horizons apart  ($I\\sim10^{84}$).",
-             color="0.88", fontsize=9.5, alpha=0.9)
+             f"gravity-scaled (conformal) so the foam is visible -- the void weighs "
+             f"$\\rho_\\Lambda\\approx${vs.vacuum_density():.0e} kg/m$^3$, so universes are "
+             "isolated flat discs (slightly oblate from spin), not polygons. At LINEAR "
+             "scale this frame is near-empty: neighbours sit $\\sim e^{I/4}$ horizons "
+             "apart ($I\\sim10^{84}$) -- the dilute verdict made visible.",
+             color="0.88", fontsize=9.0, alpha=0.9)
 
     out = os.path.join(PDF_DIR, "dilute_supraverse.pdf")
     fig.savefig(out, facecolor=VOID)
