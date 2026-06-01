@@ -99,9 +99,22 @@ produces it (`sims/src/cartasis_sims/`, figures in `figures/scripts/`).
   which SCT sources from the inherited η; ω_c-sensitive 3rd/4th peaks need a Boltzmann
   code. `cmb_peaks.py`.
 
-### Dark sector (earlier work, in repo)
+### Dark sector
 - Dark energy as parent accretion confronts DESI DR2 (`dark_energy.py`); CMB-axis /
   galaxy-spin alignment as the cheapest decisive test (`axes.py`, `galaxy_spins.py`).
+- **Dark matter as look-back: gravity felt before light seen** (`lookback.py`). The
+  membrane is our *past* horizon, so parent-injected matter arrives in our deep past.
+  The particle horizon grows (47→64 Gly asymptote; +1 Gyr → +1 Gly further back), but
+  the parent's mass is already in our metric (felt as dark matter) while its light is
+  still climbing in — gravity leads light. The dark sector is a *rate*: dark matter ~
+  accumulated projected parent mass, dark energy ~ d/dt of its growth.
+
+### Big picture
+- **"From what we observe, we must exist" (epistemic Copernicus).** Ch1 synthesis:
+  three measured-on-Earth ingredients (fluctuating vacuum, gravity, spin→torsion) plus
+  infinity *force* a recursive supraverse that births universes like ours forever —
+  the claim is not "might be" but "must be," and the Copernican principle is returned
+  as a result, not assumed.
 
 ---
 
