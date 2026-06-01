@@ -29,6 +29,8 @@ build/
 !figures/pdf/*.pdf
 # but not the preview rasters
 figures/pdf/*.png
+# except the cover PNG, which the EPUB build embeds as --epub-cover-image
+!figures/pdf/cover.png
 
 # Track the built monograph (PDF + EPUB) so both are downloadable from the repo.
 # No git-lfs here; a few MB is fine and consistent with committing the figure PDFs

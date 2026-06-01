@@ -28,7 +28,9 @@ epub:
 		exit 1; }
 	pandoc $(MAIN).tex --from=latex --to=epub3 \
 		--resource-path=.:figures/pdf --default-image-extension=png \
-		--mathml --toc --toc-depth=2 \
+		--mathml --toc --toc-depth=2 --number-sections \
+		--top-level-division=chapter \
+		--epub-cover-image=figures/pdf/cover.png \
 		--metadata title="Dawn of Eternity" \
 		--metadata author="Michael Gronager" \
 		--metadata lang=en \

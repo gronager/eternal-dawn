@@ -24,6 +24,7 @@
 \RequirePackage{array}
 \RequirePackage{graphicx}
 \graphicspath{{figures/pdf/}}
+\RequirePackage{eso-pic}   % full-bleed background images (the front cover)
 \RequirePackage{enumitem}
 \setlist{itemsep=0.2ex, topsep=0.6ex}
 
@@ -37,7 +38,23 @@
 \checkandfixthelayout
 
 % --- Sectioning, headers, ToC ---
-\chapterstyle{bringhurst}
+% Custom chapter style: shows the chapter NUMBER prominently above the title,
+% in the sans/small-caps idiom of the rest of the headings (bringhurst hid it).
+\makechapterstyle{cartasischap}{%
+  \setlength{\beforechapskip}{2\onelineskip}%
+  \setlength{\afterchapskip}{2\onelineskip}%
+  \renewcommand*{\chapnamefont}{\normalfont\sffamily\bfseries\small}%
+  \renewcommand*{\chapnumfont}{\normalfont\sffamily\bfseries\Huge}%
+  \renewcommand*{\chaptitlefont}{\normalfont\sffamily\bfseries\LARGE}%
+  \renewcommand*{\printchaptername}{%
+    \chapnamefont\MakeUppercase{\@chapapp}}%
+  \renewcommand*{\chapternamenum}{\space}%
+  \renewcommand*{\printchapternum}{\chapnumfont\thechapter}%
+  \renewcommand*{\afterchapternum}{\par\nobreak\vskip\onelineskip}%
+  \renewcommand*{\printchaptertitle}[1]{\chaptitlefont ##1\par\nobreak
+    \vskip\onelineskip \hrule height \normalrulethickness}%
+}
+\chapterstyle{cartasischap}
 \setsecnumdepth{subsection}
 \maxsecnumdepth{subsection}
 \settocdepth{section}
