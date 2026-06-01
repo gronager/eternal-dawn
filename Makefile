@@ -53,8 +53,8 @@ hash:
 	@find book.pdf book.epub book.tex CLAUDE.md README.md CITATION.cff LICENSE.md \
 		frontmatter chapters appendices style bibliography \
 		figures/scripts figures/pdf sims/src sims/tests notes \
-		-type f \( -name '*.tex' -o -name '*.py' -o -name '*.pdf' -o -name '*.bib' \
-		-o -name '*.sty' -o -name '*.md' -o -name '*.cff' \) 2>/dev/null \
+		-type f \( -name '*.tex' -o -name '*.py' -o -name '*.pdf' -o -name '*.epub' \
+		-o -name '*.bib' -o -name '*.sty' -o -name '*.md' -o -name '*.cff' \) 2>/dev/null \
 		| LC_ALL=C sort | xargs sha256sum >> MANIFEST.sha256
 	@echo "wrote MANIFEST.sha256 ($$(grep -c '^[0-9a-f]' MANIFEST.sha256) files hashed)"
 	@sha256sum MANIFEST.sha256 | sed 's/^/  root hash: /'
