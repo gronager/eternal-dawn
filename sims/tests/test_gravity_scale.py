@@ -39,3 +39,10 @@ def test_bh_mean_density_falls_as_inverse_mass_squared():
     assert math.isclose(
         gs.black_hole_mean_density(1e40) / gs.black_hole_mean_density(1e41),
         100.0, rel_tol=1e-6)
+
+
+def test_ogu_separation_over_diameter_is_absurdly_large():
+    # the one emptiness number: sep/diam ~ 10^(2.7e83) for I ~ 2.5e84
+    from cartasis_sims import birth_rate as br
+    log10_ratio = gs.ogu_separation_over_diameter_log10(br.seed_instanton_action())
+    assert 1e83 < log10_ratio < 1e84          # exponent ~2.7e83 (dwarfs 1e80 atoms)

@@ -85,3 +85,17 @@ def gravity_scaled_separation_ratio(M_a: float, M_b: float) -> float:
     """Ratio of gravity-scaled radii R_gs(M_a)/R_gs(M_b) = (M_a/M_b)^(1/3); the
     rho_ref cancels, so this is what the conformal map actually fixes."""
     return (M_a / M_b) ** (1.0 / 3.0)
+
+
+def ogu_separation_over_diameter_log10(instanton_action: float) -> float:
+    """log10 of (mean OGU separation / OGU diameter), the one memorable emptiness
+    number. Mean separation ~ e^{I/4} de Sitter horizon radii; an OGU is a
+    horizon-mass hole so its diameter ~ 2 horizon radii. The ratio is the SAME
+    gravity-scaled or not (OGU and void share a density, magnification ~1):
+
+        sep/diam ~ e^{I/4} / 2,   log10(sep/diam) = (I/4)/ln10 - log10(2).
+
+    For the computed I ~ 2.5e84 this is ~10^(2.7e83): the exponent alone dwarfs
+    every number in physics (the observable universe holds ~1e80 atoms)."""
+    return instanton_action / 4.0 / np.log(10.0) - np.log10(2.0)
+
