@@ -41,3 +41,21 @@ def test_spectrum_is_finite_and_damped():
     assert np.all(np.isfinite(TT))
     # Silk-damped tail: power at l~2000 well below the first peak
     assert TT[2000] < 0.2 * TT[220]
+
+
+@pytest.mark.skipif(not cc.HAVE_CAMB, reason="CAMB not installed")
+def test_dark_matter_sets_peak_heights():
+    # more cold dark matter -> less radiation driving -> lower first peak
+    p_lo = cc.peak_table(omch2=0.09)
+    p_hi = cc.peak_table(omch2=0.15)
+    assert p_lo[0][1] > p_hi[0][1]                 # first peak falls with omega_c
+    # and the first/third ratio drops (3rd lifts relative to 1st)
+    assert p_lo[0][1] / p_lo[2][1] > p_hi[0][1] / p_hi[2][1]
+
+
+@pytest.mark.skipif(not cc.HAVE_CAMB, reason="CAMB not installed")
+def test_dark_energy_sets_peak_positions():
+    # more dark energy (higher H0 at fixed physical densities) slides peaks to lower l
+    l1_lo = cc.peak_table(H0=60.0)[0][0]
+    l1_hi = cc.peak_table(H0=75.0)[0][0]
+    assert l1_hi < l1_lo                            # peak position shifts with Omega_L

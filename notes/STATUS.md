@@ -105,6 +105,12 @@ produces it (`sims/src/cartasis_sims/`, figures in `figures/scripts/`).
   ratio. Runs in ~2 s/spectrum on one core (no special hardware). Open: deriving
   `n_s, ω_b, ω_c` from bounce microphysics, not as SCT-motivated Planck-valued inputs.
   `camb_cmb.py` (optional `camb` extra).
+- **Darkness is the harbinger of light** (CAMB, `ch09_darkness.py`). The dark sector
+  *sculpts* the CMB along two axes: dark matter `ω_c` sets the peak **heights**
+  (radiation driving / well depth), dark energy `Ω_Λ` sets the peak **positions**
+  (distance to last scattering). In SCT both are the parent's gravity felt before its
+  light (Ch.6 lookback), so the darkness in our metric now is what shaped the oldest
+  light then — CMB and dark sector are one parent read at two times.
 
 ### Dark sector
 - Dark energy as parent accretion confronts DESI DR2 (`dark_energy.py`); CMB-axis /

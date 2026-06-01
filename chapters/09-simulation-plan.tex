@@ -556,6 +556,44 @@ Planck-valued inputs used here. Reproducible as
   \label{fig:camb}
 \end{figure}
 
+\paragraph{Darkness is the harbinger of light.} The same Boltzmann calculation makes
+explicit a connection at the heart of the framework: the dark sector and the CMB are
+one phenomenon, seen at two times. The CMB peaks are not merely \emph{consistent} with
+dark matter and dark energy---they are \emph{drawn} by them, along two independent
+axes (\Cref{fig:darkness}):
+\begin{itemize}
+  \item \textbf{Dark matter sets the peak heights.} Cold dark matter deepens the
+    gravitational wells the photon--baryon fluid oscillates in and damps the radiation
+    driving, so raising $\omega_c$ lowers the first and second peaks and lifts the
+    third relative to them. The peak-height envelope is dark matter's fingerprint.
+  \item \textbf{Dark energy sets the peak positions.} It fixes the distance to last
+    scattering, hence the angle the sound horizon subtends, hence the multipole of
+    every peak; raising $\Omega_\Lambda$ slides the whole series to lower $\ell$.
+\end{itemize}
+In $\Lambda$CDM these are two parameters that happen to shape the spectrum. In \SCT\
+they are the \emph{same thing} and they have a \emph{cause}: both are the parent's
+mass--energy reaching us through the membrane as gravity ahead of light
+(Chapter~\ref{chap:darksector}, Section~\ref{sec:lookback})---dark matter the parent's
+accumulated projected mass, dark energy the rate of its growth. So the invisible
+darkness filling our metric \emph{now}---felt, not yet seen---is precisely what
+sculpted the visible light emitted at our past horizon \emph{then}. The CMB is the
+oldest light; the dark sector is the gravity that ran ahead of it; and they are the
+same parent, read at recombination and read today. Darkness is the harbinger of
+light. Reproducible as \texttt{figures/scripts/ch09\_darkness.py} (requires CAMB).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{darkness}
+  \caption{The dark sector sculpts the CMB along two axes. \emph{Left:} varying the
+    cold-dark-matter density $\omega_c$ (ours in blue) changes the peak \emph{heights}
+    ---more dark matter damps the driving and lowers the first peak. \emph{Right:}
+    varying the dark energy $\Omega_\Lambda$ (through $H_0$ at fixed physical
+    densities) slides the peak \emph{positions}. In \SCT\ both are the parent's
+    gravity felt before its light (Section~\ref{sec:lookback}), so the darkness in our
+    metric now is what shaped the oldest light: darkness is the harbinger of light.}
+  \label{fig:darkness}
+\end{figure}
+
 \paragraph{Effort estimate.} 6--12 months for someone with
 cosmological-perturbation-theory background; $\sim 1000$--$3000$ lines of code
 building on Tier 1.
