@@ -232,15 +232,61 @@ data will sharpen this. If evolving dark energy is confirmed at $>5\sigma$,
 $\Lambda$CDM is in trouble and \SCT-like models become favored.
 
 \subsection{Hubble tension}
+\label{sec:hubble-tension}
 
-A persistent $\sim 5\sigma$ disagreement between early-universe
-($H_0 \approx 67$) and local ($H_0 \approx 73$) measurements.
-\paragraph{\SCT prediction.} Bounce dynamics modify the relationship between
-early and late expansion. A specific calculation is needed, but the framework has
-degrees of freedom to potentially resolve the tension.
-\paragraph{Status.} Calculational work needed. \SCT must reproduce both CMB
-physics and local measurements consistently. If it can, this is a major
-validation.
+A persistent $\sim 5\sigma$ disagreement between the early-universe value (CMB
+sound horizon, $H_0\approx67.4$) and the local distance ladder
+($H_0\approx73.0$). \SCT\ is natively an \emph{inhomogeneous}, backreaction
+cosmology---its dark sector is the parent's ongoing accretion and its large-scale
+structure is a void-dominated foam (Chapter~\ref{chap:darksector})---so it
+inherits Wiltshire's \emph{timescape} resolution~\citep{wiltshire2007,
+wiltshire2009} with \emph{no} added parameter. The mechanism is a clock-rate
+effect: the real universe is a two-phase mix of voids (volume fraction $f_v$,
+curvature-dominated) and walls (where galaxies and observers sit), and general
+relativity makes a void clock run faster than a wall clock. We are wall observers,
+so the Hubble rate we infer---the \emph{dressed} parameter---exceeds the
+volume-average \emph{bare} parameter once voids dominate the volume, by Wiltshire's
+closed-form factor
+\begin{equation}
+  \frac{H_0^{\mathrm{dressed}}}{\bar H_0}
+   \;=\; R(f_v)\;=\;\frac{4f_v^2+f_v+4}{2\,(2+f_v)},
+  \label{eq:dressed-bare}
+\end{equation}
+with $R(0)=1$ (the homogeneous limit: no effect).
+
+\paragraph{The numbers.} The tracker solution gives $f_v(t)=t/(t+b)$, so the void
+fraction is $\sim10^{-4}$ at recombination---the CMB sound-horizon $H_0$ is
+\emph{untouched}---and grows to the observed $f_{v0}\simeq0.76$ today. There
+$R(0.762)\simeq1.28$: a $28\%$ excess of the local/wall Hubble over the
+global/volume-average one, against an observed early-vs-late gap of only
+$\tau=(73.0-67.4)/67.4\simeq8.4\%$ (\Cref{fig:hubble}). The effect therefore has
+the \emph{right sign} (local exceeds global) and \emph{more than enough}
+magnitude---the void fraction needed to source the full gap is $f_v\simeq0.47$,
+\emph{below} the observed value---and it switches on only at late times, exactly
+the early-vs-late structure of the tension. The controlling quantity is the
+\emph{measured} void fraction, not a tuned parameter.
+
+\paragraph{Status.} A sign-and-magnitude result, not a substitute for the global
+data fit: the full timescape fit returns a single self-consistent dressed
+$H_0\simeq61.7$ (bare $\bar H_0\simeq48$, present lapse $\bar\gamma_0\simeq1.381$).
+What the framework supplies here is the demonstration---parameter-free---that
+inhomogeneity at the observed void fraction is amply capable of the tension, in
+the right direction and confined to late times. Reproducible as
+\texttt{sims/src/cartasis\_sims/hubble\_timescape.py}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{hubble_timescape}
+  \caption{The Hubble tension from inhomogeneity (the timescape clock-rate
+    effect). \emph{Left:} the dressed/bare Hubble excess $R(f_v)-1$ of
+    \eqref{eq:dressed-bare}---the factor by which a wall observer over-reads the
+    volume-average Hubble. It is zero in the homogeneous limit, crosses the
+    observed $8.4\%$ gap (shaded) at $f_v\simeq0.47$, and reaches $28\%$ at the
+    observed void fraction $f_{v0}\simeq0.76$. \emph{Right:} the tracker void
+    fraction $f_v(t)=t/(t+b)$---$\sim10^{-4}$ at recombination (the CMB is
+    untouched), rising to $0.76$ today, so the effect is purely late-time.}
+  \label{fig:hubble}
+\end{figure}
 
 \subsection{$\sigma_8$ tension}
 
@@ -468,9 +514,15 @@ framework.
     order of magnitude}, not the number; a spot-on test needs $C$, $\sigma$, and
     $\eta_{\min}$ pinned from Einstein--Cartan microphysics so that $\eta$ is
     predicted in absolute units.
-  \item \textbf{Hubble tension resolution.} Show that bounce-modified
-    early-universe dynamics produce $H_0$ consistent with both CMB and local
-    measurements.
+  \item \textbf{Hubble tension resolution.} \emph{First-cut done}
+    (Section~\ref{sec:hubble-tension}; \texttt{hubble\_timescape.py}). The
+    framework is natively inhomogeneous, so it inherits the timescape clock-rate
+    effect: at the observed void fraction $f_{v0}\simeq0.76$ the wall-observer
+    (local) Hubble over-reads the volume-average (global) one by $\sim28\%$, of
+    the right sign and well above the $8.4\%$ early-vs-late gap, and confined to
+    late times so the CMB is untouched. What is robust now is the
+    \emph{direction and magnitude}; a spot-on test needs the full data fit
+    (Wiltshire's returns a single dressed $H_0\simeq61.7$).
 \end{itemize}
 
 \section{What would falsify \SCT?}
