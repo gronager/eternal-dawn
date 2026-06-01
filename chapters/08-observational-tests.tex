@@ -98,6 +98,42 @@ program---archival plus near-future survey data (Euclid, Rubin/LSST), no new phy
   \label{fig:sharedaxis}
 \end{figure}
 
+\paragraph{Spin does not set generation---and the census footprint.} A caution and a
+payoff. The \emph{caution}: a null shared-axis result does \emph{not} make us a deeper
+generation. Spin and generation depth are orthogonal---spin is the local progenitor
+hole's Kerr spin, re-drawn every generation
+(Section~\ref{sec:spin-local}), whereas our depth is fixed by the dark-matter$+$dark-energy
+anchor ($n\ge1$) plus the branching statistics (Chapter~\ref{chap:supraverse}). A quiet
+axis just says our progenitor hole was low-spin; it leaves our $\mathrm{BHU}_1$
+placement untouched. The \emph{payoff}: the same population math lets us tabulate the
+viable-observer census along its three independent axes and locate our footprint
+(\Cref{fig:census}):
+\begin{itemize}
+  \item \textbf{generation} $n$: geometric, $P(\mathrm{BHU}_n\mid n\ge1)=(1-\epsilon)
+    \epsilon^{n-1}$, so $\sim$90\% of viable observers are $\mathrm{BHU}_1$
+    ($\epsilon\sim0.1$);
+  \item \textbf{chirality}: $50/50$ matter/antimatter by CPT, the two halves
+    observationally identical;
+  \item \textbf{family}: clean/photon-dominated ($\eta\sim$ppb, a fair-sample
+    progenitor) versus baryon-rich/degenerate---observers sit in the clean family.
+\end{itemize}
+Our derived tags---$\mathrm{BHU}_1$, matter, clean, $\sim$a Hubble mass---land in the
+\emph{dominant} cell, which holds $\sim$40\% of all viable observers. That is the
+quantitative form of the Copernican footprint check: we are where most observers are,
+not a rare outlier (a strong consistency test, though not by itself a discriminator
+against other cosmologies). Reproducible as \texttt{figures/scripts/ch08\_census.py}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{census}
+  \caption{The supraverse census of viable observers. \emph{Left:} the generation
+    tower is geometric and $\mathrm{BHU}_1$-dominated; we are in the $n=1$ bar.
+    \emph{Right:} within $\mathrm{BHU}_1$, the chirality$\times$family breakdown---our
+    cell (matter, clean; blue) holds $\sim$40\% of all viable observers, with an
+    identical antimatter CPT twin. Our footprint is the typical, dominant cell.}
+  \label{fig:census}
+\end{figure}
+
 \subsection{``Axis of evil'' in the CMB}
 
 Low-multipole CMB anomalies show suspicious alignments between the quadrupole,

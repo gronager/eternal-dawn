@@ -145,6 +145,14 @@ produces it (`sims/src/cartasis_sims/`, figures in `figures/scripts/`).
   strong SCT evidence, stays on Galactic pole → falsified. Cheapest decisive test
   (Euclid/Rubin), no new physics.
 
+### The population census (our footprint)
+- **Census of viable observers** (`census.py`, Ch8). Three independent axes:
+  generation (geometric, ~90% BHU1), chirality (50/50 by CPT), family (clean vs
+  baryon-rich). Our tags (BHU1, matter, clean, ~Hubble mass) land in the **dominant
+  cell ~40% of all viable observers** — the quantitative Copernican footprint check.
+  Correction logged: **spin does NOT set generation** (orthogonal); a shared-axis null
+  leaves BHU1 untouched, it only says our progenitor hole was low-spin.
+
 ### Big picture
 - **"From what we observe, we must exist" (epistemic Copernicus).** Ch1 synthesis:
   three measured-on-Earth ingredients (fluctuating vacuum, gravity, spin→torsion) plus
