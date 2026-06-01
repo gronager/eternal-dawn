@@ -42,6 +42,13 @@ from __future__ import annotations
 
 import numpy as np
 
+try:
+    import camb as _camb
+    HAVE_CAMB = True
+except Exception:                       # pragma: no cover
+    _camb = None
+    HAVE_CAMB = False
+
 MPC_PER_GLY = 306.6
 HOMOGENEITY_MPC = 260.0          # ~ the LambdaCDM homogeneity scale (End of Greatness)
 
@@ -71,6 +78,31 @@ def is_monotonic(L: np.ndarray) -> bool:
 def biggest_jump_index(L: np.ndarray) -> int:
     """Which membrane crossing adds the most lumpiness (the OGU->BHU1 step)."""
     return int(np.argmax(np.diff(L)))
+
+
+def lcdm_sigma_R(R_mpch, H0=67.36, ombh2=0.02237, omch2=0.12, ns=0.9649,
+                As=2.1e-9):
+    """LambdaCDM rms density contrast sigma(R) on comoving radius R [Mpc/h], from
+    CAMB's linear matter power spectrum (top-hat window). This is the OGU/smooth-start
+    FLOOR: structure a singular-start model builds internally. Falls steeply with R --
+    sigma8 ~ 0.81 at 8 Mpc/h, but only ~0.016 at the 260 Mpc/h homogeneity scale.
+    Requires CAMB; raises if absent."""
+    if not HAVE_CAMB:
+        raise RuntimeError("CAMB not installed (uv pip install camb).")
+    pars = _camb.set_params(H0=H0, ombh2=ombh2, omch2=omch2, ns=ns, As=As,
+                            tau=0.0544, mnu=0.06)
+    pars.set_matter_power(redshifts=[0.0], kmax=2.0)
+    pars.NonLinear = _camb.model.NonLinear_none
+    res = _camb.get_results(pars)
+    kh, _, pk = res.get_matter_power_spectrum(minkh=1e-4, maxkh=1.0, npoints=400)
+    pk = pk[0]
+    out = []
+    for R in np.atleast_1d(R_mpch).astype(float):
+        x = kh * R
+        W = 3.0 * (np.sin(x) - x * np.cos(x)) / x**3
+        integ = kh**3 * pk / (2.0 * np.pi**2) * W**2
+        out.append(float(np.sqrt(np.trapezoid(integ / kh, kh))))
+    return np.array(out) if np.ndim(R_mpch) else out[0]
 
 
 def gly_to_k(gly: float) -> float:

@@ -45,3 +45,15 @@ def test_ultra_large_structures_exceed_homogeneity():
 def test_gly_to_k_conversion():
     # 1 Gly ~ 307 Mpc -> k ~ 0.02 /Mpc
     assert math.isclose(lp.gly_to_k(1.0), 2 * math.pi / 306.6, rel_tol=1e-6)
+
+
+def test_lcdm_floor_is_tiny_on_ultra_large_scales():
+    # CAMB-computed: sigma8 ~ 0.81 but the floor collapses to ~0.01 at the
+    # homogeneity scale -- so observed ultra-large structure is genuine excess.
+    import pytest
+    if not lp.HAVE_CAMB:
+        pytest.skip("CAMB not installed")
+    assert abs(lp.lcdm_sigma_R(8.0) - 0.81) < 0.05      # sigma8 anchor
+    assert lp.lcdm_sigma_R(260.0) < 0.05                 # floor tiny at homogeneity
+    # monotonically falling with scale
+    assert lp.lcdm_sigma_R(400.0) < lp.lcdm_sigma_R(100.0)

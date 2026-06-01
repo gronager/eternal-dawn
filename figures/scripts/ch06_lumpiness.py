@@ -104,20 +104,43 @@ def main():
     axL.set_ylim(0, Lstar * 1.25)
     axL.grid(True, axis="y", alpha=0.2)
 
-    # Panel R: observed ultra-large structures vs homogeneity scale.
-    items = sorted(lp.ULTRA_LARGE.items(), key=lambda x: x[1])
-    names = [k for k, _ in items]
-    vals = [v for _, v in items]
-    cols = ["C0" if lp.exceeds_homogeneity(v) else "0.6" for v in vals]
-    axR.barh(names, vals, color=cols, alpha=0.85)
-    axR.axvline(lp.HOMOGENEITY_MPC, color="C3", ls="--", lw=1.5)
-    axR.text(lp.HOMOGENEITY_MPC + 8, 0.1, "homogeneity\nscale ~260 Mpc\n"
-             "(smooth-start / OGU floor)", fontsize=8, color="C3")
-    axR.set_xlabel("comoving extent  [Mpc]")
-    axR.set_title("Observed ultra-large structure exceeds the floor\n"
-                  "the excess = inherited lumpiness $\\Rightarrow$ we are a BHU",
-                  fontsize=11)
-    axR.grid(True, axis="x", alpha=0.2)
+    # Panel R: the CAMB-computed LambdaCDM (OGU) floor sigma(R), with observed
+    # ultra-large structures marked at their scales.
+    if lp.HAVE_CAMB:
+        R = np.logspace(np.log10(8), np.log10(700), 80)
+        sig = lp.lcdm_sigma_R(R)
+        axR.plot(R, sig, "0.4", lw=2.2, label=r"$\Lambda$CDM (OGU) floor $\sigma(R)$ [CAMB]")
+        axR.axvline(lp.HOMOGENEITY_MPC, color="C3", ls="--", lw=1.3)
+        axR.text(lp.HOMOGENEITY_MPC * 1.05, 0.4, "homogeneity\nscale", fontsize=8,
+                 color="C3")
+        # observed ultra-large structures: drop a marker at their scale on the floor
+        for name, mpc in lp.ULTRA_LARGE.items():
+            if name == "BAO scale (ref)":
+                continue
+            s = lp.lcdm_sigma_R(mpc)
+            axR.plot([mpc], [s], "C0o", ms=7)
+            axR.annotate(name, xy=(mpc, s), xytext=(6, 6),
+                         textcoords="offset points", fontsize=7.5, color="C0")
+        axR.set_xscale("log")
+        axR.set_yscale("log")
+        axR.set_xlabel(r"comoving scale  $R$  [Mpc/$h$]")
+        axR.set_ylabel(r"$\sigma(R)$  (rms density contrast)")
+        axR.set_title("The smooth-start floor is tiny on these scales\n"
+                      "$\\sigma\\sim0.01$ at 260 Mpc -- the structures are the excess",
+                      fontsize=11)
+        axR.legend(fontsize=8.5, loc="upper right")
+        axR.grid(True, which="both", alpha=0.2)
+    else:
+        items = sorted(lp.ULTRA_LARGE.items(), key=lambda x: x[1])
+        names = [k for k, _ in items]
+        vals = [v for _, v in items]
+        cols = ["C0" if lp.exceeds_homogeneity(v) else "0.6" for v in vals]
+        axR.barh(names, vals, color=cols, alpha=0.85)
+        axR.axvline(lp.HOMOGENEITY_MPC, color="C3", ls="--", lw=1.5)
+        axR.set_xlabel("comoving extent  [Mpc]")
+        axR.set_title("Observed ultra-large structure exceeds the floor",
+                      fontsize=11)
+        axR.grid(True, axis="x", alpha=0.2)
 
     fig.tight_layout()
     fig.savefig(os.path.join(PDF_DIR, "lumpiness.pdf"))
