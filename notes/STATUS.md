@@ -59,13 +59,19 @@ produces it (`sims/src/cartasis_sims/`, figures in `figures/scripts/`).
   paradox (heat death = max entropy) is resolved by Penrose: *total* entropy rises
   monotonically, but *Weyl/clumping* entropy cycles low→high→low and resets. SCT is
   "Penrose CCC made to branch." `cycle.py`.
-- **An OGU is a mortal recursive timeline.** It grows until its Hawking temperature
-  meets the void's de Sitter floor and **saturates at `M_eq = c³/4GH_Λ ~ a Hubble
-  mass`** (dark-energy capped, ~Nariai); then it **evaporates** on `t_evap ~ 1e142 s`
-  — long before it could touch a neighbour (`e^{I/4}` horizons away). In that lifetime
-  its interior runs **~1e34 recursive cycles**. So the nesting is a *fractal of finite,
-  pulsating timelines*, not an infinite nesting: every membrane is mortal, the tree is
-  eternal, and the flat void is the one truly eternal substrate. `recursion.py`.
+- **An OGU is a mortal recursive timeline.** It grows to the **geometric** cap (the
+  Nariai mass `c³/3√3GH_Λ ~ a Hubble mass`, where the BH and cosmological horizons
+  merge) in ~1 Hubble time. It is **never in true equilibrium** — Schwarzschild–de
+  Sitter has T_b > T_c always (equal only at the unstable Nariai point), so it always
+  **evaporates** on `t_evap ~ 1e142 s` (a near-Nariai *lukewarm plateau* mimics
+  equilibrium but isn't). This corrected an earlier "thermal equilibrium, growth
+  stops" slip. The interior does **not** end when the membrane evaporates: the membrane
+  is the baby's *past* horizon, and exterior evaporation is dual to the interior
+  reaching its own de Sitter future (an infinite interior time maps to the finite
+  exterior horizon lifetime) — the umbilical pinches off, nothing's clock stops. In its
+  lifetime an OGU hosts **~1e34 interior cycles**: a *fractal of finite, pulsating
+  timelines*, every membrane mortal, the tree eternal, the flat void the one eternal
+  substrate. `recursion.py`, `sds.py`.
 
 ### The OG birth rate, and the instanton (computed -> dilute supraverse)
 - **β = λ·H_Λ⁴/c³.** Via the recursive cycle, a de Sitter nucleation rate; the

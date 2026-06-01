@@ -4,23 +4,22 @@ This resolves the apparent tension between "OGUs grow toward Nariai" and "OGUs a
 immortal (~1e142 s)". Both hold, in sequence, and the timescale hierarchy makes the
 recursion well-defined.
 
-1. Growth and SATURATION. An OGU grows fast-then-slow (settler regime, void_scale.py)
-   toward the Nariai mass in ~1 Hubble time. But growth does not continue forever: a
-   black hole's Hawking temperature T_BH = hbar c^3/(8 pi G M k_B) FALLS as it grows,
-   and the de Sitter void it sits in has a floor temperature T_dS = hbar H/(2 pi k_B).
-   They equalise at
+1. Growth and the GEOMETRIC cap. An OGU grows fast-then-slow (settler regime,
+   void_scale.py) toward the Nariai mass in ~1 Hubble time. The cap is GEOMETRIC, not
+   thermal (see sds.py for the proper two-horizon treatment): the largest black hole
+   that fits in this de Sitter space is the Nariai mass M_Nariai = c^3/(3 sqrt3 G H)
+   ~ 4e52 kg ~ a Hubble mass, where the black-hole and cosmological horizons merge.
+   The single-horizon heuristic "T_BH falls to T_dS at M_eq = c^3/(4 G H)" (below)
+   gives the same ~Hubble-mass scale and is kept only as an order-of-magnitude marker;
+   it is NOT a thermal equilibrium (sds.py: T_b > T_c always).
 
-       M_eq = c^3/(4 G H_Lambda) ~ 5.6e52 kg  ~  M_Nariai ~ a Hubble mass,
-
-   where the OGU is in thermal equilibrium with its own cosmological horizon: no net
-   flow, growth stops. So an OGU SATURATES at ~a Hubble mass (our mass) -- it does not
-   keep growing without bound; dark energy caps it (cf. Nariai, void_scale.py).
-
-2. EVAPORATION. At saturation T_BH ~ T_dS, so the OGU is in (unstable) equilibrium and
-   then very slowly evaporates on the Hawking time t_evap ~ 5120 pi G^2 M^3/(hbar c^4)
-   ~ 1e142 s. It evaporates LONG before it could ever touch a neighbour (separation
-   ~ e^{I/4} horizons, utterly causally disconnected), so the membrane is finite-lived
-   but astronomically long-lived: it persists ~1e142 s, then returns to the void.
+2. EVAPORATION. The OGU is never in true equilibrium -- its black-hole horizon is
+   always hotter than its cosmological horizon (T_b > T_c, equal only at the unstable
+   Nariai point, sds.py), so net radiation always flows outward and it evaporates on
+   the Hawking time t_evap ~ 5120 pi G^2 M^3/(hbar c^4) ~ 1e142 s. It evaporates LONG
+   before it could ever touch a neighbour (separation ~ e^{I/4} horizons, utterly
+   causally disconnected), so the membrane is finite-lived but astronomically
+   long-lived: it persists ~1e142 s, then returns to the void.
 
 3. RECURSION DEPTH per lifetime. Meanwhile the INTERIOR runs its own timeline: it
    reaches heat death and seeds its own sub-OGUs every recursion "tick" ~ the interior
@@ -63,14 +62,21 @@ def de_sitter_temperature() -> float:
 
 
 def equilibrium_mass() -> float:
-    """M_eq where T_BH = T_dS: c^3/(4 G H_Lambda) [kg]. The OGU saturates here,
-    in thermal equilibrium with its own cosmological horizon (~a Hubble mass)."""
+    """Order-of-magnitude saturation marker, c^3/(4 G H_Lambda) [kg] (~a Hubble mass).
+    This is the single-horizon heuristic where T_BH = T_dS; it is NOT a true thermal
+    equilibrium -- the geometric cap is the Nariai mass and T_b > T_c always (sds.py)."""
     return k.c**3 / (4.0 * k.G * hubble_lambda())
 
 
+def nariai_mass() -> float:
+    """The geometric growth cap: largest BH that fits in de Sitter,
+    M_Nariai = c^3/(3 sqrt3 G H_Lambda) [kg] ~ a Hubble mass."""
+    return k.c**3 / (3.0 * np.sqrt(3.0) * k.G * hubble_lambda())
+
+
 def saturates(M: float) -> bool:
-    """True once the OGU has reached thermal equilibrium with the void (stops growing)."""
-    return M >= equilibrium_mass()
+    """True once the OGU has reached the geometric (Nariai) growth cap."""
+    return M >= nariai_mass()
 
 
 def evaporation_time(M: float) -> float:
@@ -79,8 +85,8 @@ def evaporation_time(M: float) -> float:
 
 
 def membrane_lifetime() -> float:
-    """How long an OGU's Cartasis membrane persists: t_evap at the saturation mass [s]."""
-    return evaporation_time(equilibrium_mass())
+    """How long an OGU's Cartasis membrane persists: t_evap at the Nariai cap [s]."""
+    return evaporation_time(nariai_mass())
 
 
 def recursion_cycles_per_lifetime(t_tick: float = T_INTERIOR_TICK) -> float:

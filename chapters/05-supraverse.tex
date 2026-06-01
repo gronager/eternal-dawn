@@ -603,30 +603,70 @@ internal history, and eventually ends. Three questions close the recursive pictu
 does it grow forever, does the membrane ever disappear, and is the nesting literally
 infinite?
 
-\paragraph{Saturation.} Growth stops, and thermodynamics says exactly where. A black
-hole's Hawking temperature $T_{\mathrm{BH}}=\hbar c^3/8\pi GMk_B$ falls as it grows,
-while the void it sits in has a floor temperature
-$T_{\mathrm{dS}}=\hbar H_\Lambda/2\pi k_B$. They equalise at
+\paragraph{Saturation is geometric, not thermal.} Growth stops---but \emph{not}, as a
+careless reading suggests, because the OGU reaches thermal equilibrium with the void.
+That reading creates a paradox (if it is in equilibrium, why does it evaporate?), and
+the resolution is the proper two-horizon treatment. Schwarzschild--de Sitter has
+\emph{two} horizons---the black-hole horizon $r_b$ and the cosmological horizon
+$r_c>r_b$, with the universe living \emph{between} them (\Cref{fig:sds}, left). As the
+mass grows the two approach and finally merge at the Nariai mass,
 \begin{equation}
-  M_{\mathrm{eq}} = \frac{c^3}{4GH_\Lambda} \simeq 6\times10^{52}\,\mathrm{kg}
-  \;\sim\; M_{\mathrm{Nariai}} \;\sim\; \text{a Hubble mass},
+  M_{\mathrm{Nariai}} = \frac{c^3}{3\sqrt3\,GH_\Lambda} \simeq 4\times10^{52}\,
+  \mathrm{kg} \;\sim\; \text{a Hubble mass} \;\sim\; \text{our universe},
   \label{eq:Meq}
 \end{equation}
-where the OGU is in thermal equilibrium with its own cosmological horizon: no net
-flux, growth halts (\Cref{fig:recursion}, left). So an OGU saturates at $\sim$a
-Hubble mass---our own universe's mass---rather than growing without bound. Dark
-energy both starts the growth (negative heat capacity) and ends it (the de Sitter
-floor): the OGU grows until it \emph{is} as cold as the void around it.
+the largest black hole that geometrically \emph{fits} in this de Sitter space. So the
+cap is a geometric maximum---no bigger horizon exists---reached in $\sim$1 Hubble
+time, not a thermal balance. Dark energy starts the growth (negative heat capacity)
+and bounds it (the horizon can grow no larger).
 
-\paragraph{The membrane is mortal---but long-lived.} At saturation
-$T_{\mathrm{BH}}\simeq T_{\mathrm{dS}}$, so the OGU sits in unstable equilibrium and
-then slowly evaporates, on the Hawking time $t_{\mathrm{evap}}\sim5120\pi G^2
-M^3/\hbar c^4 \sim 10^{142}\,\mathrm{s}$. So no, the Cartasis membrane does not last
-forever---it evaporates---but it does so \emph{astronomically} long after it
-saturates, and \emph{long before} it could ever touch a neighbour (which lies
-$\sim e^{I/4}$ horizons away, utterly out of causal reach, \Cref{sec:instanton}).
-The membrane is finite-lived; it persists $\sim10^{142}\,\mathrm{s}$, then returns to
-the void. Your guess was right: it Hawking-evaporates before touching anything.
+\paragraph{Why it nonetheless evaporates.} The two horizons have different
+temperatures, $T_b=|f'(r_b)|/4\pi$ and $T_c=|f'(r_c)|/4\pi$, and the decisive fact is
+that \emph{$T_b>T_c$ for every sub-Nariai mass}, with equality only at the Nariai
+point itself (\Cref{fig:sds}, right). The black hole is \emph{always} hotter than its
+own cosmological horizon, so net radiation always flows outward and the OGU
+\emph{always} evaporates---there is no true equilibrium except the unstable,
+measure-zero Nariai coincidence. What looked like ``equilibrium, growth stops'' is
+really a near-Nariai \emph{lukewarm} plateau where $T_b-T_c\to0$ and evaporation
+becomes arbitrarily slow, but never zero. So the OGU caps at $\sim M_{\mathrm{Nariai}}$
+(geometry) and then drains on the Hawking time $t_{\mathrm{evap}}\sim5120\pi G^2
+M^3/\hbar c^4\sim10^{142}\,\mathrm{s}$ (the residual $T_b>T_c$)---finite, vast, and
+long before it could ever touch a neighbour ($\sim e^{I/4}$ horizons away,
+\Cref{sec:instanton}). Your guess was right: it Hawking-evaporates before touching
+anything; the cap and the evaporation are simply geometry and thermodynamics, not a
+contradiction.
+
+\paragraph{Does time inside stop when the membrane goes?} No---and ``no
+discontinuities'' (the organizing principle, Chapter~\ref{chap:axioms}) is exactly
+the guide. The membrane is
+the baby's \emph{past} cosmological horizon (its Big-Bang surface), not its future;
+the baby's own time runs forward to its \emph{own} de Sitter infinity, eternally
+(\Cref{sec:recursion-depth} below). Exterior evaporation and interior eternity are
+\emph{duals} across the null horizon, not a clash: an infinite interior proper time
+maps to the finite exterior horizon lifetime. By the (exterior) time the parent's
+horizon has evaporated, the baby has already---on its own clock---expanded to its de
+Sitter future, i.e.\ \emph{become} a flat, heat-dead void hosting its own scatter of
+sub-OGUs. So the parent's evaporation is just the exterior face of the interior
+reaching its natural conformal infinity: the umbilical channel pinches off (the
+connection ends), but no clock is stopped and no nested structure is destroyed. The
+inner universes were always inside the baby's own far-future void, which simply
+becomes a free-standing region of the eternal flat substrate, carrying its
+sub-structure with it. Nothing inside an evaporating membrane ends; it is merely cut
+loose into the void it was always becoming.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{sds}
+  \caption{Why an OGU evaporates though it looks ``in equilibrium.''
+    \emph{Left:} Schwarzschild--de Sitter has two horizons---the black-hole horizon
+    $r_b$ and the cosmological horizon $r_c$, the universe living between them---which
+    merge at the Nariai (maximum) mass: the growth cap is \emph{geometric}.
+    \emph{Right:} their temperatures, $T_b>T_c$ for every sub-Nariai mass (equal only
+    at the unstable Nariai point), so the black hole is always hotter than its own
+    void and drains outward---slowly near Nariai (a lukewarm plateau that mimics
+    equilibrium but is not it). Reproducible as \texttt{figures/scripts/ch05\_sds.py}.}
+  \label{fig:sds}
+\end{figure}
 
 \paragraph{A mortal fractal, not an infinite nesting.} The timescale hierarchy makes
 the recursion well-defined (\Cref{fig:recursion}, right): an OGU grows in $\sim$1
@@ -654,10 +694,10 @@ it is a mortal, recursive, pulsating bubble.
   \centering
   \includegraphics[width=\textwidth]{recursion}
   \caption{The OGU as a finite-lived recursive timeline. \emph{Left:} the Hawking
-    temperature $T_{\mathrm{BH}}\propto1/M$ falls as the OGU grows until it meets the
-    void's de Sitter floor $T_{\mathrm{dS}}$ at $M_{\mathrm{eq}}\sim$ a Hubble mass
-    (\Cref{eq:Meq})---thermal equilibrium with its own horizon, where growth
-    saturates and slow evaporation begins. \emph{Right:} the timescale ladder, each
+    temperature $T_{\mathrm{BH}}\propto1/M$ falls as the OGU grows toward the void's
+    de Sitter scale near a Hubble mass (the single-horizon heuristic; the rigorous
+    two-horizon picture, where the cap is geometric and $T_b>T_c$ keeps it
+    evaporating, is \Cref{fig:sds}). \emph{Right:} the timescale ladder, each
     step vastly longer than the last---grow ($\sim10^{18}\,$s) $\ll$ interior
     recursion tick ($\sim10^{108}\,$s) $\ll$ membrane lifetime ($\sim10^{142}\,$s,
     $\sim10^{34}$ interior cycles) $\ll$ neighbour distance ($e^{I/4}$ horizons,

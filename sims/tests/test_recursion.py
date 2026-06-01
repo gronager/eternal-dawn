@@ -14,10 +14,11 @@ def test_equilibrium_mass_is_a_hubble_mass():
                         rel_tol=1e-9)
 
 
-def test_growth_saturates_at_equilibrium():
-    Meq = rc.equilibrium_mass()
-    assert not rc.saturates(0.5 * Meq)         # still growing (colder bath wins)
-    assert rc.saturates(1.5 * Meq)             # saturated / evaporating
+def test_growth_caps_at_nariai():
+    M_N = rc.nariai_mass()
+    assert 1e52 < M_N < 1e53                   # ~ a Hubble mass (geometric cap)
+    assert not rc.saturates(0.5 * M_N)         # still growing
+    assert rc.saturates(1.5 * M_N)             # past the geometric cap
 
 
 def test_membrane_lives_astronomically_long_but_finite():
