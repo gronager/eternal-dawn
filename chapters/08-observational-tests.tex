@@ -54,6 +54,50 @@ measurement the framework most needs.
   \label{fig:galaxydipole}
 \end{figure}
 
+\paragraph{The decisive test, quantified.} Both confounded clues---the JWST and
+Galaxy Zoo asymmetries near the Galactic pole, and the CMB anomaly axis near
+$(\ell,b)\simeq(260^\circ,60^\circ)$---reduce to one sharp question, which can be
+posed as a formal two-hypothesis comparison. Model the measured galaxy-spin axis as
+concentrated around a true pole with angular spread $\sigma$; then the data prefer
+$H_{\mathrm{SCT}}$ (axis drawn around the CMB axis, the parent-spin imprint) over
+$H_{\mathrm{sys}}$ (axis drawn around the Galactic pole, a Milky-Way classification
+bias) by a log-likelihood ratio
+\begin{equation}
+  \ln\frac{L_{\mathrm{SCT}}}{L_{\mathrm{sys}}}
+  = \frac{\theta_{\mathrm{sys}}^2 - \theta_{\mathrm{SCT}}^2}{2\sigma^2},
+  \label{eq:axis-llr}
+\end{equation}
+with $\theta_{\mathrm{SCT}},\theta_{\mathrm{sys}}$ the acute separations of the
+measured axis from the two candidate poles. The two poles are only $\simeq30^\circ$
+apart, so the test is entirely a question of precision (\Cref{fig:sharedaxis}). At
+the current geometry---galaxy axis $\sim\!30^\circ$ from the CMB axis but
+$\sim\!0^\circ$ from the Galactic pole---\eqref{eq:axis-llr} favours the
+\emph{systematic} decisively (odds $\sim\!10^{8}\!:\!1$ at $\sigma=5^\circ$); the
+asymmetry we have is Milky-Way contamination, not a cosmic axis. But the same formula
+shows what settles it: a de-confounded, all-sky, mirror-validated handedness map
+measuring the spin axis to $\sigma\lesssim10^\circ$ \emph{decides} between the two
+poles at $>\!100\!:\!1$. If that axis lands on the CMB axis, it is strong evidence for
+a parent-imprinted spin; if it stays on the Galactic pole at that precision, the
+parent-spin prediction is falsified. This is the cheapest decisive test in the
+program---archival plus near-future survey data (Euclid, Rubin/LSST), no new physics
+---and the framework states plainly which way each outcome cuts. Reproducible as
+\texttt{figures/scripts/ch08\_shared\_axis.py}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{shared_axis}
+  \caption{The decisive shared-axis test as a two-hypothesis comparison.
+    \emph{Left:} posterior odds (SCT\,:\,systematic) versus the precision $\sigma$ to
+    which the galaxy-spin axis is measured. With today's geometry (axis on the
+    Galactic pole) the odds favour the systematic (red); a de-confounded measurement
+    with the axis on the CMB axis would favour \SCT\ (blue); either way $\sigma
+    \lesssim10^\circ$ is needed to decide. \emph{Right:} because the candidate poles
+    are only $\sim30^\circ$ apart, the required precision is $\sim10^\circ$---closer
+    poles would demand sharper data. The discriminant is whether a well-measured spin
+    axis favours the CMB axis or the Galactic pole.}
+  \label{fig:sharedaxis}
+\end{figure}
+
 \subsection{``Axis of evil'' in the CMB}
 
 Low-multipole CMB anomalies show suspicious alignments between the quadrupole,

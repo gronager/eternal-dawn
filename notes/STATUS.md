@@ -135,6 +135,16 @@ produces it (`sims/src/cartasis_sims/`, figures in `figures/scripts/`).
   reading concerns only the plasma's *origin* and leaves BBN untouched, so η ≈ 6.1e-10
   is secure. In SCT it's the parent debris dragged through the extrusion.
 
+### The decisive observational test (shared axis)
+- **Shared-axis model comparison** (`axes.py`, Ch8 sec). SCT predicts one preferred
+  axis (progenitor hole's Kerr axis) shared by the CMB anomalies and galaxy-spin
+  handedness. Formal two-hypothesis test: `ln(L_SCT/L_sys) = (θ_sys² − θ_SCT²)/2σ²`,
+  CMB axis vs Galactic pole (~30° apart). Current data (axis ~30° from CMB, ~0° from
+  G-pole) favour the **systematic** (~1e8:1) — not a refutation, it's Milky-Way bias.
+  A de-confounded all-sky map at **σ ≲ 10°** decides at >100:1; lands on CMB axis →
+  strong SCT evidence, stays on Galactic pole → falsified. Cheapest decisive test
+  (Euclid/Rubin), no new physics.
+
 ### Big picture
 - **"From what we observe, we must exist" (epistemic Copernicus).** Ch1 synthesis:
   three measured-on-Earth ingredients (fluctuating vacuum, gravity, spin→torsion) plus
