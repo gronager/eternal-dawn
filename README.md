@@ -13,7 +13,7 @@ Start with nothing. Not empty space with a clock ticking in it — really nothin
 
 Most fluctuations are nothing at all. They ripple and fade. But once in a great while a fluctuation is large enough to tip over a threshold: enough energy gathers in one place that it collapses under its own gravity into a black hole. And here is the first surprise. The seed you need is small — about the mass of a mountain — and a black hole is the *easiest* thing of its size to make, because it is the most generic: the least special, most disordered object there is. You do not have to luck into a finished, finely arranged universe. You only need a cheap little seed, and gravity does the rest.
 
-How unlikely is even that seed? About one in 10^(10^84) — a one followed by a string of zeros that itself has eighty-five digits. Hopeless in any finite stretch of space. But the void is infinite and patient, and across an infinity of tries the hopeless happens constantly. The point was never that it is likely. The point is that it is the *cheap* way in.
+How unlikely is even that seed? About one in 10^(10^84) — a one followed by a string of zeros that itself has eighty-five digits. Hopeless in any finite stretch of space. But the void is infinite and patient, and across an infinity of tries the hopeless happens constantly. The point was never that it is likely. The point is that it is the *cheap* way in. The ethernal dawn.
 
 ### The bounce, and the first dawn
 
