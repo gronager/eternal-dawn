@@ -1,15 +1,15 @@
 # Dawn of Eternity — Supraverse Cartasis Theory
 
 A working-draft cosmological framework built from minimal axioms.
-By Michael Gronager.
+By Michael Gronager, PhD.
 
 ## The story, in plain words
 
-*This is Chapter 0 of the book — the whole framework in plain language, with no jargon and no mathematics beyond a few enormous numbers. Everything here is made precise, named, and defended in the chapters that follow.*
+*This is also Chapter 0 of the book — the whole framework in plain language, with no jargon and no mathematics beyond a few enormous numbers. Everything here is made precise, named, and defended in the chapters that follow.*
 
 ### The void
 
-Start with nothing. Not empty space with a clock ticking in it — really nothing: no stars, no matter, no before or after, not even a direction to time. But "nothing," in physics, is never quite still. The vacuum we have here, in our own laboratories, is restless: it seethes with tiny fluctuations that flicker in and out of being. Grant the void that same restlessness — no more than the vacuum already does — and the story tells itself.
+Start with nothing. Not empty space with a clock ticking in it — really nothing: no stars, no matter, no before or after, not even a direction to time. But "nothing," in physics, is never quite still. The vacuum we have here, in our own laboratories, is restless: it seethes with tiny fluctuations that flicker in and out of being. Grant the void that same restlessness — no more than the vacuum already does — and the story tells itself. (TODO: fix this to stress that this void is differnt from void with time - it has no time - yet - or are fluctuations in De Sitter Void also time fluctuations?)
 
 Most fluctuations are nothing at all. They ripple and fade. But once in a great while a fluctuation is large enough to tip over a threshold: enough energy gathers in one place that it collapses under its own gravity into a black hole. And here is the first surprise. The seed you need is small — about the mass of a mountain — and a black hole is the *easiest* thing of its size to make, because it is the most generic: the least special, most disordered object there is. You do not have to luck into a finished, finely arranged universe. You only need a cheap little seed, and gravity does the rest.
 
@@ -17,7 +17,7 @@ How unlikely is even that seed? About one in 10^(10^84) — a one followed by a 
 
 ### The bounce, and the first dawn
 
-Follow the matter down into the black hole. There is the famous surface — the horizon — past which light cannot climb back out, and where, to anyone watching from outside, time appears to freeze. But that freezing is only the outsider's illusion. The matter itself feels nothing special at the horizon; its own clock keeps ticking, smoothly, all the way down.
+Follow the matter down into the black hole. There is the famous surface — the horizon — past which light cannot climb back out, and where, to anyone watching from outside, time appears to freeze. But that freezing is only the outsider's illusion. The matter itself feels nothing special at the horizon; its own clock keeps ticking, smoothly, all the way down. (TODO: clock language in a timeless void ?)
 
 As it falls, it crowds together, denser and denser. Then something pushes back. Einstein's gravity, extended by the geometer Élie Cartan to include the *spin* of matter, says that when matter is squeezed hard enough, that spin resists — and at a stupendous density this resistance overwhelms gravity itself. The collapse does not end in a point of infinite density. It *bounces*.
 
@@ -33,9 +33,9 @@ This first universe was born straight from the void, with no parent outside it. 
 
 But inside that first universe, exactly as inside ours, stars live and die and black holes form — and each black hole does again what the void did once: it bounces, and a new universe is born inside it. We are one of those. We are a child universe, pressed into being through an enormous black hole inside our parent.
 
-Picture the squeeze. The mass of an entire universe — very roughly 10⁵³ kilograms — is forced through a throat no wider than a building, packed so tightly that the whole of it would fit in a single room, and it happens in about a thousandth of a billionth of a billionth of a second. At that density nothing recognizable survives: not a teddy bear, not an atom, not even an atomic nucleus — all of it is melted into a featureless soup. What carries across is not *things* but a *tally*: the faint surplus of matter over antimatter, about one part in a billion, inherited from the parent and nudged a little larger by the violence of the crossing.
+Picture the squeeze. The mass of an entire universe — very roughly 10⁵³ kilograms — is forced through a throat no wider than a building, packed so tightly that the whole of it would fit in a single room, and it happens in about a thousandth of a billionth of a billionth of a second. At that density nothing recognizable survives: not a torn teddy bear, not a rusty car, not an atom, not even an atomic nucleus — all of it is melted into a featureless soup. What carries across is not *things* but a *tally*: the faint surplus of matter over antimatter, about one part in a billion, inherited from the parent and nudged a little larger by the violence of the crossing.
 
-And now the dark sky makes sense. Our parent's enormous mass sits just on the far side of that birth-surface, and we feel its gravity *before* its light can ever reach us — a pull from matter we cannot see. That is dark matter. The parent is still feeding matter through to us, slowly, and the gentle outward push of that ongoing inflow is dark energy. And the parent's own faint glow — the radiation any black hole gives off, as Stephen Hawking showed — arrives smeared across our whole sky as the background hum that fills it. The unevenness in all this inflow is the seed of everything: it gathers matter into galaxies, into stars, into planets, and perhaps that is why we are here to notice at all.
+And now the dark sky makes sense. Our parent's enormous mass sits just on the far side of that birth-surface, and we feel its gravity *before* its light can ever reach us — a pull from matter we cannot see. That is dark matter. The parent is still feeding matter through to us, slowly, and the gentle outward push of that ongoing inflow is dark energy. Darkness is the harbinger of light. The parent's own faint glow — the radiation any black hole gives off, as Stephen Hawking showed — arrives smeared across our whole sky as the background hum that fills it. The unevenness in all this inflow is the seed of everything: it gathers matter into galaxies, into stars, into planets, and perhaps that is why we are here to notice at all.
 
 So we are not exotic. Count up all the universes and about nine in ten are ordinary children like ours — half of them matter, half of them antimatter, each with its own clock running its own way. We live at the most ordinary address in the whole endless family.
 
