@@ -188,3 +188,7 @@ its single root hash can additionally be anchored to any timestamping/notary ser
    is not a substitute for a DOI or ORCID.)
 4. **ResearchGate / Substack / blog** — for reach and narrative, each linking back to
    the Zenodo DOI so the popular telling cannot undercut the priority claim.
+
+## About the author
+
+Michael Gronager wrote his first letter to a physicist — Dr. John Renner Hansen at the Niels Bohr Institute — as a primary-school kid, asking whether neutrinos might really be gravitons. He went on to a PhD in quantum mechanics, then ran the Nordic CERN Tier-1 data centre (working, full circle, with the same John Renner Hansen) and started other data collaborations for big science. He left research to co-found **Kraken** and found **Chainalysis** — tracing dark transactions instead of dark particles — and is now building **GryAI**. *Eternal Dawn* is the cosmology he kept turning over on evenings and Sundays for a decade, and which finally fell together over a sleepless night in Seoul. The full story is in the book's *Note from the Author*.
