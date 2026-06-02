@@ -1,10 +1,10 @@
-# Supraverse — Project Orientation
+# Dawn of Eternity — Project Orientation
 
 ## What this is
 
 A theoretical cosmology research program built around a single principle: **physics is continuous and conservative, so singularities and discontinuities must be artifacts of incomplete theory, not real features of nature.** Applied carefully, this principle plus Einstein-Cartan gravity plus an infinite quantum vacuum produces a complete cosmological framework with no fine-tuning.
 
-The framework is referred to as **Supraverse Cartasis Theory** (SCT). Cartasis is the bounce membrane — the surface in spacetime where torsion-mediated repulsion overwhelms gravitational attraction and the geometry transitions between parent and child universes.
+The book is titled **Dawn of Eternity**. (The older working title "Supraverse Cartasis Theory" is retired; the `\SCT` macro is being removed.) The bounce membrane — the surface where torsion-mediated repulsion overwhelms gravity and the geometry transitions between a parent region and a child universe — was historically called the *Cartasis* membrane, a pun on **Cartan + κάθαρσις** (catharsis: the bounce dissolves and purifies everything, then extrudes it clean). That pun is now spent **once**, in the bounce chapter; elsewhere we say "bounce density" and "bounce membrane." See **Naming policy** below.
 
 ## What we’re trying to do
 
@@ -35,54 +35,71 @@ The framework is a synthesis, not pure invention. Original contributions are (a)
 - Plots and simulations should be reproducible from the repo.
 - The monograph is authored in LaTeX. Equations and formulas belong in LaTeX, not markdown — author new material directly in the `.tex` chapters. Quick scratch notes may start as markdown in `notes/`, but anything with math should move into the LaTeX chapters promptly.
 
+## Restructure in progress (read this before editing chapters)
+
+The monograph is mid-**reorganization** from the old "as-discovered" order into a clean linear arc that mirrors the plain-language overture. The new manuscript is **`doe.tex` + `doe/`** (canonical-in-progress); the old **`book.tex` + `chapters/`** still compiles and is the source being migrated out of, then deleted. Both build side by side (`make doe` and `make`). Migrate one chapter at a time, building `doe.pdf` green and keeping the 225 sim tests passing. Each `doe/` chapter file carries its **migration contract** as header comments (which old sections feed it, the dedup rule). **Edit `doe/` going forward; treat `chapters/` as the read-only source.**
+
+New structure (see `doe.tex`):
+
+```
+0.  First When There's Nothing            (overture — plain language)
+PART I  — The Framework
+  1. Axioms
+  2. No Singularities in Nature           (the bounce; the Cartasis=katharsis pun)
+  3. The Void                             (eigenstate, instanton, Boltzmann/Penrose)
+  4. Eternal Dawn                         (first universes; spin, baryon, arrow)
+  5. Home                                 (child universe; CMB, dark matter/energy)
+PART II — Observations and Simulations
+  6. What We Can Already See              (live results)
+  7. What the Next Decade Will Decide     (near-future)
+  8. The Simulation Program
+  9. Seeing the Foam                      (visualization)
+ 10. The Scoreboard                       (vs ΛCDM / Standard Model)
+```
+
 ## Repo structure
 
 ```
 cartasis/
 ├── CLAUDE.md                       # this file
-├── README.md                       # public-facing description + build instructions
-├── Makefile                        # `make` builds the PDF (latexmk); see also figures/, sim targets
-├── book.tex                        # main document — includes frontmatter, chapters, appendices
-├── frontmatter/                    # title, dedication, epigraph, preface (.tex)
-├── chapters/                       # the monograph, one .tex per chapter (CANONICAL)
-│   ├── 01-axioms.tex
-│   ├── 02-cartasis.tex
-│   ├── 03-baby-universes.tex
-│   ├── 04-chirality-flip-filter.tex
-│   ├── 05-supraverse.tex
-│   ├── 06-dark-sector.tex
-│   ├── 07-time-arrow.tex
-│   ├── 08-observational-tests.tex
-│   ├── 09-simulation-plan.tex
-│   └── 10-visualization.tex
-├── appendices/
-│   └── A-open-questions.tex        # what we don't know
+├── README.md                       # public-facing description (opens with the plain-language story)
+├── Makefile                        # `make doe` builds the new book; `make` builds the legacy book
+├── doe.tex                         # NEW main document (Dawn of Eternity) — CANONICAL, in progress
+├── doe/                            # NEW chapters (00-overture … 10-scoreboard), Part I + Part II
+├── book.tex, chapters/             # LEGACY manuscript — being migrated into doe/, deleted when done
+├── frontmatter/                    # title, dedication, epigraph, preface, cover (.tex)
+├── appendices/A-open-questions.tex # what we don't know (re-wired into doe after migration)
 ├── style/cartasis.sty              # preamble: packages, axiom/conjecture envs, macros
-├── bibliography/references.bib      # all citations
-├── figures/{tex,data,pdf,scripts}/ # figure sources, data, generated PDFs, build scripts
-├── data/                           # observational datasets for comparison (Ch. 8)
-├── drafts/                         # ORIGINAL markdown drafts, archived for provenance
-├── notes/                          # working notes, scratch derivations (markdown ok)
-├── sims/                           # simulation code (eventually)
+├── bibliography/references.bib     # all citations
+├── figures/{scripts,pdf,data}/     # figure scripts + generated PDFs/PNGs (shared; do not move)
+├── data/                           # observational datasets
+├── drafts/, notes/                 # markdown drafts (archival) and scratch notes
+├── sims/                           # simulation code (src + tests; reproducible, 225 passing)
 └── build/                          # LaTeX build output (gitignored)
 ```
 
-Each chapter is self-contained enough to be read independently but assumes the axioms in Chapter 1. Cross-references use LaTeX labels (`chap:*`, `ax:*`, `app:openq`) via `\ref`/`\Cref`. The `drafts/` markdown files are the pre-LaTeX originals — they are archival; **edit the `.tex` chapters, not the drafts.**
+The new chapters read linearly (each leans on the prior). Cross-references use LaTeX labels (`chap:*`, `ax:*`, `sec:*`, `app:openq`) via `\ref`/`\Cref`. The `drafts/` markdown files are the pre-LaTeX originals — archival only.
+
+## Naming policy
+
+- The book is **Dawn of Eternity**; do not reintroduce "Supraverse Cartasis Theory" or `\SCT`.
+- Lead with the **warm names** — "first universe(s)," "child universe," "the bounce," "the void." Introduce the formal acronyms **OGU** (original-generation universe) and **BHU** (black-hole universe) once each, then use sparingly.
+- "**Cartasis**" appears once, as the Cartan + *katharsis* pun in Chapter 2. Elsewhere: "**bounce density**" (the symbol `\rhoc`, ρ_C) and "**bounce membrane**."
 
 ## Workflow notes for Claude Code sessions
 
 When picking up this project:
 
-1. Read CLAUDE.md (this file) and `chapters/01-axioms.tex` first to load context.
+1. Read CLAUDE.md (this file), then `doe/00-overture.tex` (the whole story in plain words) and `doe/01-axioms.tex`, to load context. Mind the **Restructure in progress** note above.
 1. The conversation that originated this framework was long and rambling. The chapters are the distilled version. Trust the chapters over any prior conversation memory.
 1. When extending or revising, preserve the parsimony. The framework’s strength is that it derives a lot from very little. Adding postulates is a regression.
 1. When uncertain whether something is established physics vs. speculation, default to labeling speculation. Honesty about epistemic status is more valuable than apparent completeness.
-1. The monograph is in LaTeX. Build the PDF with `make` (runs `latexmk -pdf book.tex`). Author new material directly in `chapters/*.tex`; the markdown in `drafts/` is archival provenance only.
+1. The monograph is in LaTeX. Build the new book with `make doe` (`latexmk -pdf doe.tex`); the legacy book still builds with `make`. Author new material in `doe/*.tex`; `chapters/*.tex` is the read-only migration source and `drafts/` is archival.
 1. Simulation code should be Python or Julia, with results saved as plots in `sims/output/`. Numerical relativity libraries (Einstein Toolkit, GRChombo) are too heavy for early exploration; start with custom finite-difference codes.
 
 ## What this project is not
 
-- Not a refutation of ΛCDM. ΛCDM works empirically for what it describes. SCT is an alternative that explains a wider set of phenomena from fewer postulates.
+- Not a refutation of ΛCDM. ΛCDM works empirically for what it describes. Dawn of Eternity is an alternative that explains a wider set of phenomena from fewer postulates.
 - Not a claim that the framework is correct. It’s a coherent worldview that could be right and is testable. The work is finding out.
 - Not a vehicle for general philosophical speculation. Each claim should be derivable, computable, or observable in principle.
 - Not for popular audiences in its current form. The framework needs to be defensible to professional cosmologists first; popularization comes later if at all.
