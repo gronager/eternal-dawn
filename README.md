@@ -81,7 +81,7 @@ This is a research program, not an established theory. It synthesizes work by Po
 
 ## Where to read more
 
-The monograph is written in LaTeX. Start with `chapters/00-in-the-beginning.tex`
+The monograph is written in LaTeX. Start with `chapters/00-overture.tex`
 (the plain-language overture above), then `chapters/01-axioms.tex`; each
 subsequent chapter develops one piece of the framework.
 `chapters/08-observational-tests.tex` lists what would distinguish this framework

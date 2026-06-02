@@ -37,9 +37,6 @@ figures/pdf/*.png
 # above. Rebuilt by `make` / `make epub`; refresh before committing.
 !/book.pdf
 !/book.epub
-# ...and the restructured manuscript (Dawn of Eternity), built by `make doe` / `make doe-epub`.
-!/doe.pdf
-!/doe.epub
 
 # Python / sims
 __pycache__/

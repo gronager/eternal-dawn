@@ -1,15 +1,17 @@
 % =====================================================================
-%  Supraverse Cartasis Theory — main document
-%  Compile from the project root, e.g.:
-%      latexmk -pdf book.tex
-%  (chapters are authored in chapters/, drafts in markdown live in drafts/)
+%  Eternal Dawn --- main document
+%  Compile from the project root:  latexmk -pdf book.tex   (or: make)
+%
+%  Part I: The Framework; Part II: Observations and Simulations.
+%  Chapters live in chapters/ (00-overture ... 10-scoreboard); the
+%  appendix in appendices/; figures, bibliography, and sims are referenced
+%  by path. Every figure and number regenerates from the repository.
 % =====================================================================
 \documentclass[11pt,twoside,openright,a4paper]{memoir}
 
 \usepackage{style/cartasis}
 
-\title{Supraverse Cartasis Theory\\[0.5ex]
-       \large A Continuous, Conservative Cosmology from Minimal Axioms}
+\title{Eternal Dawn}
 \author{Michael Gronager, PhD}
 \date{Working draft --- \today}
 
@@ -22,22 +24,28 @@
 \input{frontmatter/dedication}
 \input{frontmatter/epigraph}
 \tableofcontents
-\input{frontmatter/preface}
+% TODO(migration): rewrite the preface for the new structure / naming
+% (the old frontmatter/preface.tex cross-references retired chapters).
+% \input{frontmatter/preface}
 
 % ------------------------- Main matter --------------------------
 \mainmatter
 \setcounter{chapter}{-1}
-\include{chapters/00-in-the-beginning}
+\include{chapters/00-overture}
+
+\part{The Framework}
 \include{chapters/01-axioms}
-\include{chapters/02-cartasis}
-\include{chapters/03-baby-universes}
-\include{chapters/04-chirality-flip-filter}
-\include{chapters/05-supraverse}
-\include{chapters/06-dark-sector}
-\include{chapters/07-time-arrow}
-\include{chapters/08-observational-tests}
-\include{chapters/09-simulation-plan}
-\include{chapters/10-visualization}
+\include{chapters/02-no-singularities}
+\include{chapters/03-void}
+\include{chapters/04-eternal-dawn}
+\include{chapters/05-home}
+
+\part{Observations and Simulations}
+\include{chapters/06-already-see}
+\include{chapters/07-next-decade}
+\include{chapters/08-simulations}
+\include{chapters/09-almost-nothing}
+\include{chapters/10-scoreboard}
 
 % ------------------------- Appendices ---------------------------
 \appendix

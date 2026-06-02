@@ -39,11 +39,9 @@ The framework is a synthesis, not pure invention. Original contributions are (a)
 - Plots and simulations should be reproducible from the repo.
 - The monograph is authored in LaTeX. Equations and formulas belong in LaTeX, not markdown — author new material directly in the `.tex` chapters. Quick scratch notes may start as markdown in `notes/`, but anything with math should move into the LaTeX chapters promptly.
 
-## Restructure in progress (read this before editing chapters)
+## Structure
 
-The monograph is mid-**reorganization** from the old "as-discovered" order into a clean linear arc that mirrors the plain-language overture. The new manuscript is **`doe.tex` + `doe/`** (canonical-in-progress); the old **`book.tex` + `chapters/`** still compiles and is the source being migrated out of, then deleted. Both build side by side (`make doe` and `make`). Migrate one chapter at a time, building `doe.pdf` green and keeping the 225 sim tests passing. Each `doe/` chapter file carries its **migration contract** as header comments (which old sections feed it, the dedup rule). **Edit `doe/` going forward; treat `chapters/` as the read-only source.**
-
-New structure (see `doe.tex`):
+The monograph reads as a linear arc — each chapter leans on the prior, mirroring the plain-language overture:
 
 ```
 0.  First When There's Nothing            (overture — plain language)
@@ -67,12 +65,11 @@ PART II — Observations and Simulations
 cartasis/
 ├── CLAUDE.md                       # this file
 ├── README.md                       # public-facing description (opens with the plain-language story)
-├── Makefile                        # `make doe` builds the new book; `make` builds the legacy book
-├── doe.tex                         # NEW main document (Eternal Dawn) — CANONICAL, in progress
-├── doe/                            # NEW chapters (00-overture … 10-scoreboard), Part I + Part II
-├── book.tex, chapters/             # LEGACY manuscript — being migrated into doe/, deleted when done
+├── Makefile                        # `make` builds book.pdf (latexmk); `make epub` the EPUB
+├── book.tex                        # main document — frontmatter, chapters, appendix, bibliography
+├── chapters/                       # the monograph (00-overture … 10-scoreboard), Part I + Part II
 ├── frontmatter/                    # title, dedication, epigraph, preface, cover (.tex)
-├── appendices/A-open-questions.tex # what we don't know (re-wired into doe after migration)
+├── appendices/A-open-questions.tex # what we don't yet know
 ├── style/cartasis.sty              # preamble: packages, axiom/conjecture envs, macros
 ├── bibliography/references.bib     # all citations
 ├── figures/{scripts,pdf,data}/     # figure scripts + generated PDFs/PNGs (shared; do not move)
@@ -90,23 +87,21 @@ The new chapters read linearly (each leans on the prior). Cross-references use L
 - Lead with the **warm names** — "first universe(s)," "child universe," "the bounce," "the void." Introduce the formal acronyms **OGU** (original-generation universe) and **BHU** (black-hole universe) once each, then use sparingly.
 - "**Cartasis**" appears once, as the Cartan + *katharsis* pun in Chapter 2. Elsewhere: "**bounce density**" (the symbol `\rhoc`, ρ_C) and "**bounce membrane**."
 
-### Migration gardening TODO (do per chapter, and a final sweep)
+### Style reminders (standing)
 
-When migrating each chapter into `doe/`, **garden as you go** — do not just move text:
-- **Naming:** purge stray "Cartasis" (keep only the Ch2 pun), `\SCT`, "Supraverse Cartasis Theory"; convert to "bounce density/membrane," "Eternal Dawn," warm names. (Copied stubs like the axioms chapter inherited the old naming — `doe/01-axioms` is gardened; recheck others.)
-- **No lab-log voice.** This is a linear monograph, not a research diary. Cut "earlier drafts assumed…," "it is tempting to…," "the honest result is…," "how the sausage is made" framing. State the result and its derivation directly; do not narrate the path that reached it.
-- **Figures:** Part I was figure-light early (overture/axioms are prose; the bounce chapter now carries `fig:bounce`; Void has `fig:instanton`; Eternal Dawn has `fig:ogudist`, `fig:cycle`). Part II (observations/sims/viz) is figure-dense. Place each figure in the chapter that *introduces* its idea; reference (don't duplicate) it elsewhere.
-- Run a final `grep -rn "Cartasis\|\\SCT\|earlier draft\|tempting" doe/` sweep before deleting the legacy tree.
+- **No lab-log voice.** This is a linear monograph, not a research diary. State the result and its derivation directly; cut "earlier drafts assumed…," "it is tempting to…," "the honest result is…," "how the sausage is made" framing.
+- **Figures:** place each figure in the chapter that *introduces* its idea; reference (don't duplicate) it elsewhere. Part I is figure-light (overture/axioms are prose); Part II is figure-dense.
+- The supraverse is a **dilute scatter**, not a "foam" (the foam was the retired `I<I_crit` packed limit).
 
 ## Workflow notes for Claude Code sessions
 
 When picking up this project:
 
-1. Read CLAUDE.md (this file), then `doe/00-overture.tex` (the whole story in plain words) and `doe/01-axioms.tex`, to load context. Mind the **Restructure in progress** note above.
+1. Read CLAUDE.md (this file), then `chapters/00-overture.tex` (the whole story in plain words) and `chapters/01-axioms.tex`, to load context.
 1. The conversation that originated this framework was long and rambling. The chapters are the distilled version. Trust the chapters over any prior conversation memory.
 1. When extending or revising, preserve the parsimony. The framework’s strength is that it derives a lot from very little. Adding postulates is a regression.
 1. When uncertain whether something is established physics vs. speculation, default to labeling speculation. Honesty about epistemic status is more valuable than apparent completeness.
-1. The monograph is in LaTeX. Build the new book with `make doe` (`latexmk -pdf doe.tex`); the legacy book still builds with `make`. Author new material in `doe/*.tex`; `chapters/*.tex` is the read-only migration source and `drafts/` is archival.
+1. The monograph is in LaTeX. Build with `make` (`latexmk -pdf book.tex`) and the EPUB with `make epub`. Author new material in `chapters/*.tex`; `drafts/` is archival.
 1. Simulation code should be Python or Julia, with results saved as plots in `sims/output/`. Numerical relativity libraries (Einstein Toolkit, GRChombo) are too heavy for early exploration; start with custom finite-difference codes.
 
 ## What this project is not

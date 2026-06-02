@@ -5,18 +5,13 @@ VENV := $(SIM)/.venv
 PYTHON := $(VENV)/bin/python
 FIGSCRIPTS := $(wildcard figures/scripts/ch*.py)
 
-.PHONY: all pdf doe figures epub doe-epub sim-install sim-test hash clean distclean
+.PHONY: all pdf figures epub sim-install sim-test hash clean distclean
 
 all: pdf
 
 pdf:
 	@mkdir -p $(BUILD)
 	latexmk -pdf $(MAIN).tex
-
-# Eternal Dawn restructure (built alongside book.tex during migration).
-doe:
-	@mkdir -p $(BUILD)
-	latexmk -pdf doe.tex
 
 # Regenerate every chapter figure (PDFs land in figures/pdf/).
 figures: sim-install
@@ -42,22 +37,6 @@ epub:
 		-o $(MAIN).epub
 	@echo "wrote $(MAIN).epub ($$(du -h $(MAIN).epub | cut -f1)) -- tracked, downloadable from the repo"
 
-# EPUB of the restructured manuscript (Eternal Dawn), built alongside book.epub.
-doe-epub:
-	@command -v pandoc >/dev/null 2>&1 || { \
-		echo "pandoc not found. Install it (apt/brew 'pandoc') -- a single binary."; \
-		exit 1; }
-	pandoc doe.tex --from=latex --to=epub3 \
-		--resource-path=.:figures/pdf --default-image-extension=png \
-		--mathml --toc --toc-depth=2 --number-sections \
-		--top-level-division=chapter \
-		--epub-cover-image=figures/pdf/cover.png \
-		--metadata title="Eternal Dawn" \
-		--metadata author="Michael Gronager, PhD" \
-		--metadata lang=en \
-		-o doe.epub
-	@echo "wrote doe.epub ($$(du -h doe.epub | cut -f1)) -- tracked, downloadable from the repo"
-
 sim-install: $(VENV)
 $(VENV):
 	cd $(SIM) && uv venv && uv pip install -e ".[dev]"
@@ -73,7 +52,7 @@ hash:
 	@echo "# generated: $$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> MANIFEST.sha256
 	@echo "# git commit: $$(git rev-parse HEAD 2>/dev/null || echo none)" >> MANIFEST.sha256
 	@echo "# author: Michael Gronager" >> MANIFEST.sha256
-	@find book.pdf book.epub book.tex doe.pdf doe.epub doe.tex doe \
+	@find book.pdf book.epub book.tex \
 		CLAUDE.md README.md CITATION.cff LICENSE.md \
 		frontmatter chapters appendices style bibliography \
 		figures/scripts figures/pdf sims/src sims/tests notes \
