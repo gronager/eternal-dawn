@@ -1,14 +1,203 @@
 \chapter{The Simulation Program}
 \label{chap:sims}
 
-% =====================================================================
-% MIGRATION CONTRACT (Stage 4 fills this chapter)  --  computational track
-%   FROM Ch9 Simulation Plan (all): philosophy; Phase 0 (is the universe a
-%        black-hole interior?); Tier 1 single-bounce Einstein-Cartan; Tier 1c
-%        the extruder / bounce entropy budget; Tier 2 perturbations through
-%        the bounce; Tier 3 chirality dynamics; Tier 4 population statistics;
-%        Tier 5 observation comparisons; MVP; tooling; reproducibility.
-%   FROM Ch8 Tier 3/4: the computational frontier + far-future experiments.
-% =====================================================================
+A framework earns the name only if it can be computed and confronted, and this
+one's strength is that it can: rare vacuum fluctuations, Einstein--Cartan bounces,
+and thermodynamic equilibrium are all tractable problems. The path from
+``interesting picture'' to ``constrained by data'' runs through simulation, and it
+is tiered---each tier a project of definite scope, higher tiers building on lower.
+This chapter lays out that pathway and, more importantly, reports what already
+runs: the bounce, the adiabatic extrusion that protects the inherited matter
+excess, and a scale-invariant primordial spectrum with the right acoustic peaks,
+all reproducible from the code in \texttt{sims/}.
 
-\noindent\emph{[Scaffold --- content migrates here in Stage 4.]}
+\section{Phase 0: is our universe a black-hole interior?}
+\label{sec:phase0}
+
+Before any dynamical run there is cheaper, sharper work to do. The thesis under
+everything is that our universe is the interior of a (rotating) black hole behind
+a bounce membrane; in the Copernican spirit we do not assume it but ask what the
+universe's \emph{measured} numbers already imply. Four ``corners,'' needing only
+arithmetic and existing catalogues, each tie an observed quantity to a black-hole
+property (\Cref{fig:firstlight}).
+
+\paragraph{A --- flatness is the Schwarzschild condition.} For a Friedmann
+universe the Schwarzschild radius of the mass inside the Hubble sphere works out
+to $R_s = \Omega\,R_H$ \emph{identically}, so the measured flatness
+$\Omega = 1.000\pm0.005$ \emph{is} the statement that the observable universe sits
+at its own Schwarzschild radius---with Planck values
+$M\approx9\times10^{52}\,\mathrm{kg}$ and $R_s/R_H=1.000$. A necessary
+consistency condition, not a proof, but a striking one.
+
+\paragraph{B --- the spin is sub-extremal, and predicts an axis.} The largest
+causal angular momentum of that mass gives a dimensionless spin
+$a^*_{\max}=2/\Omega\approx2$, so a realistic small net rotation leaves the
+interior comfortably sub-extremal---a censored Kerr interior, not a naked
+singularity. The observable handle is \emph{direction}: a parent-inherited axis
+should be shared by the CMB ``axis of evil'' and the galaxy-spin
+asymmetry~\citep{shamir2025}, the cheapest potentially-decisive test in the whole
+program (Chapter~\ref{chap:nowobs}).
+
+\paragraph{C --- the background cannot be the \emph{present} horizon's glow.} The
+Hawking temperature of the Hubble-sphere mass is $\sim\!10^{-30}\,\mathrm{K}$,
+thirty orders below the $2.7\,\mathrm{K}$ we measure. So the microwave background
+can only be the \emph{parent's} horizon radiation, hot at emission near the bounce
+and redshifted by our expansion---which means a successful calculation must
+deliver a spectrum, not merely a temperature (Tier~2 below).
+
+\paragraph{D --- the dark sector fixes one filter number.} If dark matter is the
+membrane-rejected counterpart matter, the dark-to-baryon ratio fixes the
+pass-fraction $f=\omega_b/(\omega_b+\omega_c)$; Planck's $\omega_c/\omega_b\approx
+5.4$ gives $f\approx1/6$. Any Einstein--Cartan filter model must reproduce that one
+number---the tightest quantitative target the membrane physics faces.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{bh_first_light}
+  \caption{Phase-0 consistency checks, read straight off Planck cosmology.
+    \emph{Left:} the Hawking temperature $T_H(M)$ puts the observable universe
+    $\sim$30 orders below the CMB, so the CMB is not present-horizon radiation.
+    \emph{Right:} the black-hole identities $R_s/R_H=\Omega\approx1$, maximal spin
+    $a^*_{\max}\approx2$, and membrane filter $f\approx0.16$. Reproducible as
+    \texttt{figures/scripts/ch02\_bh\_first\_light.py}.}
+  \label{fig:firstlight}
+\end{figure}
+
+Phase~0 establishes that the \emph{kinematics} are consistent with a black-hole
+interior. The tiers establish the \emph{mechanism}.
+
+\section{Tier 1: the bounce itself}
+
+The first dynamical task is to evolve a spherical collapse of fermionic matter in
+Einstein--Cartan gravity and watch torsion halt it. It works: a homogeneous
+collapse reaches the bounce density and reverses where general relativity would
+hit a singularity (the result already shown as \Cref{fig:bounce}), and the bounce
+is \emph{robust}---it occurs across the equation of state, not for a fine-tuned
+fluid. Gluing the bouncing interior to a Schwarzschild exterior---the 1939
+Oppenheimer--Snyder construction with the singularity replaced by a bounce---shows
+both faces at once: a distant observer sees the surface freeze at the horizon and
+redshift to black (a black hole), while inside the matter reaches the bounce
+density at a tiny radius, bounces, and re-expands into a child universe. A custom
+finite-difference code on a radial grid is enough; no heavy numerical-relativity
+machinery is required to demonstrate the core phenomenon.
+
+\section{Tier 1c: the extruder is adiabatic}
+\label{sec:extruder}
+
+The single most consequential numerical result so far concerns not the bounce but
+its \emph{entropy budget}, because that is what protects the inherited matter
+excess of Chapter~\ref{chap:dawn}. Entropy is generated only by irreversibility,
+and the bounce is far too fast to thermalise: the controlling small parameter is
+the same $\Omega_{\mathrm{bounce}}/T_{\mathrm{bounce}}\sim1.5\times10^{-11}$ that
+limits the chiral-vortical estimate. Computing the dilution factor
+$D=S_{\mathrm{after}}/S_{\mathrm{before}}$ from the dynamics, in both the
+homogeneous bulk-viscous channel and the inhomogeneous shear (BKL/Mixmaster)
+channel, gives $D=1$ to about one part in $10^{11}$ (\Cref{fig:extruder}). The
+shear result is the more surprising: in plain general relativity anisotropy
+diverges into the singularity and the entropy production runs away, but the same
+torsion that removes the singularity \emph{caps the density}, bounces the shear,
+and keeps the entropy integral finite. The conclusion is sharp:
+$\eta_{\mathrm{child}}=\eta_{\mathrm{parent}}$, inheritance is essentially exact,
+and the factor-of-$41$ shortfall of the chiral-vortical estimate binds only the
+parentless first universe---every descendant simply carries down the excess made
+once at the top.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{extruder}
+  \caption{The bounce entropy budget. \emph{Left:} the entropy-production kernel
+    peaks on the shoulders of the bounce and vanishes at the turnaround; the total
+    is tiny. \emph{Right:} the dilution $D-1$ versus bulk viscosity stays
+    $\lesssim10^{-10}$ across the whole physical range, so
+    $\eta_{\mathrm{child}}\approx\eta_{\mathrm{parent}}$. Reproducible as
+    \texttt{sims/src/cartasis\_sims/extruder.py},
+    \texttt{figures/scripts/ch09\_extruder.py} (and \texttt{ch09\_shear.py} for the
+    shear channel).}
+  \label{fig:extruder}
+\end{figure}
+
+\section{Tier 2: perturbations through the bounce, and the CMB}
+\label{sec:tier2}
+
+This is where the framework meets its central observable, and a first pass already
+clears the main hurdle. Evolving tensor modes through the bounce with the
+Mukhanov--Sasaki equation, with Bunch--Davies initial data deep in contraction,
+reproduces the analytic matter-bounce result: for a contraction of equation of
+state $w$ the tensor tilt is $n_T=3-|2p-1|$ with $p=2/(1+3w)$, and a
+matter-dominated contraction ($w=0$) gives $n_T=0$ \emph{exactly}---a
+scale-invariant primordial spectrum, the observed near-scale-invariance,
+\textbf{with no inflaton} (\Cref{fig:primordial}). What Einstein--Cartan supplies
+is the one ingredient the matter-bounce scenario otherwise lacks: a genuinely
+non-singular bounce, which rival realisations buy with exotic ghost matter but
+torsion delivers for free. The slight observed red tilt $n_s\simeq0.965$
+corresponds to a contraction just softer than matter ($w\approx-0.003$).
+
+The acoustic peaks then follow from \emph{shared} physics: the framework runs the
+entire post-bounce hot Big Bang exactly as $\Lambda$CDM does---same plasma, same
+recombination at $z\simeq1090$, same sound horizon---so it inherits the peaks
+rather than re-deriving them. Evaluated on the standard background the comoving
+sound horizon is $r_s\simeq142\,\mathrm{Mpc}$ and the peak series
+$\ell_n\simeq230,540,850,1150,1460$ matches the observed Planck peaks
+($220,540,810,1120,1450$) to a few percent (\Cref{fig:acoustic}). The hard,
+decisive number---the acoustic scale---is reproduced; what remains is a full
+Boltzmann computation (CAMB/CLASS-class) of peak \emph{heights}, sensitive to the
+baryon and dark-matter densities and the precise primordial amplitude. The
+parent-Hawking reading of the CMB is consistent with all of this: it concerns the
+\emph{origin} of the thermal plasma at the bounce surface, not a replacement for
+recombination---the peaks arise from standard acoustics either way.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{primordial}
+  \caption{The primordial spectrum from the Einstein--Cartan bounce. \emph{Left:}
+    the tensor power spectrum is flat (scale-invariant) for a matter-dominated
+    contraction and blue for radiation---scale invariance with no inflaton.
+    \emph{Right:} the tilt $n_T$ versus contraction equation of state on the
+    analytic curve; $w=0$ is scale-invariant, and the observed tilt corresponds to
+    $w\approx-0.003$. Reproducible as \texttt{figures/scripts/ch09\_primordial.py}.}
+  \label{fig:primordial}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{acoustic}
+  \caption{The acoustic peaks. The bounce's scale-invariant primordial input,
+    carried through the standard post-bounce plasma, yields a sound horizon
+    $r_s\simeq142\,\mathrm{Mpc}$ and a peak series matching the observed Planck
+    multipoles to a few percent. The peak \emph{heights} await a full Boltzmann
+    computation. Reproducible as \texttt{figures/scripts/ch09\_acoustic.py}.}
+  \label{fig:acoustic}
+\end{figure}
+
+\section{Tiers 3--5, and the frontier}
+
+The higher tiers are multi-year programs, sketched here as scope rather than
+results. \textbf{Tier~3 (chirality dynamics)} would quantify the membrane's filter
+efficiency and predict the dark-to-baryon ratio's $f\approx1/6$ from
+Einstein--Cartan microphysics---turning a consistency target into a derivation.
+\textbf{Tier~4 (population statistics)} treats the supraverse as a stochastic
+process---nucleation, growth, death, recursion---and computes the equilibrium
+distribution whose typical observer Chapter~\ref{chap:nowobs} located, supplying
+the rigorous measure the Boltzmann-brain argument (Chapter~\ref{chap:void}) still
+owes. \textbf{Tier~5} feeds all of this into direct, quantitative comparisons with
+specific datasets. Further out sit the genuinely frontier tests: gravitational
+decoherence as the laboratory-scale limb of the same gravity-separates-branches
+physics as the bounce, information-theoretic signatures of geometric dark matter,
+and any direct gravitational imprint of the parent. These are catalogued for
+completeness; none is near-term.
+
+\section{The minimum viable project, and the ethos}
+
+If one project should come first, it is \textbf{Tier~2 with a focus on the CMB
+power spectrum}: decisive either way, publishable either way, bounded at about a
+year, and within reach of standard numerical-relativity-plus-perturbation-theory
+expertise. The visualization track (Chapter~\ref{chap:almostnothing}) can proceed
+in parallel, needing no Tier-2 output to begin.
+
+The governing principle is not to ``prove'' the framework by simulation but to
+make it \emph{testable}: code open from the start, validated against analytic
+limits, checked for numerical convergence, and reproducible by anyone. That
+standard is already met by the results above---every figure and number in this
+book regenerates from the repository, and the simulation library ships with a
+passing test suite. Reproducible code lets others check, extend, and challenge the
+claims, which is the only thing that turns a worldview into science.

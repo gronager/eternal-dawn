@@ -12,7 +12,7 @@ Three things, in order of decreasing tractability:
 
 1. **Write the framework down clearly.** Derive each conclusion from minimal axioms. Identify what’s established physics, what’s natural extension, what’s speculative. Get to a state where the framework can be evaluated by people who haven’t been in the conversation that generated it.
 1. **Identify computational and observational tests.** Each piece of the framework should make at least one prediction distinguishable from ΛCDM in principle. Catalog these.
-1. **Build simulation infrastructure.** Start with 1D spherical Einstein-Cartan collapse and bounce. Progress to perturbation evolution through bounces. Eventually toward supraverse population statistics. The visualization piece (gravity-scaled conformal mapping of the foam manifold) is a parallel track.
+1. **Build simulation infrastructure.** Start with 1D spherical Einstein-Cartan collapse and bounce. Progress to perturbation evolution through bounces. Eventually toward supraverse population statistics. The visualization piece (gravity-scaled conformal mapping of the supraverse manifold) is a parallel track.
 
 ## Authorship and scope
 
@@ -53,7 +53,7 @@ PART II — Observations and Simulations
   6. What We Can Already See              (live results)
   7. What the Next Decade Will Decide     (near-future)
   8. The Simulation Program
-  9. Seeing the Foam                      (visualization)
+  9. Seeing almost Nothing                (visualization; the void is mostly 3D, tiny 4D pockets)
  10. The Scoreboard                       (vs ΛCDM / Standard Model)
 ```
 
