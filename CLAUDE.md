@@ -86,6 +86,14 @@ The new chapters read linearly (each leans on the prior). Cross-references use L
 - Lead with the **warm names** — "first universe(s)," "child universe," "the bounce," "the void." Introduce the formal acronyms **OGU** (original-generation universe) and **BHU** (black-hole universe) once each, then use sparingly.
 - "**Cartasis**" appears once, as the Cartan + *katharsis* pun in Chapter 2. Elsewhere: "**bounce density**" (the symbol `\rhoc`, ρ_C) and "**bounce membrane**."
 
+### Migration gardening TODO (do per chapter, and a final sweep)
+
+When migrating each chapter into `doe/`, **garden as you go** — do not just move text:
+- **Naming:** purge stray "Cartasis" (keep only the Ch2 pun), `\SCT`, "Supraverse Cartasis Theory"; convert to "bounce density/membrane," "Dawn of Eternity," warm names. (Copied stubs like the axioms chapter inherited the old naming — `doe/01-axioms` is gardened; recheck others.)
+- **No lab-log voice.** This is a linear monograph, not a research diary. Cut "earlier drafts assumed…," "it is tempting to…," "the honest result is…," "how the sausage is made" framing. State the result and its derivation directly; do not narrate the path that reached it.
+- **Figures:** Part I was figure-light early (overture/axioms are prose; the bounce chapter now carries `fig:bounce`; Void has `fig:instanton`; Eternal Dawn has `fig:ogudist`, `fig:cycle`). Part II (observations/sims/viz) is figure-dense. Place each figure in the chapter that *introduces* its idea; reference (don't duplicate) it elsewhere.
+- Run a final `grep -rn "Cartasis\|\\SCT\|earlier draft\|tempting" doe/` sweep before deleting the legacy tree.
+
 ## Workflow notes for Claude Code sessions
 
 When picking up this project:

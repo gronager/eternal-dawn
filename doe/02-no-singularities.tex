@@ -52,6 +52,20 @@ figure depends on the fermion content and on coefficients in the
 Einstein--Cartan Lagrangian, and pinning it precisely is one of the calculation
 targets of the simulation program (Chapter~\ref{chap:sims}).
 
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{bounce}
+  \caption{The Einstein--Cartan torsion bounce (a 1D spherical collapse, radiation
+    fluid, in dimensionless units $8\pi G/3=\rhoc=1$). \emph{Left:} the collapsing
+    universe reaches a minimum radius $a_{\min}$ and re-expands (blue) exactly where
+    general relativity would run to a singularity, $a\to0$ (red dashed).
+    \emph{Right:} the density saturates at the bounce density $\rhoc$ and the Hubble
+    rate crosses zero---collapse turning into expansion, with no singularity ever
+    reached. Reproducible as \texttt{figures/scripts/ch09\_bounce.py}; the full
+    numerical treatment is Chapter~\ref{chap:sims}.}
+  \label{fig:bounce}
+\end{figure}
+
 \paragraph{A name, and a pun.} This is the one place the book indulges its title
 for the mechanism. The density at which Cartan's torsion forces the turnaround is
 where everything is dissolved and then extruded clean---a kind of \emph{katharsis}.
@@ -120,12 +134,12 @@ parent's Hawking glow (Chapter~\ref{chap:home}).
 \section{What the bounce does \emph{not} do}
 \label{sec:cpt-even}
 
-It is tempting---and earlier drafts of this work yielded to the temptation---to
-imagine the bounce as a tidy mirror that flips matter into antimatter and hands
-us the cosmic matter excess for free. The dynamics forbid it. When torsion is
-integrated out of Einstein--Cartan--Sciama--Kibble gravity, the Dirac sector is
-left with a single four-fermion contact term, the Hehl--Datta
-interaction~\citep{hehl1976},
+The bounce reliably turns a black hole into an expanding world, but it does not
+also \emph{make} the matter that fills it---it is no mirror that turns infalling
+antimatter into matter and hands us the cosmic excess for free. The interaction
+that drives it forbids that, and the proof is short. When torsion is integrated
+out of Einstein--Cartan--Sciama--Kibble gravity, the Dirac sector is left with a
+single four-fermion contact term, the Hehl--Datta interaction~\citep{hehl1976},
 \[
   \Delta\mathcal{L}_{\mathrm{tors}}
   = -\,\frac{3}{16}\,\frac{8\pi G}{c^4}\,
