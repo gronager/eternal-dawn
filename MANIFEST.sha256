@@ -1,11 +1,11 @@
 # Eternal Dawn -- provenance manifest
-# generated: 2026-06-02T12:06:12Z
-# git commit: 7abcdf796f3decb1252bd9f2f36e22061f04f958
+# generated: 2026-06-02T12:24:08Z
+# git commit: db061ff39ba40c2a10906b4fba7fa2b8d3286ef1
 # author: Michael Gronager
 93def212602a8acd9ff3a142cfad051d44b3d778a78e9c5ef1f9f4636c3e15f9  CITATION.cff
 60b148e3a29d7a0038152f5d23c30c3e367a0882add33be22d52e98da4dbaacc  CLAUDE.md
 93e03ee223b25f908496c88420a1882eb2de5eac522e7cf48e2c195543d44779  LICENSE.md
-89c6912b32c77a009e795b134df03a43d046ca54d194c75204afe0348086ef9c  README.md
+70ab7c64b8a2cfa95692c97837487248082541f091d2ae2c8e4ee2d310a78d63  README.md
 dc559720892d45d39b2c54e4584fdf285217c73b4efa6001a4823ee4caaab223  appendices/A-open-questions.tex
 2c496489e8587064b61f1aa57096a03c1ebe32b6653699b7e72dc5c0d8bbafe7  bibliography/references.bib
 c4458ca1a3ffec9065e62c145a34716eff8971f4bdd241509d7bd1ae8d57a4ef  book.epub

@@ -61,45 +61,66 @@ So the choice was never "cheap fake mind" against "expensive real world." Only o
 
 ## The scoreboard
 
-ΛCDM is the standard model of cosmology — general relativity and the particle Standard Model, plus the patches it needs to fit the sky: an inflaton, a cosmological constant Λ, a dark-matter particle, a baryogenesis mechanism, and a finely chosen low-entropy start. Eternal Dawn (ED) replaces the patches with *one* mechanism — a torsion bounce in an eternal vacuum — and derives the rest.
+ΛCDM is the standard model of cosmology — general relativity and the particle Standard Model, plus the patches it needs to fit the sky: an inflaton, a cosmological constant Λ, a dark-matter particle, a baryogenesis mechanism, and a finely chosen low-entropy start. Eternal Dawn (ED) replaces the patches with *one* mechanism — a torsion bounce in an eternal vacuum — and derives the rest. The top block below is the established physics everyone shares (ΛCDM is, after all, the Standard Model extended); the lower block is where ED pulls ahead.
 
-Legend: ✅ explained from the framework's own principles · ➖ added by hand / assumed · ❌ unresolved or self-undermining · — out of scope.
+Legend: ✅ explained from first principles · 🔧 bolted on by hand / assumed (a patch) · ❌ unresolved or self-undermining · — out of scope.
 
 | Question | Eternal Dawn | ΛCDM | Standard Model |
 |---|:--:|:--:|:--:|
+| *Established physics — everyone agrees* | | | |
+| Cosmic expansion (Hubble flow) | ✅ | ✅ | — |
+| Accelerating expansion (the fact) | ✅ | ✅ | — |
+| Age of the universe (~13.8 Gyr) | ✅ | ✅ | — |
+| Light-element abundances (BBN) | ✅ | ✅ | ✅ |
+| Particle content & three neutrino flavours | ✅ | ✅ | ✅ |
+| Growth of cosmic structure | ✅ | ✅ | — |
+| The CMB (a thermal blackbody on the sky) | ✅ | ✅ | — |
+| *Where Eternal Dawn pulls ahead* | | | |
 | No singularity | ✅ | ❌ | — |
 | What came "before" the Big Bang | ✅ | ❌ | — |
 | Why there is something rather than nothing | ✅ | ❌ | — |
 | The observer problem (Boltzmann brain / "are we a simulation?") | ✅ | ❌ | — |
-| Arrow of time | ✅ | ➖ | ❌ |
-| Matter over antimatter (the charge asymmetry) | ✅ | ➖ | ➖ |
-| Dark matter | ✅ | ➖ | ❌ |
-| Dark energy | ✅ | ➖ | ❌ |
-| The CMB | ✅ | ✅ | ❌ |
+| Arrow of time | ✅ | 🔧 | ❌ |
+| Matter over antimatter (the charge asymmetry) | ✅ | 🔧 | 🔧 |
+| Dark matter | ✅ | 🔧 | ❌ |
+| Dark energy (the *cause* of the acceleration) | ✅ | 🔧 | ❌ |
+| CMB *origin* | ✅ | ✅ | ❌ |
 | Megastructures (ultra-large-scale order) | ✅ | ❌ | — |
-| Inflation | ✅ | ➖ | ❌ |
+| Inflation | ✅ | 🔧 | ❌ |
 | Hubble tension | ✅ | ❌ | — |
 | Fine-tuning of the constants | ✅ | ❌ | ❌ |
 | **New ingredients required** | **4 axioms + 1 bounce** | inflaton, Λ, a dark-matter particle, baryogenesis, special initial conditions | — |
 
-The ✅ marks explanatory *scope* — that ED accounts for the item from its own principles, not that it is proven. Evidence is a separate column, and an honest one:
+The ✅ marks explanatory *scope* — that ED accounts for the item from its own principles, not that it is proven. Evidence is a separate, honest matter — and it splits into what the code already shows and what the sky still has to deliver.
 
-### What's already pointing its way — a scorecard to tick off
+### What's been shown, and what's still a bet
 
-Already suggestive in today's data:
+**Simulation & calculation results — already in hand** (every one reproducible from the repo):
 
-- [x] **Hubble tension** — resolved with no new parameter (the inhomogeneous / timescape clock-rate effect)
-- [x] **Dark energy is evolving**, as predicted — DESI finds *w₀ > −1, wₐ < 0*
+- [x] The Einstein–Cartan bounce halts a collapse and re-expands — **no singularity**
+- [x] The extrusion is adiabatic (*D = 1*): the matter excess is **inherited exactly**, not fine-tuned
+- [x] A **scale-invariant primordial spectrum with no inflaton**
+- [x] **Acoustic peaks** matching the Planck multipoles to a few percent
+- [x] The **Hubble tension** closed by the timescape clock-rate (right sign *and* magnitude)
+- [x] The **relic lepton asymmetry** pinned to ~η — no large value left to hide
+- [x] The **Boltzmann-brain count** — the void makes worlds, not minds
+- [ ] CMB **peak heights** from a full bounce Boltzmann run (CAMB/CLASS-class) — *to compute*
+- [ ] Dark-to-baryon ratio *f ≈ 1/6* **derived** from Einstein–Cartan microphysics — *to compute*
+
+**Observations already pointing its way:**
+
+- [x] Dark energy is **evolving**, as predicted — DESI finds *w₀ > −1, wₐ < 0*
 - [x] **More ultra-large structure** than a smooth start allows (the Giant Arc, the Big Ring, …)
-- [x] **Baryon-to-photon ratio doubly anchored** — the CMB peaks and BBN deuterium agree to ~1%
+- [x] Baryon-to-photon ratio **doubly anchored** — the CMB peaks and BBN deuterium agree to ~1%
+- [x] An early-vs-late Hubble gap of just the size the timescape calc targets
 
-Awaiting data or computation (the live bets):
+**Awaiting data — the live bets:**
 
 - [ ] A **shared cosmic axis** — galaxy-spin handedness aligned with the CMB "axis of evil" (the cleanest possible confirmation)
+- [ ] **No dark-matter particle** — direct detection (LZ, XENONnT) and the colliders stay empty *(go bet it 😄)*
 - [ ] **Primordial gravitational waves** low or absent (LiteBIRD)
-- [ ] **No primordial lepton asymmetry** (improved BBN+CMB; eventually a direct C𝜈B detection)
-- [ ] **Continued null** in dark-matter direct detection
-- [ ] **CMB peak heights** reproduced from a full bounce Boltzmann computation
+- [ ] **No primordial lepton asymmetry** in the data (improved BBN+CMB; eventually a direct C𝜈B detection)
+- [ ] Galaxies assembling **earlier** than a smooth start allows (JWST, ongoing)
 
 And the deepest divergence of all. If ΛCDM's one-off Big Bang were the whole story, the cheapest way to make an observer is a momentary fluctuation with false memories — so a *typical* observer should be a Boltzmann brain, not a real inhabitant of a real world. That leaves only two ways out: a fine-tuner who set the initial state by hand, or a simulation. Eternal Dawn removes the dilemma — the void cannot dream up a brain, only give birth to a world, and the dawn is still going on. No singularity, no fine-tuned start, no new fields: just continuous physics applied carefully.
 
