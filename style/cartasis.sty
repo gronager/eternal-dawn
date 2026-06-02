@@ -1,4 +1,4 @@
-% cartasis.sty — style package for the Supraverse Cartasis Theory monograph.
+% cartasis.sty — style package for the Eternal Dawn monograph.
 % Designed for the `memoir` class. Palatino (mathpazo) text + math, a classic
 % Bringhurst chapter style, generous outer margin for sidenotes and margin
 % citations.
@@ -89,5 +89,8 @@
 \newcommand{\Cartasis}{\emph{Cartasis}\xspace}
 % A lightweight sidenote for epistemic asides / margin remarks.
 \newcommand{\sidenote}[1]{\marginpar{\footnotesize\raggedright #1}}
+
+% Last-resort stretch so long inline math / monospace paths don't overrun the margin.
+\setlength{\emergencystretch}{3em}
 
 \endinput
