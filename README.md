@@ -108,8 +108,8 @@ Layout: `book.tex` is the master document; `frontmatter/`, `chapters/`, and
 
 ## Authorship, citation, and provenance
 
-**Author:** Michael Gronager, PhD. © 2026 — text/figures CC-BY-4.0, code MIT: reuse freely
-with attribution.
+**Author:** Michael Gronager, PhD — ORCID [0009-0006-5933-0065](https://orcid.org/0009-0006-5933-0065).
+© 2026 — text/figures CC-BY-4.0, code MIT: reuse freely with attribution.
 
 This repository is the canonical, reproducible record of the work. Every figure and
 number regenerates from the code (`make figures`, `make sim-test`), and the full git
@@ -130,8 +130,8 @@ its single root hash can additionally be anchored to any timestamping/notary ser
    record (strictly better than a bare hash: timestamped *and* citable *and* indexed).
 2. **arXiv** (gr-qc / astro-ph.CO) — the physicist's standard preprint (needs an
    endorsement); the credential that signals serious work.
-3. **ORCID** (orcid.org) — a free persistent author ID; register once and add it to
-   `CITATION.cff`. (A ResearchGate profile is good for *reach* but is not a substitute
-   for a DOI or ORCID.)
+3. **ORCID** — `0009-0006-5933-0065` (now recorded in `CITATION.cff` and on the title
+   page); a free persistent author ID. (A ResearchGate profile is good for *reach* but
+   is not a substitute for a DOI or ORCID.)
 4. **ResearchGate / Substack / blog** — for reach and narrative, each linking back to
    the Zenodo DOI so the popular telling cannot undercut the priority claim.
