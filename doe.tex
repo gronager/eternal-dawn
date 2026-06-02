@@ -1,0 +1,66 @@
+% =====================================================================
+%  Dawn of Eternity --- main document (RESTRUCTURE in progress)
+%  Compile from the project root:
+%      latexmk -pdf doe.tex      (or: make doe)
+%
+%  This is the new, reorganized manuscript (Part I: The Framework;
+%  Part II: Observations and Simulations). It is built ALONGSIDE the old
+%  book.tex during the migration; the old book.tex / chapters/ stay
+%  compiling until doe is complete, then the old set is deleted.
+%
+%  Chapters live in doe/. Sims, figures, and the bibliography are shared
+%  with the old tree (referenced by path), so nothing in sims/ moves.
+% =====================================================================
+\documentclass[11pt,twoside,openright,a4paper]{memoir}
+
+\usepackage{style/cartasis}
+
+\title{Dawn of Eternity}
+\author{Michael Gronager, PhD}
+\date{Working draft --- \today}
+
+\begin{document}
+
+% ------------------------- Front matter -------------------------
+\frontmatter
+\input{frontmatter/cover}
+\input{frontmatter/title}
+\input{frontmatter/dedication}
+\input{frontmatter/epigraph}
+\tableofcontents
+% TODO(migration): rewrite the preface for the new structure / naming
+% (the old frontmatter/preface.tex cross-references retired chapters).
+% \input{frontmatter/preface}
+
+% ------------------------- Main matter --------------------------
+\mainmatter
+\setcounter{chapter}{-1}
+\include{doe/00-overture}
+
+\part{The Framework}
+\include{doe/01-axioms}
+\include{doe/02-no-singularities}
+\include{doe/03-void}
+\include{doe/04-eternal-dawn}
+\include{doe/05-home}
+
+\part{Observations and Simulations}
+\include{doe/06-already-see}
+\include{doe/07-next-decade}
+\include{doe/08-simulations}
+\include{doe/09-foam}
+\include{doe/10-scoreboard}
+
+% ------------------------- Appendices ---------------------------
+% TODO(migration): repoint appendix cross-references to the new chapters,
+% then re-enable.
+% \appendix
+% \include{appendices/A-open-questions}
+
+% ------------------------- Back matter --------------------------
+% TODO(migration): re-enable once migrated chapters cite sources.
+% \backmatter
+% \bibliographystyle{plainnat}
+% \bibliography{bibliography/references}
+
+\end{document}

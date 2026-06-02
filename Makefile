@@ -5,13 +5,18 @@ VENV := $(SIM)/.venv
 PYTHON := $(VENV)/bin/python
 FIGSCRIPTS := $(wildcard figures/scripts/ch*.py)
 
-.PHONY: all pdf figures epub sim-install sim-test hash clean distclean
+.PHONY: all pdf doe figures epub sim-install sim-test hash clean distclean
 
 all: pdf
 
 pdf:
 	@mkdir -p $(BUILD)
 	latexmk -pdf $(MAIN).tex
+
+# Dawn of Eternity restructure (built alongside book.tex during migration).
+doe:
+	@mkdir -p $(BUILD)
+	latexmk -pdf doe.tex
 
 # Regenerate every chapter figure (PDFs land in figures/pdf/).
 figures: sim-install
