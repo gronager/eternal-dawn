@@ -1,18 +1,231 @@
 \chapter{Eternal Dawn}
 \label{chap:dawn}
 
-% =====================================================================
-% MIGRATION CONTRACT (Stage 4 fills this chapter)
-%   FROM Ch3 Baby Universes: inflation substitute; what the baby inherits.
-%   FROM Ch4 Bounce Transform: fork in the road (Road A/B); where an
-%        asymmetry comes from (the seed mechanism); the chiral-vortical
-%        estimate; "a needle at one part per billion"; what survives.
-%   FROM Ch5 Supraverse: universe size distribution (birth vs growth, the
-%        derived distribution); genesis/spin/growth/foam/recursive-cycle;
-%        lineage chirality; "we are not an OGU" (bridges to Home).
-%   FROM Ch7 Arrow: "the arrow and matter are CPT-locked"; global vs local
-%        time.
-%   NAMING: lead with "first universes"; introduce OGU once.
-% =====================================================================
+The void decays into seeds (Chapter~\ref{chap:void}), and each seed bounces
+(Chapter~\ref{chap:bounce}) into a world. A world born this way---directly from
+the void, with no parent outside it---is an \emph{original-generation universe},
+an OGU: the first dawn of a lineage. This chapter asks what those first universes
+are like---what they inherit, how they choose between matter and antimatter, what
+sizes and spins they come in---and how, by growing old and dying, each one seeds
+the next, so that the dawn is not a single event but an eternal, recurring one.
 
-\noindent\emph{[Scaffold --- content migrates here in Stage 4.]}
+\section{The first dawn, and what a universe inherits}
+\label{sec:first-dawn}
+
+Just past the bounce the new universe is at its densest, and the torsion
+repulsion that halted the collapse is still near its peak. It drives a brief
+epoch of very rapid expansion that fades as the density drops and gravity
+reasserts itself---an inflation-like phase with no separate inflaton field,
+ending on its own when the density falls below the bounce threshold, and leaving
+behind the homogeneous, near-isotropic conditions a hot cosmology needs. Deriving
+its perturbation spectrum and matching it to the microwave sky is the central
+near-term test of the whole picture (Chapter~\ref{chap:nowobs}).
+
+What actually comes through the membrane is set by conservation laws, not by
+inheritance of any structure. Energy--momentum is conserved, fixing the new
+universe's mass budget. Net angular momentum passes through, so a rotating seed or
+parent leaves the child with a \emph{preferred axis}---a candidate source of the
+large-scale anisotropies discussed later. The conserved charges flow through, in
+particular the combination $B-L$ that will carry the matter excess. What does
+\emph{not} come through is everything made of structure: atoms, nuclei, particle
+identities, any record of a ``before.'' All of it is dissolved at the bounce
+density and rebuilt from elementary field content on the far side
+(Chapter~\ref{chap:bounce}). A universe inherits a budget and a few conserved
+numbers, not a cargo.
+
+\section{The matter choice}
+\label{sec:matter-choice}
+
+One of those conserved numbers is the most consequential the universe will carry:
+the slight excess of matter over antimatter, measured today as the
+baryon-to-photon ratio $\eta\simeq6\times10^{-10}$, about 0.6 parts per billion.
+Chapter~\ref{chap:bounce} established that the bounce cannot \emph{make} this
+excess---the interaction that drives it is $C$-, $P$-, and $T$-even, so it neither
+flips charge nor generates a chiral bias from nothing. The asymmetry must be
+\emph{supplied}. The framework's account of where it comes from divides cleanly by
+generation.
+
+\paragraph{For a child universe: inheritance, essentially exact.} A universe with
+a parent inherits the parent's excess directly. At the bounce the infalling
+material thermalises at $\sim10^{20}\,\mathrm{K}$ into a near-symmetric bath in
+which every species is pair-produced; the parent's particular matter is erased.
+What survives is whatever net $B-L$ the material carried, because the electroweak
+sphalerons active at the bounce temperature wash out $B+L$ but cannot touch
+$B-L$. The crossing is also fast---$\sim4\times10^{-21}\,\mathrm{s}$, far shorter
+than any thermalisation time---so it generates essentially no entropy
+(the dilution factor $D=S_{\mathrm{after}}/S_{\mathrm{before}}=1$ to about one part
+in $10^{11}$; Chapter~\ref{chap:sims}). With entropy conserved, the child does not
+regenerate its photons, and so it inherits the parent's ratio outright,
+$\eta_{\mathrm{child}}\approx\eta_{\mathrm{parent}}$. The excess is passed down a
+lineage like a family name, not re-manufactured at each step.
+
+\paragraph{For the first universe: the seed's lucky skew.} Only the OGU, with no
+parent, must source its excess at birth---and even there nothing needs to
+\emph{make} it. A vacuum fluctuation rare enough to nucleate a bounce is not
+exactly matter--antimatter symmetric; it carries some chance net $B-L$. The
+symmetric part incinerates in the thermal bath, and the surviving skew fixes that
+lineage's $\eta$. A quantitative attempt to source the skew dynamically---the
+chiral-vortical effect, in which the rotating bounce's vorticity $\omega$ drives an
+axial current and freezes in a bias $\eta\sim C\,(\omega/T)$---gives the right
+\emph{order} but not, yet, the right number: at the bounce density the bare,
+parameter-free ratio is $\omega/T\sim1.5\times10^{-11}$, landing within about 1.6
+orders of magnitude of $\eta_{\mathrm{obs}}$ when it could as easily have been
+$10^{-30}$, but matching the value would require an uncomputed coefficient
+$C\!\cdot\!f_\omega\simeq41$. This is a scaling estimate with explicit
+assumptions, not a derivation (reproducible as
+\texttt{sims/src/cartasis\_sims/cve\_filter.py}), and it binds \emph{only} the
+OGU; for the rest of us the excess is inherited debris, and the shortfall is not
+our problem.
+
+\paragraph{The needle, threaded by selection.} The surviving excess must thread a
+fine target: too much and the universe is over-baryonic, too little and it
+annihilates to a sterile furnace; the viable window sits at about one part per
+billion. The framework does not fine-tune to hit it---it \emph{selects}. Only
+lineages founded on a sufficiently skewed seed are matter-rich enough to make
+stars, black holes, and descendants at all (\S\ref{sec:shape}); the barren ones
+make nothing and are never anyone's parent. We carry down what a viable founder
+happened to have. What remains genuinely open is not the stability of $\eta$ along
+a lineage but its \emph{value} at the founder---why $\sim10^{-9}$ rather than
+$10^{-3}$ or $10^{-15}$ (see the appendix).
+
+\paragraph{Why matter comes paired with a forward arrow.} The thermodynamic arrow
+of Chapter~\ref{chap:bounce} is set by the low-entropy membrane and would exist
+even in a perfectly symmetric universe; it is not \emph{caused} by the matter
+excess. But the two are co-sourced at the same surface and locked together across
+the supraverse. The process that biases the matter is $CP$-violating, and by the
+$CPT$ theorem $CP$ violation is $T$ violation, so matter genesis is intrinsically
+time-asymmetric. Because the void is $CPT$-symmetric, for every matter-led
+universe running forward there is a $CPT$-image partner that is antimatter-led and
+runs the opposite way---the same object seen through $CPT$. The quantity fixed by
+symmetry is the \emph{product} of matter-sign and arrow-sign, and observership
+selects the diagonal: every observer necessarily finds ``matter, forward in
+time,'' while the inhabitants of the mirror lineage say exactly the same of their
+``antimatter, backward'' world. Matter and the arrow travel together not because
+one causes the other, but because the $CPT$ structure of the void binds their
+signs.
+
+\section{The shape of a generation}
+\label{sec:shape}
+
+A generation of first universes is not uniform; it has a derivable distribution in
+both size and spin, and we should expect to find ourselves at its typical point,
+not in its rare tail.
+
+\paragraph{Size: small is typical.} Two pressures compete. Births favour the
+small---a fluctuation is exponentially less likely to reach the bounce density
+over a larger mass. Growth favours the large---once born, a hole feeds by runaway
+accretion. In the stationary population these balance into a power law,
+$n(M)\propto M^{-g}$ (with $g\simeq1$--$2$ for Eddington- to Bondi-limited
+feeding): many small universes, few large, cut off at the high-mass end
+(\Cref{fig:ogudist}, left). Since the count falls with mass, a low-mass viability
+cut---enough mass to make stars and black holes---selects observer-bearing
+universes that pile up just above the edge. The old conjecture that ``we sit near
+the optimum'' is thus \emph{derived}: a typical observer is near the viability edge
+of a declining power law, not out in the exponentially rare massive tail.
+
+\paragraph{Spin: barely viable is typical, and that is why $\eta$ is small.} The
+seed's net vorticity sets the inherited bias, $|\eta|\sim C\,|\omega/T|$. A random
+fluctuation most likely has \emph{small} net vorticity, but a seed below
+$\omega_{\min}=\eta_{\min}T/C$ cannot complete baryogenesis: its matter and
+antimatter annihilate to near-symmetric radiation, no structure forms, and the
+universe is sterile. Viability therefore gates the distribution from below, and the
+result runs exactly counter to intuition (\Cref{fig:ogudist}, right): \emph{no
+spin is likeliest but most sterile, high spin is rare but pure}, and the typical
+\emph{viable} universe sits just above the threshold---low-spin, low-purity,
+barely past barren. This is a shape, not yet a number (it is plotted in units of an
+unknown birth-vorticity scale), but it carries a real payoff: it explains why the
+cosmic matter asymmetry is \emph{small without fine-tuning}. A small $\eta$ is what
+a typical viable universe has. The same low spin predicts a small but nonzero net
+rotation for our universe---a preferred axis to confront with galaxy-spin
+handedness and CMB alignments (Chapter~\ref{chap:nowobs}).
+
+\paragraph{Lineages are chirally pure.} Because the sign of the excess is set once,
+at the seed, and merely passed down thereafter, a matter-led OGU has only matter
+descendants and an antimatter-led one only antimatter, with no mixing. The vacuum's
+$CPT$ symmetry makes the two kinds equally numerous, so global $CPT$ is preserved
+even though every individual lineage is pure. What is inherited is the chirality
+\emph{sign} alone---\emph{not} the spin: a descendant's rotation axis and magnitude
+are its own progenitor hole's, set by a local astrophysical collapse and re-drawn
+every generation. Our spin is our progenitor hole's, not our distant founder's
+(Chapter~\ref{chap:nowobs}).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{ogu_distributions}
+  \caption{The two derivable population shapes. \emph{Left:} the mass distribution
+    $n(M)\propto M^{-g}$---births (small) versus runaway growth (large)---with a
+    viability cut selecting observer-bearing universes, which peak just above the
+    edge. \emph{Right:} the spin distribution---low net vorticity is likeliest, but
+    below $\omega_{\min}$ baryogenesis fails and the universe is sterile, so viable
+    universes sit just above threshold (low purity, small $\eta$). The markers are
+    the model's predicted typical location, not measurements of our universe; the
+    axes are in model units. Generated by
+    \texttt{figures/scripts/ch05\_distributions.py}.}
+  \label{fig:ogudist}
+\end{figure}
+
+\section{Growth, death, and the eternal recurrence}
+\label{sec:recursive-cycle}
+
+A first universe, once viable, grows---its central holes feed and merge, its mass
+climbs---and it lives a very long time: the parent black hole that hosts a
+universe of our mass would take on the order of $10^{145}$ years to evaporate, far
+longer than any internal cosmological clock. But it is not immortal. Its stars
+burn out, its black holes themselves Hawking-evaporate, its matter redshifts away,
+and the interior settles into cold ($\sim10^{-30}\,\mathrm{K}$), empty,
+dark-energy-driven de Sitter space. And a vast, empty, smooth de Sitter
+interior is---gravitationally---\emph{a void}. It is exactly the substrate
+Chapter~\ref{chap:void} began from. So it does what a void does: it nucleates a
+fresh, dilute scatter of new first universes inside itself, and the cycle turns.
+
+\paragraph{The void is not primordial.} This collapses a hidden assumption. The
+void of Chapter~\ref{chap:void} is not a separate arena that existed ``before''
+everything; it is the asymptotic state every universe reaches. Universes nest both
+ways---we are inside a parent, and our own far future will, in its emptiness, seed
+a foam of new lineages. There is no first void and no last universe. The supraverse
+is self-similar and eternal in both directions, and asks for no first cause.
+
+\paragraph{Why heat death does not forbid it.} The obvious objection is that heat
+death is \emph{maximal} entropy while a fresh bounce needs \emph{low} entropy.
+Penrose's resolution applies exactly~\citep{penrose2010}. The \emph{total} entropy
+rises monotonically, obeying the Second Law; but what a bounce needs small is the
+\emph{gravitational} (Weyl, clumping) entropy, and that \emph{cycles}---low at the
+smooth bounce, high while matter clumps into black holes, low again once the holes
+evaporate and the interior smooths back to conformally flat de Sitter
+(\Cref{fig:cycle}). It is the Weyl entropy a new bounce needs low, and it resets
+every cycle. This is Penrose's conformal cyclic cosmology with one change: a dead
+aeon here does not hand off to a single successor, it nucleates \emph{many}---a
+whole foam. The framework is conformal cyclic cosmology \emph{made to branch}. (The
+recurrence is a synthesis at the speculative end of the program---a natural closure
+of the picture, consistent with the gravitational arrow, not a derived result.
+Reproducible as \texttt{figures/scripts/ch05\_cycle.py}.)
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{cycle}
+  \caption{Why a heat-dead interior can seed the next foam. The \emph{total}
+    entropy (rising) climbs monotonically to the de Sitter maximum, but the
+    \emph{Weyl/clumping} entropy (the one a fresh bounce needs small) cycles---low
+    at the smooth bounce, high while black holes exist, low again once they
+    evaporate and the interior smooths to de Sitter. So the heat-dead void is a
+    valid low-gravitational-entropy substrate for the next foam: Penrose's conformal
+    cyclic cosmology, made to branch. Schematic, with order-of-magnitude entropies
+    on the black-hole Hawking timescale.}
+  \label{fig:cycle}
+\end{figure}
+
+\paragraph{And so to us.} Inside any viable universe, stellar collapse makes black
+holes, and each of those is the seed of a child universe---a black-hole universe,
+a BHU, the next rung down the recursion. We are on one of those rungs, not at the
+top: our universe carries dark matter and dark energy, and in this framework both
+\emph{require a parent} (they are the parent's mass and ongoing accretion felt
+through the membrane, Chapter~\ref{chap:home}). An OGU, born straight from the
+void, would have neither. So the very darkness of our sky tells us we are a child,
+not a firstborn---which is the subject of the next chapter. It also rescues a
+Copernican worry the framework had quietly incurred: to find ourselves a few
+billion years into a Big Bang looks special, until the recurrence reveals it as
+the most ordinary thing there is. Every universe has its own bounce and its own
+observers a few billion years on; there have been and will be endless aeons, each a
+foam of universes nested in the heat-dead past of another. We sit not at a
+privileged origin but at a typical vantage---one lit pixel in an eternal,
+self-similar screensaver of near-identical dawns.
