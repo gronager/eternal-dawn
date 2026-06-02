@@ -59,21 +59,70 @@ The same blade cuts the ready-made big bang. A finished, perfectly arranged univ
 
 So the choice was never "cheap fake mind" against "expensive real world." Only one of the two can come from nothing at all. The void cannot dream up a brain. It can only give birth to a world — and then let the world, in its own long time, grow the minds that wonder how they got here.
 
-## Why this might be worth taking seriously
+## The scoreboard
 
-The framework derives, from minimal axioms, explanations for:
+ΛCDM is the standard model of cosmology — general relativity and the particle Standard Model, plus the patches it needs to fit the sky: an inflaton, a cosmological constant Λ, a dark-matter particle, a baryogenesis mechanism, and a finely chosen low-entropy start. Eternal Dawn (ED) replaces the patches with *one* mechanism — a torsion bounce in an eternal vacuum — and derives the rest. The top block below is the established physics everyone shares (ΛCDM is, after all, the Standard Model extended); the lower block is where ED pulls ahead.
 
-- The Big Bang (a bounce, viewed from inside)
-- Inflation (rapid torsion-driven expansion at the bounce)
-- Matter-antimatter asymmetry (statistical inheritance from the seeding vacuum fluctuation, propagated by bounce dynamics)
-- Dark matter (parent’s gravitational signature through the membrane)
-- Dark energy (parent’s accretion history bleeding through)
-- The CMB (parent’s Hawking radiation)
-- The arrow of time (low-entropy boundary at bounce, high-entropy future)
-- Apparent fine-tuning (typical parameters for observer-supporting universes in the supraverse distribution)
-- Information preservation (entanglement across bounce, unitarity maintained globally)
+Legend: ✅ explained from first principles · 🔧 bolted on by hand / assumed (a patch) · ❌ unresolved or self-undermining · — out of scope.
 
-No singularity, no fine-tuned initial conditions, no exotic new fields, no special starting point. Just continuous physics applied carefully.
+| Question | Eternal Dawn | ΛCDM | Standard Model |
+|---|:--:|:--:|:--:|
+| *Established physics — everyone agrees* | | | |
+| Cosmic expansion (Hubble flow) | ✅ | ✅ | — |
+| Accelerating expansion (the fact) | ✅ | ✅ | — |
+| Age of the universe (~13.8 Gyr) | ✅ | ✅ | — |
+| Light-element abundances (BBN) | ✅ | ✅ | ✅ |
+| Particle content & three neutrino flavours | ✅ | ✅ | ✅ |
+| Growth of cosmic structure | ✅ | ✅ | — |
+| The CMB (a thermal blackbody on the sky) | ✅ | ✅ | — |
+| *Where Eternal Dawn pulls ahead* | | | |
+| No singularity | ✅ | ❌ | — |
+| What came "before" the Big Bang | ✅ | ❌ | — |
+| Why there is something rather than nothing | ✅ | ❌ | — |
+| The observer problem (Boltzmann brain / "are we a simulation?") | ✅ | ❌ | — |
+| Arrow of time | ✅ | 🔧 | ❌ |
+| Matter over antimatter (the charge asymmetry) | ✅ | 🔧 | 🔧 |
+| Dark matter | ✅ | 🔧 | ❌ |
+| Dark energy (the *cause* of the acceleration) | ✅ | 🔧 | ❌ |
+| CMB *origin* | ✅ | ✅ | ❌ |
+| Megastructures (ultra-large-scale order) | ✅ | ❌ | — |
+| Inflation | ✅ | 🔧 | ❌ |
+| Hubble tension | ✅ | ❌ | — |
+| Fine-tuning of the constants | ✅ | ❌ | ❌ |
+| **New ingredients required** | **4 axioms + 1 bounce** | inflaton, Λ, a dark-matter particle, baryogenesis, special initial conditions | — |
+
+The ✅ marks explanatory *scope* — that ED accounts for the item from its own principles, not that it is proven. Evidence is a separate, honest matter — and it splits into what the code already shows and what the sky still has to deliver.
+
+### What's been shown, and what's still a bet
+
+**Simulation & calculation results — already in hand** (every one reproducible from the repo):
+
+- [x] The Einstein–Cartan bounce halts a collapse and re-expands — **no singularity**
+- [x] The extrusion is adiabatic (*D = 1*): the matter excess is **inherited exactly**, not fine-tuned
+- [x] A **scale-invariant primordial spectrum with no inflaton**
+- [x] **Acoustic peaks** matching the Planck multipoles to a few percent
+- [x] The **Hubble tension** closed by the timescape clock-rate (right sign *and* magnitude)
+- [x] The **relic lepton asymmetry** pinned to ~η — no large value left to hide
+- [x] The **Boltzmann-brain count** — the void makes worlds, not minds
+- [ ] CMB **peak heights** from a full bounce Boltzmann run (CAMB/CLASS-class) — *to compute*
+- [ ] Dark-to-baryon ratio *f ≈ 1/6* **derived** from Einstein–Cartan microphysics — *to compute*
+
+**Observations already pointing its way:**
+
+- [x] Dark energy is **evolving**, as predicted — DESI finds *w₀ > −1, wₐ < 0*
+- [x] **More ultra-large structure** than a smooth start allows (the Giant Arc, the Big Ring, …)
+- [x] Baryon-to-photon ratio **doubly anchored** — the CMB peaks and BBN deuterium agree to ~1%
+- [x] An early-vs-late Hubble gap of just the size the timescape calc targets
+
+**Awaiting data — the live bets:**
+
+- [ ] A **shared cosmic axis** — galaxy-spin handedness aligned with the CMB "axis of evil" (the cleanest possible confirmation)
+- [ ] **No dark-matter particle** — direct detection (LZ, XENONnT) and the colliders stay empty *(go bet it 😄)*
+- [ ] **Primordial gravitational waves** low or absent (LiteBIRD)
+- [ ] **No primordial lepton asymmetry** in the data (improved BBN+CMB; eventually a direct C𝜈B detection)
+- [ ] Galaxies assembling **earlier** than a smooth start allows (JWST, ongoing)
+
+And the deepest divergence of all. If ΛCDM's one-off Big Bang were the whole story, the cheapest way to make an observer is a momentary fluctuation with false memories — so a *typical* observer should be a Boltzmann brain, not a real inhabitant of a real world. That leaves only two ways out: a fine-tuner who set the initial state by hand, or a simulation. Eternal Dawn removes the dilemma — the void cannot dream up a brain, only give birth to a world, and the dawn is still going on. No singularity, no fine-tuned start, no new fields: just continuous physics applied carefully.
 
 ## Status
 
@@ -139,3 +188,7 @@ its single root hash can additionally be anchored to any timestamping/notary ser
    is not a substitute for a DOI or ORCID.)
 4. **ResearchGate / Substack / blog** — for reach and narrative, each linking back to
    the Zenodo DOI so the popular telling cannot undercut the priority claim.
+
+## About the author
+
+Michael Gronager wrote his first letter to a physicist at the Niels Bohr Institute as a primary-school kid, asking whether neutrinos might really be gravitons. He went on to a PhD in quantum mechanics, then ran the Nordic CERN Tier-1 data centre and started other data collaborations for big science. He left research to co-found **Kraken** and found **Chainalysis** — tracing dark transactions instead of dark particles — and is now building **GryAI**. *Eternal Dawn* is the cosmology he kept turning over on evenings and Sundays for a decade, and which finally fell together over a sleepless night in Seoul. The full story is in the book's *Note from the Author*.
