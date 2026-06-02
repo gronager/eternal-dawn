@@ -30,6 +30,9 @@ epub:
 		--resource-path=.:figures/pdf --default-image-extension=png \
 		--mathml --toc --toc-depth=2 \
 		--top-level-division=chapter --split-level=2 \
+		--lua-filter=style/ed-number.lua \
+		--citeproc --bibliography=bibliography/references.bib \
+		--metadata reference-section-title=References \
 		--epub-cover-image=figures/pdf/cover.png \
 		--metadata title="Eternal Dawn" \
 		--metadata author="Michael Gronager, PhD" \
