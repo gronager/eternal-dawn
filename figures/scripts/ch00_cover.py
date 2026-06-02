@@ -5,7 +5,7 @@ A clean #808080 gray supraverse, dusted with original-generation universes (OGUs
 whose interiors are the same gray and whose edges are black (matter) or white
 (antimatter) in roughly equal numbers. Inside each OGU sit smaller BHU1s --- gray
 inside, edged in the SAME colour as their parent --- and inside each BHU1 a few
-dots: the BHU2s, the black holes we watch form in our own sky. Title in Bordeaux.
+dots: the BHU2s, the black holes we watch form in our own sky. Title in white.
 Renders figures/pdf/cover.pdf (full-bleed) for the book cover page and the EPUB
 cover image.
 """
@@ -25,34 +25,42 @@ os.makedirs(PDF_DIR, exist_ok=True)
 GRAY = "#808080"       # the supraverse background AND every interior
 BLACK = "0.04"         # matter-lineage edge
 WHITE = "0.97"         # antimatter-lineage edge
-BORDEAUX = "#6e1023"   # title text
+TITLE_COLOR = "white"  # title text
+
+
+def _pack(rng, R, lo, hi, n, gap, tries=400):
+    """Pack up to n non-overlapping discs (radii in [lo, hi]) within radius R of
+    the origin, by rejection. Returns a list of (dx, dy, rad)."""
+    out = []
+    for _ in range(n):
+        for _ in range(tries):
+            rad = rng.uniform(lo, hi)
+            rho = (R - rad) * np.sqrt(rng.random())
+            th = rng.random() * 2 * np.pi
+            dx, dy = rho * np.cos(th), rho * np.sin(th)
+            if all((dx - qx) ** 2 + (dy - qy) ** 2 > (rad + qr + gap) ** 2
+                   for qx, qy, qr in out):
+                out.append((dx, dy, rad))
+                break
+    return out
 
 
 def draw_ogu(ax, x, y, r, color, rng):
     """An OGU: a gray disc edged in `color` (black=matter / white=antimatter),
-    holding a few same-coloured BHU1s, each holding a few BHU2 dots."""
-    ecc = rng.uniform(0.0, 0.18)
-    ang = rng.uniform(0.0, 180.0)
-    w, h = 2 * r * (1 + 0.5 * ecc), 2 * r * (1 - 0.5 * ecc)
-    ax.add_patch(Ellipse((x, y), w, h, angle=ang, facecolor=GRAY,
+    holding NON-overlapping same-coloured BHU1s, each holding NON-overlapping
+    BHU2 dots."""
+    ax.add_patch(Ellipse((x, y), 2 * r, 2 * r, facecolor=GRAY,
                          edgecolor=color, lw=1.7, zorder=3))
-
-    # BHU1s inside, same lineage colour as the parent OGU
-    for _ in range(int(rng.integers(3, 6))):
-        rho = r * 0.52 * np.sqrt(rng.random())
-        th = rng.random() * 2 * np.pi
-        bx, by = x + rho * np.cos(th), y + rho * np.sin(th)
-        br = r * rng.uniform(0.17, 0.27)
-        ax.add_patch(Ellipse((bx, by), 2 * br, 2 * br * (1 - 0.3 * ecc),
-                             angle=ang, facecolor=GRAY, edgecolor=color, lw=0.9,
-                             zorder=4))
-        # BHU2 dots inside each BHU1 --- the black holes we observe
-        for _ in range(int(rng.integers(2, 5))):
-            drho = br * 0.5 * np.sqrt(rng.random())
-            dth = rng.random() * 2 * np.pi
-            ax.add_patch(Ellipse((bx + drho * np.cos(dth), by + drho * np.sin(dth)),
-                                2 * br * rng.uniform(0.11, 0.18),
-                                2 * br * rng.uniform(0.11, 0.18),
+    # BHU1s inside, packed without overlap, same lineage colour as the parent
+    for dx, dy, br in _pack(rng, 0.86 * r, 0.16 * r, 0.24 * r,
+                            n=int(rng.integers(3, 6)), gap=0.03 * r):
+        bx, by = x + dx, y + dy
+        ax.add_patch(Ellipse((bx, by), 2 * br, 2 * br, facecolor=GRAY,
+                             edgecolor=color, lw=0.9, zorder=4))
+        # BHU2 dots inside each BHU1 (the black holes we observe), also non-overlapping
+        for ex, ey, dr in _pack(rng, 0.80 * br, 0.13 * br, 0.20 * br,
+                                n=int(rng.integers(2, 5)), gap=0.02 * br):
+            ax.add_patch(Ellipse((bx + ex, by + ey), 2 * dr, 2 * dr,
                                 facecolor=color, edgecolor="none", zorder=5))
 
 
@@ -92,14 +100,14 @@ def main() -> None:
                      np.random.default_rng(int(abs(x * 1e6 + y * 1e3))))
             ci += 1
 
-    # --- title block, Bordeaux ---
-    ax.text(0.5, aspect * 0.71, "ETERNAL\nDAWN", color=BORDEAUX,
+    # --- title block, white ---
+    ax.text(0.5, aspect * 0.71, "ETERNAL\nDAWN", color=TITLE_COLOR,
             ha="center", va="center", fontsize=58, fontweight="bold",
             family="serif", linespacing=1.05, zorder=10)
     ax.text(0.5, aspect * 0.565, "A continuous, conservative cosmology",
-            color=BORDEAUX, ha="center", va="center", fontsize=18, style="italic",
+            color=TITLE_COLOR, ha="center", va="center", fontsize=18, style="italic",
             family="serif", alpha=0.95, zorder=10)
-    ax.text(0.5, aspect * 0.085, "MICHAEL GRONAGER, PhD", color=BORDEAUX,
+    ax.text(0.5, aspect * 0.085, "MICHAEL GRONAGER, PhD", color=TITLE_COLOR,
             ha="center", va="center", fontsize=16, fontweight="bold",
             family="serif", zorder=10)
 
