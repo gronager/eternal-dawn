@@ -1,6 +1,6 @@
 # Eternal Dawn -- provenance manifest
-# generated: 2026-06-02T09:22:09Z
-# git commit: 7ed1e8e6619fee4f8abd8359e0785492c56879c0
+# generated: 2026-06-02T09:28:45Z
+# git commit: e1d966377d61ac5fb4f9714bfebffed1069b74f0
 # author: Michael Gronager
 22c390e264fbce4b837ed0a45b55a50efa2c70359b4b992d1fc1ef3e46ce0d45  CITATION.cff
 396805d3805afd55432fe20d0be88d3a842eac67a9ad06f66baa3fee91d9fd3b  CLAUDE.md
@@ -22,9 +22,9 @@ adb359d4be40cc83a6151a3eeb64aee8bb4a1dd8f55452276b5d36ab5d0a1da0  chapters/05-su
 ab71a1c54d1bd15bcd7068f59bb5790836e6ddec52f6862b4f4254cbfb6d8572  chapters/08-observational-tests.tex
 eaec02a3fbef2f77ef221b6f1301ab9fbdf3d9eb9377f161c5be2c070794b036  chapters/09-simulation-plan.tex
 4b55101e25e02e11baee4409b0a72c22a79c817b60f9229f8b7251f4d6ba78f4  chapters/10-visualization.tex
-0cd1ea2d48d5ac8bd277951b8c13a6d647bbf3f496902f405e93806abc0f7abc  doe.epub
-789cf557bb7704adc6ef45e2fba0ade9b1722a28aae23e7abaa027589d025326  doe.pdf
-07385bd9fdb5187561345c8d7ebb20c63a63ac6912a11e3f5ff0eeecb812a23d  doe.tex
+8e37c743221ed4b5be784ae06b5a39f573bbd99b988db3cc16e1af9f1f9c3b00  doe.epub
+1983b5a6e8fe2d0198a456f3d83db7f6ed6254e709d5598b6eb172c62dbcfa3f  doe.pdf
+dc28aac70f5317e827b60a46520335674f5a5c20e02d5b6923e5e53b7398ad1f  doe.tex
 2e8f65847f9f2431c63296cb3172bab84441bb12a4339ee84e200341167e5e53  doe/00-overture.tex
 d7e2e962ee73eaeb762e1ff7bd16ac3b1f7aa47b613b2d043a716a821abaac16  doe/01-axioms.tex
 89ba8a9fe5cdae4ef1a209d7b3bb24b88b7afe58c49f40fd3b095ac2e483ea06  doe/02-no-singularities.tex
@@ -36,6 +36,7 @@ c4dd55d01f467ca43f3039eb3512d8f84d2a62cd53f1770022422c236312a766  doe/05-home.te
 4fb67d4c284c68d643f88c83a3d0af36e1dbcf4213c7c1c002837d557d5086cb  doe/08-simulations.tex
 dcf0d97158f87a40594e37977265ba3ecb9a3056b3b35571ba1abd90dfca9a75  doe/09-almost-nothing.tex
 d9cc7a8a8144602d4986e950b62e646cf0a3d6787d089e8937a9a94335142066  doe/10-scoreboard.tex
+24dac64708048532db872799a645c685f263122870988eec207242e37e912abc  doe/A-open-questions.tex
 1028dfa5af099ea6f30bd7fb45579cddc1344268cee019c48673a180a81022e0  figures/pdf/accretion_depth.pdf
 c2609e2383d43e76dd8b6fe0400f0c4a975641cb30bb3fa8aeda52acba200f9c  figures/pdf/acoustic.pdf
 f443e4642bd93b90217ec93bd36a37921e13b53a65a09cdbd7531c7abda0d2c3  figures/pdf/axis_alignment.pdf
