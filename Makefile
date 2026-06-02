@@ -37,7 +37,7 @@ epub:
 		--top-level-division=chapter \
 		--epub-cover-image=figures/pdf/cover.png \
 		--metadata title="Dawn of Eternity" \
-		--metadata author="Michael Gronager" \
+		--metadata author="Michael Gronager, PhD" \
 		--metadata lang=en \
 		-o $(MAIN).epub
 	@echo "wrote $(MAIN).epub ($$(du -h $(MAIN).epub | cut -f1)) -- tracked, downloadable from the repo"
@@ -53,7 +53,7 @@ doe-epub:
 		--top-level-division=chapter \
 		--epub-cover-image=figures/pdf/cover.png \
 		--metadata title="Dawn of Eternity" \
-		--metadata author="Michael Gronager" \
+		--metadata author="Michael Gronager, PhD" \
 		--metadata lang=en \
 		-o doe.epub
 	@echo "wrote doe.epub ($$(du -h doe.epub | cut -f1)) -- tracked, downloadable from the repo"

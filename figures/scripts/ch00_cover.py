@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
-r"""Front cover: the dilute supraverse, portrait, full-bleed, Bordeaux text.
+r"""Front cover: the recursive supraverse foam, portrait, full-bleed.
 
-A portrait (A4-proportion) version of the gravity-scaled dilute foam (ch10_dilute),
-sized to fill the entire front cover, with the title set in Bordeaux. Renders
-figures/pdf/cover.pdf (full-bleed, no margins) for use as the book's cover page and as
-the EPUB cover image.
+A clean #808080 gray supraverse, dusted with original-generation universes (OGUs)
+whose interiors are the same gray and whose edges are black (matter) or white
+(antimatter) in roughly equal numbers. Inside each OGU sit smaller BHU1s --- gray
+inside, edged in the SAME colour as their parent --- and inside each BHU1 a few
+dots: the BHU2s, the black holes we watch form in our own sky. Title in Bordeaux.
+Renders figures/pdf/cover.pdf (full-bleed) for the book cover page and the EPUB
+cover image.
 """
 from __future__ import annotations
 
@@ -19,86 +22,92 @@ ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
 PDF_DIR = os.path.join(ROOT, "figures", "pdf")
 os.makedirs(PDF_DIR, exist_ok=True)
 
-VOID = "0.30"          # weighted-void gray
-BLACK = "0.04"
-WHITE = "0.97"
-BORDEAUX = "#6e1023"   # deep Bordeaux for the title text
+GRAY = "#808080"       # the supraverse background AND every interior
+BLACK = "0.04"         # matter-lineage edge
+WHITE = "0.97"         # antimatter-lineage edge
+BORDEAUX = "#6e1023"   # title text
 
 
-def draw_island(ax, x, y, r, matter, rng):
-    """A flat, slightly-oblate island: gravity-scaled disc + chirality-toned membrane."""
-    ecc = rng.uniform(0.0, 0.26)
+def draw_ogu(ax, x, y, r, color, rng):
+    """An OGU: a gray disc edged in `color` (black=matter / white=antimatter),
+    holding a few same-coloured BHU1s, each holding a few BHU2 dots."""
+    ecc = rng.uniform(0.0, 0.18)
     ang = rng.uniform(0.0, 180.0)
-    w = 2 * r * (1.0 + 0.5 * ecc)
-    h = 2 * r * (1.0 - 0.5 * ecc)
-    fill = str(0.40 + rng.uniform(-0.04, 0.04))
-    ax.add_patch(Ellipse((x, y), w, h, angle=ang, facecolor=fill, edgecolor="none",
-                         zorder=2))
-    edge = BLACK if matter else WHITE
-    ax.add_patch(Ellipse((x, y), w, h, angle=ang, facecolor="none", edgecolor=edge,
-                         lw=1.1, zorder=3))
-    th = np.deg2rad(ang + 90.0)
-    ax.plot([x - 0.5 * h * np.cos(th), x + 0.5 * h * np.cos(th)],
-            [y - 0.5 * h * np.sin(th), y + 0.5 * h * np.sin(th)],
-            color=edge, lw=0.4, alpha=0.4, zorder=3)
-    for _ in range(rng.integers(2, 4)):
-        rho = r * 0.45 * np.sqrt(rng.random())
-        tth = rng.random() * 2 * np.pi
-        ax.add_patch(Ellipse((x + rho * np.cos(tth), y + rho * np.sin(tth)),
-                            w * rng.uniform(0.06, 0.12), h * rng.uniform(0.06, 0.12),
-                            angle=ang, facecolor="none", edgecolor=edge, lw=0.4,
-                            alpha=0.4, zorder=4))
+    w, h = 2 * r * (1 + 0.5 * ecc), 2 * r * (1 - 0.5 * ecc)
+    ax.add_patch(Ellipse((x, y), w, h, angle=ang, facecolor=GRAY,
+                         edgecolor=color, lw=1.7, zorder=3))
+
+    # BHU1s inside, same lineage colour as the parent OGU
+    for _ in range(int(rng.integers(3, 6))):
+        rho = r * 0.52 * np.sqrt(rng.random())
+        th = rng.random() * 2 * np.pi
+        bx, by = x + rho * np.cos(th), y + rho * np.sin(th)
+        br = r * rng.uniform(0.17, 0.27)
+        ax.add_patch(Ellipse((bx, by), 2 * br, 2 * br * (1 - 0.3 * ecc),
+                             angle=ang, facecolor=GRAY, edgecolor=color, lw=0.9,
+                             zorder=4))
+        # BHU2 dots inside each BHU1 --- the black holes we observe
+        for _ in range(int(rng.integers(2, 5))):
+            drho = br * 0.5 * np.sqrt(rng.random())
+            dth = rng.random() * 2 * np.pi
+            ax.add_patch(Ellipse((bx + drho * np.cos(dth), by + drho * np.sin(dth)),
+                                2 * br * rng.uniform(0.11, 0.18),
+                                2 * br * rng.uniform(0.11, 0.18),
+                                facecolor=color, edgecolor="none", zorder=5))
 
 
 def main() -> None:
-    rng = np.random.default_rng(20)
-    # A4 portrait proportion (210 x 297 mm) -> aspect h/w = 297/210
-    W, Hh = 8.27, 11.69
-    aspect = Hh / W                                    # y-range per unit x
-    fig = plt.figure(figsize=(W, Hh), facecolor=VOID)
+    rng = np.random.default_rng(7)
+    W, Hh = 8.27, 11.69                 # A4 portrait
+    aspect = Hh / W
+    fig = plt.figure(figsize=(W, Hh), facecolor=GRAY)
     ax = fig.add_axes([0, 0, 1, 1])
     ax.set_xlim(0, 1)
     ax.set_ylim(0, aspect)
     ax.set_xticks([]); ax.set_yticks([])
-    ax.set_facecolor(VOID)
+    ax.set_facecolor(GRAY)
     for s in ax.spines.values():
         s.set_visible(False)
 
-    # weighted-void speckle (zero-point energy)
-    sp = rng.uniform(0, 1, 2600), rng.uniform(0, aspect, 2600)
-    ax.scatter(*sp, s=rng.uniform(0.2, 1.4, 2600),
-               c=[str(s) for s in rng.uniform(0.22, 0.40, 2600)], alpha=0.5,
-               linewidths=0, zorder=1)
+    # balanced black/white lineage colours, shuffled
+    n_ogu = 12
+    colors = [BLACK, WHITE] * (n_ogu // 2)
+    rng.shuffle(colors)
 
-    # sparse, well-separated islands (dilute; illustrative sizes)
-    placed = []
-    for _ in range(400):
-        if len(placed) >= 11:
+    # sparse, well-separated OGUs; keep the central title band clear
+    placed, ci = [], 0
+    for _ in range(4000):
+        if ci >= n_ogu:
             break
-        r = rng.uniform(0.022, 0.060)
+        r = rng.uniform(0.075, 0.115)
         x, y = rng.uniform(r, 1 - r), rng.uniform(r, aspect - r)
-        if all((x - px) ** 2 + (y - py) ** 2 > (5.0 * (r + pr)) ** 2
+        if 0.50 * aspect < y < 0.80 * aspect and 0.12 < x < 0.88:
+            continue                                  # leave room for the title
+        if y < 0.13 * aspect and 0.12 < x < 0.88:
+            continue                                  # leave room for the author line
+        if all((x - px) ** 2 + (y - py) ** 2 > (1.9 * (r + pr)) ** 2
                for px, py, pr in placed):
             placed.append((x, y, r))
-            draw_island(ax, x, y, r, rng.random() > 0.5, np.random.default_rng(
-                int(abs(x * 1e6 + y * 1e3))))
+            draw_ogu(ax, x, y, r, colors[ci],
+                     np.random.default_rng(int(abs(x * 1e6 + y * 1e3))))
+            ci += 1
 
     # --- title block, Bordeaux ---
-    ax.text(0.5, aspect * 0.70, "DAWN OF\nETERNITY", color=BORDEAUX,
+    ax.text(0.5, aspect * 0.71, "DAWN OF\nETERNITY", color=BORDEAUX,
             ha="center", va="center", fontsize=58, fontweight="bold",
             family="serif", linespacing=1.05, zorder=10)
-    ax.text(0.5, aspect * 0.55, "Supraverse Cartasis Theory", color=BORDEAUX,
-            ha="center", va="center", fontsize=20, style="italic",
+    ax.text(0.5, aspect * 0.565, "A continuous, conservative cosmology",
+            color=BORDEAUX, ha="center", va="center", fontsize=18, style="italic",
             family="serif", alpha=0.95, zorder=10)
-    ax.text(0.5, aspect * 0.085, "MICHAEL GRONAGER", color=BORDEAUX,
+    ax.text(0.5, aspect * 0.085, "MICHAEL GRONAGER, PhD", color=BORDEAUX,
             ha="center", va="center", fontsize=16, fontweight="bold",
             family="serif", zorder=10)
 
     out = os.path.join(PDF_DIR, "cover.pdf")
-    fig.savefig(out, facecolor=VOID, dpi=300)
-    fig.savefig(out.replace(".pdf", ".png"), dpi=200, facecolor=VOID)
+    fig.savefig(out, facecolor=GRAY, dpi=300)
+    fig.savefig(out.replace(".pdf", ".png"), dpi=200, facecolor=GRAY)
     plt.close(fig)
-    print(f"wrote {out} and .png  (islands={len(placed)})")
+    print(f"wrote {out} and .png  (OGUs={len(placed)})")
 
 
 if __name__ == "__main__":
