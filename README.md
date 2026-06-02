@@ -3,21 +3,23 @@
 A working-draft cosmological framework built from minimal axioms.
 By Michael Gronager, PhD.
 
-## The story, in plain words
+## First When There's Nothing — But a Slow Glowing Dream
 
 *This is also Chapter 0 of the book — the whole framework in plain language, with no jargon and no mathematics beyond a few enormous numbers. Everything here is made precise, named, and defended in the chapters that follow.*
 
 ### The void
 
-Start with nothing. Not empty space with a clock ticking in it — really nothing: no stars, no matter, no before or after, not even a direction to time. But "nothing," in physics, is never quite still. The vacuum we have here, in our own laboratories, is restless: it seethes with tiny fluctuations that flicker in and out of being. Grant the void that same restlessness — no more than the vacuum already does — and the story tells itself. (TODO: fix this to stress that this void is differnt from void with time - it has no time - yet - or are fluctuations in De Sitter Void also time fluctuations?)
+Start with nothing. Not empty space with a clock ticking in it — really nothing: no stars, no matter, no before or after, not even a direction to time. But "nothing," in physics, is never quite still. The vacuum we have here, in our own laboratories, is restless: strip away every particle and what remains still shimmers with possibility. Grant the void that same restlessness — no more than the vacuum already does — and the story tells itself.
 
-Most fluctuations are nothing at all. They ripple and fade. But once in a great while a fluctuation is large enough to tip over a threshold: enough energy gathers in one place that it collapses under its own gravity into a black hole. And here is the first surprise. The seed you need is small — about the mass of a mountain — and a black hole is the *easiest* thing of its size to make, because it is the most generic: the least special, most disordered object there is. You do not have to luck into a finished, finely arranged universe. You only need a cheap little seed, and gravity does the rest.
+A warning about words, though, because it matters here more than anywhere. I am going to say "once in a while," "then," and "begins," because our minds and our language are built for time and cannot work without it. The void has none. Nothing *happens* in it in sequence; there is no clock, no first and next. Picture it instead as one single, still, everlasting state whose very nature already *contains* these rare worlds — the way a held chord already contains its overtones, sounding all at once with nothing happening in time. Worlds are not events the void goes through; they are the faint notes inside its one unending tone. "Before" and "after" switch on only inside a world, once its dawn has lit an arrow. So read what follows as a translation: a timeless truth, told in the only tense we have.
 
-How unlikely is even that seed? About one in 10^(10^84) — a one followed by a string of zeros that itself has eighty-five digits. Hopeless in any finite stretch of space. But the void is infinite and patient, and across an infinity of tries the hopeless happens constantly. The point was never that it is likely. The point is that it is the *cheap* way in. The ethernal dawn.
+Most of those faint notes are nothing at all. But a rare few are loud enough to cross a threshold — enough to fold up, under their own gravity, into a black hole. And here is the first surprise. The seed you need is small — about the mass of a mountain — and a black hole is the *easiest* thing of its size to be, because it is the most generic: the least special, most disordered object there is. The void need not contain a finished, finely arranged universe. It need only contain a cheap little seed, and gravity does the rest.
+
+How rare is even that seed? About one in 10^(10^84) — a one followed by a string of zeros that itself has eighty-five digits. Vanishing in any finite patch. But the void is endless, and even the vanishingly rare is present, somewhere, in an endless expanse. The point was never that it is likely. The point is that it is the *cheap* way in. The eternal dawn.
 
 ### The bounce, and the first dawn
 
-Follow the matter down into the black hole. There is the famous surface — the horizon — past which light cannot climb back out, and where, to anyone watching from outside, time appears to freeze. But that freezing is only the outsider's illusion. The matter itself feels nothing special at the horizon; its own clock keeps ticking, smoothly, all the way down. (TODO: clock language in a timeless void ?)
+Follow the matter down into the black hole. There is the famous surface — the horizon — past which light cannot climb back out, and where, to anyone watching from outside, time appears to freeze. But that freezing is only the outsider's illusion. The matter itself feels nothing special at the horizon; its own clock keeps ticking, smoothly, all the way down. And for this first world there was no earlier clock to borrow: time is being switched on here. What I am calling its clock is the newborn world's own — lit at the bounce, and reaching back to that instant as its beginning.
 
 As it falls, it crowds together, denser and denser. Then something pushes back. Einstein's gravity, extended by the geometer Élie Cartan to include the *spin* of matter, says that when matter is squeezed hard enough, that spin resists — and at a stupendous density this resistance overwhelms gravity itself. The collapse does not end in a point of infinite density. It *bounces*.
 
@@ -106,7 +108,7 @@ Layout: `book.tex` is the master document; `frontmatter/`, `chapters/`, and
 
 ## Authorship, citation, and provenance
 
-**Author:** Michael Gronager. © 2026 — text/figures CC-BY-4.0, code MIT: reuse freely
+**Author:** Michael Gronager, PhD. © 2026 — text/figures CC-BY-4.0, code MIT: reuse freely
 with attribution.
 
 This repository is the canonical, reproducible record of the work. Every figure and
