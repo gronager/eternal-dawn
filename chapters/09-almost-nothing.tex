@@ -1,0 +1,140 @@
+\chapter{Seeing almost Nothing}
+\label{chap:almostnothing}
+
+A picture of the supraverse runs into an awkward truth: there is almost nothing to
+draw. The instanton verdict of Chapter~\ref{chap:void} is that universes are a
+\emph{dilute} scatter---isolated specks in an overwhelmingly empty void---so an
+honest, literal portrait is a uniform grey field with, at most, a single
+infinitesimal dot. The void is the largest thing there is: nearly all of the
+supraverse is three-dimensional emptiness, and the universes are tiny pockets where
+a bounce has opened a fourth direction---time---inside. Visualisation here is the
+art of seeing almost nothing, and of magnifying the rare somethings just enough to
+make the structure legible without lying about how empty the whole is.
+
+\section{The challenge}
+
+Several difficulties compound. The supraverse is a four-dimensional manifold of
+non-trivial topology, and 4D does not render to a 2D page. Its structure spans
+every scale from subatomic to cosmic, and it is recursively nested---universes
+inside black holes inside universes. Each universe's internal time runs
+orthogonally to every other's, and the whole is a static block while each pocket
+within it evolves. And, above all, it is \emph{dilute}: the honest scales are so
+lopsided that no linear map can show a universe and its neighbour on the same page.
+Standard scientific visualisation does not handle any of this; the framework needs
+its own conformal trick.
+
+\section{The gravity-scaled conformal mapping}
+
+The trick is to choose the one conformal rescaling that makes \emph{gravitational}
+weight, not coordinate distance, set how big a thing looks. Multiply the metric by
+a factor tied to the local field,
+\[
+  g_{\mu\nu}(x)\;\to\;\Omega^2(x)\,g_{\mu\nu}(x),
+  \qquad \Omega(x)\sim\bigl(G\rho(x)\bigr)^{-1/2},
+\]
+the inverse square root of the local mass--energy density. High-density regions
+(black-hole interiors, bounce membranes) scale \emph{up}; the low-density void
+scales \emph{down}; and because the transformation is conformal it preserves causal
+structure---light cones map to light cones---so what is distorted is only apparent
+size, never the framework's physics. This is a cousin of the Penrose diagram, which
+also uses a conformal map to fit infinite spacetime on finite paper while keeping
+causal structure~\citep{penrose2010}; the difference is the choice of factor. A
+Penrose diagram is shaped to fit the page; this map is shaped by \emph{gravity}, so
+it foregrounds physically meaningful structure---bounces, horizons, nested
+worlds---rather than coordinate artefacts.
+
+\section{Two tiers, and why an empty picture is the honest one}
+\label{sec:two-tier}
+
+Made precise, the map magnifies a mass $M$ relative to its true size by
+$\mu=(\rho/\rho_{\mathrm{ref}})^{1/3}$, and only \emph{ratios} of densities matter,
+so the reference cancels. The result is two-tier, and the boundary is exactly the
+identity that defines a universe (Chapter~\ref{chap:sims}, Phase~0: a universe sits
+at its own Schwarzschild radius, $R_s=R_H$). An OGU is a horizon-mass black hole,
+so its mean density equals the cosmic critical density---essentially the void's
+dark-energy density---and therefore $\mu\simeq1$: \textbf{an OGU is not magnified
+relative to its void.} At the OGU/void level, gravity-scaled coordinates simply
+\emph{are} the true coordinates, and the picture is honestly near-empty in either
+system. One level down it is the reverse: an astrophysical black hole is far denser
+than its host, $\mu\sim10^{9}$--$10^{14}$, so the map blows these otherwise-invisible
+compact objects up until the nested next-generation universes inside them become
+visible (\Cref{fig:gravityscale}). The conformal factor earns its name exactly
+where it must---inside a world, revealing its children---while leaving the
+emptiness of the whole intact.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{gravity_scale}
+  \caption{Gravity-scaling magnification $\mu=(\rho/\rho_{\mathrm{ref}})^{1/3}$.
+    \emph{Left:} an OGU (horizon mass, mean density $=$ cosmic) sits at $\mu\simeq1$
+    ---gravity-scaled coordinates equal true coordinates at the OGU/void level---
+    while astrophysical black holes, far denser than their host, magnify by
+    $10^{9}$--$10^{14}$. \emph{Right:} the black-hole mean density crosses the
+    cosmic/void line precisely at the horizon mass, which is \emph{why} an OGU
+    scales to unity (the $R_s=R_H$ identity). Reproducible as
+    \texttt{figures/scripts/ch10\_gravity\_scale.py}.}
+  \label{fig:gravityscale}
+\end{figure}
+
+\section{One number for the emptiness}
+
+How empty is the whole? Take the ratio of the distance between neighbouring OGUs to
+an OGU's own diameter. The separation is $\sim e^{I/4}$ de Sitter horizon radii and
+an OGU spans $\sim2$ of them, so
+\[
+  \frac{\text{distance between universes}}{\text{universe diameter}}
+  \;\sim\;\frac{e^{I/4}}{2}\;\sim\;10^{\,2.7\times10^{83}} ,
+\]
+the same whether gravity-scaled or not, since a universe and its void share a
+density and neither is magnified relative to the other. The \emph{exponent} alone,
+$\sim2.7\times10^{83}$, already dwarfs every number in physics---the observable
+universe holds about $10^{80}$ atoms---so each universe is a lone speck whose nearest
+sibling lies a gap away with more zeros than a universe has atoms. That is ``seeing
+almost nothing'' made quantitative, and it is why the rendered supraverse must be
+gravity-scaled and illustrative: a literal linear frame would be uniform void with a
+single un-renderable dot.
+
+\section{The honest portrait, and the wallpaper}
+
+\Cref{fig:dilute} is the portrait the computation actually selects: a dominating,
+faintly-speckled void with universes as sparse, \emph{round}, isolated islands---
+gravity wells with chirality-toned membranes and faint nested children---never a
+packed polygonal foam. (The foam was the legible \emph{percolating} limit, the
+$I<I_{\mathrm{crit}}$ case the instanton calculation rules out; it survives only as a
+contrast.) Roundness is real, not artistic licence: the vacuum has weight, so the
+void occupies genuine volume and presses the islands into discs rather than cells.
+
+The book's cover is the same picture, stripped to its recursion: a uniform void; a
+balanced scatter of OGUs edged black for matter and white for antimatter; inside
+each, the same-coloured first-generation children; and inside those, the dots that
+are the black holes we actually watch form in our sky---the next generation down.
+It is a near-empty field with richly magnified nests, which is the truthful shape of
+a dilute, recursive, ever-dawning supraverse: almost nothing, lit here and there by
+a world still in its dawn.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{dilute_supraverse}
+  \caption{The dilute supraverse, gravity-scaled (sizes and spacings illustrative,
+    not linear). The weighted void dominates; universes are sparse, \emph{round},
+    isolated islands with chirality-toned membranes and faint nested children; the
+    inset marks \emph{home}. At a literal linear scale the frame would be near-empty
+    ---neighbours lie $\sim e^{I/4}$ horizons apart---so the void's weight keeps the
+    islands round while the true gaps are astronomically larger than drawn.
+    Reproducible as \texttt{figures/scripts/ch10\_dilute.py}.}
+  \label{fig:dilute}
+\end{figure}
+
+\section{Targets and implementation}
+
+Beyond the whole-supraverse portrait, the same gravity-scaled coordinates serve a
+handful of specific renders: a single universe with its nested black holes (zoom
+into any one and more universes appear, self-similarly); a family tree of lineages,
+chirality-coded; the slow time-evolution within one bubble; and the structure of a
+bounce membrane seen as the shared surface it is---one side a parent's horizon, the
+other a child's first sky. All of it is ordinary Python with the gravity-scaled
+transform applied before plotting, reproducible from the figure scripts alongside
+every other number in this book. The visualisation track needs no simulation output
+to begin (Chapter~\ref{chap:sims}); it is the most accessible way into the program,
+and the quickest way to \emph{see}, however magnified, a cosmos that is almost
+entirely nothing.

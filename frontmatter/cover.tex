@@ -1,0 +1,9 @@
+% Full-bleed front cover: the gravity-scaled dilute supraverse, portrait, with the
+% title set in Bordeaux. The image fills the entire page edge to edge, placed
+% absolutely from the top-left corner (memoir has no geometry package loaded).
+\thispagestyle{empty}
+\begin{titlingpage}
+\AddToShipoutPictureBG*{%
+  \put(0,0){\includegraphics[width=\paperwidth,height=\paperheight]{cover}}}
+\null
+\end{titlingpage}

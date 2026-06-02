@@ -1,0 +1,229 @@
+\chapter{No Singularities in Nature}
+\label{chap:bounce}
+
+A singularity is not a feature of the world; it is the noise a theory makes when
+it has been pushed past what it knows. General relativity, left to itself,
+predicts that gravitational collapse ends in a point of infinite density---and
+then it stops being able to say anything at all. The founding wager of this book
+(Chapter~\ref{chap:axioms}) is to take that breakdown at face value: physics is
+continuous and conservative, so the infinity is an artifact, and \emph{something}
+must intervene before it is reached. In Einstein--Cartan gravity, something does.
+The collapse does not terminate. It \emph{bounces}. Everything else in this book
+is the working-out of that single refusal to admit a singularity.
+
+\section{What stops a collapse}
+
+Einstein--Cartan gravity is general relativity with one restriction lifted: the
+connection is allowed an antisymmetric part, torsion, which couples to the spin
+of fermions (Axiom~\ref{ax:ec}). At everyday densities this changes nothing
+measurable. But it adds a second term to the high-density stress--energy, and the
+two terms scale differently. The \emph{gravitational} term is attractive and
+grows linearly with mass--energy density,
+\[
+  T_{\mathrm{grav}} \sim \rho c^2 ,
+\]
+while the \emph{torsion} term is repulsive and grows as the \emph{square} of the
+spin density $s$,
+\[
+  T_{\mathrm{tors}} \sim \frac{G\hbar^2 s^2}{c^4} .
+\]
+At nuclear density the ratio $T_{\mathrm{tors}}/T_{\mathrm{grav}}$ is about
+$10^{-40}$---utterly negligible, which is why no laboratory has ever seen it. But
+compression packs more fermions into each volume, each carrying spin $\hbar/2$,
+and the quadratic term climbs faster than the linear one. Squeeze hard enough and
+repulsion overtakes attraction. The inward fall is halted from within, by the
+spin of the matter itself, and reverses. No outside agent, no new field, no
+fine-tuning: just a term that general relativity left out because torsion was
+assumed to vanish.
+
+\section{The bounce density}
+\label{sec:bounce-density}
+
+Setting the two terms equal fixes the density at which the reversal happens. For
+ordinary fermionic matter, with about one unit of spin $\hbar$ per nucleon mass,
+\[
+  \rhoc \;\sim\; \frac{m_n^2 c^4}{G\hbar^4}
+  \;\sim\; 10^{50}\,\mathrm{kg\,m^{-3}} .
+\]
+This sits 33 orders of magnitude above nuclear density and 46 below the Planck
+density---comfortably in a regime where Einstein--Cartan is still classical and
+trustworthy, far from where quantum gravity proper would be needed. The exact
+figure depends on the fermion content and on coefficients in the
+Einstein--Cartan Lagrangian, and pinning it precisely is one of the calculation
+targets of the simulation program (Chapter~\ref{chap:sims}).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{bounce}
+  \caption{The Einstein--Cartan torsion bounce (a 1D spherical collapse, radiation
+    fluid, in dimensionless units $8\pi G/3=\rhoc=1$). \emph{Left:} the collapsing
+    universe reaches a minimum radius $a_{\min}$ and re-expands (blue) exactly where
+    general relativity would run to a singularity, $a\to0$ (red dashed).
+    \emph{Right:} the density saturates at the bounce density $\rhoc$ and the Hubble
+    rate crosses zero---collapse turning into expansion, with no singularity ever
+    reached. Reproducible as \texttt{figures/scripts/ch09\_bounce.py}; the full
+    numerical treatment is Chapter~\ref{chap:sims}.}
+  \label{fig:bounce}
+\end{figure}
+
+\paragraph{A name, and a pun.} This is the one place the book indulges its title
+for the mechanism. The density at which Cartan's torsion forces the turnaround is
+where everything is dissolved and then extruded clean---a kind of \emph{katharsis}.
+Cartan $+$ \emph{katharsis} gives \emph{Cartasis}, and one may call $\rhoc$ the
+Cartasis density and the bounce surface the Cartasis membrane. The pun is spent
+here; in the rest of the book they are simply the \emph{bounce density} and the
+\emph{bounce membrane}.
+
+\paragraph{What is actually there.} At $\rhoc$ the familiar particle picture is
+gone. The matter is compressed past quark deconfinement, past electroweak
+restoration, past any regime in which the Standard Model's quasiparticles are
+even defined. What remains is continuous field content---energy--momentum
+density, spin density, chiral current density---and what crosses the membrane is
+therefore not \emph{particles} but \emph{conserved currents}: total
+energy--momentum, total spin, total chiral charge, and (subject to electroweak
+anomaly effects) baryon and lepton number. Nothing structured survives the
+crossing. Whatever a world is built from on the far side must be rebuilt from
+elementary field content---a point that will matter both for what a universe
+inherits (Chapter~\ref{chap:dawn}) and for why a stray ordered object cannot
+simply pass through (Chapter~\ref{chap:void}).
+
+\section{The geometry of the bounce}
+
+\subsection{Radius becomes time}
+
+Inside a Schwarzschild horizon the radial coordinate $r$ is timelike: future-%
+directed motion is motion inward, and this is ordinary general relativity. The
+bounce uses that fact rather than fighting it. Torsion pushes the matter
+``outward'' in $r$---but since $r$ is timelike there, outward in $r$ is not a
+path back through the horizon; it is a path into the \emph{future} of the bounce.
+That future, read in the new region's own coordinates, is the cosmological future
+of a fresh spacetime. The parent's radial direction $r$ becomes, smoothly across
+the membrane, the new world's time direction $\tau$.
+
+\subsection{Continuity across the membrane}
+
+Because nothing is allowed to be discontinuous, the metric and connection must
+match across the membrane. The induced metric agrees from both sides; the
+extrinsic curvature matches under junction conditions of Israel--Darmois type,
+modified to carry torsion; and stress--energy and spin current flow through
+unbroken. These conditions are simply the precise statement of ``the bounce is
+continuous''---a system of equations relating the parent-side and child-side
+fields at the surface, and the thing a faithful simulation must reproduce.
+
+\subsection{A persistent interface, not a single instant}
+
+A black hole that keeps accreting keeps feeding the bounce. New matter falls in,
+compresses, reaches the bounce density, and joins the membrane---so the surface
+is not a one-time event but a persistent interface that lasts as long as the
+parent hole does. This is the framework's deepest departure from the standard
+picture, and it deserves to be stated plainly: a child universe's Big Bang is
+\emph{not} an instant in its past but a surface in its present, still dawning.
+Matter is injected across it throughout the parent's life, not only at the first
+moment---the beginning never ends, it merely recedes to the horizon. That ongoing
+injection is precisely what the child's inhabitants will later measure as their
+dark sector (Chapter~\ref{chap:home}), so the dark sky is the standing evidence
+that the dawn is still in progress. Only when the parent finally runs dry, or
+evaporates, does a universe's dawn truly close---which is why the parentless,
+fed-out OGU is the one case with a finished beginning.
+
+\subsection{The parent's horizon is the child's first light}
+
+The same surface wears three faces. From the parent's exterior it sits just
+inside the event horizon. From the parent's interior it is wherever infalling
+matter is currently reaching the bounce density. From the child's interior,
+looking as far back in time as it can, it is the boundary of the past at maximum
+lookback---the child's Big-Bang surface. The parent's horizon region and the
+child's earliest sky are one surface seen from opposite sides. This single
+identification is what later lets the cosmic microwave background be read as the
+parent's Hawking glow (Chapter~\ref{chap:home}).
+
+\section{What the bounce does \emph{not} do}
+\label{sec:cpt-even}
+
+The bounce reliably turns a black hole into an expanding world, but it does not
+also \emph{make} the matter that fills it---it is no mirror that turns infalling
+antimatter into matter and hands us the cosmic excess for free. The interaction
+that drives it forbids that, and the proof is short. When torsion is integrated
+out of Einstein--Cartan--Sciama--Kibble gravity, the Dirac sector is left with a
+single four-fermion contact term, the Hehl--Datta interaction~\citep{hehl1976},
+\[
+  \Delta\mathcal{L}_{\mathrm{tors}}
+  = -\,\frac{3}{16}\,\frac{8\pi G}{c^4}\,
+    \big(\bar\psi\gamma^5\gamma_a\psi\big)\big(\bar\psi\gamma^5\gamma^a\psi\big),
+\]
+the negative square of the axial current. This is the very term whose energy
+density grows as the square of the spin density and overwhelms gravity at $\rhoc$:
+it \emph{is} the bounce, so the bounce inherits its discrete symmetries. The axial
+current is even under charge conjugation, its contraction is even under parity,
+and the squared bilinear is even under time reversal. The interaction that drives
+the bounce is thus separately $C$-, $P$-, and $T$-even, and three things follow
+that no amount of modelling can wish away:
+
+\begin{enumerate}
+  \item \textbf{No flip.} A $C$-even interaction cannot turn matter into
+    antimatter. The membrane does not charge-conjugate what passes through it.
+  \item \textbf{No filter from nothing.} A $C$- and $P$-even interaction cannot
+    \emph{create} a chiral imbalance: zero net axial density in gives zero out.
+  \item \textbf{No arrow reversal.} A $T$-even dynamics does not run proper time
+    backwards.
+\end{enumerate}
+
+The bounce is real, robust, and generous---it reliably turns a black hole into an
+expanding world---but it is not a baryogenesis engine. Any matter--antimatter
+asymmetry must be \emph{supplied}, not manufactured at the membrane. Where it
+actually comes from is the business of Chapter~\ref{chap:dawn}.
+
+\section{The arrow is struck at the bounce: a Janus point}
+\label{sec:janus}
+
+If the bounce does not reverse time, where does a universe's arrow of time come
+from? It is \emph{made} at the membrane. Along the matter's worldlines proper
+time runs monotonically; nothing turns around, the scale factor merely passes
+through a minimum. What turns around is the \emph{thermodynamic} arrow. Infalling
+parent material arrives from a structured, high-entropy universe; compression
+toward $\rhoc$ dismantles that structure and smooths the geometry---the Weyl
+curvature is driven toward zero---so gravitational entropy \emph{falls} toward the
+membrane. On the far side, expansion lets structure, and eventually black holes,
+form again, so entropy \emph{rises} away from it. Entropy is therefore at a
+\emph{minimum at the membrane}, and the locally defined arrow points away from the
+bounce on both sides at once: a \emph{Janus point}~\citep{barbour2014}, one
+spacetime with a single monotonic proper time and two thermodynamic arrows
+diverging from a central low.
+
+A newborn universe thus inherits a genuine low-entropy past for free, with no time
+flip required---the long-postulated ``Past Hypothesis'' arriving as a consequence
+of bounce geometry rather than as an unexplained initial condition. (That this
+low-entropy past is \emph{forced}, and what it means for the timeless void from
+which the very first bounce is struck, is taken up in Chapter~\ref{chap:void}; how
+the arrow ends up locked to the matter--antimatter choice is taken up in
+Chapter~\ref{chap:dawn}.) The old slogan that ``$r$ becomes timelike, so time
+inverts'' is a statement about Schwarzschild coordinates inside a horizon, not a
+physical reversal of anyone's clock.
+
+\section{What forms after the bounce}
+
+On the far side of the membrane the bounce dynamics open a new spacetime
+region---a child universe with its own time direction and its own spatial
+extent---and from inside it looks like a perfectly ordinary hot Big Bang: it
+begins at maximum density, expands fast, cools, passes through radiation- and
+matter-dominated eras, and grows large-scale structure. The early, very rapid
+expansion is driven by the torsion repulsion at its post-bounce peak and fades as
+the density drops, giving an inflation-like epoch with no separate inflaton; its
+quantitative shape, and the perturbation spectrum it should leave, are developed
+in Chapter~\ref{chap:dawn} and put to the test in Chapter~\ref{chap:nowobs}.
+
+From the parent's side none of this is visible as a spatial object; the parent
+simply sees a black hole where the collapse occurred. The child's vast interior
+lies in the future of the bounce, in directions orthogonal to the parent's
+geometry---which produces the framework's most cheerfully counterintuitive
+feature, a \emph{Tardis}: a universe far larger inside than its parent's horizon
+would suggest. Our own matter content, some $10^{53}\,\mathrm{kg}$, sits at the
+bounce density in about $10^{3}\,\mathrm{m^3}$---less than half an Olympic
+pool---yet from inside we measure a universe tens of billions of light-years
+across. There is no contradiction: the small volume is the matter at the bounce
+moment in the parent's coordinates, the large one is the cosmological extent after
+expansion in the child's, and they are simply different quantities. Even plain
+general relativity already has the spatial volume inside a horizon growing without
+bound~\citep{christodoulou2015}; the bounce reinterprets that growth as the
+expansion of a child universe rather than the approach to a singularity we have
+agreed nature does not permit.

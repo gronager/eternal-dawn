@@ -1,0 +1,263 @@
+\chapter{What We Can Already See}
+\label{chap:nowobs}
+
+Part~I built the framework; Part~II asks whether it is true. The honest place to
+start is with what is \emph{already} on the table---phenomena observable today,
+several of them long-standing puzzles for the standard model. None is yet a
+confirmation, and this chapter says so for each. But the pattern is suggestive:
+a single inherited axis, a dark energy that evolves, a Hubble tension that
+inhomogeneity resolves for free, structure that is too lumpy and too early, and a
+matter excess pinned twice over. Each is exactly what living inside a black hole
+(Chapter~\ref{chap:home}) would look like from the inside.
+
+\section{A preferred axis}
+\label{sec:axis}
+
+If our universe inherited a rotation axis from its parent (Chapter~\ref{chap:dawn}),
+that single direction should show up in independent places: in the handedness of
+galaxy spins and in the large-angle pattern of the microwave background. Both
+hints exist. The JWST JADES survey reports a roughly $2\!:\!1$ asymmetry in
+galaxy rotation directions, peaking near the Galactic poles, at
+$3.39\sigma$~\citep{shamir2025}; and the CMB's low multipoles show the
+long-standing ``axis of evil''---quadrupole and octupole aligned with each other
+and with the ecliptic. The framework's prediction is that these are two views of
+one axis, the parent's spin imprinted on our earliest sky.
+
+\paragraph{The measurement is hard, and honesty demands showing why.} Run the spin
+test on the largest clean catalogue available---the $30{,}126$ Galaxy~Zoo~1
+spirals~\citep{lintott2011}---and the result is a cautionary tale
+(\Cref{fig:galaxydipole}). There is a highly significant \emph{overall} handedness
+offset (a $3.9\%$ clockwise deficit, $p\sim10^{-11}$), but a label-shuffle null
+shows it is the known human perception bias~\citep{land2008}, not a sky dipole
+($p=0.62$ beyond the monopole), and the best-fit axis lies $7^\circ$ from the
+Galactic pole but $35^\circ$ from the CMB axis. On the one large catalogue we
+have, the asymmetry is systematics-dominated and what axis exists tracks the Milky
+Way, not the cosmos. This does not refute the prediction---Galaxy~Zoo~1 is a
+northern footprint with uncontrolled bias---but it fixes what a real test needs:
+an all-sky, mirror-validated catalogue.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{galaxy_dipole}
+  \caption{De-confounding the galaxy-spin axis on Galaxy~Zoo~1 (clean spirals).
+    \emph{Left:} the SDSS northern footprint (red clockwise, blue counter); the
+    fitted spin dipole (star) sits on the Galactic pole, $35^\circ$ from the CMB
+    axis. \emph{Right:} the clockwise fraction sits a few percent below $0.5$
+    independent of Galactic latitude---a global perception offset, not a
+    significant dipole (shuffle null $p=0.62$). Reproducible as
+    \texttt{figures/scripts/ch08\_galaxy\_dipole.py}.}
+  \label{fig:galaxydipole}
+\end{figure}
+
+\paragraph{The decisive test, and what it can and cannot do.} Both confounded
+clues---the galaxy asymmetry near the Galactic pole and the CMB axis near
+$(\ell,b)\simeq(260^\circ,60^\circ)$---reduce to one sharp question: does a clean
+galaxy-spin axis fall on the CMB axis (the parent imprint) or on the Galactic pole
+(a Milky-Way bias)? As a two-hypothesis comparison the log-likelihood ratio is
+\begin{equation}
+  \ln\frac{L_{\mathrm{axis}}}{L_{\mathrm{sys}}}
+  = \frac{\theta_{\mathrm{sys}}^2-\theta_{\mathrm{axis}}^2}{2\sigma^2},
+  \label{eq:axis-llr}
+\end{equation}
+with $\sigma$ the precision to which the axis is measured. The two candidate poles
+are only $\simeq30^\circ$ apart, so resolving them is purely a matter of
+precision: $\sigma\sim30^\circ$ leaves them confused, while
+$\sigma\lesssim10^\circ$ separates them at better than $100\!:\!1$
+(\Cref{fig:sharedaxis}). That is all the ``$30^\circ$ versus $10^\circ$'' means---
+the targets sit $30^\circ$ apart, so the aim must be $\sim\!10^\circ$. The test is
+deliberately \emph{asymmetric in what it can conclude}. Because spin is local and
+most viable universes are low-spin (Chapter~\ref{chap:dawn}), a quiet sky is the
+\emph{typical} expectation, not a failure:
+\begin{itemize}
+  \item \textbf{Confirmation (strong):} a clean galaxy-spin axis that \emph{agrees}
+    with the CMB axis---one shared cosmic axis across independent probes, hard to
+    fake.
+  \item \textbf{Falsification (strong):} two clean, significant axes that
+    \emph{disagree}---a single parent spin cannot imprint two directions.
+  \item \textbf{Inconclusive (the likely near-term case):} a null, or an axis on
+    the Galactic pole---consistent with a low-spin parent \emph{and} with
+    systematics, so it neither confirms nor refutes.
+\end{itemize}
+So the shared axis is genuinely \emph{confirmatory} and only weakly
+disconfirmatory, and it bears on this \emph{one} prediction alone---the bounce, our
+child-universe placement, the CMB peaks, and the dark sector all stand however the
+axis comes out. It remains the cheapest measurement that could light up a
+uniquely-ours signature, on archival plus near-future survey data (Euclid,
+Rubin/LSST). Reproducible as \texttt{figures/scripts/ch08\_shared\_axis.py}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{shared_axis}
+  \caption{The shared-axis test as a precision question. \emph{Left:} posterior odds
+    (CMB axis\,:\,Galactic pole) versus the precision $\sigma$ of the galaxy-spin
+    axis; today's geometry (axis on the Galactic pole) favours the systematic, a
+    de-confounded axis on the CMB axis would favour the framework, and either way
+    $\sigma\lesssim10^\circ$ is needed. \emph{Right:} the candidate poles are
+    $\sim30^\circ$ apart, setting the $\sim10^\circ$ precision target. Reproducible
+    as \texttt{figures/scripts/ch08\_shared\_axis.py}.}
+  \label{fig:sharedaxis}
+\end{figure}
+
+\paragraph{Where we sit, and that it is typical.} The same population statistics
+that make low spin typical let us locate our own footprint
+(\Cref{fig:census}). Across three independent axes---generation depth (geometric,
+$\sim$90\% of viable observers are first-generation children for branching
+$\epsilon\sim0.1$), chirality ($50/50$ matter/antimatter by $CPT$, the halves
+observationally identical), and accretion family (clean and photon-dominated
+versus baryon-rich and degenerate)---our derived tags, a first-generation matter
+child of clean family at roughly a Hubble mass, land in the \emph{dominant} cell,
+holding about $40\%$ of all viable observers. That is the quantitative Copernican
+check: we are where most observers are, not a rare outlier. (The same accounting
+predicts \emph{no} observers in the parentless first universes---dark-matter-free,
+they build almost no structure---nor in the baryon-rich degenerate tail; observers
+inhabit a narrow clean-family stripe, exactly our location. Reproducible as
+\texttt{ch08\_census.py} and \texttt{ch08\_universe\_feel.py}.) This is a strong
+consistency test, though not by itself a discriminator against other cosmologies.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{census}
+  \caption{The supraverse census of viable observers. \emph{Left:} the generation
+    tower is geometric and first-generation-dominated; we are in the $n=1$ bar.
+    \emph{Right:} within that generation, our cell (matter, clean family) holds
+    $\sim$40\% of viable observers, with an identical antimatter $CPT$ twin. Our
+    footprint is the typical, dominant cell. Reproducible as
+    \texttt{figures/scripts/ch08\_census.py}.}
+  \label{fig:census}
+\end{figure}
+
+\section{Dark energy that evolves}
+\label{sec:desi}
+
+If dark energy is the parent's ongoing accretion (Chapter~\ref{chap:home}), it is
+a \emph{rate}, generically not constant---so it should drift from a pure
+cosmological constant. DESI's baryon-acoustic-oscillation results favour exactly
+that: $w_0w_a$ models with $w_0>-1$ and $w_a<0$ over strict $\Lambda$ at the
+$2$--$3\sigma$ level~\citep{desi2024}, i.e.\ dark energy a little stronger than
+$\Lambda$ today and weaker in the recent past. A parent-injection model---dark
+energy as the time-derivative of an accretion history that rose and then began to
+saturate---sits squarely in that $(w_0,w_a)$ wedge, with a derived phantom
+crossing rather than a tuned sign (\Cref{fig:desi}). This is a statistical
+tension, not a confirmation: years~2--5 of DESI will sharpen it, and if evolving
+dark energy is established at $>\!5\sigma$, strict $\Lambda$ is in trouble and
+accretion-driven dark energy of just this shape becomes the natural reading.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{desi_w0wa}
+  \caption{Dark energy as parent accretion versus DESI. \emph{Left:} every DESI
+    $(w_0,w_a)$ combination sits in the framework's predicted wedge
+    ($w_0>-1$, $w_a<0$), where the parent-injection model also lands.
+    \emph{Right:} the derived $w(z)$---a phantom crossing produced by accretion
+    that rose then saturated, not a free sign choice. Reproducible as
+    \texttt{figures/scripts/ch06\_desi.py}.}
+  \label{fig:desi}
+\end{figure}
+
+\section{The Hubble tension}
+\label{sec:hubble}
+
+The $\sim\!5\sigma$ gap between the early-universe Hubble value (CMB sound horizon,
+$H_0\approx67.4$) and the local distance ladder ($H_0\approx73.0$) costs the
+framework nothing to address, because it is natively inhomogeneous: voids and
+walls, with the dark sector a parent's accretion and a void-dominated cosmic web
+for large-scale structure. It therefore inherits Wiltshire's \emph{timescape}
+resolution~\citep{wiltshire2007,wiltshire2009} with no added parameter. General
+relativity makes a void clock run faster than a wall clock, and we are wall
+observers, so the Hubble rate we infer---the \emph{dressed} value---exceeds the
+volume-average \emph{bare} value once voids fill the volume, by Wiltshire's
+closed-form factor $R(f_v)=(4f_v^2+f_v+4)/[2(2+f_v)]$, with $R(0)=1$. The tracker
+void fraction is $\sim\!10^{-4}$ at recombination---so the early-universe value is
+\emph{untouched}---and grows to the observed $f_{v0}\simeq0.76$ today, where
+$R\simeq1.28$: a $28\%$ wall-versus-average excess, against an observed gap of only
+$\tau\simeq8.4\%$ (\Cref{fig:hubble}). The effect has the right sign, more than
+enough magnitude (the gap is matched already at $f_v\simeq0.47$), and switches on
+only late---exactly the early-versus-late shape of the tension, controlled by the
+\emph{measured} void fraction. This is a sign-and-magnitude result, not a global
+fit (the full timescape fit returns a single dressed $H_0\simeq61.7$); what it
+shows, parameter-free, is that inhomogeneity at the observed void fraction is amply
+capable of the tension. An eternal-$\Lambda$ model has no such handle.
+Reproducible as \texttt{sims/src/cartasis\_sims/hubble\_timescape.py}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{hubble_timescape}
+  \caption{The Hubble tension from inhomogeneity. \emph{Left:} the dressed/bare
+    excess $R(f_v)-1$---the factor by which a wall observer over-reads the
+    volume-average Hubble---crosses the observed $8.4\%$ gap (shaded) at
+    $f_v\simeq0.47$ and reaches $28\%$ at the observed $f_{v0}\simeq0.76$.
+    \emph{Right:} the tracker $f_v(t)$ is $\sim10^{-4}$ at recombination (the CMB is
+    untouched), rising to $0.76$ today---the effect is purely late-time.
+    Reproducible as \texttt{figures/scripts/ch08\_hubble\_timescape.py}.}
+  \label{fig:hubble}
+\end{figure}
+
+\section{Lumpy too early, and clustered too little}
+\label{sec:sigma8-jwst}
+
+Two further tensions point the same way. JWST finds unexpectedly massive galaxies
+at $z>10$, straining the standard structure-formation timeline; in this framework
+the inherited large-scale lumpiness of the parent's meal (Chapter~\ref{chap:home})
+and a different post-bounce expansion give structure a head start, so early massive
+galaxies are less of a surprise---the great ultra-large structures (the Giant Arc,
+the Big Ring) are the same story on the largest scales. Meanwhile the $\sigma_8$
+tension---low-redshift clustering weaker than the CMB-extrapolated prediction---is
+natural if dark matter is \emph{geometric} (the parent's projected influence) rather
+than a clustering particle, since its effective late-time clustering need not match
+cold dark matter's. Both are live research questions, not yet quantitative
+predictions: each needs structure-formation modelling in the bounce framework
+(Chapter~\ref{chap:sims}). They are flagged here as pointing in the framework's
+direction, not as won.
+
+\section{The matter excess, pinned twice}
+\label{sec:spin-local}
+
+The most secure number in this chapter is the one the framework treats as
+\emph{inherited}, not made (Chapter~\ref{chap:dawn}): the baryon-to-photon ratio
+$\eta\simeq6\times10^{-10}$. It is worth stressing that the new reading of the CMB
+(the parent's Hawking glow, Chapter~\ref{chap:home}) does not put $\eta$ in doubt,
+because $\eta$ is anchored two independent ways that agree to about $1\%$: the CMB
+acoustic-peak ratio fixes the baryon density and hence $\eta_{10}\simeq6.1$, and
+Big-Bang nucleosynthesis fixes $\eta$ \emph{separately} from the primordial
+deuterium abundance~\citep{cooke2018}, also at $\eta_{10}\simeq6.1$
+(\Cref{fig:spineta}, left). The Hawking-glow identification concerns only the
+\emph{origin} of the thermal plasma at the bounce surface; it leaves recombination
+and nucleosynthesis untouched, so both legs stand and $\eta$ is among the most
+secure numbers in cosmology.
+
+\paragraph{Spin is local; chirality is inherited.} Interpreting the axis test
+correctly requires keeping two properties apart (\Cref{fig:spineta}, right). The
+\emph{chirality} (the sign of $\eta$, matter versus antimatter) is inherited---set
+once at the founding seed and passed down a chirally pure lineage
+(Chapter~\ref{chap:dawn}). The \emph{spin} (a universe's Kerr angular momentum and
+rotation axis) is \emph{local}---it is the spin of our own progenitor black hole,
+formed astrophysically inside the parent and re-drawn every generation, not the
+distant founder's. So our observable preferred axis is our progenitor hole's, a
+single direction the CMB anomaly and the galaxy-spin handedness should share
+(\S\ref{sec:axis})---while a quiet axis tells us only that our progenitor was
+low-spin, leaving our generation depth untouched. Reproducible as
+\texttt{figures/scripts/ch08\_spin\_eta.py}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{spin_eta}
+  \caption{\emph{Left:} $\eta$ is anchored two independent ways that agree to
+    $\sim$1\%---the CMB-fixed baryon density and the BBN deuterium abundance---so
+    the matter excess is secure despite the parent-Hawking reading of the CMB,
+    which leaves nucleosynthesis untouched. \emph{Right:} spin versus chirality---
+    the chirality \emph{sign} is inherited (pure lineages), while spin
+    \emph{magnitude and axis} are local (the progenitor hole's), so the observable
+    is a single preferred axis. Reproducible as
+    \texttt{figures/scripts/ch08\_spin\_eta.py}.}
+  \label{fig:spineta}
+\end{figure}
+
+\medskip
+\noindent None of these is a confirmation on its own, and several are merely
+suggestive tensions awaiting better data or a calculation the framework still owes.
+But they are not nothing: an evolving dark energy of the predicted shape, a Hubble
+tension resolved without a new parameter, structure too lumpy for a smooth start,
+and a doubly-anchored matter excess are each what this cosmology expects and
+$\Lambda$CDM must accommodate. The single cleanest way to turn suggestion into
+evidence is the shared axis. The full tally---what is for, what is against, and what
+is still open---is drawn up in the scoreboard of Chapter~\ref{chap:scoreboard}.

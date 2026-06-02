@@ -22,7 +22,14 @@ cd sims
 uv venv && uv pip install -e ".[dev]"
 .venv/bin/pytest -q                       # tests/test_identities.py
 .venv/bin/python ../figures/scripts/ch02_bh_first_light.py
+
+# optional: the precision CMB pass (Boltzmann), ~2 s/spectrum, no special hardware
+uv pip install -e ".[camb]"               # or: uv pip install camb
+.venv/bin/python ../figures/scripts/ch09_camb.py
 ```
+
+The `camb` extra is optional; the CAMB tests skip cleanly when it is absent, so the
+core suite stays dependency-light.
 
 Or from the project root: `make sim-test` and `make figures`.
 
@@ -45,11 +52,20 @@ renders `../figures/pdf/bh_first_light.pdf`.
 
 1. **Tier 1 — single-bounce Einstein–Cartan dynamics.** Minimal model: the
    modified Friedmann equation `H² = (8πG/3) ρ (1 − ρ/ρ_C)`, which bounces at
-   `ρ_C` instead of reaching a singularity. Then spherical (Weyssenhoff-fluid)
-   collapse matched to an exterior Schwarzschild geometry: a black hole from
-   outside, an expanding cosmology from inside.
+   `ρ_C` instead of reaching a singularity (`bounce.py`). Then spherical
+   (Weyssenhoff-fluid) collapse matched to an exterior Schwarzschild geometry
+   (`os_collapse.py`): a black hole from outside, an expanding cosmology inside.
+   - **Tier 1c — the extruder (`extruder.py`).** The bounce *entropy budget*:
+     `η_baby = η_parent / D` with `D = S_after/S_before`. A bulk-viscous Eckart
+     estimate gives `ln D = 9 ζ̃ (Ω_bounce/T_bounce) J`, `J ≈ 1.38`. The
+     prefactor `Ω/T ≈ 1.5e-11` (the same small parameter as the CVE) makes the
+     bounce adiabatic to ~1 part in 1e11 for any physical viscosity → `D ≈ 1` →
+     descendants **inherit** their parent's ~1 ppb asymmetry; horizon-saturating
+     `D ~ 1e49` needs an absurd `ζ̃ ~ 1e12`. *Universes are not born, they are
+     extruded.*
 2. **Tier 2 — perturbations through the bounce** → primordial spectrum / CMB.
-3. **Tier 3 — chirality (flip/filter)** → η and dark-matter ratio.
+3. **Tier 3 — chirality** → η (CVE + inheritance/dilution, `cve_filter.py`) and
+   the dark-matter ratio.
 4. **Tier 4 — supraverse population statistics.**
 
 ## Reproducibility

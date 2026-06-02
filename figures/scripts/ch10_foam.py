@@ -6,18 +6,22 @@ so the structure -- not colour -- carries the meaning, and print-safe:
 
 * Gray void. Every universe is a gray disc on a gray background; the Cartasis
   membranes (peripheries) carry all the contrast.
-* OG universes (OGUs == BHU_0) get a bold DOUBLE periphery -- a black ring with a
-  white ring inside it -- so they read as the top-level condensations.
-* Nested universes get a single periphery, BLACK or WHITE by chirality
-  (black = matter, white = antimatter). The bias is set per bounce (CPT-even),
-  random sign -- not inherited.
+* Chirality is selected ONCE at the OG seed and INHERITED down the lineage
+  (Ch. 4, Ch. 5): half the OGUs are matter (BLACK periphery), half antimatter
+  (WHITE periphery), CPT-symmetric. A matter OGU contains only matter children
+  and grandchildren (all black); an antimatter OGU only antimatter (all white).
+  No mixed lineages -- baryonic selection happens at the top (purity ~1:1e8) and
+  is passed down, not re-rolled per bounce.
+* OGUs get a bold periphery in their chirality colour (with a thin opposite-tone
+  halo only for edge definition on the gray); nested universes a thinner single
+  periphery of the same chirality colour.
 * Sizes: OGU radii are log-normal (defined median): births outrun runaway growth,
   so many small + few large. Nesting is self-similar at diameter ratio ~1/13
   (gravity-scaled, NOT the ~1e-12 mass ratio).
-* 'home' is marked deep in the foam. The framework's own result (Ch. 5) is that
-  we are NOT an OGU: dark matter + dark energy require a parent, so our depth is
-  n >= 1 -- a range, to be tightened by the DM/DE amplitudes and C. The drawn
-  depth is illustrative; the label says n>=1.
+* 'home' is marked as a BHU1 -- a direct child of an OGU. We are not an OGU (dark
+  matter + dark energy require a parent, so n >= 1), and the narrow viable band
+  makes descendant branching subcritical (m_{n>=1} ~ epsilon < 1), so the depth
+  tail is geometric and BHU1 dominates regardless of how large the OGU is (Ch. 5).
 
 Outputs figures/pdf/foam_wallpaper.pdf and a high-res PNG.
 """
@@ -71,7 +75,8 @@ def grow_children(node, rng, max_level, n_for_level):
         cx, cy = node.x + rho * np.cos(th), node.y + rho * np.sin(th)
         if all((cx - p.x) ** 2 + (cy - p.y) ** 2 > (1.15 * (child_r + p.r)) ** 2
                for p in placed):
-            ch = Node(cx, cy, child_r, node.level + 1, rng.random() > 0.5)
+            # chirality is INHERITED from the parent: pure lineages
+            ch = Node(cx, cy, child_r, node.level + 1, node.matter)
             placed.append(ch)
             grow_children(ch, rng, max_level, n_for_level)
     node.children = placed
@@ -96,27 +101,30 @@ def sample_ogus(rng, n=34, median_r=0.052, sigma=0.5):
 
 
 def draw_node(ax, node, rng):
-    """Gray disc; membrane drawn per the grayscale spec."""
+    """Gray disc; membrane colour = chirality (black matter / white antimatter),
+    inherited down the lineage. OGUs drawn boldly, nested ones thinner."""
     z = node.level + 1
-    # gray interior (very slight level tint so deep nests don't vanish)
-    fill = str(min(0.62, 0.50 + 0.04 * node.level))
+    fill = str(min(0.62, 0.50 + 0.04 * node.level))   # gray interior
+    edge = BLACK if node.matter else WHITE            # chirality
+    halo = WHITE if node.matter else BLACK            # opposite tone for contrast
     if node.level == 0:
-        # OGU: gray fill + DOUBLE periphery (black ring, white ring inside)
+        # OGU: thin contrast halo just outside + bold chirality-coloured ring
+        ax.add_patch(Circle((node.x, node.y), node.r * 1.012, facecolor="none",
+                            edgecolor=halo, lw=2.6, alpha=0.55, zorder=z - 0.5))
         ax.add_patch(Circle((node.x, node.y), node.r, facecolor=fill,
-                            edgecolor=BLACK, lw=1.7, zorder=z))
-        ax.add_patch(Circle((node.x, node.y), node.r * 0.965, facecolor="none",
-                            edgecolor=WHITE, lw=0.9, zorder=z + 0.5))
-        # spin-axis tick on larger OGUs (median viable spin -> sets C)
+                            edgecolor=edge, lw=2.0, zorder=z))
+        # spin-axis tick on larger OGUs (the seed vorticity that sets purity)
         if node.r > 0.045:
             ang = rng.random() * np.pi
             dx, dy = node.r * 0.7 * np.cos(ang), node.r * 0.7 * np.sin(ang)
             ax.plot([node.x - dx, node.x + dx], [node.y - dy, node.y + dy],
-                    color=BLACK, lw=0.5, alpha=0.45, zorder=z + 1)
+                    color=edge, lw=0.6, alpha=0.5, zorder=z + 1)
     else:
-        # nested: single periphery, black=matter / white=antimatter
-        edge = BLACK if node.matter else WHITE
-        lw = max(0.4, 1.1 - 0.35 * (node.level - 1))
+        lw = max(0.4, 1.0 - 0.3 * (node.level - 1))
+        # faint contrast halo so white rings read on gray, then chirality ring
         ax.add_patch(Circle((node.x, node.y), node.r, facecolor=fill,
+                            edgecolor=halo, lw=lw + 0.7, alpha=0.45, zorder=z - 0.2))
+        ax.add_patch(Circle((node.x, node.y), node.r, facecolor="none",
                             edgecolor=edge, lw=lw, zorder=z))
     for ch in node.children:
         draw_node(ax, ch, rng)
@@ -146,24 +154,18 @@ def main() -> None:
     for o in ogus:
         draw_node(ax, o, drng)
 
-    # 'home' as deep as the foam allows (illustrative; true depth n>=1, a range)
-    fertile2 = [o for o in ogus if any(c.children for c in o.children)]
-    if fertile2:
-        home_ogu = max(fertile2, key=lambda o: o.r)
-        home_bpu = max((c for c in home_ogu.children if c.children),
-                       key=lambda c: c.r)
-        home = max(home_bpu.children, key=lambda c: c.r)
-    else:
-        home_ogu = max((o for o in ogus if o.children), key=lambda o: o.r)
-        home_bpu = max(home_ogu.children, key=lambda c: c.r)
-        home = home_bpu
+    # 'home' is a BHU1: a direct child of an OGU. The narrow viable band makes
+    # descendant branching subcritical (m_{n>=1} ~ epsilon < 1), so the depth tail
+    # is geometric and BHU1 dominates regardless of how big the OGU is (Ch. 5).
+    home_ogu = max((o for o in ogus if o.children), key=lambda o: o.r)
+    home = max(home_ogu.children, key=lambda c: c.r)
 
-    # magnifier inset zoomed on the home BPU
+    # magnifier inset zoomed on the home OGU, showing home among its siblings
     axm = fig.add_axes([0.655, 0.04, 0.33, 0.42])
     axm.set_facecolor("0.44")
-    pad = home_bpu.r * 1.6
-    axm.set_xlim(home_bpu.x - pad, home_bpu.x + pad)
-    axm.set_ylim(home_bpu.y - pad, home_bpu.y + pad)
+    pad = home_ogu.r * 1.35
+    axm.set_xlim(home_ogu.x - pad, home_ogu.x + pad)
+    axm.set_ylim(home_ogu.y - pad, home_ogu.y + pad)
     axm.set_xticks([])
     axm.set_yticks([])
     for s in axm.spines.values():
@@ -172,13 +174,13 @@ def main() -> None:
     draw_node(axm, home_ogu, np.random.default_rng(11))
     axm.plot([home.x], [home.y], marker="o", ms=5, color=BLACK,
              markeredgecolor=WHITE, markeredgewidth=0.8, zorder=20)
-    axm.annotate("home  ($n\\geq1$: not an OGU)", (home.x, home.y),
+    axm.annotate("home  (likely BHU1)", (home.x, home.y),
                  textcoords="offset points", xytext=(16, 14), color=BLACK,
                  fontsize=11, fontweight="bold", zorder=20,
                  arrowprops=dict(arrowstyle="-", color=BLACK, lw=1))
-    axm.set_title("magnify: home, a BH-universe nested inside an OGU",
+    axm.set_title("magnify: home, a BHU1 child of its OGU (one of many siblings)",
                   color=BLACK, fontsize=9, pad=3)
-    con = ConnectionPatch((home_bpu.x, home_bpu.y), (home_bpu.x, home_bpu.y),
+    con = ConnectionPatch((home_ogu.x, home_ogu.y), (home_ogu.x, home_ogu.y),
                           "data", "data", axesA=ax, axesB=axm,
                           color=BLACK, lw=0.8, alpha=0.5, ls=(0, (4, 3)))
     fig.add_artist(con)
@@ -186,10 +188,10 @@ def main() -> None:
     fig.text(0.022, 0.07, "THE CONDENSED VOID", color=BLACK, fontsize=23,
              fontweight="bold", alpha=0.92)
     fig.text(0.022, 0.035,
-             "gravity-scaled foam  ·  log-median OGU sizes  ·  child ≈ 1/13 "
-             "parent  ·  bold double ring = OGU membrane  ·  "
-             "black = matter, white = antimatter membranes",
-             color=BLACK, fontsize=10.5, alpha=0.82)
+             "gravity-scaled foam  ·  child ≈ 1/13 parent  ·  bold ring = OGU  ·  "
+             "black = matter, white = antimatter  ·  chirality selected at the OG "
+             "seed and inherited: pure lineages, no mixing",
+             color=BLACK, fontsize=10, alpha=0.82)
 
     out = os.path.join(PDF_DIR, "foam_wallpaper.pdf")
     fig.savefig(out, facecolor=VOID)

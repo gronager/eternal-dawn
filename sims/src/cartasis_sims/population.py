@@ -126,3 +126,192 @@ def depth_posterior(m, D, n_min=1, structure_decay=1.0):
     p[:n_min] = 0.0
     s = p.sum()
     return p / s if s > 0 else p
+
+
+# ---------------------------------------------------------------------------
+# Explicit read-off: are we likely BHU1 or BHU2?
+# ---------------------------------------------------------------------------
+# Counting universes, generation n holds N_n ~ m^n of them, so given the robust
+# floor n >= 1 (we are not an OGU), P(BHU_n) ~ m^n / sum. For a SUBCRITICAL
+# branching m < 1 this is geometric, P(BHU_n) = (1-m) m^{n-1}: lineages die out,
+# the population is shallow, and we are most likely BHU1. For SUPERCRITICAL m > 1
+# the population is dominated by the deepest generation the supraverse has had
+# TIME to grow (truncation D), so we are almost surely deep and being BHU1-2 is
+# exponentially unlikely. The "are we shallow?" question therefore reduces to
+# whether the effective viable-children-per-universe m is below 1 -- or,
+# equivalently, whether the supraverse is too young (small D) to have grown deep.
+
+def prob_bhu(m, n, D=400):
+    """P(we are BHU_n | n >= 1) for branching ratio m and truncation depth D."""
+    D = min(int(D), 100000)              # guard against huge-D array allocation
+    if not (1 <= n <= D):
+        return 0.0
+    ns = np.arange(1, D + 1, dtype=float)
+    logw = ns * np.log(m)                # stable: normalize in log space
+    logw -= logw.max()
+    w = np.exp(logw)
+    return float(w[n - 1] / w.sum())
+
+
+def shallow_probability(m, D=400, n_max=2):
+    """P(we are within the first n_max generations | n >= 1): the chance we are
+    'BHU1 or BHU2' (n_max=2). Near 1 for strongly subcritical m, ~0 for m > 1."""
+    return float(sum(prob_bhu(m, n, D) for n in range(1, n_max + 1)))
+
+
+# ---------------------------------------------------------------------------
+# Where m actually comes from: the mass-budget cap (the narrow viable band)
+# ---------------------------------------------------------------------------
+# The naive "every black hole is a child, so m ~ 1e18" double-counts: a stellar
+# hole (~10 Msun) makes a ~1e31 kg child, a tiny structureless universe far below
+# the viability mass M_vis. VIABLE children need near-Hubble-mass progenitor holes,
+# and mass conservation caps how many of those one universe of mass M_parent can
+# make at M_parent / M_vis. So the branching ratio is
+#
+#     m = epsilon * f_clean * (M_parent / M_vis),
+#
+# with epsilon the fraction of the parent's mass that ends up in viable-size holes
+# and f_clean the fraction of those that accrete a fair (b~1) sample and so stay in
+# our clean, photon-dominated family (Ch.5: the big horizon-scale holes that meet
+# the size cut are the SAME ones that contain a fair cosmic sample, so the size and
+# cleanliness cuts select together). The viable band is therefore narrow on BOTH
+# axes at once: w = M_parent/M_vis is small. If w ~ O(1) (viable ~ our size, the
+# edge we appear to sit at) then m ~ O(epsilon) < 1 -- subcritical, shallow, and we
+# are most likely BHU1. Only a WIDE band (M_vis << M_parent, w >> 1) gives m >> 1
+# and a deep population. This is a far more natural route to shallowness than a
+# young supraverse: it follows from mass conservation plus a narrow viability band.
+
+def mass_budget_branching(M_parent, M_vis, epsilon=0.1, f_clean=1.0):
+    """Branching ratio from the mass budget: m = epsilon f_clean (M_parent/M_vis),
+    capped at the conservation limit M_parent/M_vis."""
+    w = float(M_parent) / float(M_vis)
+    return min(epsilon * f_clean * w, w)
+
+
+# The branching is GENERATION-DEPENDENT, and that makes BHU1 robust. An OGU has
+# grown large (M_OGU >> M_vis), so it is super-critical: it spawns many BHU1
+# children, m_0 = epsilon (M_OGU/M_vis) >> 1. But those children sit AT the
+# viability scale (M ~ M_vis -- the edge we observe ourselves to occupy), so each
+# of them is sub-critical, m_{n>=1} = epsilon (M_child/M_vis) ~ epsilon < 1. The
+# population is then 1 OGU -> many BHU1 -> a geometrically decaying tail with ratio
+# epsilon: N_n ~ m_0 * epsilon^{n-1} for n >= 1. The huge m_0 CANCELS in the n>=1
+# normalization, so
+#
+#     P(BHU_n | n>=1) = (1 - epsilon) epsilon^{n-1},
+#
+# independent of the OGU size. BHU1 dominates (P = 1-epsilon ~ 0.9 for epsilon~0.1)
+# however large the OGU grows -- the depth is controlled by the descendants being
+# pinned at M_vis, not by the OGU. So "we are BHU1" is decoupled from the (unknown,
+# vortex/void-set) OGU mass.
+
+def generational_depth_pmf(epsilon, n_max=8):
+    """P(BHU_n | n>=1) = (1-eps) eps^{n-1} for n = 1..n_max (OGU size cancels)."""
+    n = np.arange(1, n_max + 1)
+    return n, (1.0 - epsilon) * epsilon ** (n - 1)
+
+
+def ogu_siblings(M_ogu, M_vis, epsilon=0.1, f_clean=1.0):
+    """Number of viable BHU1 children one OGU spawns: ~ epsilon f_clean M_ogu/M_vis.
+    Inverting, M_ogu/M_vis ~ N_siblings/(epsilon f_clean)."""
+    return epsilon * f_clean * float(M_ogu) / float(M_vis)
+
+
+# ---------------------------------------------------------------------------
+# OGU size (mass) distribution from birth vs growth
+# ---------------------------------------------------------------------------
+# Births inject OGUs at small mass: the Cartasis-density fluctuation probability
+# falls as exp(-M c^2 tau/hbar), so dN_birth/dM ~ exp(-M/M0) with M0 = hbar/(c^2
+# tau) a small birth scale. Once born, super-critical holes grow by runaway
+# accretion at rate Mdot(M) = A M^g (g=1 Eddington-like, g=2 Bondi-like). In a
+# stationary foam the number density n(M) obeys a continuity equation in mass
+# space, d/dM[Mdot(M) n(M)] = B(M) - death. For M well above the birth scale the
+# upward flux Mdot*n equals the (nearly constant) total birth rate, so
+#
+#     n(M) ~ 1 / Mdot(M) ~ M^{-g}              (between M0 and a death cutoff),
+#
+# i.e. a POWER LAW: many small universes, few large ones, derived rather than
+# assumed. A high-mass cutoff M_max comes from environment depletion / the
+# stationary balance; a low-mass VIABILITY cut M_vis (enough mass for astrophysics
+# and black-hole formation) selects the universes that can host observers and seed
+# descendants. Because n(M) falls with M, observer-bearing universes pile up just
+# above M_vis -- we should sit near the viability edge, which is the quantitative
+# content of the old "we are near the optimum" conjecture.
+
+def ogu_birth_rate(M, M0=1.0):
+    """Birth rate per unit mass: B(M) ~ exp(-M/M0), small M favoured."""
+    M = np.asarray(M, dtype=float)
+    return np.exp(-M / M0)
+
+
+def ogu_mass_density(M, g=2.0, M0=1.0, M_max=1e3):
+    r"""Stationary OGU number density n(M) ~ M^{-g} exp(-M/M_max), valid above the
+    birth scale M0. g is the growth-law exponent (Mdot ~ M^g): g=1 Eddington,
+    g=2 Bondi. Returns an unnormalized density (use on a log-M grid)."""
+    M = np.asarray(M, dtype=float)
+    return M ** (-g) * np.exp(-M / M_max) * (1.0 - np.exp(-M / M0))
+
+
+def observer_mass_density(M, g=2.0, M0=1.0, M_max=1e3, M_vis=10.0):
+    """OGU mass density restricted to viable (observer-bearing) universes:
+    zero below the viability mass M_vis, n(M)~M^{-g} above. The peak of this is
+    the most probable host-universe mass -> our expected neighbourhood."""
+    M = np.asarray(M, dtype=float)
+    dens = ogu_mass_density(M, g, M0, M_max)
+    return np.where(M >= M_vis, dens, 0.0)
+
+
+# ---------------------------------------------------------------------------
+# Spin (vorticity) distribution: birth favours low spin, viability needs spin
+# ---------------------------------------------------------------------------
+# The OG seed's net vorticity omega sets its baryon asymmetry, eta ~ C|omega|/T
+# (Ch. 4): the SIGN of omega fixes matter vs antimatter (CPT-symmetric, so the
+# birth distribution is even in omega -> half matter, half antimatter), and the
+# MAGNITUDE fixes purity. A random fluctuation most likely has LOW net vorticity,
+# P_birth(omega) ~ Gaussian(0, sigma) peaked at 0. But a universe with
+# |eta| < eta_min cannot complete baryogenesis: matter and antimatter annihilate
+# to near-symmetric radiation, no structure, no black holes -- a "hellish",
+# sterile universe that simply evaporates and seeds nothing. Viability therefore
+# requires |omega| > omega_min = eta_min T / C. Among viable seeds, higher spin
+# means higher purity and more descendants (productivity), but is exponentially
+# rarer. The observer/seed-weighted spin distribution is thus
+#
+#     P_obs(omega) ~ P_birth(omega) * [productivity(omega)] * 1[|omega|>omega_min],
+#
+# which peaks just ABOVE the viability threshold: viable universes are typically
+# LOW-purity, just past sterile. Our small observed asymmetry (eta ~ 1e-9..1e-8)
+# places us near that edge -- a prediction testable against any net rotation of
+# our universe (galaxy-spin handedness, CMB axis hints).
+
+def spin_birth_pdf(omega, sigma=1.0):
+    """Birth vorticity distribution: Gaussian peaked at 0 (low spin likeliest)."""
+    omega = np.asarray(omega, dtype=float)
+    return np.exp(-0.5 * (omega / sigma) ** 2) / (sigma * np.sqrt(2 * np.pi))
+
+
+def spin_threshold(eta_min, C, T):
+    """Minimum viable vorticity for baryogenesis: omega_min = eta_min * T / C."""
+    return eta_min * T / C
+
+
+def purity_from_spin(omega, C, T):
+    """Baryon asymmetry (purity) from vorticity: eta = C|omega|/T."""
+    return C * np.abs(np.asarray(omega, dtype=float)) / T
+
+
+def spin_observer_pdf(omega, sigma=1.0, omega_min=0.5, prod_power=1.0):
+    r"""Seed-weighted spin distribution: P_birth * productivity * viability gate.
+    productivity ~ (|omega|-omega_min)^prod_power above threshold (more spin ->
+    more purity -> more structure and descendants), zero below. Returns an
+    unnormalized density; normalize on a grid for plotting."""
+    omega = np.asarray(omega, dtype=float)
+    prod = np.where(np.abs(omega) > omega_min,
+                    (np.abs(omega) - omega_min) ** prod_power, 0.0)
+    return spin_birth_pdf(omega, sigma) * prod
+
+
+def sterile_fraction(sigma=1.0, omega_min=0.5):
+    """Fraction of OG seeds that are sub-threshold (sterile, evaporate): the
+    Gaussian mass within |omega| < omega_min."""
+    from math import erf
+    return float(erf(omega_min / (sigma * np.sqrt(2.0))))
+

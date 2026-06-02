@@ -141,3 +141,52 @@ def monte_carlo_pvalue(vectors: np.ndarray, n_trials: int = 200_000,
     return {"n_axes": n, "tau1": tau1_obs,
             "p_value": float(np.mean(tau1 >= tau1_obs)),
             "principal_axis_vec": axis}
+
+
+# ---------------------------------------------------------------------------
+# The decisive test: does the galaxy-spin axis favour the CMB axis (SCT) or the
+# Galactic pole (Milky-Way systematic)? A formal two-hypothesis comparison.
+# ---------------------------------------------------------------------------
+# Model a measured axis as concentrated around a true pole with a Fisher-like
+# spread of width sigma (deg): the likelihood of observing acute separation theta
+# from a candidate pole is L(theta) ~ exp(-theta^2 / 2 sigma^2) (small-angle Fisher,
+# adequate for axes well inside 90 deg). Two hypotheses:
+#   H_SCT : the galaxy-spin axis is drawn around the CMB axis (parent spin imprint);
+#   H_sys : it is drawn around the Galactic pole (classification systematic).
+# The log-likelihood ratio decides which the data prefer; with equal priors it is
+# the posterior log-odds. A positive value favours SCT.
+
+def log_likelihood_ratio(theta_sct_deg: float, theta_sys_deg: float,
+                         sigma_deg: float) -> float:
+    """ln[L(near CMB axis)/L(near Galactic pole)] for a galaxy-spin axis measured
+    at acute angles theta_sct from the CMB axis and theta_sys from the Galactic
+    pole, with measurement/intrinsic spread sigma (deg). Positive favours SCT."""
+    return (theta_sys_deg**2 - theta_sct_deg**2) / (2.0 * sigma_deg**2)
+
+
+def posterior_odds_sct(theta_sct_deg: float, theta_sys_deg: float,
+                       sigma_deg: float, prior_odds: float = 1.0) -> float:
+    """Posterior odds favouring H_SCT over H_sys (equal priors by default)."""
+    return prior_odds * np.exp(log_likelihood_ratio(theta_sct_deg, theta_sys_deg,
+                                                    sigma_deg))
+
+
+def sigma_to_decide(theta_sct_deg: float, theta_sys_deg: float,
+                    odds_threshold: float = 100.0) -> float:
+    """The measurement precision sigma (deg) at which the two poles, separated as
+    given, yield decisive odds (default 100:1) for whichever is closer. Below this
+    sigma the test decides; above it, the poles are not resolved.
+    odds = exp((theta_sys^2 - theta_sct^2)/2 sigma^2) = threshold."""
+    num = abs(theta_sys_deg**2 - theta_sct_deg**2)
+    denom = 2.0 * np.log(odds_threshold)
+    if denom <= 0 or num == 0:
+        return float("inf")
+    return float(np.sqrt(num / denom))
+
+
+def discriminating_separation(cmb_axis_vec: np.ndarray,
+                              galactic_pole_vec: np.ndarray) -> float:
+    """Acute angle between the two candidate poles (deg). The test can only
+    discriminate if the galaxy-spin axis is measured to much better than this."""
+    return acute_angle_deg(cmb_axis_vec, galactic_pole_vec)
+

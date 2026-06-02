@@ -32,6 +32,7 @@ from . import constants as k
 
 HBAR_GEV_S = 6.582119569e-25     # hbar in GeV*s
 GEV4_TO_JM3 = 2.085e37           # 1 GeV^4 = 2.085e37 J/m^3
+GEV_TO_K = 1.160451812e13        # 1 GeV / k_B in kelvin
 G_STAR_SM = 106.75               # SM relativistic dof at high T
 ETA_OBS = 6.1e-10                # observed baryon-to-photon ratio
 
@@ -67,3 +68,68 @@ def asymmetry_estimate(rho_C: float = 1.0e50, g_star: float = G_STAR_SM,
 def spinC_needed(rho_C: float = 1.0e50, g_star: float = G_STAR_SM) -> float:
     """The product C * spin_fraction required to match eta_obs."""
     return ETA_OBS / vorticity_over_T(rho_C, g_star, spin_fraction=1.0)
+
+
+# ----------------------------------------------------------------------------
+# Inheritance / dilution track.
+#
+# The estimate above asks the rotating bounce to MANUFACTURE eta from a
+# symmetric bath -- the relevant question only for an original-generation
+# universe (OGU), which has no parent to inherit from. A black-hole-born
+# universe (BHU_n, n>=1; our case, by the dark-matter+dark-energy anchor) has
+# a parent that already completed baryogenesis and sits at its own
+# baryon-to-entropy ratio ~ eta_parent. Sphalerons erase B+L but conserve
+# B-L, so that net B-L passes through the extrusion as a protected remnant.
+#
+# Across the bounce baryon number (B-L) is conserved while entropy may be
+# multiplied by a dilution factor D >= 1 (irreversible compression/shear, plus
+# -- if the CMB is parent Hawking inflow -- new photons in the denominator).
+# Since eta = n_B / n_gamma scales as (conserved B-L)/(entropy),
+#
+#     eta_baby_inherited = eta_parent / D.
+#
+# The observed asymmetry is then roughly
+#
+#     eta_baby ~ max( eta_parent / D ,  C * (omega/T) )   [inheritance vs fresh skew]
+#
+# and D is the crux unknown. It is bounded between two physically meaningful
+# anchors computed below: D = 1 (adiabatic/entropy-conserving extrusion ->
+# inheritance dominates, sign protected, PURE lineages) and the horizon-
+# saturating value D = S_BH / S_radiation (the post-bounce interior thermalizes
+# to the parent horizon entropy -> catastrophic dilution, fresh skew forced,
+# 41x problem returns for everyone, sign re-rolls -> MIXED lineages).
+# ----------------------------------------------------------------------------
+
+def inherited_eta(eta_parent: float = ETA_OBS, dilution: float = 1.0) -> float:
+    """eta_baby from inheritance: eta_parent diluted by entropy factor D >= 1."""
+    return eta_parent / dilution
+
+
+def bh_entropy_over_kB(M: float) -> float:
+    """Bekenstein-Hawking horizon entropy S_BH/k_B = 4 pi G M^2 / (hbar c)."""
+    return 4.0 * math.pi * k.G * M**2 / (k.hbar * k.c)
+
+
+def radiation_entropy_over_kB(M: float, T_GeV: float) -> float:
+    """Entropy S/k_B = (4/3) E/(k_B T) of energy E = M c^2 as thermal radiation
+    at the bounce temperature (T given in GeV)."""
+    E = M * k.c**2
+    kT = T_GeV * GEV_TO_K * k.kB
+    return (4.0 / 3.0) * E / kT
+
+
+def dilution_horizon(M: float, rho_C: float = 1.0e50,
+                     g_star: float = G_STAR_SM) -> float:
+    """Horizon-saturating dilution D_max = S_BH / S_radiation for a parent of
+    mass M, with the radiation entropy evaluated at the bounce temperature.
+    Closed form: D_max = 3 pi G M k_B T / (hbar c^3)."""
+    T_GeV = bounce_temperature_GeV(rho_C, g_star)
+    return bh_entropy_over_kB(M) / radiation_entropy_over_kB(M, T_GeV)
+
+
+def combined_eta(rho_C: float = 1.0e50, g_star: float = G_STAR_SM,
+                 spin_fraction: float = 1.0, C: float = 1.0,
+                 eta_parent: float = ETA_OBS, dilution: float = 1.0) -> float:
+    """eta_baby ~ max(inherited-diluted, fresh chiral-vortical skew)."""
+    return max(inherited_eta(eta_parent, dilution),
+               asymmetry_estimate(rho_C, g_star, spin_fraction, C))

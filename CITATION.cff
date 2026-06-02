@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+title: "Eternal Dawn"
+message: "If you use this work, please cite it using these metadata."
+type: software
+authors:
+  - given-names: Michael
+    family-names: Gronager
+    orcid: "https://orcid.org/0009-0006-5933-0065"
+abstract: >-
+  A continuous, conservative cosmology from minimal axioms (quantum mechanics,
+  special relativity, Einstein-Cartan gravity, an infinite quantum vacuum).
+  Rare vacuum fluctuations reach the bounce density and bounce rather than
+  forming singularities, extruding child universes through a bounce membrane;
+  the supraverse condenses into an eternal, recursive population of universes.
+  The monograph plus a fully reproducible simulation/figure pipeline: every
+  number and figure regenerates from the code (make figures; make doe).
+keywords:
+  - cosmology
+  - Einstein-Cartan gravity
+  - torsion bounce
+  - black hole cosmology
+  - baryogenesis
+  - dark matter
+  - dark energy
+  - cosmic microwave background
+  - supraverse
+license: CC-BY-4.0
+repository-code: "https://github.com/gronager/cartasis"
+# Fill in after the Zenodo deposit mints a DOI:
+# doi: "10.5281/zenodo.XXXXXXX"
+# version: "0.1.0"
+# date-released: "2026-06-01"
