@@ -59,21 +59,49 @@ The same blade cuts the ready-made big bang. A finished, perfectly arranged univ
 
 So the choice was never "cheap fake mind" against "expensive real world." Only one of the two can come from nothing at all. The void cannot dream up a brain. It can only give birth to a world — and then let the world, in its own long time, grow the minds that wonder how they got here.
 
-## Why this might be worth taking seriously
+## The scoreboard
 
-The framework derives, from minimal axioms, explanations for:
+ΛCDM is the standard model of cosmology — general relativity and the particle Standard Model, plus the patches it needs to fit the sky: an inflaton, a cosmological constant Λ, a dark-matter particle, a baryogenesis mechanism, and a finely chosen low-entropy start. Eternal Dawn (ED) replaces the patches with *one* mechanism — a torsion bounce in an eternal vacuum — and derives the rest.
 
-- The Big Bang (a bounce, viewed from inside)
-- Inflation (rapid torsion-driven expansion at the bounce)
-- Matter-antimatter asymmetry (statistical inheritance from the seeding vacuum fluctuation, propagated by bounce dynamics)
-- Dark matter (parent’s gravitational signature through the membrane)
-- Dark energy (parent’s accretion history bleeding through)
-- The CMB (parent’s Hawking radiation)
-- The arrow of time (low-entropy boundary at bounce, high-entropy future)
-- Apparent fine-tuning (typical parameters for observer-supporting universes in the supraverse distribution)
-- Information preservation (entanglement across bounce, unitarity maintained globally)
+Legend: ✅ explained from the framework's own principles · ➖ added by hand / assumed · ❌ unresolved or self-undermining · — out of scope.
 
-No singularity, no fine-tuned initial conditions, no exotic new fields, no special starting point. Just continuous physics applied carefully.
+| Question | Eternal Dawn | ΛCDM | Standard Model |
+|---|:--:|:--:|:--:|
+| No singularity | ✅ | ❌ | — |
+| What came "before" the Big Bang | ✅ | ❌ | — |
+| Why there is something rather than nothing | ✅ | ❌ | — |
+| The observer problem (Boltzmann brain / "are we a simulation?") | ✅ | ❌ | — |
+| Arrow of time | ✅ | ➖ | ❌ |
+| Matter over antimatter (the charge asymmetry) | ✅ | ➖ | ➖ |
+| Dark matter | ✅ | ➖ | ❌ |
+| Dark energy | ✅ | ➖ | ❌ |
+| The CMB | ✅ | ✅ | ❌ |
+| Megastructures (ultra-large-scale order) | ✅ | ❌ | — |
+| Inflation | ✅ | ➖ | ❌ |
+| Hubble tension | ✅ | ❌ | — |
+| Fine-tuning of the constants | ✅ | ❌ | ❌ |
+| **New ingredients required** | **4 axioms + 1 bounce** | inflaton, Λ, a dark-matter particle, baryogenesis, special initial conditions | — |
+
+The ✅ marks explanatory *scope* — that ED accounts for the item from its own principles, not that it is proven. Evidence is a separate column, and an honest one:
+
+### What's already pointing its way — a scorecard to tick off
+
+Already suggestive in today's data:
+
+- [x] **Hubble tension** — resolved with no new parameter (the inhomogeneous / timescape clock-rate effect)
+- [x] **Dark energy is evolving**, as predicted — DESI finds *w₀ > −1, wₐ < 0*
+- [x] **More ultra-large structure** than a smooth start allows (the Giant Arc, the Big Ring, …)
+- [x] **Baryon-to-photon ratio doubly anchored** — the CMB peaks and BBN deuterium agree to ~1%
+
+Awaiting data or computation (the live bets):
+
+- [ ] A **shared cosmic axis** — galaxy-spin handedness aligned with the CMB "axis of evil" (the cleanest possible confirmation)
+- [ ] **Primordial gravitational waves** low or absent (LiteBIRD)
+- [ ] **No primordial lepton asymmetry** (improved BBN+CMB; eventually a direct C𝜈B detection)
+- [ ] **Continued null** in dark-matter direct detection
+- [ ] **CMB peak heights** reproduced from a full bounce Boltzmann computation
+
+And the deepest divergence of all. If ΛCDM's one-off Big Bang were the whole story, the cheapest way to make an observer is a momentary fluctuation with false memories — so a *typical* observer should be a Boltzmann brain, not a real inhabitant of a real world. That leaves only two ways out: a fine-tuner who set the initial state by hand, or a simulation. Eternal Dawn removes the dilemma — the void cannot dream up a brain, only give birth to a world, and the dawn is still going on. No singularity, no fine-tuned start, no new fields: just continuous physics applied carefully.
 
 ## Status
 

@@ -28,7 +28,7 @@ epub:
 		exit 1; }
 	pandoc $(MAIN).tex --from=latex --to=epub3 \
 		--resource-path=.:figures/pdf --default-image-extension=png \
-		--mathml --toc --toc-depth=2 --number-sections \
+		--mathml --toc --toc-depth=2 \
 		--top-level-division=chapter --split-level=2 \
 		--epub-cover-image=figures/pdf/cover.png \
 		--metadata title="Eternal Dawn" \
