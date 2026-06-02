@@ -93,7 +93,7 @@ def main() -> None:
             ci += 1
 
     # --- title block, Bordeaux ---
-    ax.text(0.5, aspect * 0.71, "DAWN OF\nETERNITY", color=BORDEAUX,
+    ax.text(0.5, aspect * 0.71, "ETERNAL\nDAWN", color=BORDEAUX,
             ha="center", va="center", fontsize=58, fontweight="bold",
             family="serif", linespacing=1.05, zorder=10)
     ax.text(0.5, aspect * 0.565, "A continuous, conservative cosmology",

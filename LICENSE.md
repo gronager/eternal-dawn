@@ -28,5 +28,5 @@ This work is dual-licensed by content type:
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
   DEALINGS IN THE SOFTWARE.
 
-Attribution for any reuse: **Michael Gronager, _Dawn of Eternity: Supraverse Cartasis
+Attribution for any reuse: **Michael Gronager, _Eternal Dawn: Supraverse Cartasis
 Theory_ (2026)**, plus the Zenodo DOI once assigned.

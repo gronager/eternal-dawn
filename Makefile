@@ -13,7 +13,7 @@ pdf:
 	@mkdir -p $(BUILD)
 	latexmk -pdf $(MAIN).tex
 
-# Dawn of Eternity restructure (built alongside book.tex during migration).
+# Eternal Dawn restructure (built alongside book.tex during migration).
 doe:
 	@mkdir -p $(BUILD)
 	latexmk -pdf doe.tex
@@ -36,13 +36,13 @@ epub:
 		--mathml --toc --toc-depth=2 --number-sections \
 		--top-level-division=chapter \
 		--epub-cover-image=figures/pdf/cover.png \
-		--metadata title="Dawn of Eternity" \
+		--metadata title="Eternal Dawn" \
 		--metadata author="Michael Gronager, PhD" \
 		--metadata lang=en \
 		-o $(MAIN).epub
 	@echo "wrote $(MAIN).epub ($$(du -h $(MAIN).epub | cut -f1)) -- tracked, downloadable from the repo"
 
-# EPUB of the restructured manuscript (Dawn of Eternity), built alongside book.epub.
+# EPUB of the restructured manuscript (Eternal Dawn), built alongside book.epub.
 doe-epub:
 	@command -v pandoc >/dev/null 2>&1 || { \
 		echo "pandoc not found. Install it (apt/brew 'pandoc') -- a single binary."; \
@@ -52,7 +52,7 @@ doe-epub:
 		--mathml --toc --toc-depth=2 --number-sections \
 		--top-level-division=chapter \
 		--epub-cover-image=figures/pdf/cover.png \
-		--metadata title="Dawn of Eternity" \
+		--metadata title="Eternal Dawn" \
 		--metadata author="Michael Gronager, PhD" \
 		--metadata lang=en \
 		-o doe.epub
@@ -69,7 +69,7 @@ sim-test: sim-install
 # with a UTC timestamp and the current git commit. Commit MANIFEST.sha256 to anchor
 # the exact bytes to a point in time (and optionally to a blockchain/notary service).
 hash:
-	@echo "# Dawn of Eternity -- provenance manifest" > MANIFEST.sha256
+	@echo "# Eternal Dawn -- provenance manifest" > MANIFEST.sha256
 	@echo "# generated: $$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> MANIFEST.sha256
 	@echo "# git commit: $$(git rev-parse HEAD 2>/dev/null || echo none)" >> MANIFEST.sha256
 	@echo "# author: Michael Gronager" >> MANIFEST.sha256

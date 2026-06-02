@@ -1,7 +1,9 @@
-# Dawn of Eternity — Supraverse Cartasis Theory
+# Eternal Dawn
 
 A working-draft cosmological framework built from minimal axioms.
 By Michael Gronager, PhD.
+
+*The title is the thesis: there is no one-time Big Bang. Our beginning is a surface still present at the edge of the sky, with our parent universe still pouring matter across it — so the dawn is ongoing, and the dark sector is the proof of it.*
 
 ## First When There's Nothing — But a Slow Glowing Dream
 
@@ -38,6 +40,8 @@ But inside that first universe, exactly as inside ours, stars live and die and b
 Picture the squeeze. The mass of an entire universe — very roughly 10⁵³ kilograms — is forced through a throat no wider than a building, packed so tightly that the whole of it would fit in a single room, and it happens in about a thousandth of a billionth of a billionth of a second. At that density nothing recognizable survives: not a torn teddy bear, not a rusty car, not an atom, not even an atomic nucleus — all of it is melted into a featureless soup. What carries across is not *things* but a *tally*: the faint surplus of matter over antimatter, about one part in a billion, inherited from the parent and nudged a little larger by the violence of the crossing.
 
 And now the dark sky makes sense. Our parent's enormous mass sits just on the far side of that birth-surface, and we feel its gravity *before* its light can ever reach us — a pull from matter we cannot see. That is dark matter. The parent is still feeding matter through to us, slowly, and the gentle outward push of that ongoing inflow is dark energy. Darkness is the harbinger of light. The parent's own faint glow — the radiation any black hole gives off, as Stephen Hawking showed — arrives smeared across our whole sky as the background hum that fills it. The unevenness in all this inflow is the seed of everything: it gathers matter into galaxies, into stars, into planets, and perhaps that is why we are here to notice at all.
+
+And here is the deepest break from the textbook story — the one this book is named for. That story has the Big Bang happen once, in a single instant, and end. Ours never ended. The squeeze that made us is not a moment in our past but a surface still *there*, at the edge of the sky, with our parent still pressing matter through it; our Big Bang is not over, it is going on *now*, and will until the parent runs dry. The dark sky is the proof — dark matter and dark energy are simply the parts of that ongoing dawn we are able to measure. We do not live *after* our beginning. We live *inside* it: an eternal dawn.
 
 So we are not exotic. Count up all the universes and about nine in ten are ordinary children like ours — half of them matter, half of them antimatter, each with its own clock running its own way. We live at the most ordinary address in the whole endless family.
 

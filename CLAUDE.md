@@ -1,10 +1,14 @@
-# Dawn of Eternity — Project Orientation
+# Eternal Dawn — Project Orientation
 
 ## What this is
 
 A theoretical cosmology research program built around a single principle: **physics is continuous and conservative, so singularities and discontinuities must be artifacts of incomplete theory, not real features of nature.** Applied carefully, this principle plus Einstein-Cartan gravity plus an infinite quantum vacuum produces a complete cosmological framework with no fine-tuning.
 
-The book is titled **Dawn of Eternity**. (The older working title "Supraverse Cartasis Theory" is retired; the `\SCT` macro is being removed.) The bounce membrane — the surface where torsion-mediated repulsion overwhelms gravity and the geometry transitions between a parent region and a child universe — was historically called the *Cartasis* membrane, a pun on **Cartan + κάθαρσις** (catharsis: the bounce dissolves and purifies everything, then extrudes it clean). That pun is now spent **once**, in the bounce chapter; elsewhere we say "bounce density" and "bounce membrane." See **Naming policy** below.
+The book is titled **Eternal Dawn**. (The older working title "Supraverse Cartasis Theory" is retired; the `\SCT` macro is being removed.) The bounce membrane — the surface where torsion-mediated repulsion overwhelms gravity and the geometry transitions between a parent region and a child universe — was historically called the *Cartasis* membrane, a pun on **Cartan + κάθαρσις** (catharsis: the bounce dissolves and purifies everything, then extrudes it clean). That pun is now spent **once**, in the bounce chapter; elsewhere we say "bounce density" and "bounce membrane." See **Naming policy** below.
+
+## Central thesis (carry this as the tone, everywhere)
+
+**The dawn is ongoing, not an event.** This is the single largest break from the standard model, and it must color the whole book — not appear as the occasional paragraph. There is no one-time Big Bang finished in the first $10^{-21}$ second. Our bounce membrane is a *persistent* surface at our past horizon, and the parent is *still* extruding matter across it — our "Big Bang" is happening *now*, and goes on until the parent stops feeding (and eventually evaporates). **The dark sector is the live, measurable proof of this ongoing dawn:** dark matter is the parent's mass still pressing through the membrane, dark energy the ongoing *rate* of that inflow. Only an old OGU — parentless, its feed exhausted — has a finished beginning, and (lacking a parent) it has no dark sector. So **dark matter + dark energy ARE the proof of the eternal dawn**, and ΛCDM's finished Big Bang is precisely what we diverge from. Whenever "the Big Bang," "the beginning," or "our dawn" is mentioned, write it as ongoing; reserve the finished, one-shot beginning for the OGU case. The book's title, *Eternal Dawn*, names this.
 
 ## What we’re trying to do
 
@@ -64,7 +68,7 @@ cartasis/
 ├── CLAUDE.md                       # this file
 ├── README.md                       # public-facing description (opens with the plain-language story)
 ├── Makefile                        # `make doe` builds the new book; `make` builds the legacy book
-├── doe.tex                         # NEW main document (Dawn of Eternity) — CANONICAL, in progress
+├── doe.tex                         # NEW main document (Eternal Dawn) — CANONICAL, in progress
 ├── doe/                            # NEW chapters (00-overture … 10-scoreboard), Part I + Part II
 ├── book.tex, chapters/             # LEGACY manuscript — being migrated into doe/, deleted when done
 ├── frontmatter/                    # title, dedication, epigraph, preface, cover (.tex)
@@ -82,14 +86,14 @@ The new chapters read linearly (each leans on the prior). Cross-references use L
 
 ## Naming policy
 
-- The book is **Dawn of Eternity**; do not reintroduce "Supraverse Cartasis Theory" or `\SCT`.
+- The book is **Eternal Dawn**; do not reintroduce "Supraverse Cartasis Theory" or `\SCT`.
 - Lead with the **warm names** — "first universe(s)," "child universe," "the bounce," "the void." Introduce the formal acronyms **OGU** (original-generation universe) and **BHU** (black-hole universe) once each, then use sparingly.
 - "**Cartasis**" appears once, as the Cartan + *katharsis* pun in Chapter 2. Elsewhere: "**bounce density**" (the symbol `\rhoc`, ρ_C) and "**bounce membrane**."
 
 ### Migration gardening TODO (do per chapter, and a final sweep)
 
 When migrating each chapter into `doe/`, **garden as you go** — do not just move text:
-- **Naming:** purge stray "Cartasis" (keep only the Ch2 pun), `\SCT`, "Supraverse Cartasis Theory"; convert to "bounce density/membrane," "Dawn of Eternity," warm names. (Copied stubs like the axioms chapter inherited the old naming — `doe/01-axioms` is gardened; recheck others.)
+- **Naming:** purge stray "Cartasis" (keep only the Ch2 pun), `\SCT`, "Supraverse Cartasis Theory"; convert to "bounce density/membrane," "Eternal Dawn," warm names. (Copied stubs like the axioms chapter inherited the old naming — `doe/01-axioms` is gardened; recheck others.)
 - **No lab-log voice.** This is a linear monograph, not a research diary. Cut "earlier drafts assumed…," "it is tempting to…," "the honest result is…," "how the sausage is made" framing. State the result and its derivation directly; do not narrate the path that reached it.
 - **Figures:** Part I was figure-light early (overture/axioms are prose; the bounce chapter now carries `fig:bounce`; Void has `fig:instanton`; Eternal Dawn has `fig:ogudist`, `fig:cycle`). Part II (observations/sims/viz) is figure-dense. Place each figure in the chapter that *introduces* its idea; reference (don't duplicate) it elsewhere.
 - Run a final `grep -rn "Cartasis\|\\SCT\|earlier draft\|tempting" doe/` sweep before deleting the legacy tree.
@@ -107,7 +111,7 @@ When picking up this project:
 
 ## What this project is not
 
-- Not a refutation of ΛCDM. ΛCDM works empirically for what it describes. Dawn of Eternity is an alternative that explains a wider set of phenomena from fewer postulates.
+- Not a refutation of ΛCDM. ΛCDM works empirically for what it describes. Eternal Dawn is an alternative that explains a wider set of phenomena from fewer postulates.
 - Not a claim that the framework is correct. It’s a coherent worldview that could be right and is testable. The work is finding out.
 - Not a vehicle for general philosophical speculation. Each claim should be derivable, computable, or observable in principle.
 - Not for popular audiences in its current form. The framework needs to be defensible to professional cosmologists first; popularization comes later if at all.
