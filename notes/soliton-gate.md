@@ -248,3 +248,17 @@ Status: colour factors RIGOROUS (forced). Radial shape (Cornell) MODELLED -- the
 tension is lattice-scale, not computed. The residual singlet-singlet force is the
 overlap-derived nuclear-force analogue (sigma-exchange Yukawa, attractive short-range)
 -- the 'force from overlaps' the picture delivers directly.
+
+## CORRECTION (color force): overlaps SCREEN; confinement (~r) is owed
+
+The earlier color-force note overstated. Corrected `color_force.py`: the colour FACTORS
+are rigorous (forced by the label, = QCD), but every overlap/exchange force the picture
+produces ASYMPTOTES TO ZERO (screened) -- the one-gluon-exchange channels (~alpha/r) and
+the residual sigma-exchange between singlets (Yukawa). CONFINEMENT (V~sigma r, never zero)
+is NOT produced -- it is a non-perturbative flux tube of the non-abelian connection, not a
+pairwise overlap. Whether the gravity-torsion connection confines (~r) or only screens
+(->0) is the deepest open strong-sector question; if it only screens, quarks aren't
+confined and the picture fails here. Lattice-scale, undecided. (The earlier figure had a
+sign slip AND imposed the linear term; both fixed.) Three vs four colours: working answer
+is THREE (forced minimum, reproduces the observed channel structure, lower S); four
+(Pati-Salam) is elegant but not forced and makes S worse.

@@ -150,3 +150,61 @@ Stated as specifications, in dependency order, because nothing downstream comput
 1. **The density question.** Determine whether the particle-scale binding density coincides with the cosmological ρ_C ∼ 10⁵⁰ kg m⁻³ of Part I, or differs — and if it differs, by how much and why. *This closes the open caveat of the thesis section and reconciles Part II with Part I.*
 
 *Part III (Electroweak Chemistry) builds on targets 1–3 and adds its own — the composite vector resonances, the custodial-symmetry question, and the precision-electroweak (S, T) confrontation — and must first resolve the consistency tension noted in the cover message: the Part I Hehl–Datta four-fermion term is C-, P-, and T-even, while the weak interaction is maximally C- and P-violating. Any “weak from torsion” claim has to confront that head-on, and it is flagged at the top of Part III rather than buried.*
+-----
+
+## Update — computed results (first numerical pass)
+
+*Added after a session of direct computation. Each is reproducible (`sims/`); the
+honest forced/suggestive/owed status is kept on every line, and one result downgrades
+an earlier hope.*
+
+**Forced / computed (moved from "assumed" to "demonstrated"):**
+
+- **The soliton EXISTS.** The self-consistent Hartree loop — fill the levels (Pauli),
+  their density sources the four-fermion σ field, that field is the well, iterate —
+  *converges* to a genuine self-bound soliton: bound levels, a chiral-restored core
+  (the effective mass flips sign), a finite mass (`self_consistent.py`, `chiral_soliton.py`).
+  Target #1, the existence Chapter II.1 had to assume, is no longer assumed. Derrick is
+  clearable as argued; the Soler/balance evasion holds.
+- **Mass is configurational.** The chiral soliton's observable mass is ~94% field-and-bag
+  energy, only ~6% constituent *gv* — the proton's own accounting — and it scales
+  linearly with the condensate *v=f_π*, vanishing as *v→0*. So mass is bound field
+  energy created by the condensate, not a conserved label; only *P^μ* and the charges
+  (*B−L*, *Q*, spin) are conserved — which is exactly what the bounce keeps through the
+  membrane. This is the spine of new Chapter II.5 (separate file).
+- **Colour is forced, and gives QCD's channel structure.** The Pauli-required 3-valued
+  label *is* the SU(3) fundamental, so the two-body colour factor ⟨T₁·T₂⟩ is fixed
+  (Gell-Mann-validated, C_F=4/3): q-q̄ singlet −4/3 (attract → mesons), q-q antitriplet
+  −2/3 (attract but not a singlet → confined diquark), octet/sextet repel
+  (`color_force.py`). So free states are colour singlets only — q-q̄ (2-body meson) or
+  qqq (3-body baryon, the totally antisymmetric singlet) — and there is *no free
+  2-quark state*, exactly as observed. Which combinations bind is a *consequence* of
+  the forced label, not an input.
+- **Generations are a geometric ladder, and finite.** If generations are internal rungs,
+  the level energies are ~arithmetic but the observable masses are wavefunction overlaps,
+  which fall exponentially with the level — so the masses are *geometric* (ln-mass linear
+  in rung), matching the real fermions' approximate log-spacing (`generations.py`). And
+  the electroweak S budget *caps* the number: leading-order S would forbid even one
+  generation, so walking is mandatory, and cap≈3 needs S/gen≈0.03 — a finite count, with
+  3 plausible but exponentially sensitive (`generations_cap.py`).
+
+**Suggestive (confirmed in shape):** the relativistic tower is ~Regge (E² linear in rung,
+`soliton.py`); Pauli degeneracy flattens the soliton toward the S-friendly walking
+regime (`fermi_ball.py`).
+
+**The downgrade — honest:** the effective forces, computed as soliton overlaps, all
+**screen**: the one-gluon-exchange channels and the residual σ-exchange between singlets
+asymptote to *zero*, not to a linear ~r. **Confinement (V~σr) is NOT produced by the
+overlap picture** — it is a non-perturbative flux tube of the non-abelian connection.
+Whether the gravity-torsion connection actually confines (~r) or only screens (→0) is the
+deepest open question of the strong sector: if it only screens, quarks would not be
+confined and the picture fails here. Lattice-scale, undecided (`color_force.py`,
+`figures/pdf/color_force.pdf`). So the colour *charge* structure is forced and correct,
+but the confining *force* is owed.
+
+**Three colours or four?** Not settled, but the working answer is **three**: it is the
+forced minimum (Pauli), it reproduces the observed colour-channel structure (mesons,
+baryons, no free diquark), and it gives the lower S (N_c/6π). Four (Pati–Salam, lepton as
+the fourth colour) is elegant — it would tie colour to the *B−L* the bounce already
+conserves — but it is *not* forced and it makes S *worse* (S grows with N_c). So three is
+favoured; four is a speculative extension carried at an S cost.

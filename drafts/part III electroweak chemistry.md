@@ -125,3 +125,51 @@ In dependency order, building on Part II’s targets 1–3 (the soliton, its rel
 1. **A composite-Higgs signature.** Identify what deviation from elementary-Higgs behaviour the composite reading predicts (modified couplings, a TeV-scale resonance partner) and whether it is consistent with current LHC limits or already excluded. *Success:* a definite, falsifiable prediction the next LHC runs can test.
 
 *The dependency spine across all three Parts now reads: the soliton must exist (Part II, target 1) → its anharmonic spectrum sets the resonance structure → the resonance structure sets S (Part III, target 3) → S decides whether the electroweak picture lives. Everything funnels to the shape of the bounce well. That is where the computation begins, and it is the same well whose existence Part II owes — so a single first calculation, the stable soliton of the Part I potential, is the gate for the entire matter-and-force programme of Parts II and III.*
+-----
+
+## Update — computed results (first numerical pass)
+
+*Added after a session of direct computation (`sims/`). The S verdict moved — twice —
+and the honest net is: more hopeful than the leading-order graveyard, not yet safe.*
+
+**The leading-order S is the graveyard (computed).** The constituent-fermion loop (mass
+*M=gv* from the chiral condensate) gives a positive, UV-finite V−A spectral difference,
+so S>0, with the standard value S = N_c/6π per doublet: ~0.16 (one doublet), ~0.32 (two),
+and — confirming the earlier warning — ~0.21 for Pati–Salam's N_c=4: **extra colour makes
+S worse** (`electroweak_S.py`). Escape needs a ~1.7× walk.
+
+**But the torsion's resonance structure points the other way (the Fierz, GREEN).** S is
+killed or saved by the vector/axial resonance splitting, set by the meson-channel
+couplings G_V, G_A — so the make-or-break is one ratio, G_A/G_V, fixed by the
+interaction's Lorentz structure. Fierzing the Hehl–Datta (axial-axial) term into the
+exchange channels with explicit Dirac matrices — *validated exactly* against the V−A
+self-Fierz identity and Fierz²=identity — gives
+
+> G_S = +1/4, G_P = −1/4, **G_V = G_A = +1/2**, G_T = 0, so **G_A/G_V = 1 exactly**.
+
+The torsion couples the vector and axial channels *equally* — forced, not tuned — which
+is the structural prerequisite for walking (M_a₁→M_ρ, where ρ_V and ρ_A cancel and S→0),
+the *opposite* of a QCD-like sector. (Bonus: G_S>0 drives the chiral condensate the
+soliton forms; G_T=0.) `fierz.py`.
+
+**The RPA confirms the direction (relative, not absolute).** Resumming the bubbles, in the
+walking limit the equal couplings keep S *bounded* while a QCD-like sector blows up:
+S_torsion/S_QCD falls to ~0.36 (`rpa.py`). So two independent calculations agree the
+torsion is on the *right side* of S. The honest limit: this RPA is one-sided (it has the
+vector enhancement that *raises* S but not the full axial/Weinberg catch-up that *lowers*
+it), so the *absolute* S<0.1 is **not** established — that needs the full chiral RPA, which
+is genuinely lattice-scale.
+
+**Net verdict.** Part III is *favourably placed* on its make-or-break — the
+torsion-specific G_A=G_V is exactly the feature generic technicolor lacks — but not proven
+safe. The absolute S<0.1 is owed and undecided. And a striking consistency check fell out:
+the leading-order S would forbid even *one* generation, so walking is *required* by our own
+existence (Part II's generation cap), and the torsion supplies it. So Part III's survival
+and the existence of three generations are the same question, and both turn on whether the
+torsion walks far enough — the one number the full chiral RPA (lattice) still owes.
+
+**Consistency debt update.** The C/P/T-even Hehl–Datta term vs the maximally C/P-violating
+weak interaction (flagged at the top) is *not* resolved by the above; the Fierz/RPA work
+sits in reading (i) — the electroweak bosons as composite resonances that *rhyme* with the
+torsion four-fermion form — and "weak from torsion" in the strong sense remains the open,
+possibly-false conjecture it was flagged as.

@@ -1,46 +1,43 @@
-r"""Effective forces from soliton overlaps: the colour channels and the residual force.
+r"""Effective forces from soliton overlaps: the colour channels, and the confinement gap.
 
-The vision: the particles are soliton wavefunctions; their overlaps are effective
+The vision: particles are soliton wavefunctions; their overlaps are effective
 potentials; the forces are the channels of those overlaps. This module makes that
-concrete for the strong sector.
+concrete -- AND is honest about where the overlap picture stops.
 
-TWO PIECES, with clearly different status.
-
-(1) The COLOUR-CHANNEL structure -- RIGOROUS, and FORCED by the framework. The soliton
-carries the 3-valued antisymmetric label forced by Pauli (the Delta++ argument), i.e.
-the SU(3) fundamental. The two-body colour factor <T1.T2> = (C_R - C_1 - C_2)/2 is then
-fixed by the SU(3) Casimirs -- identical to QCD, not chosen:
+(1) The COLOUR-CHANNEL structure -- RIGOROUS, FORCED by the framework. The soliton
+carries the Pauli-forced 3-valued antisymmetric label = the SU(3) fundamental, so the
+two-body colour factor <T1.T2> = (C_R - C_1 - C_2)/2 is fixed -- identical to QCD:
 
     q-qbar:  singlet 1 -> -4/3 (attractive: MESONS),   octet 8 -> +1/6 (repulsive)
     q-q   :  antitriplet 3bar -> -2/3 (attractive but NOT a singlet: confined diquark),
              sextet 6 -> +1/3 (repulsive)
 
-So free states must be colour SINGLETS: q-qbar (meson, 2-body) or qqq (baryon, 3-body,
-the totally antisymmetric singlet) -- and there is NO free 2-quark state, exactly as
-observed. The channel structure (which combinations bind) is a consequence of the
-forced label.
+Free states must be colour SINGLETS: q-qbar (meson, 2-body) or qqq (baryon, 3-body,
+the totally antisymmetric singlet). No free 2-quark state -- exactly as observed.
 
-(2) The radial SHAPE -- MODELLED. The colour-force potential's shape (Coulomb-like at
-short range, confining linear at long range -- the Cornell form) comes from the
-non-abelian connection dynamics, whose string tension is genuinely lattice-scale and
-NOT computed here. We use a Cornell shape as illustration; only the colour FACTORS
-multiplying it are rigorous.
+(2) The one-gluon-exchange (OGE) potential, V_OGE = <T1.T2> * alpha/r, is short-range:
+it -> 0 as r -> infinity. So is the residual sigma-exchange between singlets (a Yukawa,
+the nuclear-force analogue). **Every overlap/exchange force the soliton picture
+produces SCREENS -- it asymptotes to zero, not to a linear ~r.**
 
-(3) The RESIDUAL force between colour-singlet composites -- the "force from overlaps".
-Two singlets feel a leftover force from the overlap of their fields (the van der Waals
-of the colour force / sigma-exchange between solitons): an attractive Yukawa set by the
-condensate field (mass m_sigma). This is the nuclear-force analogue, computable from
-the soliton's own field, and it is what the overlap picture delivers directly.
+(3) THE CONFINEMENT GAP -- owed, and a genuine risk. Real quarks are CONFINED: the
+quark-quark potential rises linearly, V ~ sigma r, never going to zero (you cannot
+isolate a quark). That linear term is NON-PERTURBATIVE -- a collective flux tube of the
+non-abelian connection, NOT a pairwise exchange/overlap. The overlap method here does
+NOT produce it; it gives screened (-> 0) forces. So `linear_confinement(r)` below is
+shown for CONTRAST as what the framework MUST eventually produce, but it is imposed,
+not derived. Whether the gravity-torsion connection actually forms flux tubes (confines,
+~r) or merely screens (-> 0) is the deepest open question of the strong sector -- if it
+only screens, quarks would not be confined and the picture fails here. It is
+lattice-scale, undecided, and honestly flagged.
 """
 
 from __future__ import annotations
 
 import numpy as np
 
-# SU(3) quadratic Casimirs
 _C2 = {"1": 0.0, "3": 4.0 / 3, "3bar": 4.0 / 3, "8": 3.0, "6": 10.0 / 3, "6bar": 10.0 / 3}
 
-# two-body channels: (combined rep, rep1, rep2, label)
 CHANNELS = {
     "qqbar_singlet": ("1", "3", "3bar", "q-qbar singlet (meson)"),
     "qqbar_octet": ("8", "3", "3bar", "q-qbar octet"),
@@ -50,36 +47,45 @@ CHANNELS = {
 
 
 def color_factor(channel):
-    """<T1.T2> = (C_R - C_1 - C_2)/2 for a two-body colour channel (negative=attractive).
-    Forced by the SU(3) fundamental label -- identical to QCD."""
+    """<T1.T2> = (C_R - C_1 - C_2)/2 (negative = attractive). Forced by the SU(3)
+    fundamental label; identical to QCD."""
     R, r1, r2, _ = CHANNELS[channel]
     return (_C2[R] - _C2[r1] - _C2[r2]) / 2.0
 
 
-def cornell(r, alpha=0.4, sigma=1.0):
-    """Modelled colour-force shape: -alpha/r + sigma r (Coulomb + linear confinement).
-    Only illustrative -- the string tension sigma is lattice-scale, not computed here."""
+def oge_potential(r, channel, alpha=0.4):
+    """One-gluon-exchange (perturbative) potential: V = <T1.T2> * alpha / r.
+    Sign is set by the colour factor: singlet attractive, octet repulsive. It is
+    SHORT-RANGE -- V -> 0 as r -> infinity (a Coulomb-like exchange)."""
     r = np.asarray(r, dtype=float)
-    return -alpha / r + sigma * r
-
-
-def channel_potential(r, channel, alpha=0.4, sigma=1.0):
-    """V_channel(r) = <T1.T2> * Cornell(r): the colour factor (rigorous) times the
-    modelled shape. Attractive (binding) iff the colour factor is negative."""
-    return color_factor(channel) * cornell(r, alpha, sigma)
-
-
-def binds(channel):
-    """Does the channel attract (negative colour factor)?"""
-    return color_factor(channel) < 0
+    return color_factor(channel) * alpha / r
 
 
 def residual_yukawa(r, g=1.0, m_sigma=1.0):
-    """The residual force between two colour SINGLETS from the overlap of their
-    condensate (sigma) fields -- an attractive Yukawa, the nuclear-force analogue.
-    This is the 'force from overlaps' the soliton picture delivers directly."""
+    """Residual force between two colour SINGLETS from the overlap of their condensate
+    (sigma) fields -- an attractive Yukawa, the nuclear-force analogue. SCREENED:
+    V -> 0 as r -> infinity. This is what the overlap picture delivers directly."""
     r = np.asarray(r, dtype=float)
     return -(g**2) * np.exp(-m_sigma * r) / (4 * np.pi * r)
+
+
+def linear_confinement(r, sigma=1.0):
+    """V = sigma r: the linear confining potential real quarks obey (V -> infinity, never
+    zero). Shown for CONTRAST -- it is NON-PERTURBATIVE (a flux tube), NOT produced by
+    any overlap/exchange here, and is imposed, not derived. The open question is whether
+    the gravity-torsion connection actually generates it (confines) or only screens."""
+    r = np.asarray(r, dtype=float)
+    return sigma * r
+
+
+def binds_perturbatively(channel):
+    """Does the channel attract at short range (negative colour factor)?"""
+    return color_factor(channel) < 0
+
+
+def asymptotes_to_zero(channel, alpha=0.4):
+    """Every overlap/exchange force here screens: |V(r)| -> 0 as r grows."""
+    return abs(float(oge_potential(8.0, channel, alpha))) < abs(float(oge_potential(1.0, channel, alpha)))
 
 
 def casimir_fundamental():
