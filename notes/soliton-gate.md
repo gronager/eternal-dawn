@@ -157,3 +157,31 @@ UNDECIDED. Degeneracy/Pauli says only that the direction is favourable. So Part 
 can still die here -- exactly its own stated 'live possibility of being wrong'. The
 honest scorecard after the whole soliton thread: existence YES, Regge YES, generations
 (shape) YES, configurational mass YES (+ the bounce bridge); S still the coin-flip.
+
+## The Fierz probe (cheap decisive test before the RPA) -- GREEN
+
+`fierz.py` + `figures/pdf/fierz.pdf`. The electroweak S of a composite sector is
+killed or saved by the vector/axial resonance splitting M_A/M_V, which is set by the
+four-fermion couplings in the meson (exchange) channels, G_V and G_A. So the
+make-or-break reduces to one ratio, G_A/G_V, fixed by the interaction's Lorentz
+structure.
+
+Fierzed the torsion (Hehl-Datta, axial-axial) term into the exchange channels with
+explicit Dirac matrices, VALIDATED exactly against the V-A self-Fierz identity and
+Fierz^2 = identity:
+
+    G_S = +1/4,  G_P = -1/4,  G_V = +1/2,  G_A = +1/2,  G_T = 0
+    => G_A / G_V = 1  EXACTLY.
+
+The torsion interaction couples the VECTOR and AXIAL meson channels EQUALLY -- forced
+by the axial-axial structure, not tuned. That is the structural prerequisite for
+walking (M_A -> M_V, where rho_V and rho_A cancel and S -> 0), the OPPOSITE of a
+QCD-like sector (G_A != G_V, M_a1 > M_rho, S ~ 0.3, the graveyard). Also G_S = +1/4 > 0
+(attractive: drives the chiral condensate the soliton forms) and G_T = 0.
+
+So the cheap probe is GREEN: the framework has a real, structural shot at escaping the
+S graveyard that generic technicolor lacks. NECESSARY, not sufficient -- the residual
+splitting from the chiral-breaking loops needs the full RPA, which is now clearly
+worth building. This flips the leading-order (constituent-loop) verdict's pessimism:
+the leading S is the graveyard, but the torsion-specific resonance structure points
+hard the other way.
