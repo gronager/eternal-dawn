@@ -405,3 +405,23 @@ M_Pl down to electroweak?); (2) generation spread ~2.8 vs observed ~10^4 -- the 
 self-consistent well; the steep exp suppression needs the real chiral/walking dynamics =
 lattice. Exactly the 1960s Weltformel outcome: turn the crank, get the matrix, structure
 right, numbers off. This is the honest center of the particle program.
+
+## THE SCALE GAP RESOLVED: dimensional transmutation of a propagating spin-gravity coupling
+
+`scale_gap.py` + `figures/pdf/scale_gap.pdf` + `test_scale_gap.py`. The Weltformel matrix
+sat at M_Pl (off ~10^17). Resolution: the gap is NOT a tuning, it is exp(-38.8) -- dimensional
+transmutation. In pure Einstein-Cartan torsion is algebraic (glued to G -> only scale M_Pl);
+the natural extension (Poincare gauge gravity) lets the SPIN CONNECTION PROPAGATE with its
+OWN gauge coupling g_T, independent of Newton's G -- the "second coupling" the user intuited.
+If g_T is asymptotically free, it condenses at Lambda = M_Pl exp(-2pi/(b0 g_T^2)). An ORDINARY
+g_T^2 ~ 0.015-0.16 (alpha_T ~ 0.001-0.013, weaker than SM gauge couplings) gives the observed
+electroweak/Planck ratio -- exactly as Lambda_QCD sits 10^19 below M_Pl from an O(1/30)
+coupling. Running: alpha_T ~ 2% at M_Pl -> ~1 at Lambda. Rescaling the matrix M_Pl->Lambda
+pins top=173 GeV and drops the whole heavy end into the 10-170 GeV ballpark: SCALE GAP CLOSED.
+The residual (electron ~10 GeV vs 0.5 MeV) is now purely the STRUCTURE gap (generation spread
+= substrate-overlap refinement), cleanly separated. The two gaps are now distinct and named:
+scale = transmutation of g_T (resolved in principle); structure = substrate overlaps (next).
+
+TODO (user-flagged): redo generation overlaps against the SUBSTRATE (sharp chiral/walking
+vacuum) not the soliton's own condensate -> should widen spread ~3 toward ~10^4. Approximation,
+not estimate.
