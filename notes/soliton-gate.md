@@ -385,3 +385,23 @@ THE WALL (owed, L4): the ABSOLUTE coupling normalisations -> actual MeV (0.511 e
 inter-tower factors (t/b~41, t/tau~97) are non-perturbative = lattice. No laptop yields the
 electron mass from first principles; that's the open problem. Honest verdict: charges +
 eigenstates fix STRUCTURE/ordering + neutrino with no fit; absolute Yukawas are the residue.
+
+## THE WELTFORMEL COMPUTATION: full spectrum from G, hbar, c alone (user's actual ask)
+
+`ab_initio_spectrum.py` + `figures/pdf/ab_initio_spectrum.pdf` + `test_ab_initio_spectrum.py`.
+The strict Heisenberg-style computation I'd been dodging by smuggling in v=246 GeV. ONE
+nonlinear Dirac (four-fermion Hehl-Datta) soliton, inputs = G, hbar, c ONLY (no Yukawa, no
+v, no f_pi, no fitted well). Because the four-fermion coupling IS gravity (kappa=8piG/c^4),
+the scale is the PLANCK mass M_Pl=1.22e19 GeV. Engine: self_consistent soliton (no fitted
+shape) -> levels + overlaps (no fit); ab_initio_charges -> tower handles (no fit); assemble
+m(T,n)=M_Pl*handle_norm(T)*genfactor(n). Generations assigned by overlap magnitude (heaviest
+= ground state). Bosons W/Z/H from the same soliton's composite scales (f_pi peak, M_V gap).
+
+RESULT: a real ab-initio 3x4 matrix + W,Z,H, all ~10^18-19 GeV. STRUCTURE comes out
+(3 gens x 4 towers; quarks>leptons>neutrino; gen III heaviest; neutrino->0 in singlet limit).
+TWO honest gaps: (1) SCALE = Planck, off by ~7e16 = the gauge hierarchy = the density
+question L5 (does the particle-scale binding density differ from cosmological rho_C, pulling
+M_Pl down to electroweak?); (2) generation spread ~2.8 vs observed ~10^4 -- the simple
+self-consistent well; the steep exp suppression needs the real chiral/walking dynamics =
+lattice. Exactly the 1960s Weltformel outcome: turn the crank, get the matrix, structure
+right, numbers off. This is the honest center of the particle program.
