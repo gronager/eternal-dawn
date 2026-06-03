@@ -323,3 +323,21 @@ suffix, parallel to graviton; graviton being taken, torsiton takes the adjacent 
 torsion-bound matter quantum -- what an electron/quark IS). Genesis chapter retitled
 **Ab Initio Genesis** -- ab initio twice: from first principles (no inserted particle
 content) and from the beginning (the post-membrane origin). ("Dawniton" rejected.)
+
+## Best-effort 12 fermion masses from the overlap ladder (L4, laptop attempt)
+
+`fermion_masses.py` + `figures/pdf/fermion_masses.pdf` + `test_fermion_masses.py`. The
+headline calc, attempted honestly. Fermions = soliton levels; mass = overlap of the level
+with the condensate core (Yukawa-as-overlap). Harmonic well (best-matching the observed
+"big gap at the light end"); ONE shape knob s_T per tower + scale anchored at gen1; the
+heavier two masses are PREDICTIONS.
+
+RESULT: all 9 charged fermions within a factor ~3.4; charged LEPTONS within ~20% (mu x1.22,
+tau x1.06) from one knob. Spans (heaviest/lightest) reproduced within ~3x. The hierarchy
+SHAPE/SPAN is a near-parameter-free output -- electron's tiny Yukawa = exp(-overlap), no
+fine-tuning. Params: 6 (model) vs 9 (SM inserted); ideal 1 (the generated scale) if s_T is
+derived from the condensate coupling (owed). Neutrino lightness: mass linear in coupling ->
+neutral+colourless = weakest grip = lightest tower; needs c_nu/c_charged ~1e-7, the smallest
+handle, NOT a new scale (seesaw gives same structurally). Koide Q(leptons)=0.6667 reported
+as an unmet target (owed). OWED to lattice L4: exact ratios, per-tower size from coupling,
+up/down isospin splitting, Koide. "Roughly right" = the win, exactly as asked.
