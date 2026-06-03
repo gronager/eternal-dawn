@@ -208,3 +208,46 @@ baryons, no free diquark), and it gives the lower S (N_c/6π). Four (Pati–Sala
 the fourth colour) is elegant — it would tie colour to the *B−L* the bounce already
 conserves — but it is *not* forced and it makes S *worse* (S grows with N_c). So three is
 favoured; four is a speculative extension carried at an S cost.
+
+### Confinement update — the substrate supplies the linear term (conditional)
+
+The downgrade above (overlaps screen; confinement ~r is not a pairwise overlap) has a
+candidate resolution, computed. If the gravity–torsion vacuum is a **dual
+superconductor** — its chiral condensate (the same σ the soliton forms) expelling
+colour-electric flux by a dual Meissner effect — then the flux between two colour
+sources is squeezed into a **Nielsen–Olesen flux tube**, a 1-D string whose energy is
+proportional to its length: V(L) = σL, confinement. The vortex ODEs solve
+(`flux_tube.py`); at the BPS point (m_H=m_W) the tension saturates its topological
+bound, σ = 2π v² exactly — the computation's validation. So **a confining flux tube
+exists, with tension σ ∝ v² = f_π²** — the *same* condensate scale that sets the
+(configurational) mass also sets the confinement scale: one substrate, both jobs.
+
+This is **conditional**: it assumes the gravity–torsion vacuum actually is a dual
+superconductor (monopole condensation in the non-abelian connection). Whether it is is
+the genuinely non-perturbative question, and it is a clean, well-posed **lattice** target
+(the Wilson-loop area law / a dual order parameter for the Part I connection; Part IV
+addendum). So confinement is now *possible and scaled*, not assumed — but whether the
+substrate realises it is owed to lattice.
+
+### How the overlap and the tube combine — one substrate, two regimes
+
+It is worth stating how the two contributions to the inter-soliton potential relate,
+because they are not two independent forces added blindly. Both come from the *same*
+gravity–torsion field, as two different responses of it:
+
+- the **overlap** is that field shared *directly* in the two solitons' tails — a genuine
+  two-body wavefunction overlap (one-gluon-exchange and residual σ-exchange), short-range,
+  screening to zero;
+- the **tube** is that field organised by the *substrate vacuum* into a flux string
+  *between* the sources — a collective response of the condensate, not a pairwise overlap,
+  long-range, growing as L.
+
+They dominate in different regimes — the overlap at short range (while the cores
+interpenetrate, before a tube has formed), the tube at long range (after the overlap has
+screened away) — and match smoothly between. So the practical form is the **Cornell
+sum**, V(r) ≈ −κ_overlap/r + σ L, and it is legitimate *precisely because the two regimes
+separate cleanly* (which is why the Cornell potential works so well in QCD). But the right
+picture is one field with two limits — a perturbative (overlap) limit and a
+non-perturbative (substrate/tube) limit — not two forces. The overlap *dresses*; the
+substrate *confines*. The overlap builds the short-distance, "atomic" part of the hadron
+spectrum; the tube builds the long-distance, Regge/string part.

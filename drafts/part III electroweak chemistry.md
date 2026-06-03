@@ -173,3 +173,18 @@ weak interaction (flagged at the top) is *not* resolved by the above; the Fierz/
 sits in reading (i) — the electroweak bosons as composite resonances that *rhyme* with the
 torsion four-fermion form — and "weak from torsion" in the strong sense remains the open,
 possibly-false conjecture it was flagged as.
+
+### Confinement update — the condensate confines, and does double duty
+
+A coda to the strong-sector picture, computed (`flux_tube.py`). The overlap forces
+between colour sources all screen (→0); confinement (V~σr) is not a pairwise overlap but
+a flux tube of the substrate. If the gravity–torsion vacuum is a dual superconductor, its
+condensate expels colour-electric flux into a Nielsen–Olesen string of tension σ ∝ v² =
+f_π² (at the BPS point σ = 2π v² exactly, the validation). So the **same condensate scale
+that confers (configurational) mass also sets the confinement string tension** — one
+substrate, mass and confinement both. This is conditional on the dual-superconductor
+realisation, which is a lattice question (Part IV addendum). It strengthens, but does not
+resolve, Part III: the electroweak resonance scales and the confinement scale now share a
+single origin (the condensate v=f_π), tightening the picture, while the two hard numbers
+— the absolute S and whether the vacuum truly confines — remain the owed, lattice-scale
+make-or-breaks.
