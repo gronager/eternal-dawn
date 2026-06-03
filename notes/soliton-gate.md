@@ -369,3 +369,19 @@ INPUTS, not predictions, and the scale was fit. Fixed two ways:
 Remaining inputs = the inter-tower (heaviest-rung) couplings t/b~41, t/tau~97 -- the genuine
 owed Yukawas (charge ansatz gets the ordering coloured>lepton, up-type heaviest, not the
 factors). `predict_tower(anchor='heaviest')`, `top_from_condensate`, `inter_tower_from_charges`.
+
+## Strict ab initio: charges (no fit) give the tower structure + forced neutrino (user)
+
+`ab_initio_charges.py` + `test_ab_initio_charges.py`. The user's standard: from the well +
+eigenstates + CHARGES alone, no fitting, get the fermion/lepton/neutrino differences. Honest
+split:
+NO-FIT (delivered): condensate "handle" H = alpha_s*C2_colour + alpha_em*Q^2 + alpha_w*T(T+1),
+built from group theory + the (measured, not fitted) gauge couplings. Gives ordering up>down>
+lepton>neutrino with NO per-tower knob; quarks ~85% colour (the reason they top leptons);
+and the CLEAN forced result: a total-singlet (RH) neutrino has H=0 EXACTLY -> massless at
+leading order, light by its charges not by tuning. The generation ladder is also no-fit
+(eigenstates of the self-consistent well).
+THE WALL (owed, L4): the ABSOLUTE coupling normalisations -> actual MeV (0.511 etc.) and the
+inter-tower factors (t/b~41, t/tau~97) are non-perturbative = lattice. No laptop yields the
+electron mass from first principles; that's the open problem. Honest verdict: charges +
+eigenstates fix STRUCTURE/ordering + neutrino with no fit; absolute Yukawas are the residue.
