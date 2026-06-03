@@ -341,3 +341,17 @@ neutral+colourless = weakest grip = lightest tower; needs c_nu/c_charged ~1e-7, 
 handle, NOT a new scale (seesaw gives same structurally). Koide Q(leptons)=0.6667 reported
 as an unmet target (owed). OWED to lattice L4: exact ratios, per-tower size from coupling,
 up/down isospin splitting, Koide. "Roughly right" = the win, exactly as asked.
+
+## W, Z, Higgs masses in the composite/walking reading (Part III)
+
+`electroweak_masses.py` + `figures/pdf/electroweak_masses.pdf` + `test_electroweak_masses.py`.
+No elementary Higgs; EWSB by the gravity-torsion condensate (technicolor-like). CLEAN
+(computable, real prediction): m_W=(1/2)g v, m_Z=(1/2)sqrt(g^2+g'^2)v with v=246 GeV the
+GENERATED condensate scale -> within 0.4% of observed; custodial rho=m_W^2/(m_Z^2 cos^2)=1
+EXACTLY (m_W=m_Z cos theta_W) -- the genuine prediction of a doublet condensate, one fewer
+param, no inserted VEV. HIGGS (owed, L3): composite scalar / bound state, bracketed between
+a walking pseudo-dilaton ~0.5v=123 GeV (light) and a QCD-scaled heavy sigma ~5.4v=1.3 TeV
+(excluded). Observed 125.2 GeV (m_H/v=0.508) sits at the LIGHT/walking edge -> the dilaton
+of the SAME near-conformal walking that pushes S below the LEP bound. So Higgs lightness is
+not a separate tuning; it's the walking the S-parameter already demanded. Exact 125 owed to
+lattice; the lightness explained.
