@@ -95,32 +95,38 @@ The ✅ marks explanatory *scope* — that ED accounts for the item from its own
 
 ### What's been shown, and what's still a bet
 
+*Effort tags below are the work still to do, not the wall-clock to a result: a `[ ]` calc is a focused sprint of code, a `[ ]` bet waits on an instrument. Done items are marked `done`.*
+
 **Simulation & calculation results — already in hand** (every one reproducible from the repo):
 
-- [x] The Einstein–Cartan bounce halts a collapse and re-expands — **no singularity**
-- [x] The extrusion is adiabatic (*D = 1*): the matter excess is **inherited exactly**, not fine-tuned
-- [x] A **scale-invariant primordial spectrum with no inflaton**
-- [x] **Acoustic peaks** matching the Planck multipoles to a few percent
-- [x] The **Hubble tension** closed by the timescape clock-rate (right sign *and* magnitude)
-- [x] The **relic lepton asymmetry** pinned to ~η — no large value left to hide
-- [x] The **Boltzmann-brain count** — the void makes worlds, not minds
-- [ ] CMB **peak heights** from a full bounce Boltzmann run (CAMB/CLASS-class) — *to compute*
-- [ ] Dark-to-baryon ratio *f ≈ 1/6* **derived** from Einstein–Cartan microphysics — *to compute*
+- [x] The Einstein–Cartan bounce halts a collapse and re-expands — **no singularity** · *done*
+- [x] The extrusion is adiabatic (*D = 1*): the matter excess is **inherited exactly**, not fine-tuned · *done*
+- [x] A **scale-invariant primordial spectrum with no inflaton** · *done*
+- [x] **Acoustic peaks** matching the Planck multipoles to a few percent · *done*
+- [x] The **Hubble tension** closed by the timescape clock-rate (right sign *and* magnitude) · *done*
+- [x] The **relic lepton asymmetry** pinned to ~η — no large value left to hide · *done*
+- [x] The **Boltzmann-brain count** — the void makes worlds, not minds · *done*
+- [x] CMB **peak heights** from a full bounce Boltzmann run (CAMB) — matches the **real Planck 2018 binned TT** at *χ²/N ≈ 1.0* (83 band powers), first four peaks to 1–2%, with *ωb* fixed by the inherited *η* and the 3rd peak measuring the parent's *ωc* · *done*
+- [x] Dark-to-baryon ratio *f ≈ 1/6* **narrowed** from Einstein–Cartan microphysics — the membrane is a torsion barrier with pass-fraction *f(x)*, *x=Δ/T*; the bounce balance forces *x ~ O(1)*, giving *f* in the 0.08–0.37 decade (the observed 1/6 at *x≈1.8*). So *f≈1/6* is **natural, not tuned** — converted from a free fit to an O(1) ratio; the precise value still needs the full bounce profile (SymPy-checked) · *done (narrowed)*
+- [x] The **primordial-tensor fork** computed — the bounce ties the tilt to the *scalar* tilt (*nT = ns − 1 ≈ −0.035*), breaking inflation's *nT = −r/8*; the value of *r* stays honestly open (simplest bounce overshoots, cured versions drop below LiteBIRD), so the discriminator is the consistency relation, not the bare *r* · *done*
+- [x] The **birefringence** *EB/TB* fingerprint computed (real CAMB) — ΛCDM forbids it, measured at *β ≈ 0.3°* (~3σ); the *value* of *β* stays owed (set by the relic axial-torsion amplitude), but the distinctive prediction is an **axis-aligned anisotropic *β(n̂)*** locked to the same axis as the axis-of-evil / galaxy spins · *done*
 
 **Observations already pointing its way:**
 
-- [x] Dark energy is **evolving**, as predicted — DESI finds *w₀ > −1, wₐ < 0*
-- [x] **More ultra-large structure** than a smooth start allows (the Giant Arc, the Big Ring, …)
-- [x] Baryon-to-photon ratio **doubly anchored** — the CMB peaks and BBN deuterium agree to ~1%
-- [x] An early-vs-late Hubble gap of just the size the timescape calc targets
+- [x] Dark energy is **evolving**, as predicted — DESI finds *w₀ > −1, wₐ < 0* · *in hand (DESI DR2)*
+- [x] **More ultra-large structure** than a smooth start allows (the Giant Arc, the Big Ring, …) · *in hand*
+- [x] Baryon-to-photon ratio **doubly anchored** — the CMB peaks and BBN deuterium agree to ~1% · *in hand*
+- [x] An early-vs-late Hubble gap of just the size the timescape calc targets · *in hand*
+- [x] A **nonzero cosmic birefringence** hinted at ~3σ — parity-conserving ΛCDM forbids it · *in hand (Planck reanalysis)*
 
 **Awaiting data — the live bets:**
 
-- [ ] A **shared cosmic axis** — galaxy-spin handedness aligned with the CMB "axis of evil" (the cleanest possible confirmation)
-- [ ] **No dark-matter particle** — direct detection (LZ, XENONnT) and the colliders stay empty *(go bet it 😄)*
-- [ ] **Primordial gravitational waves** low or absent (LiteBIRD)
-- [ ] **No primordial lepton asymmetry** in the data (improved BBN+CMB; eventually a direct C𝜈B detection)
-- [ ] Galaxies assembling **earlier** than a smooth start allows (JWST, ongoing)
+- [x] **Shared-axis archival analysis done** on two *independent* real catalogues (GZ1 crowd votes, Iye 2019 expert S/Z winding) — verdict: **systematics-limited**. The methods disagree on the asymmetry (−3.9% vs +1.9%), neither shows a significant sky dipole, and both axes track the Galactic pole (~7°), ~30° from the CMB axis. Neither confirms nor refutes (a low-spin parent predicts a quiet sky too) · *analysis done; decisive data: Euclid / Rubin, ~2026–2030*
+- [ ] An **axis-aligned cosmic birefringence** — the polarization twist sharing the parent's spin axis · *data: CMB-S4 / LiteBIRD, ~2030s*
+- [ ] **No dark-matter particle** — direct detection (LZ, XENONnT) and the colliders stay empty *(go bet it 😄)* · *external; accumulating now*
+- [ ] **Primordial gravitational waves** low or absent (LiteBIRD) · *data: LiteBIRD, ~2030s*
+- [ ] **No primordial lepton asymmetry** in the data (improved BBN+CMB; eventually a direct C𝜈B detection) · *external; tightening now, C𝜈B long-term*
+- [ ] Galaxies assembling **earlier** than a smooth start allows (JWST, ongoing) · *external; ongoing*
 
 And the deepest divergence of all. If ΛCDM's one-off Big Bang were the whole story, the cheapest way to make an observer is a momentary fluctuation with false memories — so a *typical* observer should be a Boltzmann brain, not a real inhabitant of a real world. That leaves only two ways out: a fine-tuner who set the initial state by hand, or a simulation. Eternal Dawn removes the dilemma — the void cannot dream up a brain, only give birth to a world, and the dawn is still going on. No singularity, no fine-tuned start, no new fields: just continuous physics applied carefully.
 
@@ -132,10 +138,11 @@ This is a research program, not an established theory. It synthesizes work by Po
 
 The monograph is written in LaTeX. Start with `chapters/00-overture.tex`
 (the plain-language overture above), then `chapters/01-axioms.tex`; each
-subsequent chapter develops one piece of the framework.
-`chapters/08-observational-tests.tex` lists what would distinguish this framework
-from ΛCDM, and `chapters/09-simulation-plan.tex` lays out a tiered computational
-pathway. `appendices/A-open-questions.tex` catalogs what we don't yet know.
+subsequent chapter develops one piece of the framework. Part II opens the tests:
+`chapters/06-already-see.tex` and `chapters/07-next-decade.tex` list what would
+distinguish this framework from ΛCDM, `chapters/08-simulations.tex` lays out a
+tiered computational pathway, and `chapters/10-scoreboard.tex` tallies it against
+ΛCDM. `appendices/A-open-questions.tex` catalogs what we don't yet know.
 
 The pre-LaTeX markdown drafts are kept in `drafts/` for provenance.
 

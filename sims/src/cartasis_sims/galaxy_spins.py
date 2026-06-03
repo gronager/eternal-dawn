@@ -121,3 +121,25 @@ def analyse(l, b, spin, cmb_axis_lb=(260.0, 60.0)):
         "angle_to_cmb_axis": ang_cmb, "angle_to_galactic_pole": ang_pole,
         "vecs": vecs, "spin": spin,
     }
+
+
+def load_spin_catalogue(path):
+    """Load a galaxy-spin catalogue and return (l, b, spin) in Galactic degrees.
+
+    Accepts two schemas:
+      * GZ1-style   : columns RAJ2000, DEJ2000, pcS, paS (spin = +1 if pcS>paS);
+      * generic     : columns ra_deg, dec_deg, spin (spin in {+1 CW, -1 CCW}).
+    """
+    d = np.genfromtxt(path, delimiter=",", names=True)
+    cols = d.dtype.names
+    if "pcS" in cols and "paS" in cols:
+        ra, dec = d["RAJ2000"], d["DEJ2000"]
+        spin = np.where(d["pcS"] > d["paS"], 1.0, -1.0)
+    elif "spin" in cols:
+        ra = d["ra_deg"] if "ra_deg" in cols else d["RAJ2000"]
+        dec = d["dec_deg"] if "dec_deg" in cols else d["DEJ2000"]
+        spin = d["spin"].astype(float)
+    else:
+        raise ValueError(f"unrecognised spin-catalogue schema: {cols}")
+    lb = np.array([equatorial_to_galactic(r, c) for r, c in zip(ra, dec)])
+    return lb[:, 0], lb[:, 1], spin

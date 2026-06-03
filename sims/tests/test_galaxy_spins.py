@@ -47,3 +47,39 @@ def test_null_pvalue_calibration():
     vecs2, spin2, _ = _injected_catalogue((10.0, 20.0), amplitude=0.25)
     p2 = gs.dipole_null_pvalue(vecs2, spin2, n_perm=500, seed=4)
     assert p2 < 0.05
+
+
+def _data(fname):
+    import os
+    here = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(here, "..", "..", "data", "galaxy_spins", fname)
+
+
+def test_load_both_real_catalogue_schemas():
+    l1, b1, s1 = gs.load_spin_catalogue(_data("gz1_raw_debiased.csv"))
+    l2, b2, s2 = gs.load_spin_catalogue(_data("iye2019.csv"))
+    assert len(s1) > 30000 and set(np.unique(s1)) <= {-1.0, 1.0}      # GZ1 clean
+    assert 450 < len(s2) < 600 and set(np.unique(s2)) <= {-1.0, 1.0}  # Iye 530
+    assert np.all(np.abs(b1) <= 90.0) and np.all(np.abs(b2) <= 90.0)
+
+
+def test_independent_methods_disagree_on_asymmetry():
+    # GZ1 (crowd) shows a highly SIGNIFICANT CW excess (perception bias amplified by
+    # its huge N); Iye (expert) is consistent with isotropy. The contrast is the
+    # significance, not the raw fraction.
+    from scipy.stats import binomtest
+    _, _, s_gz1 = gs.load_spin_catalogue(_data("gz1_raw_debiased.csv"))
+    _, _, s_iye = gs.load_spin_catalogue(_data("iye2019.csv"))
+    p_gz1 = binomtest(int((s_gz1 > 0).sum()), len(s_gz1), 0.5).pvalue
+    p_iye = binomtest(int((s_iye > 0).sum()), len(s_iye), 0.5).pvalue
+    assert p_gz1 < 1e-6      # GZ1: a 'significant' asymmetry...
+    assert p_iye > 0.05      # ...that the independent method does not reproduce
+
+
+def test_both_axes_track_the_galactic_pole_not_cmb():
+    # the honest systematic signature: best-fit axes sit near |b|~90, not the CMB axis
+    for fname in ("gz1_raw_debiased.csv", "iye2019.csv"):
+        l, b, spin = gs.load_spin_catalogue(_data(fname))
+        vecs = np.array([gs.lb_to_vec(li, bi) for li, bi in zip(l, b)])
+        fit = gs.fit_dipole(vecs, spin)
+        assert abs(fit["b"]) > 70.0                # within ~20 deg of the Galactic pole

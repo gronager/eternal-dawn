@@ -22,9 +22,14 @@ one spectrum on one core -- no special hardware), so this is a cheap, decisive c
 This module wraps CAMB if installed (pip install camb / uv pip install camb); all
 functions raise a clear message if it is absent, and the test suite skips them so the
 core remains dependency-light.
+
+(Internally the Eternal Dawn parameter set is still spelled ``SCT_PARAMS`` for
+backward compatibility; ``ED_PARAMS`` is the preferred alias.)
 """
 
 from __future__ import annotations
+
+import os
 
 import numpy as np
 
@@ -45,6 +50,8 @@ SCT_PARAMS = dict(
     tau=0.0544,        # reionisation optical depth
     mnu=0.06,          # neutrino mass sum [eV]
 )
+# Preferred alias (the book is "Eternal Dawn"; SCT_PARAMS kept for back-compat).
+ED_PARAMS = SCT_PARAMS
 
 
 def _require_camb():
@@ -71,6 +78,24 @@ def cmb_tt_spectrum(lmax: int = 2500, **overrides):
     return ell, cl[:, 0]
 
 
+def cmb_polarization_spectra(lmax: int = 2500, **overrides):
+    """Lensed CMB power spectra D_l = l(l+1)C_l/2pi [microK^2] through CAMB.
+    Returns (ell, TT, EE, BB, TE) -- the four non-vanishing spectra of a
+    parity-conserving sky. The parity-odd EB and TB are exactly zero here; cosmic
+    birefringence (birefringence.py) generates them by rotating E into B."""
+    _require_camb()
+    p = dict(SCT_PARAMS)
+    p.update(overrides)
+    pars = _camb.set_params(H0=p["H0"], ombh2=p["ombh2"], omch2=p["omch2"],
+                            mnu=p["mnu"], omk=0.0, tau=p["tau"],
+                            As=p["As"], ns=p["ns"], lmax=lmax)
+    results = _camb.get_results(pars)
+    cl = results.get_cmb_power_spectra(pars, CMB_unit="muK",
+                                       raw_cl=False)["total"]
+    ell = np.arange(cl.shape[0])
+    return ell, cl[:, 0], cl[:, 1], cl[:, 2], cl[:, 3]
+
+
 def peak_table(lmax: int = 2200, **overrides):
     """Locate the first five acoustic peaks: list of (ell, D_l) from the CAMB spectrum."""
     ell, TT = cmb_tt_spectrum(lmax, **overrides)
@@ -88,3 +113,49 @@ def baryon_density_from_eta(eta: float = 6.1e-10) -> float:
     omega_b = eta * (n_gamma today) * m_b / (rho_crit/h^2). Numerically omega_b ~
     eta / 2.74e-8 (standard conversion), so eta~6.1e-10 -> omega_b ~ 0.0223."""
     return eta / 2.74e-8
+
+
+# ---- comparison with the REAL Planck 2018 binned TT spectrum ---------------
+def _default_planck_path() -> str:
+    here = os.path.dirname(os.path.abspath(__file__))
+    root = os.path.abspath(os.path.join(here, "..", "..", ".."))
+    return os.path.join(root, "data", "planck",
+                        "COM_PowerSpect_CMB-TT-binned_R3.01.txt")
+
+
+def planck_binned_tt(path: str | None = None):
+    """Load the Planck 2018 binned TT band powers (the real measured spectrum).
+
+    Returns (ell, Dl, sigma, bestfit): bin centres, D_l = l(l+1)C_l/2pi [microK^2],
+    a symmetrised 1-sigma error, and the Planck base-LCDM best fit. Columns of the
+    PLA file are: ell, Dl, -dDl, +dDl, BestFit."""
+    path = path or _default_planck_path()
+    d = np.loadtxt(path)
+    ell, Dl, dlo, dhi, best = d[:, 0], d[:, 1], d[:, 2], d[:, 3], d[:, 4]
+    sigma = 0.5 * (np.abs(dlo) + np.abs(dhi))
+    return ell, Dl, sigma, best
+
+
+def chi2_vs_planck(path: str | None = None, lmax: int = 2600, **overrides):
+    """Chi-square of the Eternal Dawn full-Boltzmann (CAMB) TT prediction against the
+    real Planck binned band powers. Parameters are ED-sourced (n_s from the bounce,
+    omega_b from eta, omega_c from the parent), not re-fit, so this is a consistency
+    test. Returns (chi2, ndata). The band-power errors are treated as independent
+    (illustrative goodness, not the full Planck likelihood with its correlations)."""
+    ell, Dl, sigma, _ = planck_binned_tt(path)
+    em, TT = cmb_tt_spectrum(lmax=lmax, **overrides)
+    model = np.interp(ell, em, TT)
+    chi2 = float(np.sum(((Dl - model) / sigma) ** 2))
+    return chi2, int(ell.size)
+
+
+def peak_height_ratios(lmax: int = 2200, **overrides):
+    """The two falsifiable peak-HEIGHT diagnostics, from the CAMB spectrum:
+      r12 = D(peak1)/D(peak2)  -- the odd/even (compression/rarefaction) ratio, set
+            by the baryon density omega_b;
+      r13 = D(peak1)/D(peak3)  -- set by the dark-matter density omega_c through
+            radiation driving (more omega_c lifts the 3rd peak, lowering r13).
+    Returns dict(r12=, r13=)."""
+    pe = peak_table(lmax=lmax, **overrides)
+    d1, d2, d3 = pe[0][1], pe[1][1], pe[2][1]
+    return dict(r12=d1 / d2, r13=d1 / d3)

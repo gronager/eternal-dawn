@@ -15,7 +15,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=7"]
+dev = ["pytest>=7", "sympy>=1.12"]
 camb = ["camb>=1.5"]
 
 [tool.setuptools.packages.find]

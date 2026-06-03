@@ -14,16 +14,92 @@ strongly embarrass it.
 If the background is the parent's Hawking glow (Chapter~\ref{chap:home}), its
 spectrum should be a perfect Planck curve---which it is, to one part in
 $10^{5}$---and its departures from perfection should carry the parent's
-fingerprints. Three are worth looking for: faint spectral features from the
-membrane geometry; a correlation between the background temperature and the
+fingerprints. Three are worth looking for: faint spectral distortions ($\mu$- and
+$y$-type) from the membrane geometry and from the glow's non-recombination origin,
+a target for spectrometers of the PIXIE class~\citep{chluba2012}; a correlation
+between the background temperature and the
 dark-matter distribution (both being projections of the same parent through the
 same surface); and specific large-angle polarization patterns from a rotating
 parent, aligned with the preferred axis of Chapter~\ref{chap:nowobs}. CMB-S4 and
 LiteBIRD will tighten the spectrum and polarization by orders of magnitude. The
-harder, prior task is internal: re-deriving the acoustic-peak structure from the
-bounce rather than from recombination, which standard cosmology fits superbly and
-which the framework still owes---the central calculational challenge of
-Chapter~\ref{chap:sims}.
+acoustic-peak structure itself is not at issue: the framework runs the same
+post-bounce recombination as $\Lambda$CDM, and fed its own sourced parameters that
+shared transfer already reproduces the Planck peak \emph{heights} at $\chi^2/N\simeq1$
+(Chapter~\ref{chap:sims}). What these finer measurements add is the search for the
+parent's residual fingerprints on top of that standard spectrum.
+
+\section{A twist in the polarization: cosmic birefringence}
+\label{sec:birefringence}
+
+The framework carries two ingredients standard cosmology lacks, and together they
+point at a single, now-measurable signal. The first is a genuine parity violation:
+the matter-versus-antimatter choice and the arrow are co-sourced at the bounce
+(Chapter~\ref{chap:dawn}), and our lineage is chirally pure, so the sky is not
+parity-symmetric the way $\Lambda$CDM assumes. The second is one inherited
+preferred direction, the parent's spin axis (\Cref{sec:axis}). A parity-odd
+physics with a preferred axis is exactly what rotates the plane of linear
+polarization as light crosses the cosmos---\emph{cosmic birefringence}, a slow
+turning of the $E$- and $B$-mode pattern of the microwave background by an angle
+$\beta$. Einstein--Cartan even supplies the concrete agent: the totally
+antisymmetric part of torsion is a pseudoscalar axial vector that couples to the
+photon like a Chern--Simons term, so where other models must \emph{add} an
+axion by hand, a relic axial-torsion background is already present. Parity-conserving
+$\Lambda$CDM predicts $\beta=0$ identically; the framework predicts $\beta\neq0$.
+
+The rotation is not abstract: it mixes the parity-even and parity-odd polarization,
+turning the (otherwise vanishing) $EB$ and $TB$ cross-spectra on,
+\begin{equation}
+  C_\ell^{EB}=\tfrac12\sin(4\beta)\,C_\ell^{EE},\qquad
+  C_\ell^{TB}=\sin(2\beta)\,C_\ell^{TE},
+  \label{eq:birefringence-eb}
+\end{equation}
+and because $EE$ and $TE$ are large, even $\beta\sim0.3^\circ$ leaves a measurable
+sub-microkelvin signal (\Cref{fig:birefringence}, left, from the real transfer
+functions). A nonzero $EB$ \emph{is} the birefringence; $\Lambda$CDM has it at zero.
+
+There is already a hint, and it has firmed up. Successive analyses of the
+\emph{Planck} polarization---calibrated against the Galactic foreground to break the
+detector-angle degeneracy---report $\beta\simeq0.3^\circ$: $0.35^\circ\pm0.14^\circ$
+from PR3~\citep{minami2020}, $0.30^\circ\pm0.11^\circ$ from
+PR4~\citep{diegopalazuelos2022}, and $0.34^\circ\pm0.09^\circ$ combining Planck with
+WMAP, a $3.6\sigma$ exclusion of zero~\citep{eskilt2022} (\Cref{fig:birefringence},
+middle). These share data, so the joint significance is nearer $3\sigma$ than the
+naive combination---small, not yet decisive, but nonzero in exactly the sense a
+parity-violating cosmology expects. What would make the signal \emph{ours} rather
+than generic is its geometry: most birefringence models invoke a spatially uniform
+pseudoscalar field and so predict an \emph{isotropic} rotation, whereas a single
+inherited spin axis predicts a rotation with an \emph{anisotropic} part aligned with
+the same direction as the ``axis of evil'' and the galaxy-spin handedness of
+Chapter~\ref{chap:nowobs} (\Cref{fig:birefringence}, right). The test therefore has
+two rungs: (i)~confirm $\beta\neq0$, and (ii)~check whether its anisotropy shares the
+axis of the other parity anomalies---a second, independent appearance of the one
+direction the whole of \S\ref{sec:axis} turns on.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{birefringence}
+  \caption{Cosmic birefringence as an Eternal Dawn signature. \emph{Left:} the
+    parity-odd $EB$ and $TB$ spectra a rotation $\beta$ produces, computed from the
+    real \textsc{camb} $EE$/$TE$ transfer via \eqref{eq:birefringence-eb};
+    $\Lambda$CDM predicts them identically zero (dashed). \emph{Middle:} the measured
+    isotropic $\beta\simeq0.3^\circ$ (Planck, Planck$+$WMAP) against the $\Lambda$CDM
+    zero it excludes. \emph{Right:} the distinctive, uniquely-ED component---an
+    \emph{anisotropic} $\beta(\hat n)$ locked to the inherited spin axis, predicted
+    to coincide with the axis of evil / galaxy-spin axis (shown as a shape; the
+    amplitude is not derived). Reproducible as
+    \texttt{figures/scripts/ch07\_birefringence.py}.}
+  \label{fig:birefringence}
+\end{figure}
+
+\paragraph{The test.} A confirmed nonzero $\beta$ is a weak-to-moderate
+confirmation; a nonzero $\beta$ whose anisotropy \emph{aligns with the shared
+axis} would be strong, tying the polarization twist to the same parent spin that
+the CMB and galaxy-spin anomalies trace. A $\beta$ driven to \emph{exactly} zero at
+high precision sits awkwardly with a parity-violating bounce, though---as with the
+tensor ratio---turning ``nonzero, axis-aligned'' into a predicted \emph{magnitude}
+is a computation the framework still owes (Chapter~\ref{chap:sims}); the
+\emph{direction} of the discriminator is what is set here. CMB-S4 and LiteBIRD will
+measure $\beta$, and its sky pattern, to well below the current uncertainty.
 
 \section{The neutrino sector's unmatched number}
 \label{sec:lepton-asymmetry}
@@ -59,15 +135,51 @@ with no antineutrino-like excess from a $CPT$ mirror. Reproducible as
 \texttt{sims/src/cartasis\_sims/lepton\_asymmetry.py}.
 
 \section{Primordial gravitational waves}
+\label{sec:tensor-r}
 
-Inflation predicts a tensor-to-scalar ratio $r$ in a fairly definite range; a
-torsion bounce, with its different early-expansion history
-(Chapter~\ref{chap:bounce}), predicts a different and typically \emph{smaller}
-$r$. This is a clean fork. LiteBIRD will constrain $r$ to the $\sim\!10^{-3}$
-level: a detection at the higher values favours inflation, while a value pushed
-low or absent favours the bounce. Turning ``typically smaller'' into a definite
-predicted band is a computation the framework owes (Chapter~\ref{chap:sims}), but
-the \emph{direction} of the discriminator is already set.
+Inflation and the bounce both leave a primordial gravitational-wave background, but
+they organise the two observables---the tensor-to-scalar ratio $r$ and the tensor
+tilt $n_T$---by \emph{different} rules, and that is the fork (\Cref{fig:tensorr}).
+Slow-roll inflation ties the two together through its consistency relation
+$n_T=-r/8$: a detectable $r$ comes with a tiny, red tilt, and the favoured plateau
+models (Starobinsky, Higgs) sit at $r\simeq0.004$ with $n_T\simeq-5\times10^{-4}$,
+right at LiteBIRD's reach, while large-field $m^2\phi^2$ ($r\simeq0.14$) is already
+excluded by the bound $r<0.036$. The matter bounce ties the tensor tilt instead to
+the \emph{scalar} tilt: both spectra are set by the same modes leaving the horizon
+during contraction, so their tilts coincide,
+\begin{equation}
+  n_T \;=\; n_s-1 \;\simeq\; -0.035,
+  \label{eq:bounce-consistency}
+\end{equation}
+about seventy times more tilt than a plateau inflation model at the same $r$, and
+\emph{decoupled} from $r$ entirely. On $r$'s magnitude the framework is honestly not
+yet sharp: the simplest single-field matter bounce \emph{over}-produces tensors
+($r\gtrsim1$, excluded), and a realistic realisation must cure that by enhancing the
+scalar power---a sub-unity scalar sound speed, or a second field---which generically
+drives $r$ below LiteBIRD's reach. So the discriminator is not the bare value of $r$
+but \emph{which consistency relation the sky obeys}: a plateau-level detection lying
+on $n_T=-r/8$ favours inflation; a null at $r\lesssim10^{-3}$, or a measured tilt
+near $n_s-1$ far off the inflationary line, favours the bounce. The robust,
+parameter-free predictions---$n_s\simeq0.965$ from a contraction just softer than
+matter, and the equal-tilt relation~\eqref{eq:bounce-consistency}---are computed in
+\Cref{chap:sims}; LiteBIRD will decide between the two rules within the decade.
+Reproducible as \texttt{figures/scripts/ch07\_tensor\_r.py}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{tensor_r}
+  \caption{Primordial gravitational waves as the inflation-versus-bounce fork.
+    \emph{Left:} the $(n_s,r)$ landscape---the Planck $n_s$ band, the current bound
+    $r<0.036$, LiteBIRD's forecast reach $\sigma_r\sim10^{-3}$, and the inflation
+    menu (plateau models within reach; $m^2\phi^2$ excluded). The bounce sits at
+    $n_s\simeq0.965$ with $r$ \emph{not} fixed by a consistency relation---the
+    simplest version is excluded at $r\gtrsim1$ and a cured one drops low.
+    \emph{Right:} the tilt fork that does not need $r$'s uncertain magnitude---
+    inflation puts $n_T=-r/8\approx0$, the bounce puts $n_T=n_s-1\simeq-0.035$, a
+    $\sim$70$\times$ gap at the observed $n_s$. Reproducible as
+    \texttt{figures/scripts/ch07\_tensor\_r.py}.}
+  \label{fig:tensorr}
+\end{figure}
 
 \section{The dark-matter null}
 
@@ -93,9 +205,11 @@ pointed: excess large-scale power, correlated with the dark background rather th
 the luminous one, on scales above our own homogeneity scale.
 
 \medskip
-\noindent Of these, the cleanest single forks are the tensor ratio $r$ (a bounce
-runs low where inflation can run high) and the lepton asymmetry (the framework
-forbids the large value the data still allow). The dark-matter null and the
+\noindent Of these, the cleanest single forks are the primordial tensors (the
+bounce ties the tilt to $n_s-1$, not to $r$, breaking inflation's consistency
+relation), the lepton asymmetry (the framework
+forbids the large value the data still allow), and an axis-aligned cosmic
+birefringence (parity-conserving $\Lambda$CDM forbids any). The dark-matter null and the
 large-scale-structure patterns accumulate weight more slowly but in one
 direction. Each is logged, with its current status and the calculation it still
 needs, in the scoreboard of Chapter~\ref{chap:scoreboard}.
