@@ -97,3 +97,18 @@ the exact ratios (leptons 207 then 17 -- a *decreasing* ratio, i.e. mild curvatu
 log), which needs the detailed level/overlap structure. The flavour problem is not
 solved, but it is reframed: "why tiny Yukawas" becomes "internal levels are evenly
 spaced," which is what ladders do.
+
+## The self-consistent soliton (the iteration) -- target #1 demonstrated
+
+`self_consistent.py` + `figures/pdf/self_consistent.pdf`. The Hartree loop (fill
+levels with Pauli -> density sources the four-fermion sigma field -> that field is
+the well -> iterate) CONVERGES (residual ~1e-6 in ~40 iterations) to a genuine
+self-bound soliton: bound levels (E < m0), a chiral-restored core (M(0) flips sign),
+a finite mass. So Part II target #1 -- the existence the first pass had to ASSUME --
+is now demonstrated, not assumed. The gate is open.
+
+S did NOT move to a reliable number: this non-chiral (massive-sigma, Walecka-type)
+model gives the soliton but not the symmetry-breaking f_pi and the composite V/A
+current correlators that a trustworthy S needs. So: existence moved a lot (the big
+one, everything funnels through it); S is still the owed make-or-break, with the
+degeneracy result saying only that the *direction* is favourable.
