@@ -74,3 +74,26 @@ degeneracy KE to the self-bound drop (e(n) = e_kin - a n + b n^2):
 It does NOT deliver S < 0.1 by itself (that needs the full self-consistent, colored,
 composite V/A spectrum), but it confirms the intuition: Pauli is in the column that
 helps. Figure: `figures/pdf/degeneracy.pdf`.
+
+## Generations: arithmetic ladder -> geometric hierarchy (overlap mechanism)
+
+`generations.py` + `figures/pdf/generations.pdf`. If generations are internal
+excitation levels of the same soliton (same charge/colour/isospin, different rung),
+the level energies are ~arithmetic but the observable mass is a wavefunction OVERLAP
+with the localized condensate -- and overlaps are exponentially sensitive to the
+level. Computed from the real soliton wavefunctions: the core overlap O_n falls
+exponentially with n, so mass ~ |O_n|^2 is geometric (ln(mass) linear in n).
+
+- The real SM charged-fermion masses ARE approximately geometric: ln-mass gaps equal
+  to within a factor ~1.3-1.9 for leptons, up-, and down-type. Exactly the structure
+  this produces.
+- The per-generation factor is tunable by the source size (0.15->1.2x, 0.25->2.2x,
+  0.4->18x), reaching the lepton ballpark.
+- So the SM's "unnaturally tiny" electron Yukawa (~3e-6) is exp(-O(10)) -- the
+  exponential of an order-one overlap, not a fine-tuned small number.
+
+Delivered: the SHAPE (geometric, orders of magnitude from O(1) inputs). NOT delivered:
+the exact ratios (leptons 207 then 17 -- a *decreasing* ratio, i.e. mild curvature in
+log), which needs the detailed level/overlap structure. The flavour problem is not
+solved, but it is reframed: "why tiny Yukawas" becomes "internal levels are evenly
+spaced," which is what ladders do.
