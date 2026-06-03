@@ -135,3 +135,25 @@ because M_V ~ the fermion gap is the WRONG scale. A reliable S needs the composi
 vector/axial CURRENT correlators (a further step). So the chiral model cracked the
 MASS question, not S. S remains the owed make-or-break; the only directional info is
 that degeneracy/walking pushes it favourably.
+
+## The S computation (leading order) -- the make-or-break, honestly
+
+`electroweak_S.py` + `figures/pdf/electroweak_S.pdf`. The constituent-fermion loop
+(mass M=gv from the chiral condensate): the V-A spectral difference is positive and
+UV-finite (rho_V - rho_A ~ M^2/s), so S > 0. The leading value is the standard
+S = N_c/(6pi) per doublet:
+
+- QCD-like (N_c=3, 1 doublet): S = 0.16   (> LEP bound 0.1: graveyard)
+- 2 doublets:                  S = 0.32
+- Pati-Salam (N_c=4):          S = 0.21   -- extra colour makes it WORSE, as warned.
+
+Escape (S < 0.1) needs M_V/f_pi > ~14 vs QCD's ~8: a ~1.7x 'walk'. That reduction is
+the SUBLEADING resonance/meson-loop (walking) correction -- the V and A composites
+rearranging so their spectral functions cancel -- which needs the RPA correlators
+this calculation does not contain (a lattice-scale problem).
+
+VERDICT: leading-order S from the model is in the graveyard; the escape is genuinely
+UNDECIDED. Degeneracy/Pauli says only that the direction is favourable. So Part III
+can still die here -- exactly its own stated 'live possibility of being wrong'. The
+honest scorecard after the whole soliton thread: existence YES, Regge YES, generations
+(shape) YES, configurational mass YES (+ the bounce bridge); S still the coin-flip.
