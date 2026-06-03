@@ -228,3 +228,23 @@ CONCLUSION: the framework predicts a FINITE number of generations and REQUIRES w
 to allow our three; three is squarely in the plausible window; the exact count is owed
 and exponentially sensitive -- claiming the framework predicts exactly 3 would be
 dishonest, but predicting "finite, and ~3 is natural" is fair.
+
+## Forces from overlaps: colour channels (rigorous) + residual nuclear force
+
+`color_force.py` + `figures/pdf/color_force.pdf`. The soliton's Pauli-forced 3-valued
+label IS the SU(3) fundamental, so the two-body colour factor <T1.T2> = (C_R-C1-C2)/2
+is fixed -- identical to QCD (Gell-Mann-validated, C_F=4/3):
+  q-qbar singlet -4/3 (ATTRACT -> meson), octet +1/6 (repel);
+  q-q antitriplet -2/3 (attract but NOT singlet -> confined diquark), sextet +1/3.
+=> free states are colour SINGLETS only: q-qbar (2-body meson) or qqq (3-body baryon,
+the totally antisymmetric singlet); NO free 2-quark state -- exactly as observed. So
+the colour-channel structure (which combinations bind, why confinement) is a
+CONSEQUENCE of the forced label, not assumed.
+
+2-body vs 3-body: the FORCE is read off the 2-body colour channels (no 3-body needed);
+a stable free hadron needs a singlet -> q-qbar (meson, decays) or qqq (baryon, stable).
+
+Status: colour factors RIGOROUS (forced). Radial shape (Cornell) MODELLED -- the string
+tension is lattice-scale, not computed. The residual singlet-singlet force is the
+overlap-derived nuclear-force analogue (sigma-exchange Yukawa, attractive short-range)
+-- the 'force from overlaps' the picture delivers directly.
