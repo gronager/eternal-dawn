@@ -68,6 +68,35 @@ targets of the simulation program (Chapter~\ref{chap:sims}).
   \label{fig:bounce}
 \end{figure}
 
+\paragraph{The shape of the turnaround.} It helps to see the bounce as a particle
+rolling in a potential. Writing the effective Friedmann equation
+$H^2=a^{-n}(1-a^{-n})$ (dimensionless, with $\rhoc$ and $a_{\min}$ set to one and
+$n=3(1+w)$) as a zero-energy mechanics problem $\dot a^2+V(a)=0$ gives
+\begin{equation}
+  V(a)=a^{2-2n}-a^{2-n},
+  \label{eq:bounce-potential}
+\end{equation}
+a \emph{single repulsive wall} (\Cref{fig:bouncepot}). The positive term
+$a^{2-2n}$ is the torsion contribution---the $-\rho^2/\rhoc$ spin term---and it
+walls off small $a$; the negative term $-a^{2-n}$ is the ordinary matter pull. They
+cross at $a_{\min}$, where the contracting universe turns around ($V=0$, slope
+$-n$). There is no second minimum and nothing tuned: the only things that fix the
+shape are the equation of state $w$ (through $n$) and the density scale $\rhoc$. The
+microphysics that fixes \emph{that} scale---the strong four-fermion coupling at the
+wall---is where the framework's deepest open question lives (Appendix~\ref{app:openq}).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.82\textwidth]{bounce_potential}
+  \caption{The bounce as a single repulsive wall, \eqref{eq:bounce-potential}. The
+    torsion term $a^{2-2n}$ (dotted) forbids small $a$; the matter pull $-a^{2-n}$
+    (dashed) dominates at large $a$; they meet at $a_{\min}$ ($V=0$), the turnaround.
+    The classically forbidden region is $V>0$ ($a<a_{\min}$); the expanding universe
+    lives in $V<0$. The only knobs are $w$ and $\rhoc$. Reproducible as
+    \texttt{figures/scripts/ch02\_bounce\_potential.py}.}
+  \label{fig:bouncepot}
+\end{figure}
+
 \paragraph{A name, and a pun.} This is the one place the book indulges its title
 for the mechanism. The density at which Cartan's torsion forces the turnaround is
 where everything is dissolved and then extruded clean---a kind of \emph{katharsis}.

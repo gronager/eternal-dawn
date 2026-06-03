@@ -41,3 +41,20 @@ def test_gr_collapse_hits_zero():
 def test_physical_timescale_is_femtoscale():
     tau = bnc.physical_timescale(1.0e50)
     assert 1e-22 < tau < 1e-19   # ~10^-21 s for rho_C ~ 1e50 kg/m^3
+
+
+def test_effective_potential_is_a_single_wall():
+    import numpy as np
+    from cartasis_sims import bounce as bn
+    # V(1) = 0 (the turning point / bounce), for any w
+    for w in (0.0, 1.0 / 3.0, 1.0):
+        assert abs(float(bn.effective_potential(1.0, w))) < 1e-12
+    # forbidden (V>0) for a<1, allowed (V<0) for a>1 -- a single wall
+    a = np.linspace(0.5, 3.0, 200)
+    V = bn.effective_potential(a, w=1.0 / 3.0)
+    assert np.all(V[a < 0.999] > 0)
+    assert np.all(V[a > 1.001] < 0)
+    # slope at the bounce is -n = -3(1+w) (wall on the small-a side)
+    da = 1e-6
+    slope = (bn.effective_potential(1 + da, 0.0) - bn.effective_potential(1 - da, 0.0)) / (2 * da)
+    assert abs(float(slope) - (-3.0)) < 1e-3

@@ -45,3 +45,17 @@ handedness consistent with isotropy on large scales), versus GZ1's large,
 crowd-sourced, northern SDSS sample with its perception bias. Comparing the two
 exposes how method and footprint, not the cosmos, drive the inferred spin axis.
 Used by `figures/scripts/ch06_spin_datasets.py`.
+
+### A note on Shamir's algorithmic catalogues (we looked, could not retrieve)
+
+A third, *algorithmic* determination (Shamir's Ganalyzer-based spin catalogues for
+SDSS / Pan-STARRS / DESI Legacy) would add a method independent of both the GZ1
+crowd and the Iye experts, and we tried to include one. It was not retrievable here:
+VizieR's TAP service has no galaxy-handedness tables (only position-angle columns),
+and `people.cs.ksu.edu/~lshamir/` links *papers* (arXiv) from its project page
+rather than machine-readable data files (the `/data/` directory has listing
+disabled). The earlier `404`s were our own guessed paths, not a bot block — the host
+returns `200`. So the independent cross-check rests on GZ1 (crowd) vs Iye (expert),
+which is already enough to expose the method-dependent systematic. A Shamir DESI
+Legacy table, or a Euclid / Rubin spin catalogue, dropped in under the
+`ra_deg, dec_deg, spin` schema would run through the same pipeline unchanged.

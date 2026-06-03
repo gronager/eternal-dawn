@@ -102,6 +102,26 @@ def physical_timescale(rho_C: float = 1.0e50) -> float:
     return 1.0 / math.sqrt(8.0 * math.pi * k.G * rho_C / 3.0)
 
 
+def effective_potential(a, w: float = 1.0 / 3.0):
+    r"""The bounce as a zero-energy 1-D mechanics problem: a'^2 + V(a) = 0.
+
+    From H^2 = a^{-n}(1 - a^{-n}) (dimensionless, rho_C = a_min = 1) one has
+    a'^2 = a^2 H^2 = a^{2-n} - a^{2-2n}, so the effective potential is
+
+        V(a) = a^{2-2n} - a^{2-n},     n = 3(1+w).
+
+    The first (positive) term is the TORSION wall (it came from the -rho^2/rho_C
+    spin term, exponent 2-2n); the second is the attractive MATTER term (exponent
+    2-n). They cross at a = 1: V(1) = 0 with V'(1) = -n < 0 -- a single repulsive
+    turning-wall rising on the small-a side, not a multi-well potential. V > 0
+    (classically forbidden) for a < 1, V < 0 (allowed, a'^2 > 0) for a > 1. What
+    sets the shape is just the equation of state w (through n) and the scale rho_C
+    (fixing a_min)."""
+    a = np.asarray(a, dtype=float)
+    n = _n(w)
+    return a**(2.0 - 2.0 * n) - a**(2.0 - n)
+
+
 def bounce_fwhm(sol: BounceSolution) -> float:
     """Proper-time full width of the density peak at half its maximum.
 
