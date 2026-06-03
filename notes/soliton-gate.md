@@ -185,3 +185,25 @@ splitting from the chiral-breaking loops needs the full RPA, which is now clearl
 worth building. This flips the leading-order (constituent-loop) verdict's pessimism:
 the leading S is the graveyard, but the torsion-specific resonance structure points
 hard the other way.
+
+## The RPA (torsion vs QCD-like) -- relative advantage confirmed, absolute owed
+
+`rpa.py` + `figures/pdf/rpa.pdf`. RPA-dressed S = (Nc/6pi) x [resonance enhancement of
+the V-A correlator], anchored to the leading value at G=0; walking = large Lambda/M
+(small chiral breaking, where Pi_A -> Pi_V).
+
+Result: in the walking limit the loops equalise and the torsion's EQUAL couplings
+(G_A=G_V, from the Fierz) keep S bounded while a QCD-like sector (G_A < G_V) blows up
+-- S_torsion/S_QCD falls from ~1 (strong breaking) to ~0.36 (deep walking). So the
+Fierz direction is confirmed by an independent calculation: the torsion structure is
+on the right side of S, increasingly so as it walks.
+
+HONEST LIMIT: this RPA is ONE-SIDED -- it has the vector-resonance enhancement (which
+RAISES S, the technicolor problem) but not the full axial/Weinberg-sum-rule catch-up
+(which LOWERS S). So the ABSOLUTE values are overestimates and never drop below the
+leading ~0.16. It establishes the RELATIVE advantage (torsion << QCD-like), NOT the
+absolute escape S<0.1. A trustworthy absolute S needs the full chiral RPA (proper sum
+rules, the a1 catch-up) -- likely lattice. So after Fierz + RPA: the torsion is
+FAVOURABLY PLACED on S (two independent calcs agree), but the absolute S<0.1 is still
+genuinely owed and undecided. Part III is more hopeful than the leading-order
+graveyard suggested, not yet safe.
