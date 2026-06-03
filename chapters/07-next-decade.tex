@@ -98,15 +98,51 @@ with no antineutrino-like excess from a $CPT$ mirror. Reproducible as
 \texttt{sims/src/cartasis\_sims/lepton\_asymmetry.py}.
 
 \section{Primordial gravitational waves}
+\label{sec:tensor-r}
 
-Inflation predicts a tensor-to-scalar ratio $r$ in a fairly definite range; a
-torsion bounce, with its different early-expansion history
-(Chapter~\ref{chap:bounce}), predicts a different and typically \emph{smaller}
-$r$. This is a clean fork. LiteBIRD will constrain $r$ to the $\sim\!10^{-3}$
-level: a detection at the higher values favours inflation, while a value pushed
-low or absent favours the bounce. Turning ``typically smaller'' into a definite
-predicted band is a computation the framework owes (Chapter~\ref{chap:sims}), but
-the \emph{direction} of the discriminator is already set.
+Inflation and the bounce both leave a primordial gravitational-wave background, but
+they organise the two observables---the tensor-to-scalar ratio $r$ and the tensor
+tilt $n_T$---by \emph{different} rules, and that is the fork (\Cref{fig:tensorr}).
+Slow-roll inflation ties the two together through its consistency relation
+$n_T=-r/8$: a detectable $r$ comes with a tiny, red tilt, and the favoured plateau
+models (Starobinsky, Higgs) sit at $r\simeq0.004$ with $n_T\simeq-5\times10^{-4}$,
+right at LiteBIRD's reach, while large-field $m^2\phi^2$ ($r\simeq0.14$) is already
+excluded by the bound $r<0.036$. The matter bounce ties the tensor tilt instead to
+the \emph{scalar} tilt: both spectra are set by the same modes leaving the horizon
+during contraction, so their tilts coincide,
+\begin{equation}
+  n_T \;=\; n_s-1 \;\simeq\; -0.035,
+  \label{eq:bounce-consistency}
+\end{equation}
+about seventy times more tilt than a plateau inflation model at the same $r$, and
+\emph{decoupled} from $r$ entirely. On $r$'s magnitude the framework is honestly not
+yet sharp: the simplest single-field matter bounce \emph{over}-produces tensors
+($r\gtrsim1$, excluded), and a realistic realisation must cure that by enhancing the
+scalar power---a sub-unity scalar sound speed, or a second field---which generically
+drives $r$ below LiteBIRD's reach. So the discriminator is not the bare value of $r$
+but \emph{which consistency relation the sky obeys}: a plateau-level detection lying
+on $n_T=-r/8$ favours inflation; a null at $r\lesssim10^{-3}$, or a measured tilt
+near $n_s-1$ far off the inflationary line, favours the bounce. The robust,
+parameter-free predictions---$n_s\simeq0.965$ from a contraction just softer than
+matter, and the equal-tilt relation~\eqref{eq:bounce-consistency}---are computed in
+\Cref{chap:sims}; LiteBIRD will decide between the two rules within the decade.
+Reproducible as \texttt{figures/scripts/ch07\_tensor\_r.py}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{tensor_r}
+  \caption{Primordial gravitational waves as the inflation-versus-bounce fork.
+    \emph{Left:} the $(n_s,r)$ landscape---the Planck $n_s$ band, the current bound
+    $r<0.036$, LiteBIRD's forecast reach $\sigma_r\sim10^{-3}$, and the inflation
+    menu (plateau models within reach; $m^2\phi^2$ excluded). The bounce sits at
+    $n_s\simeq0.965$ with $r$ \emph{not} fixed by a consistency relation---the
+    simplest version is excluded at $r\gtrsim1$ and a cured one drops low.
+    \emph{Right:} the tilt fork that does not need $r$'s uncertain magnitude---
+    inflation puts $n_T=-r/8\approx0$, the bounce puts $n_T=n_s-1\simeq-0.035$, a
+    $\sim$70$\times$ gap at the observed $n_s$. Reproducible as
+    \texttt{figures/scripts/ch07\_tensor\_r.py}.}
+  \label{fig:tensorr}
+\end{figure}
 
 \section{The dark-matter null}
 
@@ -132,8 +168,9 @@ pointed: excess large-scale power, correlated with the dark background rather th
 the luminous one, on scales above our own homogeneity scale.
 
 \medskip
-\noindent Of these, the cleanest single forks are the tensor ratio $r$ (a bounce
-runs low where inflation can run high), the lepton asymmetry (the framework
+\noindent Of these, the cleanest single forks are the primordial tensors (the
+bounce ties the tilt to $n_s-1$, not to $r$, breaking inflation's consistency
+relation), the lepton asymmetry (the framework
 forbids the large value the data still allow), and an axis-aligned cosmic
 birefringence (parity-conserving $\Lambda$CDM forbids any). The dark-matter null and the
 large-scale-structure patterns accumulate weight more slowly but in one
