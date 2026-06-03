@@ -207,3 +207,24 @@ rules, the a1 catch-up) -- likely lattice. So after Fierz + RPA: the torsion is
 FAVOURABLY PLACED on S (two independent calcs agree), but the absolute S<0.1 is still
 genuinely owed and undecided. Part III is more hopeful than the leading-order
 graveyard suggested, not yet safe.
+
+## Generations from the S budget -- the cap exists, requires walking, '3' sensitive
+
+`generations_cap.py` + `figures/pdf/generations_cap.pdf`. Each generation adds to the
+electroweak S; the total composite S must stay under the precision budget (~0.1), so
+N_max ~ budget / S_per_gen.
+
+- ROBUST: a cap EXISTS (the SM doesn't explain why generations are finite; here it
+  follows from the S budget).
+- ROBUST + striking: the leading-order S_per_gen = N_c/6pi ~ 0.16 gives cap = 0 -- it
+  would forbid even our own existence. So WALKING IS MANDATORY: our three generations
+  demand S_per_gen <= 0.033, a ~5x walk-down from leading. The torsion's G_A=G_V
+  (Fierz + RPA) supplies walking in the right direction.
+- SENSITIVE: cap = budget/S_per_gen is a steep 1/x law. cap=3 needs S_per_gen in
+  (0.025, 0.033]; 0.05 -> 2, 0.025 -> 4. Whether the torsion walks to exactly the
+  cap-3 window vs nearby is the highly-sensitive, uncomputed number (full chiral RPA).
+
+CONCLUSION: the framework predicts a FINITE number of generations and REQUIRES walking
+to allow our three; three is squarely in the plausible window; the exact count is owed
+and exponentially sensitive -- claiming the framework predicts exactly 3 would be
+dishonest, but predicting "finite, and ~3 is natural" is fair.
