@@ -285,3 +285,34 @@ Whether it is is the non-perturbative question a real LATTICE computation would 
 (Wilson-loop area law / dual order parameter for the Part I connection). So confinement
 is POSSIBLE and its scale is the condensate's; whether the GT vacuum realises it is owed
 -- a clean, well-posed lattice target. Qualitative result with a lattice path, as asked.
+
+## Parameter count: banking on S buys most of the Standard Model
+
+`parameter_count.py` + `figures/pdf/parameter_count.pdf` + `test_parameter_count.py`.
+Answers "doesn't it put us at far fewer parameters than SM?" -- yes, in structure. SM has
+19 (no nu mass) to 26 (with nu) free parameters, ~20 of them pure insertion (the Yukawa
+sprinkling: 9 fermion masses + 4 CKM + 7 neutrino). ED-particle inherits only G,hbar,c
+(shared with all of physics, NOT new) + ONE generated scale v=f_pi (dimensional
+transmutation, not free) -> ZERO new fundamental parameters in the ideal case. Each SM
+block becomes derived/forced: gauge couplings (colour forced by the label, weak from the
+one torsion four-fermion coupling, Fierz G_A=G_V), Higgs (composite, v generated), 9
+masses (overlap integrals, ladder shown/ratios owed), CKM (generation overlaps), neutrinos
+(same + CPT mirror). HONEST RESIDUALS: theta_QCD not addressed; 3-vs-4 colours a choice;
+and the load-bearing caveat -- the NUMBERS (S<0.1, exact masses, confinement) are owed to
+lattice. Structure supports it; proof doesn't exist yet.
+
+## Genesis (drafts/part II ch7): the particles condense out of the cooling field
+
+ED-language thermal history. NOT a finished Big-Bang event -- a STANDING gradient at the
+past horizon, still fed by the parent (the ongoing dawn). Order of operations down the
+temperature gradient: Stage 0 at the membrane the field is melted/symmetric/massless
+(v=0 -> mass=0, conserves only P^mu, B-L, Q, spin); Stage 1 condensate forms (v:0->f_pi),
+chiral symmetry breaks, MASS SWITCHES ON (configurational, ~94% field, scale generated);
+Stage 2 solitons crystallise (Hartree converges; 3 families, finite cap); Stage 3 colour +
+confinement turn on (screening -> flux tubes, sigma~2pi v^2, dual SC); Stage 4 hadrons
+(only colour-singlets survive -> protons/neutrons); Stage 5 BBN (outer cool layer, ED & LCDM
+agree, ED re-supplies it). Same diagram as the cosmological bounce run as a phase diagram:
+the bounce melts matter to the symmetric field on the way in, genesis re-condenses it out.
+Caveat L5: particle-genesis density vs cosmological rho_C owed to lattice.
+
+## Naming the particle sector: proposal pending user choice (see chat).
