@@ -50,6 +50,37 @@ an all-sky, mirror-validated catalogue.
   \label{fig:galaxydipole}
 \end{figure}
 
+\paragraph{A second, independent catalogue tells the same cautionary story.}
+Fitting the dipole ourselves on two genuinely independent real samples makes the
+systematics-limit explicit (\Cref{fig:spindatasets}). Galaxy~Zoo~1's $30{,}126$
+crowd-classified spirals show a $3.9\%$ clockwise excess at binomial
+$p\sim10^{-11}$; the $530$ expert-determined S/Z-winding spirals of Iye, Tadaki \&
+Fukumoto's spin-parity catalogue~\citep{iye2019}, on a broader sky, are instead
+balanced to $1.9\%$ ($p\simeq0.7$), consistent with isotropy. So the two \emph{methods disagree on the asymmetry
+itself}, the tell-tale of a perception or selection systematic rather than a sky
+signal. And on the dipole that actually matters, both agree it is absent: neither
+catalogue's handedness shows a sky dipole beyond its monopole (label-shuffle
+$p\simeq0.6$ and $0.8$), and both best-fit axes sit within $\sim7^\circ$ of the
+Galactic pole---$\sim30^\circ$ from the CMB axis. Today's spin data is
+systematics-limited; it neither confirms the shared axis nor refutes it (a low-spin
+parent predicts a quiet sky too), and what it fixes is the requirement: an all-sky,
+mirror-validated catalogue. Reproducible as
+\texttt{figures/scripts/ch06\_spin\_datasets.py}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{spin_datasets}
+  \caption{The shared-axis test on two independent real catalogues. \emph{Left:} the
+    spin-dipole axes we fit to Galaxy~Zoo~1 (crowd CW/ACW) and to Iye et al.'s expert
+    S/Z-winding sample both hug the Galactic pole, far from the CMB ``axis of evil''
+    (headless axes shown both ways, with bootstrap $68\%$ circles---Iye's is
+    essentially unconstrained). \emph{Right:} the two methods give different
+    asymmetries (a significant $-3.9\%$ versus an insignificant $+1.9\%$), and
+    neither yields a significant dipole---the signature of a systematic, not a cosmic
+    axis. Reproducible as \texttt{figures/scripts/ch06\_spin\_datasets.py}.}
+  \label{fig:spindatasets}
+\end{figure}
+
 \paragraph{The decisive test, and what it can and cannot do.} Both confounded
 clues---the galaxy asymmetry near the Galactic pole and the CMB axis near
 $(\ell,b)\simeq(260^\circ,60^\circ)$---reduce to one sharp question: does a clean

@@ -22,3 +22,26 @@ Expected schema for any drop-in spin catalogue used by `cartasis_sims.galaxy_spi
 
 To get an all-sky probe, replace with a full-sky spin catalogue (e.g. Shamir's
 DESI Legacy Survey tables) under the same schema.
+
+## gz1_raw_debiased.csv  (REAL DATA)
+
+The same GZ1 clean-spiral cut as `gz1_clean.csv`, but pulling the *debiased*
+spin-vote fractions (`pcSm, paSm`) alongside the raw ones (`pcS, paS`). For the
+clean sample the debiasing does not flip the spin sign of any galaxy, so the
+two derivations give the *same* per-galaxy handedness — GZ1's known asymmetry is
+a vote-level perception bias (Land et al. 2008), not removed by these columns.
+
+## iye2019.csv  (REAL DATA — independent method)
+
+Iye, Tadaki & Fukumoto (2019, ApJ 886, 133), "The Spin Parity of Spiral
+Galaxies. II", fetched from VizieR tables `J/ApJ/886/133/figure{8,9,10,11}` via
+TAP and merged (deduplicated by ID): 530 spirals with expert-determined **S/Z
+winding** (chirality) and sky positions. Columns: `ra_deg, dec_deg, spin`
+(`+1` = S-wise, `-1` = Z-wise).
+
+This is a genuinely *independent* handedness determination from GZ1 — a small,
+expert-curated, broader-sky sample (this is the reanalysis that found the spiral
+handedness consistent with isotropy on large scales), versus GZ1's large,
+crowd-sourced, northern SDSS sample with its perception bias. Comparing the two
+exposes how method and footprint, not the cosmos, drive the inferred spin axis.
+Used by `figures/scripts/ch06_spin_datasets.py`.

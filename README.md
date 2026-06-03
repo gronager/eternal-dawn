@@ -121,7 +121,7 @@ The ✅ marks explanatory *scope* — that ED accounts for the item from its own
 
 **Awaiting data — the live bets:**
 
-- [ ] A **shared cosmic axis** — galaxy-spin handedness aligned with the CMB "axis of evil" (the cleanest possible confirmation) · *our archival analysis ~1–2 weeks; decisive data: Euclid / Rubin, ~2026–2030*
+- [x] **Shared-axis archival analysis done** on two *independent* real catalogues (GZ1 crowd votes, Iye 2019 expert S/Z winding) — verdict: **systematics-limited**. The methods disagree on the asymmetry (−3.9% vs +1.9%), neither shows a significant sky dipole, and both axes track the Galactic pole (~7°), ~30° from the CMB axis. Neither confirms nor refutes (a low-spin parent predicts a quiet sky too) · *analysis done; decisive data: Euclid / Rubin, ~2026–2030*
 - [ ] An **axis-aligned cosmic birefringence** — the polarization twist sharing the parent's spin axis · *data: CMB-S4 / LiteBIRD, ~2030s*
 - [ ] **No dark-matter particle** — direct detection (LZ, XENONnT) and the colliders stay empty *(go bet it 😄)* · *external; accumulating now*
 - [ ] **Primordial gravitational waves** low or absent (LiteBIRD) · *data: LiteBIRD, ~2030s*
