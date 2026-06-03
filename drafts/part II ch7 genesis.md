@@ -1,7 +1,10 @@
-# Part II — Genesis: how the particles condense out of the cooling field
+# Part II — Ab Initio Genesis: how the torsitons condense out of the cooling field
 
 *Draft chapter for Part II (Matter as gravity–torsion solitons). Markdown, in the working
-register. This is the thermal history of matter told in the language of Eternal Dawn:
+register. "Ab initio" twice over: this is genesis **from first principles** (no inserted
+particle content — everything falls out of the one field's phase diagram) and genesis
+**from the beginning** (ab initio = from the start, the literal post-membrane origin). This
+is the thermal history of matter told in the language of Eternal Dawn:
 not "what happened in the first $10^{-21}$ s of a finished Big Bang," but what happens,
 **still and continuously**, as the extruded field crosses the bounce membrane and cools.
 The genesis below is a standing gradient at our past horizon, not a closed event — the
@@ -65,16 +68,16 @@ is generated in the Standard Model. So genesis sets its own mass scale. In ED la
 With a condensate to bind against, the field's localized, self-bound solutions become
 stable: the solitons of `self_consistent.py` (the Hartree loop converges) and
 `soliton.py`. The cooling field, which above Stage 1 was a structureless plasma, now
-**crystallises into particles** — knots of field that hold themselves together because the
+**crystallises into torsitons** — knots of field that hold themselves together because the
 condensate outside costs more energy than the restored core inside (the bag). This is the
 literal "condensation of matter": standing waves freezing out of a cooling continuum, the
-way droplets condense out of a cooling vapour. Each soliton is a quantum of matter; the
+way droplets condense out of a cooling vapour. Each torsiton is a quantum of matter; the
 generations are its internal excitation rungs (`generations.py`), a geometric ladder with a
 finite cap (`generations_cap.py`) — so genesis produces *three* families and stops, not
 because three was inserted but because the S-budget runs out.
 
 **Stage 3 — Colour and confinement turn on: the field organises into tubes.**
-The solitons carry the three-valued Pauli label that the algebra forces (`fierz.py`,
+The torsitons carry the three-valued Pauli label that the algebra forces (`fierz.py`,
 `color_force.py`: the colour factors are rigorous and equal QCD's). As the field cools
 further, the strong channel passes from the screening, perturbative regime (overlaps
 $\to 0$) into the **confining** regime: the condensate, acting as a dual superconductor,
@@ -86,9 +89,9 @@ condensate that switched mass on at Stage 1 supplies the string tension here —
 substrate, both jobs.
 
 **Stage 4 — Hadrons: only the colour-singlets survive.**
-Once the tubes are on, an isolated coloured soliton would cost an infinite tube to exist,
+Once the tubes are on, an isolated coloured torsiton would cost an infinite tube to exist,
 so the field arranges its quanta into the singlets the colour algebra allows: mesons
-(soliton + anti-soliton) and baryons (three solitons, one of each colour) — the no-free-quark,
+(torsiton + anti-torsiton) and baryons (three torsitons, one of each colour) — the no-free-quark,
 no-free-diquark result of the colour-factor chapter. **The protons and neutrons of the
 universe condense here**, as the colour-neutral bound states the flux tubes permit. By this
 stage the field that crossed the membrane massless and symmetric has become recognisable

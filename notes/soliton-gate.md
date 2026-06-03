@@ -315,4 +315,11 @@ agree, ED re-supplies it). Same diagram as the cosmological bounce run as a phas
 the bounce melts matter to the symmetric field on the way in, genesis re-condenses it out.
 Caveat L5: particle-genesis density vs cosmological rho_C owed to lattice.
 
-## Naming the particle sector: proposal pending user choice (see chat).
+## Naming: the matter quantum is the TORSITON; the genesis chapter is AB INITIO GENESIS.
+
+The gravity-torsion soliton's physical quantum = the **torsiton** (torsion + particle
+suffix, parallel to graviton; graviton being taken, torsiton takes the adjacent slot).
+"Soliton" stays generic (any self-bound solution); "torsiton" names THIS one (the
+torsion-bound matter quantum -- what an electron/quark IS). Genesis chapter retitled
+**Ab Initio Genesis** -- ab initio twice: from first principles (no inserted particle
+content) and from the beginning (the post-membrane origin). ("Dawniton" rejected.)
