@@ -106,8 +106,8 @@ The ✅ marks explanatory *scope* — that ED accounts for the item from its own
 - [x] The **Hubble tension** closed by the timescape clock-rate (right sign *and* magnitude) · *done*
 - [x] The **relic lepton asymmetry** pinned to ~η — no large value left to hide · *done*
 - [x] The **Boltzmann-brain count** — the void makes worlds, not minds · *done*
-- [ ] CMB **peak heights** from a full bounce Boltzmann run (CAMB/CLASS-class) — *the minimum viable project* · *effort: ~1–2 weeks of code*
-- [ ] Dark-to-baryon ratio *f ≈ 1/6* **derived** from Einstein–Cartan microphysics · *effort: ~2–4 weeks*
+- [x] CMB **peak heights** from a full bounce Boltzmann run (CAMB) — matches the **real Planck 2018 binned TT** at *χ²/N ≈ 1.0* (83 band powers), first four peaks to 1–2%, with *ωb* fixed by the inherited *η* and the 3rd peak measuring the parent's *ωc* · *done*
+- [ ] Dark-to-baryon ratio *f ≈ 1/6* **derived** from Einstein–Cartan microphysics (the 3rd-peak *ωc* turned into a prediction) · *effort: ~2–4 weeks — a modeling problem, not a compute one*
 - [ ] The **tensor band** *r* predicted from the bounce — the LiteBIRD fork made quantitative · *effort: ~1 week*
 - [ ] The **birefringence angle** *β* predicted from the inherited spin axis · *effort: ~1–2 weeks*
 

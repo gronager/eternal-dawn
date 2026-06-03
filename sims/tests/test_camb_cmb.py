@@ -2,6 +2,7 @@
 
 import math
 
+import numpy as np
 import pytest
 
 from cartasis_sims import camb_cmb as cc
@@ -59,3 +60,36 @@ def test_dark_energy_sets_peak_positions():
     l1_lo = cc.peak_table(H0=60.0)[0][0]
     l1_hi = cc.peak_table(H0=75.0)[0][0]
     assert l1_hi < l1_lo                            # peak position shifts with Omega_L
+
+
+def test_planck_binned_tt_loads():
+    # the real Planck 2018 binned TT band powers ship in data/planck/
+    ell, Dl, sigma, best = cc.planck_binned_tt()
+    assert ell.size > 70                            # ~83 band powers
+    assert ell[0] < 60 and ell[-1] > 2000          # l ~ 48 .. 2500
+    assert np.all(sigma > 0) and np.all(Dl > 0)
+    # first acoustic peak shows up in the data near l~220, D~5800 microK^2
+    j = int(np.argmin(np.abs(ell - 220)))
+    assert 5000 < Dl[j] < 6500
+
+
+@pytest.mark.skipif(not cc.HAVE_CAMB, reason="CAMB not installed")
+def test_ed_prediction_fits_real_planck():
+    # ED-sourced parameters (not re-fit) reproduce the real binned spectrum at chi2/N~1
+    chi2, n = cc.chi2_vs_planck()
+    assert n > 70
+    assert chi2 / n < 1.3                           # consistency hurdle cleared
+
+
+@pytest.mark.skipif(not cc.HAVE_CAMB, reason="CAMB not installed")
+def test_peak_height_ratios_match_planck():
+    r = cc.peak_height_ratios()
+    assert abs(r["r12"] - 2.2) < 0.3               # odd/even (baryon) ratio ~2.2
+    assert abs(r["r13"] - 2.3) < 0.4               # 1st/3rd (dark-matter) ratio ~2.3
+
+
+def test_baryon_fraction_is_about_one_sixth():
+    # omega_c / omega_b = 5.36 -> baryon fraction f ~ 0.157 ~ 1/6 (the target Ch.6 owes)
+    ob, oc = cc.SCT_PARAMS["ombh2"], cc.SCT_PARAMS["omch2"]
+    f = ob / (ob + oc)
+    assert abs(f - 1.0 / 6.0) < 0.02

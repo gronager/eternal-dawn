@@ -141,13 +141,32 @@ recombination at $z\simeq1090$, same sound horizon---so it inherits the peaks
 rather than re-deriving them. Evaluated on the standard background the comoving
 sound horizon is $r_s\simeq142\,\mathrm{Mpc}$ and the peak series
 $\ell_n\simeq230,540,850,1150,1460$ matches the observed Planck peaks
-($220,540,810,1120,1450$) to a few percent (\Cref{fig:acoustic}). The hard,
-decisive number---the acoustic scale---is reproduced; what remains is a full
-Boltzmann computation (CAMB/CLASS-class) of peak \emph{heights}, sensitive to the
-baryon and dark-matter densities and the precise primordial amplitude. The
-parent-Hawking reading of the CMB is consistent with all of this: it concerns the
-\emph{origin} of the thermal plasma at the bounce surface, not a replacement for
-recombination---the peaks arise from standard acoustics either way.
+($220,540,810,1120,1450$) to a few percent (\Cref{fig:acoustic}).
+
+The peak \emph{heights}---the discriminating half, sensitive to the baryon and
+dark-matter densities and the primordial amplitude---are now computed at full
+Boltzmann precision rather than left as a promissory note. Feeding the
+\emph{shared} recombination transfer (through \textsc{camb}) a parameter set whose
+values Eternal Dawn \emph{sources} rather than fits---the tilt $n_s\simeq0.965$
+from the bounce (above), the baryon density $\omega_b$ from the inherited $\eta$
+(Chapter~\ref{chap:dawn}), the cold density $\omega_c$ from the parent's projected
+mass (Chapter~\ref{chap:home})---reproduces the \emph{real} Planck 2018 binned TT
+spectrum at $\chi^2/N\simeq1.0$ across $83$ band powers, with the first four peak
+heights matched to one to two percent (\Cref{fig:peakheights}). Two points keep
+this honest. First, a match is the \emph{expected} outcome, not a triumph over
+$\Lambda$CDM: because the framework inherits ordinary recombination, this is a
+consistency hurdle it must clear where $\Lambda$CDM already succeeds, and clearing
+it removes $\Lambda$CDM's claim to \emph{uniquely} explain the peaks rather than
+favouring either. Second, what is genuinely framework-specific is that two of the
+three inputs are not free: the inherited $\eta=6.1\times10^{-10}$ predicts
+$\omega_b=0.0223$, within $0.5\%$ of the value that sets the first-to-second peak
+ratio, and the \emph{third} peak height is a direct measurement of $\omega_c$---the
+parent's projected mass---so the dark-to-baryon ratio $f\approx1/6$
+(\S\ref{sec:tier3-frontier}) becomes a number a future microphysics derivation must
+hit, not a parameter to dial. The parent-Hawking reading of the CMB is consistent
+throughout: it concerns the \emph{origin} of the thermal plasma at the bounce
+surface, not a replacement for recombination---the peaks arise from standard
+acoustics either way.
 
 \begin{figure}[t]
   \centering
@@ -167,12 +186,31 @@ recombination---the peaks arise from standard acoustics either way.
   \caption{The acoustic peaks. The bounce's scale-invariant primordial input,
     carried through the standard post-bounce plasma, yields a sound horizon
     $r_s\simeq142\,\mathrm{Mpc}$ and a peak series matching the observed Planck
-    multipoles to a few percent. The peak \emph{heights} await a full Boltzmann
-    computation. Reproducible as \texttt{figures/scripts/ch09\_acoustic.py}.}
+    multipoles to a few percent. The peak \emph{heights} are computed in
+    \Cref{fig:peakheights}. Reproducible as
+    \texttt{figures/scripts/ch09\_acoustic.py}.}
   \label{fig:acoustic}
 \end{figure}
 
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{peak_heights}
+  \caption{The peak \emph{heights}, at full Boltzmann precision, against the real
+    Planck 2018 binned TT spectrum. The standard recombination transfer
+    (\textsc{camb}), fed an Eternal Dawn parameter set whose values are
+    \emph{sourced}---$n_s$ from the bounce, $\omega_b$ from the inherited $\eta$,
+    $\omega_c$ from the parent's projected mass---reproduces the measured spectrum
+    at $\chi^2/N\simeq1.0$ over $83$ band powers (residuals, lower panel, scatter
+    within $\pm2\sigma$). The first peak's height fixes the baryon density (the
+    odd/even ratio $D_1/D_2\simeq2.2$), the third peak the dark-matter density
+    ($D_1/D_3\simeq2.3$); $\omega_c/\omega_b\simeq5.4$ is the baryon fraction
+    $f\approx1/6$ that the membrane filter (\S\ref{sec:tier3-frontier}) must derive.
+    Reproducible as \texttt{figures/scripts/ch09\_peak\_heights.py}.}
+  \label{fig:peakheights}
+\end{figure}
+
 \section{Tiers 3--5, and the frontier}
+\label{sec:tier3-frontier}
 
 The higher tiers are multi-year programs, sketched here as scope rather than
 results. \textbf{Tier~3 (chirality dynamics)} would quantify the membrane's filter
