@@ -60,3 +60,17 @@ the absolute mass scale and S < 0.1 — are both still owed, and S in particular
 real coin-flip the framework must compute and survive. Nothing here promotes Parts
 II/III above "well-posed research program"; it sharpens the targets and confirms the
 walls are where the drafts said.
+
+## Update: degeneracy pressure (Pauli) — which way it pushes
+
+`fermi_ball.py` (Thomas-Fermi, SymPy-verified Fermi-gas energy). Adding the Pauli
+degeneracy KE to the self-bound drop (e(n) = e_kin - a n + b n^2):
+
+- saturation density drops to ~81% and binding per particle to ~25% of the no-Pauli
+  case — the drop gets **larger, less dense, and flatter-topped**.
+- A flatter, more uniform (scale-flat) interior is the **walking** regime that
+  *suppresses* the electroweak S. So degeneracy moves S in the FAVOURABLE direction.
+
+It does NOT deliver S < 0.1 by itself (that needs the full self-consistent, colored,
+composite V/A spectrum), but it confirms the intuition: Pauli is in the column that
+helps. Figure: `figures/pdf/degeneracy.pdf`.
