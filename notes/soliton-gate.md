@@ -112,3 +112,26 @@ model gives the soliton but not the symmetry-breaking f_pi and the composite V/A
 current correlators that a trustworthy S needs. So: existence moved a lot (the big
 one, everything funnels through it); S is still the owed make-or-break, with the
 degeneracy result saying only that the *direction* is favourable.
+
+## The chiral soliton: configurational mass, and the limit on S
+
+`chiral_soliton.py` + `figures/pdf/chiral_soliton.pdf`. The symmetry-breaking (linear
+sigma / Friedberg-Lee) self-consistent soliton: a real condensate v = f_pi, the
+fermion's constituent mass g v, and a self-bound bag.
+
+Delivered (feeds the mass insight):
+- a REAL f_pi = v (the order parameter), set by the condensate -- no longer a finger
+  on the scale;
+- CONFIGURATIONAL MASS: the observable soliton mass is ~94% field + bag energy and
+  only ~6% constituent g v -- exactly the proton (~99% binding);
+- mass scales linearly with v and vanishes as v -> 0: the condensate CREATES the
+  mass. So mass is bound field energy, not a fundamental conserved label; only the
+  total energy-momentum (and the charges B-L, Q, spin) is conserved -- which is the
+  SAME thing the bounce keeps through the membrane (Part I). Particle-mass insight and
+  cosmology close into one statement.
+
+NOT delivered -- S: even with a real f_pi, the S proxy comes out ~10 (unphysical)
+because M_V ~ the fermion gap is the WRONG scale. A reliable S needs the composite
+vector/axial CURRENT correlators (a further step). So the chiral model cracked the
+MASS question, not S. S remains the owed make-or-break; the only directional info is
+that degeneracy/walking pushes it favourably.
