@@ -39,20 +39,56 @@ preferred direction, the parent's spin axis (\Cref{sec:axis}). A parity-odd
 physics with a preferred axis is exactly what rotates the plane of linear
 polarization as light crosses the cosmos---\emph{cosmic birefringence}, a slow
 turning of the $E$- and $B$-mode pattern of the microwave background by an angle
-$\beta$. Parity-conserving $\Lambda$CDM predicts $\beta=0$ identically; the
-framework predicts $\beta\neq0$.
+$\beta$. Einstein--Cartan even supplies the concrete agent: the totally
+antisymmetric part of torsion is a pseudoscalar axial vector that couples to the
+photon like a Chern--Simons term, so where other models must \emph{add} an
+axion by hand, a relic axial-torsion background is already present. Parity-conserving
+$\Lambda$CDM predicts $\beta=0$ identically; the framework predicts $\beta\neq0$.
 
-There is already a hint. A reanalysis of the \emph{Planck} polarization data finds
-$\beta\simeq0.35^\circ$ at about $3\sigma$~\citep{minami2020}---small, not yet
-decisive, but nonzero in exactly the sense a parity-violating cosmology expects.
-What would make the signal \emph{ours} rather than generic is its geometry: most
-birefringence models invoke a spatially uniform pseudoscalar field and so predict
-an \emph{isotropic} rotation, whereas a single inherited spin axis predicts a
-rotation with an \emph{anisotropic} part aligned with the same direction as the
-``axis of evil'' and the galaxy-spin handedness of Chapter~\ref{chap:nowobs}. The
-test therefore has two rungs: (i)~confirm $\beta\neq0$, and (ii)~check whether its
-anisotropy shares the axis of the other parity anomalies---a second, independent
-appearance of the one direction the whole of \S\ref{sec:axis} turns on.
+The rotation is not abstract: it mixes the parity-even and parity-odd polarization,
+turning the (otherwise vanishing) $EB$ and $TB$ cross-spectra on,
+\begin{equation}
+  C_\ell^{EB}=\tfrac12\sin(4\beta)\,C_\ell^{EE},\qquad
+  C_\ell^{TB}=\sin(2\beta)\,C_\ell^{TE},
+  \label{eq:birefringence-eb}
+\end{equation}
+and because $EE$ and $TE$ are large, even $\beta\sim0.3^\circ$ leaves a measurable
+sub-microkelvin signal (\Cref{fig:birefringence}, left, from the real transfer
+functions). A nonzero $EB$ \emph{is} the birefringence; $\Lambda$CDM has it at zero.
+
+There is already a hint, and it has firmed up. Successive analyses of the
+\emph{Planck} polarization---calibrated against the Galactic foreground to break the
+detector-angle degeneracy---report $\beta\simeq0.3^\circ$: $0.35^\circ\pm0.14^\circ$
+from PR3~\citep{minami2020}, $0.30^\circ\pm0.11^\circ$ from
+PR4~\citep{diegopalazuelos2022}, and $0.34^\circ\pm0.09^\circ$ combining Planck with
+WMAP, a $3.6\sigma$ exclusion of zero~\citep{eskilt2022} (\Cref{fig:birefringence},
+middle). These share data, so the joint significance is nearer $3\sigma$ than the
+naive combination---small, not yet decisive, but nonzero in exactly the sense a
+parity-violating cosmology expects. What would make the signal \emph{ours} rather
+than generic is its geometry: most birefringence models invoke a spatially uniform
+pseudoscalar field and so predict an \emph{isotropic} rotation, whereas a single
+inherited spin axis predicts a rotation with an \emph{anisotropic} part aligned with
+the same direction as the ``axis of evil'' and the galaxy-spin handedness of
+Chapter~\ref{chap:nowobs} (\Cref{fig:birefringence}, right). The test therefore has
+two rungs: (i)~confirm $\beta\neq0$, and (ii)~check whether its anisotropy shares the
+axis of the other parity anomalies---a second, independent appearance of the one
+direction the whole of \S\ref{sec:axis} turns on.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{birefringence}
+  \caption{Cosmic birefringence as an Eternal Dawn signature. \emph{Left:} the
+    parity-odd $EB$ and $TB$ spectra a rotation $\beta$ produces, computed from the
+    real \textsc{camb} $EE$/$TE$ transfer via \eqref{eq:birefringence-eb};
+    $\Lambda$CDM predicts them identically zero (dashed). \emph{Middle:} the measured
+    isotropic $\beta\simeq0.3^\circ$ (Planck, Planck$+$WMAP) against the $\Lambda$CDM
+    zero it excludes. \emph{Right:} the distinctive, uniquely-ED component---an
+    \emph{anisotropic} $\beta(\hat n)$ locked to the inherited spin axis, predicted
+    to coincide with the axis of evil / galaxy-spin axis (shown as a shape; the
+    amplitude is not derived). Reproducible as
+    \texttt{figures/scripts/ch07\_birefringence.py}.}
+  \label{fig:birefringence}
+\end{figure}
 
 \paragraph{The test.} A confirmed nonzero $\beta$ is a weak-to-moderate
 confirmation; a nonzero $\beta$ whose anisotropy \emph{aligns with the shared

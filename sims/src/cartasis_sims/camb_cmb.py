@@ -78,6 +78,24 @@ def cmb_tt_spectrum(lmax: int = 2500, **overrides):
     return ell, cl[:, 0]
 
 
+def cmb_polarization_spectra(lmax: int = 2500, **overrides):
+    """Lensed CMB power spectra D_l = l(l+1)C_l/2pi [microK^2] through CAMB.
+    Returns (ell, TT, EE, BB, TE) -- the four non-vanishing spectra of a
+    parity-conserving sky. The parity-odd EB and TB are exactly zero here; cosmic
+    birefringence (birefringence.py) generates them by rotating E into B."""
+    _require_camb()
+    p = dict(SCT_PARAMS)
+    p.update(overrides)
+    pars = _camb.set_params(H0=p["H0"], ombh2=p["ombh2"], omch2=p["omch2"],
+                            mnu=p["mnu"], omk=0.0, tau=p["tau"],
+                            As=p["As"], ns=p["ns"], lmax=lmax)
+    results = _camb.get_results(pars)
+    cl = results.get_cmb_power_spectra(pars, CMB_unit="muK",
+                                       raw_cl=False)["total"]
+    ell = np.arange(cl.shape[0])
+    return ell, cl[:, 0], cl[:, 1], cl[:, 2], cl[:, 3]
+
+
 def peak_table(lmax: int = 2200, **overrides):
     """Locate the first five acoustic peaks: list of (ell, D_l) from the CAMB spectrum."""
     ell, TT = cmb_tt_spectrum(lmax, **overrides)

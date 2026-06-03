@@ -109,7 +109,7 @@ The ✅ marks explanatory *scope* — that ED accounts for the item from its own
 - [x] CMB **peak heights** from a full bounce Boltzmann run (CAMB) — matches the **real Planck 2018 binned TT** at *χ²/N ≈ 1.0* (83 band powers), first four peaks to 1–2%, with *ωb* fixed by the inherited *η* and the 3rd peak measuring the parent's *ωc* · *done*
 - [ ] Dark-to-baryon ratio *f ≈ 1/6* **derived** from Einstein–Cartan microphysics (the 3rd-peak *ωc* turned into a prediction) · *effort: ~2–4 weeks — a modeling problem, not a compute one*
 - [x] The **primordial-tensor fork** computed — the bounce ties the tilt to the *scalar* tilt (*nT = ns − 1 ≈ −0.035*), breaking inflation's *nT = −r/8*; the value of *r* stays honestly open (simplest bounce overshoots, cured versions drop below LiteBIRD), so the discriminator is the consistency relation, not the bare *r* · *done*
-- [ ] The **birefringence angle** *β* predicted from the inherited spin axis · *effort: ~1–2 weeks*
+- [x] The **birefringence** *EB/TB* fingerprint computed (real CAMB) — ΛCDM forbids it, measured at *β ≈ 0.3°* (~3σ); the *value* of *β* stays owed (set by the relic axial-torsion amplitude), but the distinctive prediction is an **axis-aligned anisotropic *β(n̂)*** locked to the same axis as the axis-of-evil / galaxy spins · *done*
 
 **Observations already pointing its way:**
 
