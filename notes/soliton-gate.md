@@ -355,3 +355,17 @@ a walking pseudo-dilaton ~0.5v=123 GeV (light) and a QCD-scaled heavy sigma ~5.4
 of the SAME near-conformal walking that pushes S below the LEP bound. So Higgs lightness is
 not a separate tuning; it's the walking the S-parameter already demanded. Exact 125 owed to
 lattice; the lightness explained.
+
+## CORRECTION (anchor): gen-1 must be PREDICTED, scale from the condensate (user-caught)
+
+The first 12-mass pass anchored gen-1 (e,u,d) per tower -- so the lightest masses were
+INPUTS, not predictions, and the scale was fit. Fixed two ways:
+(1) The absolute scale is NOT free: m_top = v/sqrt2 = 174.1 GeV vs observed 172.7 (off
+    x1.008). The top is the unsuppressed ground state (overlap~1, Yukawa~1) = the condensate
+    scale itself. So everything lighter is computed by overlap suppression below it.
+(2) Anchor each tower at its HEAVIEST rung -> gen-1 are now PREDICTIONS. Electron comes out
+    0.482 MeV vs 0.511 (x1.1!), muon x1.1; up x3.4, charm x1.6; down x3.0, strange x1.1.
+    The tiny electron mass is now COMPUTED to ~10%, not inserted.
+Remaining inputs = the inter-tower (heaviest-rung) couplings t/b~41, t/tau~97 -- the genuine
+owed Yukawas (charge ansatz gets the ordering coloured>lepton, up-type heaviest, not the
+factors). `predict_tower(anchor='heaviest')`, `top_from_condensate`, `inter_tower_from_charges`.

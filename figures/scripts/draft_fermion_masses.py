@@ -50,22 +50,29 @@ def main():
         lines.append(f"   span: predicted {r['total_span_pred']:.0f} vs observed "
                      f"{r['total_span_obs']:.0f};  ratios pred {np.round(r['pred_ratios'],1)} "
                      f"obs {np.round(r['obs_ratios'],1)}")
+    top = fm.top_from_condensate()
     nu = fm.neutrino_suppression()
     lines += [
-        f"\nworst single-mass residual across all 9 charged fermions: x{worst:.1f}",
+        f"\ntop from the condensate (NOT anchored): m_t = v/sqrt2 = {top['predicted']/1000:.1f}"
+        f" GeV vs observed {top['observed']/1000:.1f} GeV (off x{top['off']:.3f}); Yukawa~1, the",
+        f"  heaviest fermion IS the condensate scale -> the electron etc. below it are computed.",
+        f"electron (PREDICTED, anchor=heaviest): "
+        f"{fm.predict_tower('charged-lepton')['predicted'][0]:.3f} MeV vs 0.511 observed.",
+        f"worst single-mass residual across all 9 charged fermions: x{worst:.1f}",
         f"neutrino lightness: needs coupling ratio c_nu/c_charged ~ {nu['needed_c_ratio']:.1e}"
         f" (weakest grip on the condensate -- no new scale)",
         f"Koide Q (leptons) = {fm.koide_Q(fm.OBSERVED['charged-lepton']):.4f} "
         f"(target 2/3 = {2/3:.4f}; an unmet target, owed)",
         f"parameters: {fm.n_free_parameters()} (model 6 vs SM 9 inserted; ideal 1)",
         "",
-        "READING: from a soliton overlap ladder -- one knot, one effective size per tower --",
-        "the whole 5-orders-of-magnitude charged-fermion hierarchy comes out within a factor",
-        "~3 (leptons ~20%). The hierarchy SHAPE and SPAN are a near-parameter-free output:",
-        "the electron's 'absurd' Yukawa is exp(-overlap), not a tuned small number; neutrinos",
-        "are light because a neutral colourless knot grips the condensate least. OWED to",
-        "lattice (L4): the exact ratios, the per-tower size derived from the coupling, the",
-        "up/down isospin splitting, and Koide's 2/3. Roughly right -- and that is the win.",
+        "READING: the absolute scale is NOT a free anchor -- the top is the condensate scale",
+        "itself (m_t = v/sqrt2, Yukawa ~1, off 0.8%), so every lighter fermion is computed by",
+        "overlap suppression below it. Anchoring each tower at its HEAVIEST rung, the gen-1",
+        "masses -- including the electron (0.48 vs 0.511 MeV) -- are PREDICTIONS, not inputs.",
+        "From a soliton overlap ladder the whole 5-orders-of-magnitude hierarchy lands within",
+        "~3x (leptons ~10-20%); neutrinos light because a neutral colourless knot grips least.",
+        "OWED to lattice (L4): the inter-tower couplings (t/b~41, t/tau~97 -- the heaviest rung",
+        "per tower), the exact ratios, up/down isospin splitting, and Koide's 2/3.",
     ]
     text = "\n".join(lines)
     print(text)

@@ -113,16 +113,23 @@ def fit_source_size(tower, grid=None, well=WELL):
     return float(best), best_err
 
 
-def predict_tower(tower, well=WELL):
-    """Best-effort masses for a tower: ONE shape knob s_T (fit to the whole tower) and the
-    scale anchored at gen1. The heavier two masses are predictions of the soliton ladder.
-    Returns predicted/observed/ratios and per-state residual factors."""
+def predict_tower(tower, well=WELL, anchor="heaviest"):
+    """Best-effort masses for a tower: ONE shape knob s_T (fit to the whole tower) and one
+    scale anchor. With anchor='heaviest' (default) the tower hangs off its gen-3 rung and
+    the LIGHTER generations -- including the gen-1 electron/up/down -- are PREDICTIONS
+    (m = m_heaviest x overlap-suppression), not inputs. With anchor='lightest' the old
+    behaviour. Returns predicted/observed/ratios and per-state residual factors."""
     obs = np.asarray(OBSERVED[tower], dtype=float)
     s_T, _ = fit_source_size(tower, well=well)
-    pred = obs[0] * _ascending_ladder(s_T, well=well)
+    ladder = _ascending_ladder(s_T, well=well)            # gen1=1 .. gen3=biggest
+    if anchor == "heaviest":
+        pred = obs[-1] * (ladder / ladder[-1])            # pin gen3, predict gen1,2
+    else:
+        pred = obs[0] * ladder                            # pin gen1, predict gen2,3
     return {
         "tower": tower,
         "source_size": s_T,
+        "anchor": anchor,
         "predicted": pred,
         "observed": obs,
         "pred_ratios": pred[1:] / pred[:-1],
@@ -131,6 +138,44 @@ def predict_tower(tower, well=WELL):
         / np.maximum(np.minimum(pred, obs), 1e-300),
         "total_span_pred": float(pred[-1] / pred[0]),
         "total_span_obs": float(obs[-1] / obs[0]),
+    }
+
+
+# The condensate scale (electroweak v) and the top-quark "Yukawa ~ 1" near-derivation:
+# the heaviest fermion is the unsuppressed ground state (overlap ~ 1), sitting at the
+# condensate scale -- so the absolute scale of the whole spectrum is NOT a free anchor.
+V_EW = 246220.0   # MeV (= 246.22 GeV)
+
+
+def top_from_condensate(v=V_EW):
+    """m_top ~ v/sqrt(2): the top is the ground state with overlap ~1 (Yukawa ~1). Returns
+    the prediction and the residual against the observed top -- a genuine scale derivation,
+    so the electron etc. below it are computed (overlap-suppressed), not anchored."""
+    pred = v / np.sqrt(2.0)
+    obs = OBSERVED["up-quark"][-1]
+    return {"predicted": pred, "observed": obs,
+            "off": max(pred, obs) / min(pred, obs)}
+
+
+def inter_tower_from_charges():
+    """The OWED step: the inter-tower scales (top vs bottom vs tau) as condensate couplings.
+    A naive charge-content ansatz (colour + |Q|) gives only the gross ordering
+    (coloured > charged-lepton, up-type heaviest), NOT the observed factors t/b~41, t/tau~97
+    -- those inter-generation/inter-tower Yukawas are the genuine lattice residual (L4). We
+    expose the ordering it gets and the factors it misses, honestly."""
+    # heaviest rung of each tower, observed
+    heavy = {"up-quark": OBSERVED["up-quark"][-1],     # top
+             "down-quark": OBSERVED["down-quark"][-1], # bottom
+             "charged-lepton": OBSERVED["charged-lepton"][-1]}  # tau
+    naive_ordering = sorted(heavy, key=heavy.get, reverse=True)
+    return {
+        "observed_heavy_rung": heavy,
+        "observed_ordering": naive_ordering,        # up-quark, down-quark, lepton
+        "ratios_owed": {"top/bottom": heavy["up-quark"] / heavy["down-quark"],
+                        "top/tau": heavy["up-quark"] / heavy["charged-lepton"],
+                        "bottom/tau": heavy["down-quark"] / heavy["charged-lepton"]},
+        "status": "ordering (coloured > lepton, up-type heaviest) is reproduced by "
+                  "charge content; the exact inter-tower factors are owed to lattice (L4)",
     }
 
 

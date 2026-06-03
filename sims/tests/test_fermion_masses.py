@@ -11,16 +11,32 @@ def test_all_charged_fermions_within_a_small_factor():
 
 
 def test_leptons_are_the_clean_win():
-    # the charged-lepton tower comes out best (mu, tau within ~30% of observed)
+    # the charged-lepton tower comes out best (all within ~30% of observed)
     r = fm.predict_tower("charged-lepton")
     assert np.max(r["residual_factor"]) < 1.5
 
 
-def test_anchor_is_exact_by_construction():
-    # gen-1 is the scale anchor, so it matches observation exactly
+def test_electron_is_predicted_not_anchored():
+    # with the default 'heaviest' anchor, gen-1 (electron) is a PREDICTION; it lands within
+    # ~20% of the observed 0.511 MeV -- the tiny electron mass computed, not inserted
+    r = fm.predict_tower("charged-lepton", anchor="heaviest")
+    assert r["anchor"] == "heaviest"
+    assert not np.isclose(r["predicted"][0], r["observed"][0], rtol=1e-6)  # not pinned
+    assert r["residual_factor"][0] < 1.25                                  # but close
+
+
+def test_top_mass_from_condensate_scale():
+    # m_top ~ v/sqrt(2): the heaviest fermion is the condensate scale itself (Yukawa ~1),
+    # so the absolute scale is derived, not a free anchor
+    t = fm.top_from_condensate()
+    assert t["off"] < 1.02
+
+
+def test_heaviest_anchor_is_exact_by_construction():
+    # with 'heaviest', gen-3 is the per-tower scale anchor and matches exactly
     for t in ("charged-lepton", "up-quark", "down-quark"):
-        r = fm.predict_tower(t)
-        assert np.isclose(r["predicted"][0], r["observed"][0], rtol=1e-9)
+        r = fm.predict_tower(t, anchor="heaviest")
+        assert np.isclose(r["predicted"][-1], r["observed"][-1], rtol=1e-9)
 
 
 def test_total_span_is_roughly_reproduced():
