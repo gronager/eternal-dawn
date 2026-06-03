@@ -262,3 +262,26 @@ confined and the picture fails here. Lattice-scale, undecided. (The earlier figu
 sign slip AND imposed the linear term; both fixed.) Three vs four colours: working answer
 is THREE (forced minimum, reproduces the observed channel structure, lower S); four
 (Pati-Salam) is elegant but not forced and makes S worse.
+
+## 1-D string tension: a confining flux tube from the condensate (dual superconductor)
+
+`flux_tube.py` + `figures/pdf/flux_tube.pdf`. Tests the mechanism by which the SCREENING
+gap (overlaps -> 0) could be closed: the DUAL SUPERCONDUCTOR. If the chiral condensate
+(the sigma the soliton forms) expels colour-electric flux, it squeezes into a
+Nielsen-Olesen vortex -- a 1-D tube whose energy is proportional to its length ->
+confinement.
+
+- The vortex ODEs converge; at the BPS point (beta=2, m_H=m_W) the topological bound is
+  saturated: sigma = 2 pi v^2 EXACTLY (= 6.2832, the code's validation). type-I (beta<2)
+  below, type-II (beta>2) above.
+- So a CONFINING flux tube exists with tension sigma ~ 2 pi v^2, set by the condensate
+  scale v = f_pi. V(L) = sigma L rises forever -> confinement, the linear potential the
+  overlap/exchange picture could NOT produce. The SAME condensate that makes mass
+  (configurational) sets the string tension -- one scale, both jobs.
+
+CONDITIONAL on the gravity-torsion vacuum being a dual superconductor (monopole
+condensation in the non-abelian Part I connection -> dual Meissner -> flux expulsion).
+Whether it is is the non-perturbative question a real LATTICE computation would decide
+(Wilson-loop area law / dual order parameter for the Part I connection). So confinement
+is POSSIBLE and its scale is the condensate's; whether the GT vacuum realises it is owed
+-- a clean, well-posed lattice target. Qualitative result with a lattice path, as asked.
