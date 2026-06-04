@@ -57,13 +57,34 @@ four targets (each lattice fits in one GPU's memory, so **no interconnect is nee
 targets aarch64 (Grace) + Hopper `sm_90`. Lattice solvers are memory-bandwidth-bound and
 mixed-precision, so the GH200's bandwidth is the relevant figure of merit, not FP64.
 
+## Build
+
+```bash
+lattice/build/build_grid_gh200.sh          # installs deps, builds Grid + its tests, verifies
+export GRID=$HOME/ed-lattice/src/Grid/build # the run scripts read $GRID
+```
+
+The build script is self-contained: it `apt-get`-installs the external dependencies (GMP, MPFR,
+FFTW, HDF5, OpenSSL, autotools), builds **c-lime** from source, clones and configures Grid for
+single-GPU Hopper (`sm_90`, no MPI), and crucially runs **`make tests`** — Grid builds only the
+library and top-level tests by default, so the sub-directory executables the run scripts call
+(`tests/hmc/...`, `tests/core/...`) exist *only* after `make tests`. Step 5 then **lists the test
+executables that were actually built**: Grid's test names vary by version, so if a run script
+names one that isn't in that list, swap in the matching name. The run scripts call `require_exe`
+up front and fail with that same guidance rather than a bare "No such file or directory."
+
+> Grid's stock HMC tests sometimes fix action parameters (e.g. `beta`) in the source rather than
+> on the command line. Each run script prints a reminder to check the binary's `--help`; if a
+> flag is ignored, edit the `.cc` and rebuild, or supply Grid's HMC XML input.
+
 ## Layout
 
 ```
 lattice/
 ├── README.md                      # this file
-├── build/build_grid_gh200.sh      # Grid (+ optional QUDA) build for GH200
+├── build/build_grid_gh200.sh      # deps + Grid + `make tests` + verification (GH200)
 └── run/
+    ├── _lib.sh                    # shared: $GRID default, require_exe, note_params
     ├── 01_puregauge_potential.sh  # target 1: string tension
     ├── 02_finiteT_polyakov.sh     # target 2: T_c (the melting)
     ├── 03_gradient_flow.sh        # target 3: w0 scale setting

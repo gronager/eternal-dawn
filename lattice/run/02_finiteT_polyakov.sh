@@ -3,8 +3,10 @@
 # This is the lattice version of "the condensate melts" (genesis Stage 3): scan beta on a
 # fixed-Nt lattice, find the susceptibility peak. T_c = 1/(Nt a(beta_c)); set a via target 3.
 set -euo pipefail
-GRID="${GRID:-$HOME/ed-lattice/src/Grid/build}"
+source "$(dirname "$0")/_lib.sh"                    # sets GRID, require_exe, note_params
 OUT="${OUT:-out/finiteT}"; mkdir -p "$OUT"
+require_exe "$GRID/tests/hmc/Test_hmc_WilsonGauge"
+note_params "$GRID/tests/hmc/Test_hmc_WilsonGauge"
 
 NS=16 ; NT=6           # 16^3 x 6 : finite-T, Nt=6 sets the temperature axis
 BETAS=$(seq 5.65 0.02 5.95)   # scan across the transition

@@ -6,8 +6,11 @@
 # Two stages: (a) generate a dynamical-fermion ensemble (HMC with the sextet Dirac operator);
 # (b) on each config, stochastically count Dirac eigenvalues below a ladder of thresholds M.
 set -euo pipefail
-GRID="${GRID:-$HOME/ed-lattice/src/Grid/build}"
+source "$(dirname "$0")/_lib.sh"                    # sets GRID, require_exe, note_params
 OUT="${OUT:-out/gammam}"; mkdir -p "$OUT"
+require_exe "$GRID/tests/hmc/Test_hmc_WilsonFermionGauge"
+require_exe "$GRID/tests/solver/Test_ModeNumber"
+note_params "$GRID/tests/hmc/Test_hmc_WilsonFermionGauge"
 
 L=24 ; T=48
 BETA=5.4 ; MASS=-0.02      # bare coupling + (near-critical) fermion mass: TUNE these first

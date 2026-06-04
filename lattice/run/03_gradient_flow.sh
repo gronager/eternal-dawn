@@ -2,9 +2,10 @@
 # Target 3: scale setting via the gradient (Wilson) flow -> w0 (cheap, minutes).
 # Flow each config, record t^2<E>(t); w0^2 is where W(t)=t d/dt[t^2 E]=0.3.
 set -euo pipefail
-GRID="${GRID:-$HOME/ed-lattice/src/Grid/build}"
+source "$(dirname "$0")/_lib.sh"                    # sets GRID, require_exe, note_params
 OUT="${OUT:-out/flow}"; mkdir -p "$OUT"
 ENS="${ENS:-out/puregauge}"   # reuse the target-1 ensemble (or any ensemble)
+require_exe "$GRID/tests/smearing/Test_WilsonFlow"
 
 L=24 ; T=48
 : > "$OUT/t2E_raw.dat"        # columns: t  t^2<E>  (per config)
