@@ -53,72 +53,107 @@ Appendix~\ref{app:openq}, but it is no longer simply unaddressed.
 Now the computation. Working in units of $\Lambda$, the scale is fixed once and physically: the
 heaviest fermion is the unsuppressed ground state, with overlap of order one and therefore mass
 of order the condensate scale itself. This is the top quark, whose Yukawa coupling is famously
-$\simeq1$: $m_t\simeq v/\sqrt2\simeq174~\mathrm{GeV}$, reproduced to $0.8\%$. Every lighter
-fermion is then \emph{computed} below it---no fermion mass is anchored by hand---by the two
-factors derived in the previous chapters:
+$\simeq1$: $m_t\simeq v/\sqrt2\simeq173~\mathrm{GeV}$. This sets the single global scale---and it
+is the \emph{only} scale; no individual mass is anchored. Every other particle is then
+\emph{computed} from it by the two factors derived in the previous chapters:
 \begin{equation}
   m(T,n) \;=\; \Lambda \;\hat h(T)\;\hat O_n ,
   \label{eq:massmatrix}
 \end{equation}
 the tower factor $\hat h(T)$ being the charge/colour handle and the generation factor $\hat O_n$
-the substrate overlap of the $n$-th radial level (Section~\ref{sec:generations}). The handle is
-pure group theory and the measured gauge couplings,
+the substrate overlap of the $n$-th radial level (Section~\ref{sec:generations}), with one shared
+well depth---no per-tower knob. The handle is pure group theory and the measured gauge couplings,
 \begin{equation}
   \hat h(T) \;\sim\; \alpha_s\,C_2^{\mathrm{colour}}(T) + \alpha_{\mathrm{em}}\,Q^2(T)
-                     + \alpha_w\,T(T{+}1),
+                     + \alpha_w\,T(T{+}1):
 \end{equation}
-with no fitted per-tower knob: quarks sit above leptons because $\sim\!85\%$ of a quark's handle
-is colour, the channel leptons lack, and a right-handed neutrino is a total singlet---colour $0$,
-charge $0$, weak $0$---so its handle is \emph{exactly zero} and its mass vanishes at leading
-order. The neutrino is light because of its charges, not by a tuned small number: the one piece
-of the mass problem the framework settles cleanly and without fit.
+quarks sit above leptons because $\sim\!85\%$ of a quark's handle is colour, the channel leptons
+lack. The neutrino needs more care, and it is the most interesting case. A Dirac mass couples a
+left-handed field to a right-handed one, $m_D\,\bar\nu_L\nu_R$, so it requires \emph{both} to grip
+the condensate. The left-handed neutrino does carry weak isospin ($T=\tfrac12$), but the
+right-handed neutrino is a \emph{total singlet}---colour $0$, charge $0$, weak $0$---the one
+fermion that couples to nothing that condenses. Its handle therefore vanishes, the leading Dirac
+mass with it, and the physical neutrino mass is pushed down to the seesaw value $m_\nu\sim
+m_D^2/M$, with $M$ a heavy right-handed (Majorana) scale: tiny, not exactly zero, and far below
+every charged fermion. The neutrino is light \emph{because of its charges}---it is the fermion the
+condensate can barely grip---not by a tuned small number. That is the one piece of the mass problem
+the framework settles cleanly and without fit: it predicts a sub-eV neutrino tower, the absolute
+value (the seesaw scale $M$) being the only owed input.
 
-Assembling \eqref{eq:massmatrix} for all four towers and three generations gives
-Table~\ref{tab:masses} and Figure~\ref{fig:masscomparison}.
+Assembling \eqref{eq:massmatrix} for all four towers and three generations, and adding $W$, $Z$
+(from the condensate scale and the measured gauge couplings, Chapter~\ref{chap:forces}) and the
+composite Higgs (the walking dilaton, $\sim0.5v$), gives all fifteen elementary masses---in
+$\mathrm{GeV}$ and $\mathrm{MeV}$, from the equations and a single scale, with no fitting
+(Table~\ref{tab:weltformel} and Figure~\ref{fig:weltformel}).
+
+\input{chapters/auto/weltformel_table}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{weltformel_spectrum}
+  \caption{The Weltformel spectrum: all fifteen elementary masses from Eq.~\eqref{eq:massmatrix}
+  and the gauge couplings, with one global scale and \emph{no} per-particle fitting. Open circles:
+  the torsiton predictions; filled: measured; coloured by family. The structure is exact---three
+  generations, geometric ladders, quarks above leptons, the neutrino driven to zero. The charged
+  fermions land within one to two orders of magnitude (no fit), and the gauge bosons $W,Z,H$
+  within a percent. Contrast the per-tower-anchored fit of Figure~\ref{fig:masscomparison}, which
+  tightens the agreement at the cost of three extra inputs.}
+  \label{fig:weltformel}
+\end{figure}
+
+For comparison, allowing one anchor and one shape per tower (three extra inputs, the
+``geometric-relationship'' fit) tightens every charged fermion to within a factor of three
+(Table~\ref{tab:masses}, Figure~\ref{fig:masscomparison})---confirming that the geometric ladder
+is real and the residual is an overall per-tower normalisation, not a failure of the shape. But
+the honest, input-free result is Table~\ref{tab:weltformel}: the spectrum from one scale.
 
 \input{chapters/auto/mass_table}
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\textwidth]{mass_comparison}
-  \caption{The torsiton mass spectrum versus experiment, in physical units. Open circles: the
-  torsiton masses of Eq.~\eqref{eq:massmatrix}; filled: the measured values; coloured by family.
-  Every one of the twelve fermions lands within about a factor of three of its measured mass
-  across five orders of magnitude---the charged leptons within $10$--$20\%$---and the neutrinos
-  sit at the floor, forced light by their vanishing handle. The relative placement is
-  qualitatively exact; the absolute values are within an order of magnitude.}
+  \caption{The per-tower-anchored comparison (three extra inputs beyond the single global scale
+  of Figure~\ref{fig:weltformel}): each tower's overall normalisation fixed to one mass, the
+  generations then predicted. Every charged fermion falls within a factor of three, the leptons
+  within $10$--$20\%$---the geometric relationships are tight; only the inter-tower normalisations
+  are owed.}
   \label{fig:masscomparison}
 \end{figure}
 
 \section{What this is}
 \label{sec:what-this-is}
 
-It is worth stopping to say plainly what Table~\ref{tab:masses} is, because the field has been
+It is worth stopping to say plainly what Table~\ref{tab:weltformel} is, because the field has been
 without it for fifty years. \emph{The entire spectrum of elementary-particle masses has been
-computed from geometry}---from the constants of Nature and the charges, with no Yukawa couplings
-put in by hand. The result is right \emph{qualitatively}---every quark, every lepton, every
-neutrino is located where it belongs, in the correct family, in the correct generational order,
-with quarks above leptons and neutrinos at the floor---and right \emph{quantitatively} to within
-an order of magnitude, the charged leptons to tens of percent. The same condensate scale gives
-$W$, $Z$, and the composite Higgs (Chapter~\ref{chap:forces}).
+computed from geometry}---from the constants of Nature and the charges, with one overall scale and
+no Yukawa couplings put in by hand. The result is right \emph{qualitatively}---every quark, every
+lepton, every neutrino is located where it belongs, in the correct family, in the correct
+generational order,
+with quarks above leptons and neutrinos at the floor---and right \emph{quantitatively}, the
+charged fermions within one to two orders of magnitude with a single scale, the gauge bosons
+$W,Z,H$ within a percent. Fifteen elementary masses, in $\mathrm{GeV}$ and $\mathrm{MeV}$, from
+one equation and the constants.
 
 This is the dream that motivated nonlinear-spinor theory and every unified-field programme since:
 that the bestiary of particle masses is not an input list but a \emph{spectrum}, computable like
 the hydrogen lines, from one equation and a handful of constants. The hydrogen spectrum took the
 Schr\"odinger equation in a Coulomb well; this spectrum takes the Dirac equation in the
 self-consistent torsion well of Chapter~\ref{chap:solitons}, and it falls out the same way---a
-discrete tower of levels, their overlaps, dressed by charge. That it works at all, that the
-twelve masses land in the right places, is the strongest evidence in this book that the torsiton
-picture is more than an analogy. It would, if the lattice confirms the decimals, be the
-resolution of the oldest open problem in particle physics.
+discrete tower of levels, their overlaps, dressed by charge. That it works at all---that fifteen
+masses spanning twelve orders of magnitude land in the right places, qualitatively exactly and
+quantitatively within an order or two, from no inputs but the charges and a single scale---is the
+strongest evidence in this book that the torsiton picture is more than an analogy. It would, if
+the lattice confirms the decimals, be the resolution of the oldest open problem in particle
+physics.
 
 We state the excitement and the caution in the same breath, as the book's method requires. The
-caution: the absolute normalisations---the difference between a factor of three and exact
-agreement, the precise inter-tower ratios, the exact value of $\Lambda$---are the strongly-coupled
-core, owed to the lattice. The excitement is not diminished by this. A theory that places all
-twelve fermion masses correctly, qualitatively and to within an order of magnitude, from $G$,
-$\hbar$, $c$ and the charges, has done something no other framework has done; the remaining work
-is to sharpen a result that already exists, not to conjure one that does not.
+caution: the absolute normalisations---the inter-tower splittings (why the top is forty times the
+bottom), the exact value of $\Lambda$---are the strongly-coupled core, owed to the lattice, and
+the no-fit spectrum is off by as much as a factor of seventy in its worst case. The excitement is
+not diminished by this. A framework that places all twelve fermion masses and the three bosons
+correctly---qualitatively exactly, quantitatively within an order or two, from $G$, $\hbar$, $c$,
+the charges, and one scale---has done something no other framework has done. The remaining work is
+to sharpen a result that already exists, not to conjure one that does not.
 
 \section{The two remaining gaps}
 
@@ -131,6 +166,6 @@ away at the end, because the infrared scale $\Lambda$ was fixed by dimensional t
 before any mass was quoted, exactly as $\Lambda_{\mathrm{QCD}}$ is fixed in the Standard Model.
 What remains of it is a single number---the value of $\Lambda$ itself, equivalently the
 propagating-torsion coupling $g$ and its $\beta$-function---which is lattice target~L5 and the
-density question of Part~I. Two numbers from a supercomputer stand between Table~\ref{tab:masses}
-and the periodic table of the quarks and leptons computed exactly. The framework predicts they
-are computable; Appendix~\ref{app:lattice} says how.
+density question of Part~I. Two numbers from a supercomputer stand between
+Table~\ref{tab:weltformel} and the periodic table of the quarks and leptons computed exactly. The
+framework predicts they are computable; Appendix~\ref{app:lattice} says how.

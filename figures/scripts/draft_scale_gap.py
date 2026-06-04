@@ -68,9 +68,9 @@ def main():
     with open(os.path.join(OUT_DIR, "scale_gap.txt"), "w") as f:
         f.write(text + "\n")
 
-    fig, (axA, axB) = plt.subplots(1, 2, figsize=(13.0, 5.4))
+    fig, axA = plt.subplots(figsize=(7.6, 5.4))
 
-    # ---- A: the transmutation curve + running ----
+    # ---- the transmutation curve ----
     g2 = np.linspace(0.005, 0.5, 400)
     ratio = np.exp(-2 * np.pi / (7.0 * g2))
     axA.semilogy(g2, ratio, "C0", lw=2.2, label=r"$\Lambda/M_{Pl}=e^{-2\pi/(b_0 g_T^2)}$ ($b_0$=7)")
@@ -91,32 +91,7 @@ def main():
     axA.legend(fontsize=8.5, loc="lower right")
     axA.grid(True, which="both", alpha=0.15)
 
-    # ---- B: matrix before/after transmutation ----
-    fm = sp.fermion_matrix_GeV()
-    for t in sp.TOWERS:
-        before = fm["matrix_GeV"][t]
-        after = mat[t]
-        obs = sp.OBSERVED_GEV[t]
-        axB.scatter([0, 1, 2], before, color=TCOLOR[t], marker="^", s=45, alpha=0.5)
-        axB.scatter([0, 1, 2], after, color=TCOLOR[t], marker="s", s=55, edgecolor="k", lw=0.5)
-        axB.scatter([0, 1, 2], obs, color=TCOLOR[t], marker="o", s=70, edgecolor="k", lw=0.6,
-                    label=t)
-    axB.axhspan(1e15, 1e20, color="0.85", alpha=0.5)
-    axB.text(0.05, 3e18, "Planck (before): triangles", fontsize=8.5, color="0.4")
-    axB.text(0.05, 4e2, "transmuted: squares   observed: circles", fontsize=8.5, color="0.3")
-    axB.set_yscale("log")
-    axB.set_xticks([0, 1, 2]); axB.set_xticklabels(["gen I", "gen II", "gen III"])
-    axB.set_ylabel("mass (GeV)")
-    axB.set_ylim(1e-12, 1e20)
-    axB.set_title("Weltformel matrix: Planck $\\to$ transmuted\n"
-                  "scale gap closes (heavy end into the ballpark)", fontsize=11)
-    axB.legend(fontsize=7.5, loc="center right")
-    axB.grid(True, which="both", axis="y", alpha=0.12)
-
-    fig.suptitle("Closing the scale gap: dimensional transmutation of the propagating "
-                 "spin-gravity coupling ($g_T$, the second coupling beyond $G$)",
-                 fontsize=11.5, y=1.0)
-    fig.tight_layout(rect=(0, 0, 1, 0.94))
+    fig.tight_layout()
     fig.savefig(os.path.join(PDF_DIR, "scale_gap.pdf"))
     fig.savefig(os.path.join(PDF_DIR, "scale_gap.png"), dpi=130)
     plt.close(fig)
