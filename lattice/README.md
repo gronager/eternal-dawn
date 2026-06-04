@@ -66,9 +66,10 @@ export GRID=$HOME/ed-lattice/src/Grid/build # the run scripts read $GRID
 
 The build script is self-contained: it `apt-get`-installs the external dependencies (GMP, MPFR,
 FFTW, HDF5, OpenSSL, autotools), builds **c-lime** from source, clones and configures Grid for
-single-GPU Hopper (`sm_90`, no MPI), and crucially runs **`make tests`** — Grid builds only the
-library and top-level tests by default, so the sub-directory executables the run scripts call
-(`tests/hmc/...`, `tests/core/...`) exist *only* after `make tests`. Step 5 then **lists the test
+single-GPU Hopper (`sm_90`, no MPI), and builds **only the five executables the run scripts need**
+— each independently. (Grid's `make` builds just the library + top-level tests, and its full
+`make tests` is all-or-nothing: one sibling test that won't compile on a GPU config aborts the
+whole suite. Building the five we use one at a time sidesteps that.) Step 5 then **lists the test
 executables that were actually built**: Grid's test names vary by version, so if a run script
 names one that isn't in that list, swap in the matching name. The run scripts call `require_exe`
 up front and fail with that same guidance rather than a bare "No such file or directory."
