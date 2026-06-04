@@ -66,7 +66,7 @@ def main():
              r" is within a factor of $\sim$3 across five orders of magnitude (leptons"
              r" $\sim$10--20\%); exact ratios are owed to the lattice (Appendix~\ref{app:lattice}).}",
              r"  \label{tab:masses}",
-             r"  \begin{tabular}{llll}", r"    \toprule",
+             r"  \small", r"  \begin{tabular}{llll}", r"    \toprule",
              r"    family & \multicolumn{3}{c}{generation: torsiton (measured)} \\",
              r"     & I & II & III \\", r"    \cmidrule(lr){2-4}"]
     for fam, cells in rows:
