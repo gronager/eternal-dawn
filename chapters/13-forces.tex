@@ -1,0 +1,185 @@
+\chapter{The Forces from the Field}
+\label{chap:forces}
+
+If matter is torsitons, the forces between them are not separate ingredients either: they are
+what the same gravity--torsion field does when two knots overlap and exchange. This chapter
+walks the strong and electroweak interactions back to properties of that one field, and asks
+the hard question of the programme---whether the electroweak precision parameter $S$ can be
+brought below its measured bound. The answer decides whether Part~III lives or retreats to
+Part~II.
+
+\section{Colour is forced by the label}
+\label{sec:colour}
+
+A torsiton built from a Dirac field carries the Pauli exclusion label, and for three filled
+states that label is three-valued. Treating it as an internal $SU(3)$ charge is not a choice
+bolted on---it is forced by the requirement that the bound state antisymmetrise. The resulting
+channel factors $\langle T_1\!\cdot\!T_2\rangle$ are then pure group theory, and they
+\emph{are} those of QCD: the singlet attractive ($-4/3$), the octet repulsive ($+1/6$), the
+antitriplet ($-2/3$), the sextet ($+1/3$). Mesons (singlet) and baryons (three colours) bind;
+free quarks and free diquarks do not. The colour structure of the strong interaction is
+recovered, not assumed (Figure~\ref{fig:color}).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{color_force}
+  \caption{Colour channel factors from the $SU(3)$ Casimirs forced by the Pauli label. The
+  attractive singlet and the repulsive octet reproduce QCD's channel structure; every
+  perturbative overlap channel screens to zero, so confinement must come from elsewhere
+  (Section~\ref{sec:confinement}).}
+  \label{fig:color}
+\end{figure}
+
+\section{The four-fermion term, Fierzed}
+\label{sec:fierz}
+
+The torsion-induced interaction is a single axial--axial four-fermion term \citep{hehl1976}. A
+Fierz transformation re-expresses it in the scalar, pseudoscalar, vector, axial, and tensor
+channels; carried out explicitly with the Dirac matrices it gives equal vector and axial
+couplings, $G_A = G_V$ (Figure~\ref{fig:fierz}). This is not a cosmetic detail: a sector with
+$G_A=G_V$ is precisely the ``walking-favourable'' case, the one whose vector and axial current
+correlators tend to equalise---which, as Section~\ref{sec:S} shows, is exactly what is needed
+to push the electroweak $S$ down.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{fierz}
+  \caption{The Hehl--Datta four-fermion term, Fierzed into channels: the vector and axial
+  couplings come out equal, $G_A=G_V$---the walking-favourable starting point for the
+  electroweak parameter $S$.}
+  \label{fig:fierz}
+\end{figure}
+
+\section{Confinement: one substrate, two regimes}
+\label{sec:confinement}
+
+The overlap (one-gluon-exchange) forces of Section~\ref{sec:colour} all \emph{screen}: they
+fall to zero at large separation. Confinement---a potential that rises forever, $V(L)=\sigma
+L$---is not produced by any pairwise overlap; it is a non-perturbative property of the
+non-abelian field. The candidate mechanism is the dual superconductor: if the chiral condensate
+expels colour-electric flux, it squeezes that flux into a Nielsen--Olesen tube of finite width,
+whose energy grows linearly with length (Figure~\ref{fig:flux}). At the Bogomolny point the
+string tension saturates the topological bound, $\sigma = 2\pi v^2$---so the \emph{same}
+condensate that sets configurational mass sets the confinement scale. One substrate does both
+jobs; the potential is the Cornell sum $V(r)\approx -\kappa/r + \sigma L$, the overlap dressing
+the short distance, the substrate confining the long. Whether the gravity--torsion vacuum
+actually realises dual superconductivity is the cleanest lattice question (Appendix).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{flux_tube}
+  \caption{A confining flux tube from the condensate. A Nielsen--Olesen vortex squeezes
+  colour-electric flux into a string of tension $\sigma=2\pi v^2$ (the same condensate scale
+  that sets mass), giving the linear confinement the screening overlaps cannot. Conditional on
+  the vacuum being a dual superconductor.}
+  \label{fig:flux}
+\end{figure}
+
+\section{The electroweak $S$: the make-or-break}
+\label{sec:S}
+
+If electroweak symmetry is broken by the gravity--torsion condensate rather than an elementary
+Higgs, the theory is technicolor-like \citep{weinberg1979,susskind1979}, and its central danger
+is the Peskin--Takeuchi parameter $S$ \citep{peskin1992}. A QCD-like sector gives $S\approx0.25$,
+well above the LEP bound $S\lesssim0.1$: the ``technicolor graveyard.'' Two facts move the theory
+off that headstone. First, the $G_A=G_V$ of Section~\ref{sec:fierz} equalises the vector and
+axial correlators, and a random-phase (RPA) resummation of the simpler numerical model shows the
+ratio $S_{\mathrm{torsion}}/S_{\mathrm{QCD}}$ falling as the sector walks
+(Figure~\ref{fig:rpa})---a real, growing relative advantage. Second, near-conformal (``walking'')
+dynamics \citep{holdom1981,dietrich2007} raises the resonance masses relative to $f_\pi$, and the
+Weinberg sum rules \citep{weinberg1967} give
+\[
+  S = 4\pi\left(\frac{f_\pi}{M_V}\right)^2\!\left(1+\frac{M_V^2}{M_A^2}\right),
+\]
+which falls below $0.1$ once $M_V/f_\pi \gtrsim 13$ (versus QCD's $\sim 8$). The simpler numerical
+work---analytic Fierz algebra, RPA moments, sum-rule saturation, as opposed to a full lattice
+treatment---places the theory \emph{favourably}, but does not settle the absolute value: whether
+the walking sector actually clears $S<0.1$ is a frontier lattice computation
+(Appendix~\ref{app:lattice}), and the field has not settled the analogous technicolor question in
+forty years.
+We bank on it provisionally and mark it as the load-bearing assumption.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{electroweak_S}
+  \caption{The electroweak $S$. A QCD-like sector sits in the graveyard ($S\sim0.25$); the
+  $G_A=G_V$ torsion sector, RPA-resummed, gains a growing relative advantage as it walks. The
+  direction is favourable; the absolute $S<0.1$ is the lattice make-or-break.}
+  \label{fig:electroweak-S}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{rpa}
+  \caption{RPA resummation: with $G_A=G_V$ the torsion sector's $S$ falls relative to a
+  QCD-like sector as the dynamics walk---a genuine, growing advantage (shown as a ratio; the
+  absolute value is owed to the lattice).}
+  \label{fig:rpa}
+\end{figure}
+
+\section{$W$, $Z$, and the composite Higgs}
+\label{sec:wzh}
+
+Banking on $S$, the boson masses are then the cleanest numbers in the Part---though it is worth
+being precise about what is \emph{computed} and what is \emph{input}. We take the condensate scale
+$v=246~\mathrm{GeV}$ (in the framework this is the infrared scale $\Lambda$ of
+Section~\ref{sec:ir-potential}, generated rather than an inserted Higgs vacuum value, but its
+\emph{numerical} value is fixed to experiment here) and the measured gauge couplings $g,g'$, so
+that
+\[
+  m_W = \tfrac12 g v, \qquad m_Z = \tfrac12\sqrt{g^2+g'^2}\,v
+\]
+are not predictions of $80$ and $91~\mathrm{GeV}$ from nothing---they reproduce the Standard
+Model's own tree-level relations, with the same three inputs. These are therefore not ab-initio
+numbers. What \emph{is} a genuine, input-free prediction is the structure: a custodial (doublet)
+condensate gives $\rho = m_W^2/(m_Z^2\cos^2\theta_W)=1$, equivalently $m_W=m_Z\cos\theta_W$---one
+fewer parameter than a general Higgs sector, observed to $\sim0.1\%$ (Figure~\ref{fig:ewmasses}).
+The $125~
+\mathrm{GeV}$ scalar is then \emph{composite}: a torsiton--anti-torsiton bound state, not an
+elementary field. Its mass is a strong-dynamics bound state---owed to the lattice---but its
+\emph{lightness} is explained: a generic composite scalar would be heavy ($\sim$~TeV, the
+excluded heavy-sigma), whereas a walking sector yields a light pseudo-dilaton at $\sim0.5v$,
+exactly where the observed Higgs sits. The Higgs is light because the sector walks---the same
+walking the $S$ parameter needs.
+
+This is worth stating bluntly, because it is the framework's most direct collision with
+established particle physics. The 2013 Nobel Prize honoured the Higgs \emph{mechanism}---
+electroweak symmetry broken by a condensate---and that mechanism this framework keeps entirely;
+the bounce-condensate breaks the symmetry exactly as advertised. What it does \emph{not} keep is
+the elementary Higgs \emph{field}. In this reading the $125~\mathrm{GeV}$ particle is not a
+fundamental scalar but the lightest composite of the new strong sector---the analogue of the
+$\sigma$/$f_0(500)$ meson of QCD, a torsiton--anti-torsiton state. The discovery at the LHC
+confirmed the \emph{mechanism}; it did not establish that the boson is elementary, and the
+experiments that could tell an elementary scalar from a composite one---precision coupling
+measurements, off-shell behaviour, the search for partners---are not yet decisive. To that
+extent the prize was awarded on the mechanism while the deeper question, what the boson
+\emph{is}, remained open.
+
+And the framework makes that question answerable, because a composite Higgs cannot be alone. If
+the $125~\mathrm{GeV}$ scalar is a torsiton pair bound by the new strong force, then---exactly as
+QCD has not one meson but a whole spectrum ($\sigma$, $\rho$, $a_1$, $\dots$)---there must be a
+\emph{tower} of further composites: heavier scalars, pseudoscalars, and especially vector
+resonances (the ``techni-$\rho$'') built from torsiton pairs, plus the technipions already eaten
+to make the $W$ and $Z$ massive. These are short-lived torsiton--anti-torsiton (and multi-torsiton)
+states at the TeV scale, and finding even one would settle the matter. So the sharp,
+falsifiable prediction that distinguishes this picture from the Standard Model is twofold: the
+$125~\mathrm{GeV}$ boson should eventually betray its compositeness (form factor, coupling
+deviations) where the Standard Model says ``point-like forever''; and it should not be the only
+Higgs-like state---a spectrum of heavier composite resonances should appear as the energy reach
+climbs. The Standard Model predicts a desert above the Higgs; this framework predicts company.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{electroweak_masses}
+  \caption{$W$, $Z$, and Higgs in the composite/walking reading. $m_W,m_Z$ follow from the
+  condensate scale and the gauge couplings (within $0.4\%$), with custodial $\rho=1$ a genuine
+  prediction. The Higgs is a composite scalar; the observed $125~\mathrm{GeV}$ sits at the
+  light, walking-dilaton edge, far from the excluded heavy-sigma.}
+  \label{fig:ewmasses}
+\end{figure}
+
+There is no separate generation-changing boson to find: generations are internal rungs of one
+torsiton, so a generation transition is an internal de-excitation carried by the \emph{existing}
+weak current, and the CKM/PMNS mixings are the wavefunction overlaps between rungs. The place
+this picture is tested is the flavour-changing neutral currents that plague extended
+technicolor---the experimental front where the parsimony lives or dies.

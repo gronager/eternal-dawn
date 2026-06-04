@@ -1,0 +1,54 @@
+\chapter{The Lattice Targets}
+\label{app:lattice}
+
+Parts~II and~III reduce the matter-and-force programme to a finite, ordered set of
+non-perturbative calculations---the ones the laptop cannot reach but a lattice gauge-theory
+group could. This appendix states them precisely enough to be picked up, with success criteria
+and a sense of cost, so that the framework's quantitative claims are consequences to compute
+rather than parameters to insert. The boundary is deliberately sharp: what analytic, few-body,
+and mean-field methods settled is in the chapters; what genuinely needs leadership-class
+computation is here.
+
+\paragraph{L1 --- Does the gravity--torsion vacuum confine?}
+Put the Part~I non-abelian connection on a Euclidean lattice and measure the Wilson-loop area
+law (or a dual order parameter for monopole condensation). \emph{Success:} a clear area law and
+a string tension $\sigma$; \emph{failure:} a perimeter law / screening, which kills the
+soliton-confinement picture cleanly. This is the cheapest target (pure gauge, no chiral
+fermions needed for the string) and the natural first step---it directly tests the dual-
+superconductor assumption of Section~\ref{sec:confinement}, and it can falsify the picture
+quickly.
+
+\paragraph{L2 --- The string tension in physical units.}
+Given L1, extract $\sigma$ and test $\sigma \propto f_\pi^2$---the condensate scale that also
+sets the configurational mass. \emph{Success:} a $\sigma$ consistent with the chiral-soliton
+condensate scale, confirming ``one substrate, mass and confinement both.''
+
+\paragraph{L3 --- The electroweak $S$ of the walking sector.}
+Compute the vector and axial current correlators of the strongly-coupled, near-conformal sector
+($G_A=G_V$ from the Fierz, Section~\ref{sec:fierz}) and extract $S$. \emph{Question:} does the
+walking pull $S$ below the LEP bound $\sim0.1$? \emph{Success:} Part~III lives; \emph{failure:}
+retreat to Part~II intact. This is the frontier target---near-conformal dynamics are notoriously
+hard, and the field has not settled the analogous technicolor question in forty years. The
+laptop work says the theory is favourably placed, not safe; only this decides it.
+
+\paragraph{L4 --- The fermion mass spectrum as overlap integrals.}
+With lattice soliton wavefunctions in hand, compute the Yukawa couplings as overlap integrals---
+one fermion mass ratio, parameter-free, rather than inserted. \emph{Success:} one ratio matching
+observation with no tuned input would be the result that makes the whole programme worth more
+than its coherence. The generation \emph{shape} (the geometric ladder, the substrate steepening)
+is laptop-computed; the exact \emph{ratios} are this target.
+
+\paragraph{L5 --- The particle-scale binding density versus $\rhoc$.}
+Determine whether the density at which a particle-scale torsiton stabilises equals the
+cosmological bounce density $\rhoc$, or differs by a computable factor. Equivalently (in the
+language of Chapter~\ref{chap:weltformel}), pin the transmuted scale $\Lambda = M_{\mathrm{Pl}}
+\exp(-2\pi/b_0 g_T^2)$ by fixing $g_T$ and $b_0$ from the propagating-torsion sector.
+\emph{Success:} a derived particle-scale density and an explicit relation to $\rhoc$, closing
+the scale gap with a number rather than an order of magnitude.
+
+\bigskip
+\noindent The honest order is the reverse of glamour: L1 first---the cheapest, most decisive,
+most falsifiable---because it is the one that can kill the picture quickly. Only if the vacuum
+confines do L3 (the $S$ make-or-break) and L4 (the masses) become worth their large cost. Every
+chapter result is reproducible from the repository as far as laptop computation reaches; this
+appendix marks exactly where that reach ends and the supercomputers begin.

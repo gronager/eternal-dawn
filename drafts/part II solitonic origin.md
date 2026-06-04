@@ -28,6 +28,8 @@ A note on the bounce density. Part I sets the cosmological bounce density at ρ_
 
 In Einstein–Cartan geometry the connection carries an antisymmetric part, torsion, sourced by fermion spin (Part I, Axiom A3). Curvature pulls matter together; torsion, at high spin density, pushes it apart. Part I used the second to reverse a collapse. The same opposition admits a stationary solution: a configuration in which inward curvature and outward torsion balance not momentarily, at a bounce, but permanently, holding a finite, localized lump of field together. We call such a stationary solution a **gravity–torsion soliton**, and the proposal of this Part is that the elementary fermions are solitons of this kind.
 
+A name for the quantum. "Soliton" is generic — it names *any* self-bound, non-dispersing solution of a nonlinear field, of which there are many across physics. The object here is the specific one: the stable bound solution of the gravity–torsion field, the torsion-supported standing knot. Where the gravity quantum is the *graviton*, we call the torsion-bound matter quantum the **torsiton** — torsion + the particle suffix, parallel to graviton, naming *which* soliton it is. The torsiton is the elementary unit of matter in this Part: a torsiton is what an electron or a quark *is*, in the same sense that a photon is what light is. (Graviton being already spoken for, torsiton takes the adjacent slot it leaves open.) We lead with "soliton" where the generic mathematical object is meant and "torsiton" where the physical matter-quantum of this framework is meant; the two are introduced together here and used with that distinction throughout.
+
 **Mass is bound field energy, not a separate substance.** The soliton has no point of infinite density at its centre — that is the whole inheritance from Part I’s refusal — so its energy is finite, and its rest mass is simply the total energy of the bound configuration: curvature energy, torsion energy, and the internal motion of whatever the knot contains. There is no mass added by hand; mass is what the bound field weighs. This is the same accounting by which the proton’s mass is overwhelmingly the energy of its internal fields and motion rather than the rest masses of its constituents, and that parallel is not decorative — it is the feature the program most wants to inherit, and we return to it in Chapter II.3.
 
 **The soliton is a fermion, and this is the one genuinely forced property.** Torsion couples to spin. A stationary torsion-supported knot is therefore intrinsically a configuration of nonzero spin, and the minimal such object carries spin one-half. This is the strongest claim in Part II precisely because it is the least optional: the soliton is fermionic *because* the binding mechanism is spin-sourced. The fermionic character of matter is not an input to this picture but a consequence of which field does the binding. (The corollary — that bosons are not solitons of this kind but excitations of the connection itself — is taken up in Part III, where it becomes the dividing line between matter and force.)
@@ -35,6 +37,8 @@ In Einstein–Cartan geometry the connection carries an antisymmetric part, tors
 **No horizon, hence no baldness.** The classic objection to “particle as black hole” is the no-hair theorem: a black hole remembers only mass, charge, and angular momentum, while a particle carries colour, flavour, weak isospin — a whole register GR cannot store. The objection is fatal to a *horizon*; it is silent on a *horizonless soliton*. Because the bounce removes the singularity, the soliton need have no horizon, and a horizonless regular configuration is under no obligation to forget its quantum numbers. The price is exact and worth stating plainly: this picture buys the right to carry internal structure by giving up the horizon, so a soliton is emphatically *not* a small black hole. It is the regular core that the bounce permits where a black hole’s singularity used to be. The relation to the black-hole limit survives only at the very top of the mass scale, where a soliton’s would-be Schwarzschild radius grows to meet its core; for any real particle that correction is of order (m/m_Planck)² ∼ 10⁻⁴⁰ and does nothing.
 
 **Status of this chapter.** The existence of a stable, regular, spin-supported soliton of the Einstein–Cartan field equations is *assumed* here and is a nontrivial dynamical claim. The soliton tradition (notably Burinskii’s regularized Dirac–Kerr–Newman construction) makes it plausible but not settled in this specific torsion-bounce setting. Establishing that the Part I bounce potential admits stationary bound solutions — and computing even one — is the foundational computation target of Part II (see the targets list). Until it is done, the soliton is a well-motivated hypothesis, not a demonstrated object.
+
+**The first wall is Derrick’s theorem, and the framework is built to clear it.** The standard reason “particle as a lump of field” attempts die is Derrick’s theorem: in three space dimensions a static, finite-energy soliton of a plain scalar field is forbidden by a scaling argument — shrink it and the energy only drops, so nothing holds it at a finite size. Two ingredients evade it, and the soliton has both. First, the binding object is a *Dirac* field, not a scalar: integrating torsion out of Einstein–Cartan leaves a nonlinear Dirac equation of Soler type, whose first-order spinor kinetic term scales differently from a scalar’s, and Soler-type solitons are known to exist in 3-D precisely for this reason. Second, the binding balances *two terms with different size-scaling* — inward attraction against the outward ρ² torsion wall — which is the same two-terms-balance that makes the cosmological bounce; a balance at a finite radius is exactly what Derrick forbids a single scalar and permits two competing powers. So Derrick is not a wall the soliton runs into blindly; it is the wall the framework’s own bounce mechanism is shaped to clear, and confirming it explicitly for the Part I potential is the first item of target #1.
 
 -----
 
@@ -94,9 +98,13 @@ The observed spectrum is the *product* of these two ladders, and that product st
 
 **The relativistic ladder is Regge-shaped, and that is a bridge, not a coincidence.** The non-relativistic harmonic core gives an equally-spaced ladder (energy linear in the quantum number, with the spatial SU(3) degeneracies 1, 3, 6, 10). But at binding densities the binding is comparable to the mass, and the correct treatment is relativistic — the Dirac-oscillator form, in which it is the *square* of the energy that is linear in the quantum number, so masses grow as the square root of the level and the spacing bunches as one climbs. Equivalently, m² grows linearly: the Regge pattern of real hadrons, with its empirical slope of about 1.1 GeV⁻². The relativistic soliton bound state therefore wears, natively, the empirical signature of the composite hadron spectrum. This is encouraging and must be kept in proportion: Regge behaviour is already claimed, and well, by QCD flux tubes. Reproducing a known slope from a new mechanism is suggestive of consistency, not of superiority; distinguishing the soliton account from the flux-tube account would require a *second* number — a deviation, a curvature, an intercept — where the two disagree. That comparison is a target, not a result.
 
+A first numerical pass already shows the shape. Solving the radial Dirac equation in the self-generated confining well (the SymPy-verified reduction, `sims/.../soliton.py`) returns a rising tower whose squared energies are linear in the level index to better than one percent for a linear (flux-tube-like) wall — the Regge form, parameter-free — and bend upward for the steeper, anharmonic ρ²-wall of the actual bounce. So “the relativistic bound state is Regge-shaped” is now a computed statement and not only an analytic hope. But two honesties bound it. The slope is a *shape*, fixed here in dimensionless units; the absolute scale is the open density question, and the bare Einstein–Cartan coupling would put it near the Planck mass unless the particle-scale binding density differs from the cosmological ρ_C (target #5). And — the point that matters most for what comes after — **this is not an ordinary potential problem.** The well is not external: it is the one the fermion’s own axial-spin density digs through the four-fermion (Hehl–Datta) term, so the honest equation is a *nonlinear, self-consistent* Dirac equation (NJL/Soler class), in which the spectrum back-reacts on the well that binds it and Pauli filling of the levels matters. The fixed-well calculation here is the first iteration of that self-consistency, not its endpoint; the real difficulty — and the place the optimistic analytic story is most likely to get nastier — lives in the back-reaction, and it is owed.
+
 **Relativity dresses the symmetry; it does not preserve it intact.** The same relativistic treatment that produces the Regge form also produces a large spin-orbit splitting (of order the level spacing itself, not the feeble fine-structure scale of atoms), which breaks the clean 1/3/6/10 spatial degeneracy into interleaved sub-ladders and produces an approximate degeneracy between states of different orbital angular momentum — the pseudospin pattern observed in nuclear single-particle spectra. That an unforced near-degeneracy of this kind shows up in nature is a point in the picture’s favour; whether the *specific* Part I bounce profile lands in the coupling class that produces it is a computation (it turns on the Lorentz character of the Cartan term), and is owed.
 
 **Tunnelling gives every state a width.** No finite potential confines absolutely; the bounce is a turning point at finite density, not an infinite wall, so there is always a small amplitude to tunnel through it. Two consequences follow. Inward, a soliton has a finite amplitude to penetrate its own bounce — so a soliton is metastable, with a lifetime, rather than eternal. Outward, a constituent can tunnel out of its coalition — ordinary quantum decay. The unified statement is that a soliton or bound state is not a sharp mass eigenvalue but a resonance with a width set by its tunnelling rate; the sharp, long-lived particles (electron, proton) are those whose barriers are effectively infinite, and the rest of the zoo carries widths. That real hadron resonances all carry widths, and that the stable/unstable distinction tracks binding depth, is the qualitative prediction this makes — correct in shape, and a target to make quantitative.
+
+**The two tunnelling directions are death and birth, and they close the loop to Part I.** The barrier has two sides, and they are not symmetric. *Outward* tunnelling — a quantum escaping the well to lower density — is decay; for a horizon-scale object it is Hawking radiation, the slow evaporation Part I already uses. *Inward* tunnelling is the strange one the cosmology forces us to take seriously: an amplitude to penetrate to densities *above* ρ_C, past the torsion wall. There is nothing classically allowed there — but a region driven past the bounce density is exactly a region that *bounces*, and on the far side that is a new expanding interior. So inward tunnelling is not annihilation into nothing; it is **nucleation** — the same baby-universe birth that Part I’s instanton describes (Chapter 3), now read as WKB penetration of the very same membrane. The membrane is therefore a two-way quantum barrier: *evaporation* outward, *creation* inward. The asymmetry between the two rates is enormous and is the whole reason the world looks stable — outward emission is a single-quantum process, while inward nucleation must assemble a coherent super-Cartan seed and is suppressed by the full instanton action (the mountain-mass exponent of Chapter 3, ∼10^{84}), so every soliton is in principle metastable against nucleating a child universe at a rate of effectively never. Death is easy and birth is instanton-rare; the same wall sets both. (In the strictly *homogeneous* cosmological potential the inward wall rises without bound toward a→0 and the amplitude is only the bounce’s quantum fuzz; it is the *local* collapse — a soliton, or a black hole — that turns inward tunnelling into an actual new region. That distinction is the same one that separates Part I’s OGU instanton from its black-hole children.)
 
 -----
 
@@ -144,3 +152,104 @@ Stated as specifications, in dependency order, because nothing downstream comput
 1. **The density question.** Determine whether the particle-scale binding density coincides with the cosmological ρ_C ∼ 10⁵⁰ kg m⁻³ of Part I, or differs — and if it differs, by how much and why. *This closes the open caveat of the thesis section and reconciles Part II with Part I.*
 
 *Part III (Electroweak Chemistry) builds on targets 1–3 and adds its own — the composite vector resonances, the custodial-symmetry question, and the precision-electroweak (S, T) confrontation — and must first resolve the consistency tension noted in the cover message: the Part I Hehl–Datta four-fermion term is C-, P-, and T-even, while the weak interaction is maximally C- and P-violating. Any “weak from torsion” claim has to confront that head-on, and it is flagged at the top of Part III rather than buried.*
+-----
+
+## Update — computed results (first numerical pass)
+
+*Added after a session of direct computation. Each is reproducible (`sims/`); the
+honest forced/suggestive/owed status is kept on every line, and one result downgrades
+an earlier hope.*
+
+**Forced / computed (moved from "assumed" to "demonstrated"):**
+
+- **The soliton EXISTS.** The self-consistent Hartree loop — fill the levels (Pauli),
+  their density sources the four-fermion σ field, that field is the well, iterate —
+  *converges* to a genuine self-bound soliton: bound levels, a chiral-restored core
+  (the effective mass flips sign), a finite mass (`self_consistent.py`, `chiral_soliton.py`).
+  Target #1, the existence Chapter II.1 had to assume, is no longer assumed. Derrick is
+  clearable as argued; the Soler/balance evasion holds.
+- **Mass is configurational.** The chiral soliton's observable mass is ~94% field-and-bag
+  energy, only ~6% constituent *gv* — the proton's own accounting — and it scales
+  linearly with the condensate *v=f_π*, vanishing as *v→0*. So mass is bound field
+  energy created by the condensate, not a conserved label; only *P^μ* and the charges
+  (*B−L*, *Q*, spin) are conserved — which is exactly what the bounce keeps through the
+  membrane. This is the spine of new Chapter II.5 (separate file).
+- **Colour is forced, and gives QCD's channel structure.** The Pauli-required 3-valued
+  label *is* the SU(3) fundamental, so the two-body colour factor ⟨T₁·T₂⟩ is fixed
+  (Gell-Mann-validated, C_F=4/3): q-q̄ singlet −4/3 (attract → mesons), q-q antitriplet
+  −2/3 (attract but not a singlet → confined diquark), octet/sextet repel
+  (`color_force.py`). So free states are colour singlets only — q-q̄ (2-body meson) or
+  qqq (3-body baryon, the totally antisymmetric singlet) — and there is *no free
+  2-quark state*, exactly as observed. Which combinations bind is a *consequence* of
+  the forced label, not an input.
+- **Generations are a geometric ladder, and finite.** If generations are internal rungs,
+  the level energies are ~arithmetic but the observable masses are wavefunction overlaps,
+  which fall exponentially with the level — so the masses are *geometric* (ln-mass linear
+  in rung), matching the real fermions' approximate log-spacing (`generations.py`). And
+  the electroweak S budget *caps* the number: leading-order S would forbid even one
+  generation, so walking is mandatory, and cap≈3 needs S/gen≈0.03 — a finite count, with
+  3 plausible but exponentially sensitive (`generations_cap.py`).
+
+**Suggestive (confirmed in shape):** the relativistic tower is ~Regge (E² linear in rung,
+`soliton.py`); Pauli degeneracy flattens the soliton toward the S-friendly walking
+regime (`fermi_ball.py`).
+
+**The downgrade — honest:** the effective forces, computed as soliton overlaps, all
+**screen**: the one-gluon-exchange channels and the residual σ-exchange between singlets
+asymptote to *zero*, not to a linear ~r. **Confinement (V~σr) is NOT produced by the
+overlap picture** — it is a non-perturbative flux tube of the non-abelian connection.
+Whether the gravity-torsion connection actually confines (~r) or only screens (→0) is the
+deepest open question of the strong sector: if it only screens, quarks would not be
+confined and the picture fails here. Lattice-scale, undecided (`color_force.py`,
+`figures/pdf/color_force.pdf`). So the colour *charge* structure is forced and correct,
+but the confining *force* is owed.
+
+**Three colours or four?** Not settled, but the working answer is **three**: it is the
+forced minimum (Pauli), it reproduces the observed colour-channel structure (mesons,
+baryons, no free diquark), and it gives the lower S (N_c/6π). Four (Pati–Salam, lepton as
+the fourth colour) is elegant — it would tie colour to the *B−L* the bounce already
+conserves — but it is *not* forced and it makes S *worse* (S grows with N_c). So three is
+favoured; four is a speculative extension carried at an S cost.
+
+### Confinement update — the substrate supplies the linear term (conditional)
+
+The downgrade above (overlaps screen; confinement ~r is not a pairwise overlap) has a
+candidate resolution, computed. If the gravity–torsion vacuum is a **dual
+superconductor** — its chiral condensate (the same σ the soliton forms) expelling
+colour-electric flux by a dual Meissner effect — then the flux between two colour
+sources is squeezed into a **Nielsen–Olesen flux tube**, a 1-D string whose energy is
+proportional to its length: V(L) = σL, confinement. The vortex ODEs solve
+(`flux_tube.py`); at the BPS point (m_H=m_W) the tension saturates its topological
+bound, σ = 2π v² exactly — the computation's validation. So **a confining flux tube
+exists, with tension σ ∝ v² = f_π²** — the *same* condensate scale that sets the
+(configurational) mass also sets the confinement scale: one substrate, both jobs.
+
+This is **conditional**: it assumes the gravity–torsion vacuum actually is a dual
+superconductor (monopole condensation in the non-abelian connection). Whether it is is
+the genuinely non-perturbative question, and it is a clean, well-posed **lattice** target
+(the Wilson-loop area law / a dual order parameter for the Part I connection; Part IV
+addendum). So confinement is now *possible and scaled*, not assumed — but whether the
+substrate realises it is owed to lattice.
+
+### How the overlap and the tube combine — one substrate, two regimes
+
+It is worth stating how the two contributions to the inter-soliton potential relate,
+because they are not two independent forces added blindly. Both come from the *same*
+gravity–torsion field, as two different responses of it:
+
+- the **overlap** is that field shared *directly* in the two solitons' tails — a genuine
+  two-body wavefunction overlap (one-gluon-exchange and residual σ-exchange), short-range,
+  screening to zero;
+- the **tube** is that field organised by the *substrate vacuum* into a flux string
+  *between* the sources — a collective response of the condensate, not a pairwise overlap,
+  long-range, growing as L.
+
+They dominate in different regimes — the overlap at short range (while the cores
+interpenetrate, before a tube has formed), the tube at long range (after the overlap has
+screened away) — and match smoothly between. So the practical form is the **Cornell
+sum**, V(r) ≈ −κ_overlap/r + σ L, and it is legitimate *precisely because the two regimes
+separate cleanly* (which is why the Cornell potential works so well in QCD). But the right
+picture is one field with two limits — a perturbative (overlap) limit and a
+non-perturbative (substrate/tube) limit — not two forces. The overlap *dresses*; the
+substrate *confines*. The overlap builds the short-distance, "atomic" part of the hadron
+spectrum; the tube builds the long-distance, Regge/string part.
