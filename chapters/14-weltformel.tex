@@ -60,9 +60,38 @@ is the \emph{only} scale; no individual mass is anchored. Every other particle i
   m(T,n) \;=\; \Lambda \;\hat h(T)\;\hat O_n ,
   \label{eq:massmatrix}
 \end{equation}
-the tower factor $\hat h(T)$ being the charge/colour handle and the generation factor $\hat O_n$
-the substrate overlap of the $n$-th radial level (Section~\ref{sec:generations}), with one shared
-well depth---no per-tower knob. The handle is pure group theory and the measured gauge couplings,
+%
+\paragraph{The one scale, and why the top fixes it.}
+This single anchor deserves a word, because it carries content. One dimensionful scale is
+unavoidable: no calculation of dimensionless ratios can yield a mass in $\mathrm{GeV}$ without
+it, and here that scale is the condensate $\Lambda\simeq v$. We could in principle \emph{compute}
+it---it is $M_{\mathrm{Pl}}\exp(-2\pi/b_0 g^2)$ of Section~\ref{sec:ir-potential}---but only once
+the propagating-torsion coupling $g$ and its $\beta$-function are known, which is the one number
+owed to the lattice (L5). Until then we fix it to a single measurement, and the natural choice is
+the top quark---and \emph{only} the top, because the top is the one fermion that sits \emph{at}
+the condensate scale: its overlap is of order one (Yukawa $\simeq1$), so $m_t\simeq v/\sqrt2$ with
+no suppression folded in. Anchoring on a \emph{light} fermion would corrupt the scale: the
+electron's mass is $v$ times a tiny, overlap-suppressed factor, so pinning $v$ to the electron
+would absorb that (uncertain, and here over-estimated) suppression into $v$ and throw everything
+else off by the same factor. Concretely, anchored on the electron the predicted top falls to
+$\sim3~\mathrm{GeV}$ and the Higgs to $\sim2~\mathrm{GeV}$, both some fifty-five times too small.
+The top is the right anchor precisely because it is unsuppressed.
+
+This also explains why $W$, $Z$, and the Higgs come out so well, and what that does and does not
+prove. They are not independent successes: all three are set by the \emph{same} condensate $v$
+that the top fixes ($m_W=\tfrac12 gv$, $m_Z=\tfrac12\sqrt{g^2+g'^2}\,v$, $m_H\simeq0.5v$), so once
+the top pins $v\simeq246~\mathrm{GeV}$ they follow---in particular $m_H\simeq0.5v\simeq123~
+\mathrm{GeV}$ is locked to $m_t\simeq0.71v$ the moment the scale is set. What is \emph{not} trivial
+is that the framework places the top, $W$, $Z$, and Higgs all within a factor of two of that one
+scale---the entire electroweak cluster at $80$--$173~\mathrm{GeV}$---while driving every other
+fermion orders of magnitude below it. Nature does exactly this: the heavy quartet sits together at
+the weak scale and the rest of the spectrum falls away beneath. The single scale is owed; the
+clustering, and the suppression of everything light below it, is predicted.
+
+The two factors of \eqref{eq:massmatrix} are what produce that suppression: the tower factor
+$\hat h(T)$ is the charge/colour handle and the generation factor $\hat O_n$ the substrate overlap
+of the $n$-th radial level (Section~\ref{sec:generations}), with one shared well depth---no
+per-tower knob. The handle is pure group theory and the measured gauge couplings,
 \begin{equation}
   \hat h(T) \;\sim\; \alpha_s\,C_2^{\mathrm{colour}}(T) + \alpha_{\mathrm{em}}\,Q^2(T)
                      + \alpha_w\,T(T{+}1):
