@@ -3,8 +3,11 @@
 # Generate a pure-gauge ensemble (Wilson action), measure Wilson loops -> V(r), fit Cornell.
 # Cost: hours. Validates the stack and confirms the area law (confinement) before any fermions.
 set -euo pipefail
-GRID="${GRID:-$HOME/ed-lattice/src/Grid/build}"     # Grid build dir
+source "$(dirname "$0")/_lib.sh"                    # sets GRID, require_exe, note_params
 OUT="${OUT:-out/puregauge}"; mkdir -p "$OUT"
+require_exe "$GRID/tests/hmc/Test_hmc_WilsonGauge"
+require_exe "$GRID/tests/core/Test_WilsonLoops"
+note_params "$GRID/tests/hmc/Test_hmc_WilsonGauge"
 
 L=24 ; T=48            # 24^3 x 48 -- comfortably single-GPU
 BETA=6.0               # SU(3) Wilson beta (a ~ 0.09 fm here; adjust for your scale)
