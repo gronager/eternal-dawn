@@ -33,15 +33,19 @@ GROUP_LABEL = {"up-quark": "up-type quarks", "down-quark": "down-type quarks",
 
 
 def _u(m_gev):
-    """Pretty mass (input GeV) as GeV/MeV/keV."""
+    """Pretty mass (input GeV) as TeV/GeV/MeV/keV/eV."""
     if m_gev <= 0:
         return r"\to 0"
     m = m_gev * 1000.0  # MeV
+    if m >= 1e6:
+        return f"{m/1e6:.3g}~\\mathrm{{TeV}}"
     if m >= 1000:
         return f"{m/1000:.3g}~\\mathrm{{GeV}}"
     if m >= 1:
         return f"{m:.3g}~\\mathrm{{MeV}}"
-    return f"{m*1000:.3g}~\\mathrm{{keV}}"
+    if m >= 1e-3:
+        return f"{m*1000:.3g}~\\mathrm{{keV}}"
+    return f"{m*1e6:.2g}~\\mathrm{{eV}}"
 
 
 def main():
@@ -65,13 +69,31 @@ def main():
              r"    family & \multicolumn{3}{c}{generation: torsiton (measured)} \\",
              r"     & I & II & III \\", r"    \cmidrule(lr){2-4}"]
     for t in ("up-quark", "down-quark", "charged-lepton", "neutrino"):
-        cells = [f"${_u(p)}$ (${_u(o)}$)" for p, o in zip(mat[t], wf.OBSERVED_GEV[t])]
+        if t == "neutrino":
+            cells = [f"$0^{{\\dagger}}$ (${_u(o)}$)" for o in wf.OBSERVED_GEV[t]]
+        else:
+            cells = [f"${_u(p)}$ (${_u(o)}$)" for p, o in zip(mat[t], wf.OBSERVED_GEV[t])]
         lines.append(f"    {GROUP_LABEL[t]} & " + " & ".join(cells) + r" \\")
+    lines += [r"    \multicolumn{4}{l}{\footnotesize $^{\dagger}$ the leading Dirac mass"
+              r" vanishes (the right-handed neutrino is a total singlet); the physical mass is"
+              r" the sub-eV seesaw floor $m_\nu\sim m_D^2/M$ ($M$ owed).} \\"]
     lines += [r"    \midrule",
               r"    gauge / scalar bosons & "
               f"$W$: ${_u(bm['W'])}$ (${_u(wf.OBSERVED_BOSONS['W'])}$) & "
               f"$Z$: ${_u(bm['Z'])}$ (${_u(wf.OBSERVED_BOSONS['Z'])}$) & "
               f"$H$: ${_u(bm['H'])}$ (${_u(wf.OBSERVED_BOSONS['H'])}$) \\\\",
+              r"    \midrule",
+              r"    \multicolumn{4}{l}{\emph{predicted composite (torsiton-pair) family --"
+              r" the Higgs is the lightest member:}} \\"]
+    # the resonances above the Higgs, asterisked as not-yet-observed
+    sym = {"heavier scalar": "h'", "vector (techni-rho)": r"\rho_T",
+           "axial-vector (techni-a_1)": "a_T"}
+    fam = [r for r in wf.composite_resonances() if not r[3]]
+    cells = [f"${sym[n]}$: ${_u(m)}^{{*}}$" for (n, _s, m, _o) in fam]
+    lines += [r"    composite resonances & " + " & ".join(cells) + r" \\",
+              r"    \multicolumn{4}{l}{\footnotesize $^{*}$ predicted, not yet observed"
+              r" (rough TeV-scale estimates from the walking bound $M_V\gtrsim13 f_\pi$;"
+              r" exact owed to the lattice).} \\",
               r"    \bottomrule", r"  \end{tabular}", r"\end{table}", ""]
     with open(os.path.join(TEX_DIR, "weltformel_table.tex"), "w") as f:
         f.write("\n".join(lines))
@@ -109,18 +131,31 @@ def main():
                    zorder=3)
         ax.annotate(k, (4 + dx, wf.OBSERVED_BOSONS[k] * 1000), textcoords="offset points",
                     xytext=(0, 9), ha="center", fontsize=8.5, color="C1")
+    # predicted composite family above the Higgs -- not yet observed (open, asterisked)
+    sym = {"heavier scalar": "h'$^*$", "vector (techni-rho)": r"$\rho_T^*$",
+           "axial-vector (techni-a_1)": "$a_T^*$"}
+    for (name, _s, m, found) in wf.composite_resonances():
+        if found:
+            continue
+        ax.scatter(4, m * 1000, s=130, facecolor="white", edgecolor="C1", lw=1.9, marker="D",
+                   zorder=3)
+        ax.annotate(sym.get(name, "?"), (4, m * 1000), textcoords="offset points",
+                    xytext=(12, -3), fontsize=9, color="C1")
     ax.set_yscale("log")
     ax.set_xticks([0, 1, 2, 3, 4])
     ax.set_xticklabels(["up-type\nquarks", "down-type\nquarks", "charged\nleptons",
                         "neutrinos", "$W,Z,H$"])
     ax.set_ylabel("mass (MeV)")
-    ax.set_ylim(1e-8, 1e6)
+    ax.set_ylim(1e-8, 1e7)
     proxies = [Line2D([0], [0], marker="o", color="w", markerfacecolor="0.3",
                       markeredgecolor="k", markersize=11, label="measured"),
                Line2D([0], [0], marker="o", color="w", markerfacecolor="white",
                       markeredgecolor="0.3", markeredgewidth=1.9, markersize=11,
-                      label="torsiton (Weltformel, no fit)")]
-    ax.legend(handles=proxies, fontsize=10, loc="lower right")
+                      label="torsiton (Weltformel, no fit)"),
+               Line2D([0], [0], marker="D", color="w", markerfacecolor="white",
+                      markeredgecolor="C1", markeredgewidth=1.9, markersize=10,
+                      label="predicted composite family (not yet found)")]
+    ax.legend(handles=proxies, fontsize=9.5, loc="center left", bbox_to_anchor=(0.0, 0.30))
     ax.set_title("The Weltformel spectrum: all 15 elementary masses from the equations\n"
                  "one global scale, no fitting -- structure exact, magnitudes within "
                  "1--2 orders, bosons within a percent", fontsize=12)

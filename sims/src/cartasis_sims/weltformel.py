@@ -73,6 +73,26 @@ def bosons():
     return {"W": ew.m_W(), "Z": ew.m_Z(), "H": ew.higgs_walking_dilaton()}
 
 
+# The composite ('techni-hadron') family the picture predicts ABOVE the Higgs. If the 125 GeV
+# scalar is a torsiton pair, then -- like QCD's meson tower (sigma, rho, a1, ...) -- there must
+# be heavier composites. Rough scale set by the walking bound M_V >~ 13 f_pi (S < 0.1, Ch. 8),
+# with v ~ 246 GeV: vectors at a few TeV, axials higher. Estimates only; exact owed to lattice.
+COMPOSITE_FAMILY = [
+    # (name, symbol, rough mass estimate in GeV, observed?)
+    ("scalar (Higgs)", "h_0", ew.higgs_walking_dilaton(), True),
+    ("heavier scalar", "h'", 1500.0, False),
+    ("vector (techni-rho)", "rho_T", 3000.0, False),
+    ("axial-vector (techni-a_1)", "a_T", 5000.0, False),
+]
+
+
+def composite_resonances():
+    """The predicted composite (torsiton-pair) family. The Higgs is the lightest member
+    (found); the rest are TeV-scale resonances not yet observed -- the sharp collider test
+    (the Standard Model predicts a desert above the Higgs; this framework predicts company)."""
+    return COMPOSITE_FAMILY
+
+
 def residual_factors():
     """Per-particle discrepancy max(pred,obs)/min(pred,obs) for the charged fermions and the
     bosons (neutrinos excluded -- predicted zero, no finite ratio)."""
