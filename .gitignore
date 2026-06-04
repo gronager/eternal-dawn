@@ -1,5 +1,5 @@
 # LaTeX build artifacts
-build/
+/build/
 *.aux
 *.bbl
 *.blg
@@ -22,7 +22,7 @@ build/
 *.pdf
 
 # Keep build dir tracked but empty
-!build/.gitkeep
+!/build/.gitkeep
 
 # Keep committed figure PDFs (generated from figures/tex or figures/data)
 !figures/pdf/
