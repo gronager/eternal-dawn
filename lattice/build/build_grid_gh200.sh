@@ -63,10 +63,28 @@ if [ ! -f Makefile ]; then
 fi
 
 # --------------------------------------------------------------------------
-echo "== 4. build the library AND the tests (this is the part that was missing) =="
-make -j"$NPROC"          # library + top-level tests
-make -j"$NPROC" tests    # <-- builds tests/hmc, tests/core, tests/smearing, tests/solver, ...
-make install             # installs headers + libGrid under $PREFIX
+echo "== 4. build the library, install it, then build ONLY the executables we need =="
+make -j"$NPROC"          # the Grid library (+ top-level tests)
+make install             # headers + libGrid under $PREFIX
+
+# Grid's full `make tests` is all-or-nothing: ONE sibling test that does not compile on a given
+# (GPU) config aborts the whole build -- which is exactly the tests/core error you saw. We don't
+# need the suite, only five executables, so build each one independently; a broken sibling can no
+# longer block us, and a wrong name (Grid versions differ) just prints a warning, not a halt.
+build_one() {   # build_one <subdir> <exe>
+  echo "-- building $1/$2 --"
+  if make -C "$1" -j"$NPROC" "$2"; then
+    echo "   ok: $1/$2"
+  else
+    echo "!! $1/$2 did NOT build -- its name may differ in this Grid version (see step 5),"
+    echo "   or it has a genuine compile error; the OTHER targets below are unaffected."
+  fi
+}
+build_one tests/hmc      Test_hmc_WilsonGauge
+build_one tests/hmc      Test_hmc_WilsonFermionGauge
+build_one tests/core     Test_WilsonLoops
+build_one tests/smearing Test_WilsonFlow
+build_one tests/solver   Test_ModeNumber
 
 # --------------------------------------------------------------------------
 echo "== 5. verify the executables the run scripts need actually exist =="
