@@ -33,8 +33,8 @@ recovered, not assumed (Figure~\ref{fig:color}).
 \section{The four-fermion term, Fierzed}
 \label{sec:fierz}
 
-The torsion-induced interaction is a single axial--axial four-fermion term. A Fierz
-transformation re-expresses it in the scalar, pseudoscalar, vector, axial, and tensor
+The torsion-induced interaction is a single axial--axial four-fermion term \citep{hehl1976}. A
+Fierz transformation re-expresses it in the scalar, pseudoscalar, vector, axial, and tensor
 channels; carried out explicitly with the Dirac matrices it gives equal vector and axial
 couplings, $G_A = G_V$ (Figure~\ref{fig:fierz}). This is not a cosmetic detail: a sector with
 $G_A=G_V$ is precisely the ``walking-favourable'' case, the one whose vector and axial current
@@ -79,21 +79,24 @@ actually realises dual superconductivity is the cleanest lattice question (Appen
 \label{sec:S}
 
 If electroweak symmetry is broken by the gravity--torsion condensate rather than an elementary
-Higgs, the theory is technicolor-like, and its central danger is the Peskin--Takeuchi
-parameter $S$. A QCD-like sector gives $S\approx0.25$, well above the LEP bound $S\lesssim0.1$:
-the ``technicolor graveyard.'' Two facts move the theory off that headstone. First, the
-$G_A=G_V$ of Section~\ref{sec:fierz} equalises the vector and axial correlators, and the
-RPA-resummed estimate shows the ratio $S_{\mathrm{torsion}}/S_{\mathrm{QCD}}$ falling as the
-sector walks (Figure~\ref{fig:rpa})---a real, growing relative advantage. Second, near-conformal
-(``walking'') dynamics raises the resonance masses relative to $f_\pi$, and the
-Weinberg-sum-rule form
+Higgs, the theory is technicolor-like \citep{weinberg1979,susskind1979}, and its central danger
+is the Peskin--Takeuchi parameter $S$ \citep{peskin1992}. A QCD-like sector gives $S\approx0.25$,
+well above the LEP bound $S\lesssim0.1$: the ``technicolor graveyard.'' Two facts move the theory
+off that headstone. First, the $G_A=G_V$ of Section~\ref{sec:fierz} equalises the vector and
+axial correlators, and a random-phase (RPA) resummation of the simpler numerical model shows the
+ratio $S_{\mathrm{torsion}}/S_{\mathrm{QCD}}$ falling as the sector walks
+(Figure~\ref{fig:rpa})---a real, growing relative advantage. Second, near-conformal (``walking'')
+dynamics \citep{holdom1981,dietrich2007} raises the resonance masses relative to $f_\pi$, and the
+Weinberg sum rules \citep{weinberg1967} give
 \[
-  S = 4\pi\left(\frac{f_\pi}{M_V}\right)^2\!\left(1+\frac{M_V^2}{M_A^2}\right)
+  S = 4\pi\left(\frac{f_\pi}{M_V}\right)^2\!\left(1+\frac{M_V^2}{M_A^2}\right),
 \]
-falls below $0.1$ once $M_V/f_\pi \gtrsim 13$ (versus QCD's $\sim 8$). The laptop work places
-the theory \emph{favourably}---the direction is green---but does not settle the absolute value:
-whether the walking sector actually clears $S<0.1$ is a frontier lattice computation
-(Appendix), and the field has not settled the analogous technicolor question in forty years.
+which falls below $0.1$ once $M_V/f_\pi \gtrsim 13$ (versus QCD's $\sim 8$). The simpler numerical
+work---analytic Fierz algebra, RPA moments, sum-rule saturation, as opposed to a full lattice
+treatment---places the theory \emph{favourably}, but does not settle the absolute value: whether
+the walking sector actually clears $S<0.1$ is a frontier lattice computation
+(Appendix~\ref{app:lattice}), and the field has not settled the analogous technicolor question in
+forty years.
 We bank on it provisionally and mark it as the load-bearing assumption.
 
 \begin{figure}[t]
@@ -117,15 +120,21 @@ We bank on it provisionally and mark it as the load-bearing assumption.
 \section{$W$, $Z$, and the composite Higgs}
 \label{sec:wzh}
 
-Banking on $S$, the boson masses are then the cleanest numbers in the Part. With the condensate
-scale $v=246~\mathrm{GeV}$ (generated, not an inserted Higgs vacuum value) and the gauge
-couplings $g,g'$,
+Banking on $S$, the boson masses are then the cleanest numbers in the Part---though it is worth
+being precise about what is \emph{computed} and what is \emph{input}. We take the condensate scale
+$v=246~\mathrm{GeV}$ (in the framework this is the infrared scale $\Lambda$ of
+Section~\ref{sec:ir-potential}, generated rather than an inserted Higgs vacuum value, but its
+\emph{numerical} value is fixed to experiment here) and the measured gauge couplings $g,g'$, so
+that
 \[
-  m_W = \tfrac12 g v, \qquad m_Z = \tfrac12\sqrt{g^2+g'^2}\,v,
+  m_W = \tfrac12 g v, \qquad m_Z = \tfrac12\sqrt{g^2+g'^2}\,v
 \]
-which land within $0.4\%$ of the measured masses, and a custodial (doublet) condensate predicts
-$\rho = m_W^2/(m_Z^2\cos^2\theta_W)=1$, equivalently $m_W=m_Z\cos\theta_W$---a genuine
-relation, one fewer parameter, observed to $\sim0.1\%$ (Figure~\ref{fig:ewmasses}). The $125~
+are not predictions of $80$ and $91~\mathrm{GeV}$ from nothing---they reproduce the Standard
+Model's own tree-level relations, with the same three inputs. These are therefore not ab-initio
+numbers. What \emph{is} a genuine, input-free prediction is the structure: a custodial (doublet)
+condensate gives $\rho = m_W^2/(m_Z^2\cos^2\theta_W)=1$, equivalently $m_W=m_Z\cos\theta_W$---one
+fewer parameter than a general Higgs sector, observed to $\sim0.1\%$ (Figure~\ref{fig:ewmasses}).
+The $125~
 \mathrm{GeV}$ scalar is then \emph{composite}: a torsiton--anti-torsiton bound state, not an
 elementary field. Its mass is a strong-dynamics bound state---owed to the lattice---but its
 \emph{lightness} is explained: a generic composite scalar would be heavy ($\sim$~TeV, the

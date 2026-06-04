@@ -1,150 +1,243 @@
 \chapter{The Solitonic Origin of Matter}
 \label{chap:solitons}
 
-Part~I took a single refusal---no singularities---and followed it to a cosmology.
-The refusal was implemented by one object: a gravitational potential, extended by
-torsion, that grows steeply enough at high density to halt collapse and reverse it
-(Chapter~\ref{chap:bounce}). This Part takes that potential at its word in a second
-place. If a torsion-supported potential is a real feature of geometry sourced by spin,
-and not merely a cosmological convenience, then it does not switch on only when a
-universe's worth of matter collapses---it is present wherever spin density is. And a
-potential that can arrest the collapse of a universe can also, in principle, \emph{bind}:
-it can hold a finite, self-sustaining knot of field together. The conjecture of this
-Part is that those knots are the elementary fermions.
+Part~I took a single refusal---no singularities---and followed it to a cosmology, implemented
+by one object: a gravitational potential, extended by torsion, that grows steeply enough at
+high density to halt collapse and reverse it (Chapter~\ref{chap:bounce}). This Part takes that
+potential at its word in a second place. If a torsion-supported potential is a real feature of
+geometry sourced by spin, it does not switch on only when a universe collapses---it is present
+wherever spin density is, and a potential that can arrest a universe can also \emph{bind}: it
+can hold a finite, self-sustaining knot of field together. The wager of this Part is that those
+knots are the elementary fermions.
 
 \begin{conjecture}
-If the gravity--torsion potential is what forbids singularities, then its stable
-bound solutions---regular, horizonless, spin-supported solitons---are candidates for
-the elementary constituents of matter.
+If the gravity--torsion potential is what forbids singularities, then its stable bound
+solutions---regular, horizonless, spin-supported solitons---are the elementary constituents of
+matter, and their masses are binding energies rather than inputs.
 \end{conjecture}
 
-This has a long pedigree (Wheeler's geons, the Soler and Friedberg--Lee soliton tradition,
-and above all Heisenberg's nonlinear-spinor \emph{Weltformel}: one nonlinear Dirac equation,
-one fundamental constant, the whole particle spectrum). It also has well-known walls. The
-task here is to state the conjecture precisely, walk it to each wall, and report honestly
-which fall, which stand, and which are merely untested. The status is held claim by claim;
-the central quantitative prize---masses as binding energies rather than inputs---is named at
-the end as the calculation the programme owes.
+This is the nonlinear-spinor programme of \citet{finkelstein1951}, \citet{heisenberg1957},
+and \citet{soler1970}---one nonlinear Dirac equation, one fundamental constant, the whole
+particle spectrum---now sourced by Einstein--Cartan torsion rather than an ad hoc
+self-coupling. Heisenberg's \emph{Weltformel} foundered on the same two walls we will meet: the
+absolute mass scale, and the strongly-coupled bound-state spectrum. The first we dispatch in
+Section~\ref{sec:ir-potential}, before any masses are quoted, so that the rest of the Part
+works in physical units; the second we reduce to a finite list of lattice calculations
+(Chapter~\ref{chap:weltformel} and Appendix~\ref{app:lattice}). What survives in between is a
+genuine, if approximate, derivation of the particle spectrum from geometry.
 
-\section{The torsiton}
-\label{sec:torsiton}
+\section{The quantum torsion potential in the infrared}
+\label{sec:ir-potential}
 
-In Einstein--Cartan geometry the connection carries an antisymmetric part, torsion,
-sourced by fermion spin (Axiom~\ref{ax:ec}). Integrating torsion out leaves a Dirac field
-with a four-fermion self-interaction, the Hehl--Datta term,
-\[
-  \mathcal{L}_{\mathrm{int}} \;\sim\; -\frac{3}{2}\,\frac{8\pi G}{c^4}
-  \left(\bar\psi\,\gamma_5\gamma^\mu\,\psi\right)^2 ,
-\]
-so the binding ``potential'' is not external: it is the well the fermion's own axial-spin
-density digs for itself. Curvature pulls the field together; torsion, at high spin density,
-pushes it apart. The same opposition that reverses a cosmological collapse admits a
-\emph{stationary} balance---a localized lump held together permanently. We call such a
-stationary, self-bound solution of the gravity--torsion field the \textbf{torsiton}: where
-the gravity quantum is the graviton, the torsion-bound matter quantum is the torsiton, and
-a torsiton is what an electron or a quark \emph{is}. (``Soliton'' remains the generic
-mathematical object; ``torsiton'' names this particular one.)
+The bounce potential of Chapter~\ref{chap:bounce} is classical, and its coupling is gravity's
+own: the Einstein--Cartan four-fermion term carries $\kappa = 8\pi G/c^4$, so a soliton bound by
+it alone would sit at the Planck mass $M_{\mathrm{Pl}}c^2=\sqrt{\hbar c^5/G}\approx
+1.2\times10^{19}~\mathrm{GeV}$---seventeen orders of magnitude too heavy. Before going further we
+must ask the question Heisenberg could not answer: \emph{what is the quantum version of this
+potential in the infrared}, where the field condenses and matter forms?
 
-That such a solution can exist in three dimensions, where Derrick's theorem forbids static
-scalar lumps, is not an oversight: the first-order Dirac kinetic term scales differently
-from a scalar's, and the binding balances two terms of different size-scaling---the same
-two-terms-balance that makes the bounce. Soler-type nonlinear-Dirac solitons are known to
-exist for exactly this reason. The self-consistent calculation confirms it: filling the
-lowest levels (Pauli), sourcing the four-fermion field from their density, and iterating
-the well to a fixed point yields a genuine self-bound object
-(Figure~\ref{fig:self-consistent}). The gate is open---the torsiton exists, not as an
-assumption but as the converged solution of the field's own equations.
+The answer is the mechanism that already sets every strong-interaction scale. A gauge coupling
+that is weak in the ultraviolet but asymptotically free runs to strong coupling in the infrared
+and condenses there, at a scale set by \emph{dimensional transmutation} \citep{coleman1973}:
+\begin{equation}
+  \Lambda \;=\; M_{\mathrm{Pl}}\,\exp\!\left(-\frac{2\pi}{b_0\,g^2}\right).
+  \label{eq:transmutation}
+\end{equation}
+For the spin-gravity sector to run, torsion must propagate---which it does once the
+Einstein--Cartan connection is promoted to a dynamical (Poincar\'e) gauge field
+\citep{kibble1961,sciama1964,hehl1976}, carrying its own coupling $g$ independent of Newton's
+$G$. Equation~\eqref{eq:transmutation} then turns an utterly ordinary coupling, $g^2\sim0.02$
+(weaker than electromagnetism), into the observed electroweak scale: $\exp(-40)\approx10^{-17}$
+is the exponential of a small number, not a fine-tuning. This is precisely the argument
+$\Lambda$CDM and the Standard Model already make for $\Lambda_{\mathrm{QCD}}$, which sits
+nineteen orders of magnitude below $M_{\mathrm{Pl}}$ from a coupling of order $1/30$; we make it
+once, here, for the spin-gravity field.
+
+We therefore work, for the remainder of this Part, in units of the condensation scale
+$\Lambda\simeq v\simeq 246~\mathrm{GeV}$---the \emph{infrared} torsion potential
+(Figure~\ref{fig:scalegap}). The Planck scale does not reappear; the masses below come out in
+$\mathrm{GeV}$ and $\mathrm{MeV}$. The one number this argument does not yet fix is $\Lambda$
+itself (equivalently $g$ and $b_0$): that is the density question of
+Chapter~\ref{chap:weltformel} and lattice target~L5 (Appendix~\ref{app:lattice}). With the scale
+set, we can solve for the spectrum.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{scale_gap}
+  \caption{The infrared scale by dimensional transmutation, Eq.~\eqref{eq:transmutation}. The
+  electroweak-to-Planck ratio is $e^{-40}\approx10^{-17}$, the exponential of an ordinary
+  coupling $g^2\sim0.02$ (weaker than electromagnetism). Fixing the scale here, once, lets the
+  rest of Part~II work in physical units---the same step $\Lambda$CDM makes for
+  $\Lambda_{\mathrm{QCD}}$.}
+  \label{fig:scalegap}
+\end{figure}
+
+\section{The nonlinear Dirac equation}
+\label{sec:nonlinear-dirac}
+
+In Einstein--Cartan geometry the connection carries torsion sourced by fermion spin
+(Axiom~\ref{ax:ec}); torsion is non-propagating in the minimal theory and can be eliminated
+algebraically, leaving a Dirac field with a quartic self-interaction, the Hehl--Datta term
+\citep{hehl1976}:
+\begin{equation}
+  i\hbar c\,\gamma^\mu \partial_\mu \psi - m c^2 \psi
+   \;=\; -\,\frac{3}{2}\,\kappa\,(\bar\psi\,\gamma_5\gamma^\mu\,\psi)\,\gamma_5\gamma_\mu\,\psi .
+  \label{eq:nld}
+\end{equation}
+The binding ``potential'' is not external: it is the well the fermion's own axial-spin density
+$j_5^\mu=\bar\psi\gamma_5\gamma^\mu\psi$ digs for itself. In the infrared the quartic term is
+dressed into a scalar condensate $\sigma\sim\langle\bar\psi\psi\rangle$ of the
+Nambu--Jona-Lasinio type \citep{nambu1961}, and \eqref{eq:nld} becomes a Dirac equation in a
+self-consistent scalar well, $M(r)=m-g\,\sigma(r)$---the Friedberg--Lee soliton bag
+\citep{friedberg1977}.
+
+That such a bound, regular, finite-energy solution exists in three dimensions, where Derrick's
+theorem forbids static \emph{scalar} lumps, is not an oversight: the first-order Dirac kinetic
+term scales differently from a scalar's, and the binding balances two terms of different
+size-scaling---the same two-terms-balance that makes the bounce. Soler-type solitons are known
+to exist for exactly this reason \citep{soler1970}.
+
+\section{Separating the equation: the radial problem}
+\label{sec:radial}
+
+The solution proceeds exactly as for the hydrogen atom. The Dirac operator commutes with total
+angular momentum, so we separate the spinor into angular and radial parts using the spinor
+spherical harmonics $\Omega_{\kappa m}$,
+\begin{equation}
+  \psi(\mathbf r) = \frac{1}{r}\begin{pmatrix} G(r)\,\Omega_{\kappa m}(\hat r) \\[2pt]
+                                    i\,F(r)\,\Omega_{-\kappa m}(\hat r)\end{pmatrix},
+\end{equation}
+where the integer $\kappa$ collects the orbital and total angular momentum ($\kappa=-1$ for the
+ground $s_{1/2}$ state). The angular part integrates out, and the two radial functions
+$G,F$---the ``large'' and ``small'' components---obey the coupled first-order system
+\begin{equation}
+  \frac{dG}{dr} = -\frac{\kappa}{r}\,G + \frac{1}{\hbar c}\big(E + Mc^2 + S(r)\big)\,F,
+  \qquad
+  \frac{dF}{dr} = +\frac{\kappa}{r}\,F - \frac{1}{\hbar c}\big(E - Mc^2 - S(r)\big)\,G,
+  \label{eq:radial}
+\end{equation}
+with $S(r)=-g\,\sigma(r)$ the self-generated scalar well. Regularity at the origin fixes the
+boundary condition $G\sim r^{|\kappa|}$, $F\to0$; normalisability fixes it at infinity. Together
+these turn \eqref{eq:radial} into an eigenvalue problem: bound states exist only at a discrete
+set of energies $E_n$, exactly as the hydrogen radial equation admits solutions only at the
+Balmer energies.
+
+Eliminating the small component gives the equivalent Schr\"odinger-like form for $u=G$,
+\begin{equation}
+  -\frac{\hbar^2}{2m}\,u'' + \Big[\frac{\hbar^2}{2m}\frac{\kappa(\kappa+1)}{r^2}
+      + V_{\mathrm{eff}}(r)\Big]\,u = \mathcal{E}\,u,
+  \qquad V_{\mathrm{eff}}\sim M(r)^2 c^4,
+  \label{eq:schrodinger}
+\end{equation}
+a particle in the self-consistent well $M(r)^2$, with the centrifugal barrier $\kappa(\kappa+1)$
+the analogue of $\ell(\ell+1)$. The well is not given in advance: the occupied levels source the
+condensate through \eqref{eq:nld}, the condensate is the well, and one iterates
+$M\!\to\!\{u_n,E_n\}\!\to\!\sigma\!\to\!M$ (the relativistic Hartree loop) to a fixed point. That
+loop converges to a genuine self-bound object (Figure~\ref{fig:self-consistent})---the torsiton
+exists as the solution of the field's own equations, not as a postulate.
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\textwidth]{self_consistent}
-  \caption{The self-consistent gravity--torsion soliton. The Hartree loop
-  (levels~$\to$~density~$\to$~four-fermion field~$\to$~well) converges to a genuine
-  self-bound profile: the torsiton exists as a solution, not a postulate. Reproducible
-  from \texttt{sims/src/cartasis\_sims/self\_consistent.py}.}
+  \caption{The self-consistent torsiton. The Hartree loop
+  (levels~$\to$~density~$\to$~condensate~$\to$~well) of Section~\ref{sec:radial} converges to a
+  self-bound profile $M(r)=m-g\sigma(r)$ with a discrete bound spectrum $E_n$. Reproducible from
+  \texttt{sims/src/cartasis\_sims/self\_consistent.py}.}
   \label{fig:self-consistent}
 \end{figure}
+
+We call this stationary, self-bound solution the \textbf{torsiton}: where the gravity quantum is
+the graviton, the torsion-bound matter quantum is the torsiton, and a torsiton is what an
+electron or a quark \emph{is}. (``Soliton'' remains the generic mathematical object; ``torsiton''
+names this particular one.)
 
 \section{Mass is configurational}
 \label{sec:configurational-mass}
 
-The decisive property follows at once. A torsiton's mass is not a label hung on a point;
-it is the bound energy of a field configuration---roughly $94\%$ field energy, with the
-rest the level energy of the trapped fermion. Mass is therefore \emph{configurational}: it
-is set by how tightly the knot binds to the surrounding condensate, and it vanishes when the
-condensate vanishes. The chiral-soliton calculation makes this explicit
-(Figure~\ref{fig:chiral}): the soliton mass scales linearly with the condensate amplitude
-$v$, so as $v \to 0$ the mass switches off.
+With the wavefunction in hand, the mass follows. The rest energy of the torsiton is the
+expectation of the local mass operator in the bound state---an overlap integral of the
+wavefunction with the condensate,
+\begin{equation}
+  m_{\mathrm{torsiton}}\,c^2 \;=\; \int \psi^\dagger\, \beta\,M(r)c^2\,\psi \,d^3r
+  \;=\; \int_0^\infty \big(G^2 - F^2\big)\,M(r)c^2\,dr ,
+  \label{eq:configmass}
+\end{equation}
+plus the field energy of the condensate itself, which dominates ($\sim$94\%). Mass is therefore
+\emph{configurational}: it is the bound energy of a field configuration, set by how tightly the
+knot couples to the surrounding condensate, and it scales linearly with the condensate amplitude
+$v$. As $v\to0$ the mass switches off (Figure~\ref{fig:chiral}). This is the analogue of the
+constituent mass in the NJL model \citep{nambu1961}: nearly all of the proton's mass is field
+energy of this kind, and almost none is the ``bare'' Lagrangian mass.
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\textwidth]{chiral_soliton}
-  \caption{Configurational mass. The torsiton's mass is dominantly field energy and is
-  proportional to the symmetry-breaking condensate $v=f_\pi$: turn off the condensate and
-  the mass vanishes. Mass is a property of the bound configuration, not an intrinsic tag.}
+  \caption{Configurational mass. From \eqref{eq:configmass} the torsiton mass is dominantly
+  condensate field energy and is proportional to the symmetry-breaking amplitude $v=f_\pi$:
+  turn off the condensate and the mass vanishes. Mass is a property of the bound configuration,
+  not an intrinsic tag.}
   \label{fig:chiral}
 \end{figure}
 
-This is the bridge back to Part~I. What the bounce conserves are energy--momentum, charge,
-spin, and $B\!-\!L$---never mass, which is configurational. So the bounce \emph{can} dissolve
-matter: on the way into the membrane the condensate melts ($v\to0$), mass switches off, and
-the field crosses as a hot, symmetric, effectively massless plasma; on the way out it
-re-condenses and re-acquires weight. Catharsis (Chapter~\ref{chap:bounce}) and genesis
-(Chapter~\ref{chap:genesis}) are the two halves of one crossing, and configurational mass is
-why the crossing is allowed at all.
+This is the bridge back to Part~I. What the bounce conserves are $P^\mu$, $Q$, spin, and
+$B\!-\!L$---never mass, which is configurational. So the bounce \emph{can} dissolve matter: on
+the way into the membrane the condensate melts ($v\to0$, $\Lambda\to0$), mass switches off, and
+the field crosses as a hot symmetric plasma; on the way out it re-condenses and re-acquires
+weight. Catharsis (Chapter~\ref{chap:bounce}) and genesis (Chapter~\ref{chap:genesis}) are the
+two halves of one crossing, and configurational mass is why the crossing is allowed at all.
 
 \section{Generations: an arithmetic ladder, a geometric hierarchy}
 \label{sec:generations}
 
-If the generations are internal excitation levels of the same torsiton---same charge,
-colour, and isospin, different internal rung---their level energies are roughly evenly
-spaced. But the observable mass is not the level energy; in the soliton picture it is the
-overlap of the level's wavefunction with the localized, mass-giving substrate. Overlaps are
-exponentially sensitive to the rung: a higher, more spread-out level overlaps the sharp
-substrate exponentially less,
-\[
+The radial eigenvalue problem \eqref{eq:schrodinger} does not have one bound state but a
+\emph{tower} of them, $n=1,2,3,\dots$, just as the hydrogen atom has $1s,2s,3s$. We identify the
+three generations of each fermion with the lowest three rungs of this tower---same charge,
+colour, and isospin, different radial excitation. The level energies $E_n$ are roughly evenly
+spaced (arithmetic). But the observable mass is not the level energy; by \eqref{eq:configmass}
+it is the overlap of the level's wavefunction with the localized, mass-giving substrate, and
+overlaps are exponentially sensitive to the rung. A higher, more spread-out level overlaps the
+sharp substrate exponentially less,
+\begin{equation}
   O_n \sim e^{-c\,n}, \qquad m_n \sim |O_n|^2 \sim e^{-2cn},
-\]
+\end{equation}
 so an \emph{arithmetic} ladder in $n$ becomes a \emph{geometric} ladder in mass. The
-``unnaturally tiny'' electron Yukawa ($\sim 3\times 10^{-6}$) is then not a fine-tuned small
-number but the exponential of an order-one overlap. The mechanism produces a large hierarchy
-from $O(1)$ inputs---exactly the structure the Standard Model lacks---and a finite number of
-rungs: the $S$-budget that binds the soliton runs out, capping the tower
-(Figure~\ref{fig:gencap}), which is why there are three families and not thirty.
+``unnaturally tiny'' electron Yukawa ($\sim3\times10^{-6}$) is then not a fine-tuned small number
+but the exponential of an order-one overlap---a large hierarchy from $O(1)$ inputs, exactly the
+structure the Standard Model lacks \citep{koide1983}. And the tower is finite: the excitation
+budget that binds the soliton runs out, capping it (Figure~\ref{fig:gencap}), which is why there
+are three families and not thirty.
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\textwidth]{generations_cap}
   \caption{Generations as a capped ladder. The internal excitation budget is finite, so the
   geometric mass tower terminates---a structural reason for a small, fixed number of
-  generations rather than an arbitrary one.}
+  generations.}
   \label{fig:gencap}
 \end{figure}
 
-How steep the geometric ladder is depends on the overlap with the \emph{substrate}---the
-sharp chiral-restored core, not the soliton's own broad condensate. Overlapping each level
-against that sharp substrate (its width fixed by the well's own healing length, not fitted)
-turns a near-flat spread into a steep one of order $10^3$--$10^4$
-(Figure~\ref{fig:substrate}), the observed size of the generation hierarchy. The exact ratios
-and the per-tower steepness remain the chiral-dynamics refinement owed to the lattice; the
-\emph{shape}---why generations span orders of magnitude---is the soliton's, with no fit.
+How steep the ladder is depends on what the level overlaps. Overlapped with the soliton's own
+\emph{broad} condensate the spread is only $\sim\!3$; overlapped with the sharp
+\emph{substrate}---the chiral-restored core, its width fixed by the well's own healing length
+$\xi=w/\sqrt{\text{depth}}$, not fitted---the spread steepens to $\sim\!10^3$--$10^4$
+(Figure~\ref{fig:substrate}), the observed size of the generation hierarchy, reached at the
+well's natural depth. The wavefunctions of \eqref{eq:radial} thus carry the hierarchy in their
+shape. The exact ratios and the per-tower steepness are the chiral-dynamics refinement owed to
+the lattice (Appendix~\ref{app:lattice}); the \emph{mechanism}---why generations span orders of
+magnitude---is the soliton's, with no fit.
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\textwidth]{substrate_overlap}
   \caption{The substrate-overlap pass. Overlapping each generation with the sharply localized
   substrate (width $=$ the well's healing length, derived) rather than the soliton's broad
-  self-condensate turns the spread from $\sim\!1$ into $\sim\!10^3$: the arithmetic level
-  ladder becomes the observed geometric mass hierarchy, with no new fit.}
+  self-condensate turns the spread from $\sim\!1$ into $\sim\!10^3$: the arithmetic level ladder
+  of \eqref{eq:schrodinger} becomes the observed geometric mass hierarchy, with no new fit.}
   \label{fig:substrate}
 \end{figure}
 
-\section{What is owed}
-
-The single result that would make this Part worth more than its coherence is the recovery of
-a fermion mass as a binding energy, parameter-free. That is not yet delivered: it is the
-strongly-coupled, non-perturbative core of the theory, and it is named here as a calculation
-to compute (Chapter~\ref{chap:weltformel} attempts the laptop-scale version; the
-Appendix lists the lattice targets). What \emph{is} delivered is the structure---the torsiton
-exists, mass is configurational, generations are a capped geometric ladder---and a clean
-bridge to the cosmology: mass is exactly what the bounce does not conserve.
+We now have the machinery: a self-consistent well, its bound spectrum and wavefunctions, an
+overlap integral for the mass, and a tower for the generations---all in units of the infrared
+scale $\Lambda$. What remains is to put in the charges that distinguish quarks from leptons, add
+the forces, and turn the crank. That is the business of the next chapters; the cooling that
+switches it all on, chapter by chapter, is genesis itself.

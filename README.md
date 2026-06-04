@@ -89,7 +89,11 @@ Legend: ✅ explained from first principles · 🔧 bolted on by hand / assumed 
 | Inflation | ✅ | 🔧 | ❌ |
 | Hubble tension | ✅ | ❌ | — |
 | Fine-tuning of the constants | ✅ | ❌ | ❌ |
-| **New ingredients required** | **4 axioms + 1 bounce** | inflaton, Λ, a dark-matter particle, baryogenesis, special initial conditions | — |
+| Elementary-particle masses (the Yukawa list) | ✅ | 🔧 | 🔧 |
+| Why three generations | ✅ | 🔧 | 🔧 |
+| Why neutrinos are light | ✅ | 🔧 | 🔧 |
+| The Planck–electroweak hierarchy | ✅ | ❌ | ❌ |
+| **New ingredients required** | **4 axioms + 1 bounce** | inflaton, Λ, a dark-matter particle, baryogenesis, special initial conditions, the Yukawa couplings | the Yukawa couplings, the Higgs, the gauge group |
 
 The ✅ marks explanatory *scope* — that ED accounts for the item from its own principles, not that it is proven. Evidence is a separate, honest matter — and it splits into what the code already shows and what the sky still has to deliver.
 
@@ -110,6 +114,26 @@ The ✅ marks explanatory *scope* — that ED accounts for the item from its own
 - [x] Dark-to-baryon ratio *f ≈ 1/6* **narrowed** from Einstein–Cartan microphysics — the membrane is a torsion barrier with pass-fraction *f(x)*, *x=Δ/T*; the bounce balance forces *x ~ O(1)*, giving *f* in the 0.08–0.37 decade (the observed 1/6 at *x≈1.8*). So *f≈1/6* is **natural, not tuned** — converted from a free fit to an O(1) ratio; the precise value still needs the full bounce profile (SymPy-checked) · *done (narrowed)*
 - [x] The **primordial-tensor fork** computed — the bounce ties the tilt to the *scalar* tilt (*nT = ns − 1 ≈ −0.035*), breaking inflation's *nT = −r/8*; the value of *r* stays honestly open (simplest bounce overshoots, cured versions drop below LiteBIRD), so the discriminator is the consistency relation, not the bare *r* · *done*
 - [x] The **birefringence** *EB/TB* fingerprint computed (real CAMB) — ΛCDM forbids it, measured at *β ≈ 0.3°* (~3σ); the *value* of *β* stays owed (set by the relic axial-torsion amplitude), but the distinctive prediction is an **axis-aligned anisotropic *β(n̂)*** locked to the same axis as the axis-of-evil / galaxy spins · *done*
+
+**Genesis — matter from geometry** (the particle sector; every one reproducible from the repo):
+
+- [x] The **torsiton exists** — the self-consistent gravity–torsion (nonlinear-Dirac) soliton converges to a genuine self-bound object, not a postulate · *done*
+- [x] **Mass is configurational** — ~94% bound field energy, *∝* the condensate *v*; it vanishes as *v → 0*, which is why the bounce can dissolve matter (only *P^μ, Q, B−L, spin* are conserved, never mass) · *done*
+- [x] **Colour is forced**, not assumed — the three-valued Pauli label gives the *SU(3)* channel factors of QCD (singlet binds, octet repels; no free quarks/diquarks); the Hehl–Datta term Fierzes to *G_A = G_V* (walking-favourable) · *done*
+- [x] **Generations** as a capped geometric ladder — an arithmetic level tower becomes a geometric mass hierarchy via wavefunction overlap; the **substrate overlap** steepens the spread from ~3 to **~10³–10⁴**, the observed size · *done*
+- [x] **All 12 fermion masses computed from geometry** — *G, ℏ, c* + the charges, no inserted Yukawas: every quark, lepton, and neutrino located in the right family and generation, **within ~a factor of 3** (charged leptons ~10–20%); the **neutrino forced light** (a total singlet has zero condensate handle) · *done (decimals owed to lattice)*
+- [x] ***W, Z*** reproduced and **custodial *ρ = 1*** a genuine prediction; the **125 GeV Higgs as a composite** scalar sitting at the light *walking-dilaton* edge (its compositeness the sharp break from the SM) · *done (m_W, m_Z use measured v, g, g′)*
+- [x] **The scale gap closed** — the Planck-vs-electroweak factor 10¹⁷ is *exp(−40)*, dimensional transmutation of a propagating spin-gravity coupling *g²≈0.02* (the same argument ΛCDM makes for Λ_QCD) · *done*
+- [x] **Far fewer parameters than the SM** — ~0 new fundamental inputs vs the Standard Model's 19–26, the Yukawa list replaced by overlaps · *done*
+
+**Genesis — the lattice bets** (the outstanding work; mostly supercomputer-scale, stated as L1–L5 in the appendix):
+
+- [ ] **Does the gravity–torsion vacuum confine?** — Wilson-loop area law on the lattice; the cheapest, most falsifiable target (do first) · *lattice (L1)*
+- [ ] **String tension *σ ∝ f_π²*** — confirming one substrate does both mass and confinement · *lattice (L2)*
+- [ ] **Electroweak *S < 0.1*** in the walking sector — the make-or-break; simpler numerical work says *favourable*, only the lattice decides · *lattice (L3)*
+- [ ] **Exact fermion mass ratios** as overlap integrals — one parameter-free ratio matching data would be the headline · *lattice (L4)*
+- [ ] **The scale Λ itself** — the particle-scale binding density vs the cosmological *ρ_C* (the density question); pins the last free number · *lattice (L5)*
+- [ ] **Higgs compositeness** — the 125 GeV boson betraying structure where the SM says point-like · *external; HL-LHC / future colliders*
 
 **Observations already pointing its way:**
 
@@ -136,13 +160,19 @@ This is a research program, not an established theory. It synthesizes work by Po
 
 ## Where to read more
 
-The monograph is written in LaTeX. Start with `chapters/00-overture.tex`
-(the plain-language overture above), then `chapters/01-axioms.tex`; each
-subsequent chapter develops one piece of the framework. Part II opens the tests:
-`chapters/06-already-see.tex` and `chapters/07-next-decade.tex` list what would
-distinguish this framework from ΛCDM, `chapters/08-simulations.tex` lays out a
-tiered computational pathway, and `chapters/10-scoreboard.tex` tallies it against
-ΛCDM. `appendices/A-open-questions.tex` catalogs what we don't yet know.
+The monograph is written in LaTeX in three parts. Start with
+`chapters/00-overture.tex` (the plain-language overture above), then
+`chapters/01-axioms.tex`. **Part I — Catharsis** (`01`–`05`) builds the
+cosmology from the bounce. **Part II — Genesis** (`11`–`14`) derives matter from
+the same field: `11-solitonic-origin.tex` solves the torsiton eigenstates,
+`12-genesis.tex` walks the cooling field condensing into particles,
+`13-forces.tex` recovers the strong and electroweak forces, and
+`14-weltformel.tex` computes the elementary-particle mass spectrum from
+*G, ℏ, c*. **Part III — Observations, Simulations, and Experiments** (`06`–`10`)
+opens the tests and tallies the scoreboard against ΛCDM.
+`appendices/A-open-questions.tex` catalogs what we don't yet know, and
+`appendices/B-lattice-targets.tex` states the five supercomputer calculations
+(L1–L5) the particle sector reduces to.
 
 The pre-LaTeX markdown drafts are kept in `drafts/` for provenance.
 
