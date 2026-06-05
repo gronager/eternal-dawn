@@ -49,6 +49,30 @@ def static_potential_cornell(r, V, V_err=None):
             "r0_sommer": sommer_scale(alpha, sigma)}
 
 
+def effective_potential(R, T, W, t_window=None):
+    """The static potential V(R) from timelike Wilson loops W(R,T), via the effective-mass
+    ratio V(R) = ln[W(R,T)/W(R,T+1)], averaged over a plateau window in T (default: the upper
+    half of the available T, where excited-state contamination has decayed). Returns (R, V(R))
+    ready for static_potential_cornell."""
+    R = np.asarray(R); T = np.asarray(T); W = np.asarray(W, dtype=float)
+    Rs = np.unique(R)
+    Vr = []
+    for r in Rs:
+        m = R == r
+        Tr, Wr = T[m], W[m]
+        order = np.argsort(Tr)
+        Tr, Wr = Tr[order], Wr[order]
+        vt = np.log(Wr[:-1] / Wr[1:])              # effective V at each T
+        Tmid = Tr[:-1]
+        if t_window is None:
+            sel = Tmid >= max(1, int(Tr.max()) // 2)
+        else:
+            sel = (Tmid >= t_window[0]) & (Tmid <= t_window[1])
+        vt_sel = vt[sel & np.isfinite(vt)]
+        Vr.append(float(np.mean(vt_sel)) if vt_sel.size else float("nan"))
+    return Rs.astype(float), np.array(Vr)
+
+
 def sommer_scale(alpha, sigma, ref=1.65):
     """The Sommer scale r0, defined by r0^2 dV/dr |_{r0} = ref (ref=1.65 conventional). For the
     Cornell form dV/dr = alpha/r^2 + sigma, this gives r0 = sqrt((ref - alpha)/sigma)."""
