@@ -48,11 +48,18 @@ start_mps() {
   export CUDA_MPS_PIPE_DIRECTORY="${CUDA_MPS_PIPE_DIRECTORY:-/tmp/nvidia-mps}"
   export CUDA_MPS_LOG_DIRECTORY="${CUDA_MPS_LOG_DIRECTORY:-/tmp/nvidia-mps-log}"
   mkdir -p "$CUDA_MPS_PIPE_DIRECTORY" "$CUDA_MPS_LOG_DIRECTORY"
-  nvidia-cuda-mps-control -d 2>/dev/null && echo "[mps] daemon started ($CUDA_MPS_PIPE_DIRECTORY)"
+  if nvidia-cuda-mps-control -d 2>/dev/null; then
+    echo "[mps] daemon started ($CUDA_MPS_PIPE_DIRECTORY)"
+  else
+    echo "[mps] daemon already running -- reusing it"   # already up: fine, not an error
+  fi
+  return 0                                               # never fail the caller (set -e safe)
 }
 stop_mps() {
   command -v nvidia-cuda-mps-control >/dev/null 2>&1 || return 0
-  echo quit | nvidia-cuda-mps-control 2>/dev/null && echo "[mps] daemon stopped"
+  echo quit | nvidia-cuda-mps-control 2>/dev/null || true
+  echo "[mps] daemon stopped"
+  return 0
 }
 
 run_pool() {
