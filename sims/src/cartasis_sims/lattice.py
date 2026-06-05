@@ -92,6 +92,26 @@ def effective_potential(R, T, W, t_window=None):
     return Rs.astype(float), np.array(Vr)
 
 
+def effective_mass_table(R, T, W):
+    """Diagnostic: the effective potential V_eff(R,T) = ln[W(R,T)/W(R,T+1)] as a function of T,
+    for each R. This is the raw object whose T-plateau IS the static potential V(R): at small T
+    excited states inflate V_eff, then it falls to a plateau, then noise blows it up. Printing
+    this table tells you (a) where the plateau is -- the right fit window -- and (b) whether you
+    have a plateau at all (no plateau within the signal window => you need smearing).
+    Returns {R: (T_mid_array, Veff_array)} with T_mid the lower T of each adjacent pair."""
+    R = np.asarray(R); T = np.asarray(T); W = np.asarray(W, dtype=float)
+    out = {}
+    for r in np.unique(R):
+        m = R == r
+        Tr, Wr = T[m], W[m]
+        order = np.argsort(Tr)
+        Tr, Wr = Tr[order], Wr[order]
+        with np.errstate(divide="ignore", invalid="ignore"):
+            veff = np.log(Wr[:-1] / Wr[1:])
+        out[int(r)] = (Tr[:-1].astype(float), veff)
+    return out
+
+
 def sommer_scale(alpha, sigma, ref=1.65):
     """The Sommer scale r0, defined by r0^2 dV/dr |_{r0} = ref (ref=1.65 conventional). For the
     Cornell form dV/dr = alpha/r^2 + sigma, this gives r0 = sqrt((ref - alpha)/sigma)."""

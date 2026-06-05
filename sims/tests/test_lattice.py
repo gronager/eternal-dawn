@@ -45,6 +45,22 @@ def test_potential_linear_fit_recovers_tension():
     assert np.isclose(fit["sigma"], sigma_true, rtol=1e-6)
 
 
+def test_effective_mass_table_plateaus_at_true_potential():
+    # synthetic loops W(R,T)=exp(-V(R)T): V_eff(R,T)=ln[W(R,T)/W(R,T+1)] is a flat plateau at V(R)
+    sigma_true, alpha_true, c_true = 0.05, 0.28, 0.6
+    Rs, Ts, Ws = [], [], []
+    Vtrue = {}
+    for r in np.arange(1, 6):
+        V = c_true - alpha_true / r + sigma_true * r
+        Vtrue[int(r)] = V
+        for t in np.arange(1, 9):
+            Rs.append(r); Ts.append(t); Ws.append(np.exp(-V * t))
+    table = lat.effective_mass_table(np.array(Rs), np.array(Ts), np.array(Ws))
+    for r, (Tmid, veff) in table.items():
+        assert np.allclose(veff, Vtrue[r], rtol=1e-6)   # flat plateau exactly at V(R)
+        assert Tmid[0] == 1.0
+
+
 def test_screening_gives_zero_tension():
     # a pure Coulomb (screened) potential has sigma ~ 0 -> no area law
     r = np.linspace(1.0, 10.0, 20)
