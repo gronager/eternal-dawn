@@ -15,9 +15,10 @@ require_exe() {
     local dir; dir="$(dirname "$exe")"
     if [ -d "$dir" ]; then
       echo "Executables that DO exist in $dir :" >&2
-      find "$dir" -maxdepth 1 -type f -perm -u+x -name 'Test_*' -printf '   %f\n' 2>/dev/null >&2 \
+      find "$dir" -maxdepth 1 -type f -perm -u+x -printf '   %f\n' 2>/dev/null >&2 \
         || ls "$dir" >&2
-      echo "(Grid's test names vary by version -- set the right one and re-run.)" >&2
+      echo "(if this is a Grid test dir, names vary by version; if it is lattice/src," >&2
+      echo " run the build -- step 6 compiles our measurement programs.)" >&2
     else
       echo "(directory $dir does not exist -- the build did not complete.)" >&2
     fi
