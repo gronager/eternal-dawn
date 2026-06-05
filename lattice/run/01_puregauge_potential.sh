@@ -20,17 +20,22 @@ THERM="${THERM:-150}"  # discard configs below this trajectory (thermalisation)
 STRIDE="${STRIDE:-20}" # then measure every STRIDE-th config (decorrelation)
 NPAR="${NPAR:-8}"      # parallel measurement jobs on the GPU (tiny lattices -> pack the 96 GB)
 
-# --- 1. generate the pure-gauge ensemble --------------------------------------------------
-# Test_hmc_WilsonGauge fixes beta=5.6 in source and saves a NERSC ckpoint_lat.<n> EVERY
-# trajectory. We over-generate, then thermalise + decorrelate by selection below. (To change
-# beta you must edit the .cc and rebuild, or use a custom HMC -- 5.6 is fine for confinement.)
-( cd "$OUT" && "$HMC" --grid "$GRIDSPEC" --Trajectories "$NTRAJ" --accelerator-threads 8 \
-    2>&1 | tee hmc.log )
+# --- 1. generate the pure-gauge ensemble (skip if configs already exist) -------------------
+# If you ran ./lattice/run/00_generate.sh first (recommended -- K independent streams in
+# parallel), the configs are already in $OUT/stream*/ and this step is skipped. Otherwise it
+# falls back to a single serial chain with the stock Test_hmc_WilsonGauge (beta=5.6 hardcoded).
+shopt -s nullglob
+if ls "$OUT"/ckpoint_lat.* "$OUT"/stream*/ckpoint_lat.* >/dev/null 2>&1; then
+  echo "using existing configs in $OUT (run/00 streams or a previous run)"
+else
+  echo "no configs found -- generating a single serial chain (or run run/00 first for streams)"
+  ( cd "$OUT" && "$HMC" --grid "$GRIDSPEC" --Trajectories "$NTRAJ" --accelerator-threads 8 \
+      2>&1 | tee hmc.log )
+fi
 
 # --- 2. measure W(R,T) on THERMALISED, DECORRELATED configs (parallel on the GPU) ----------
-shopt -s nullglob
 sel=()
-for cfg in "$OUT"/ckpoint_lat.*; do
+for cfg in "$OUT"/ckpoint_lat.* "$OUT"/stream*/ckpoint_lat.*; do
   [[ "$cfg" == *.gz ]] && continue
   n="${cfg##*.}"; [[ "$n" =~ ^[0-9]+$ ]] || continue
   (( n >= THERM )) || continue                 # thermalisation cut
