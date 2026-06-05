@@ -43,8 +43,10 @@ for b in $BETAS; do
   for c in $(ls -v "$d"/ckpoint_lat.* 2>/dev/null | grep -vE '\.gz$|rng'); do
     n="${c##*.}"; [[ "$n" =~ ^[0-9]+$ ]] || continue
     (( n >= THERM )) || continue
+    # take ONLY our own "# config ... plaquette X" line (NerscIO also echoes the header's stored
+    # plaquette, which would otherwise be averaged in twice)
     p=$("$MEAS" --grid "$GRIDSPEC" --config "$c" --rmax 1 --tmax 1 --accelerator-threads 8 2>/dev/null \
-        | sed -n 's/.*plaquette //p' | awk '{print $1}')
+        | grep -m1 '^# config' | sed -n 's/.*plaquette //p' | awk '{print $1}')
     [ -n "$p" ] && vals+=("$p")
   done
   if [ "${#vals[@]}" -gt 0 ]; then
