@@ -2,6 +2,11 @@
 # Sets GRID (the Grid build dir) and provides require_exe to fail loudly + helpfully.
 GRID="${GRID:-$HOME/ed-lattice/src/Grid/build}"
 
+# Make the repo's Python package (cartasis_sims) importable in the analysis steps without
+# requiring a pip install on the box -- the run scripts call `from cartasis_sims import lattice`.
+_LATTICE_REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+export PYTHONPATH="$_LATTICE_REPO/sims/src${PYTHONPATH:+:$PYTHONPATH}"
+
 require_exe() {
   # require_exe <path-to-executable>
   local exe="$1"
