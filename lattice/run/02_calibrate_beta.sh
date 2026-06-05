@@ -23,16 +23,23 @@ THERM="${THERM:-40}"                # discard below this trajectory (plaquette e
 TARGET="${TARGET:-0.5669}"          # SU(3) Wilson reference plaquette at standard beta=5.6
 
 echo "calibrating beta against the plaquette (target <P>=$TARGET): scanning betas [$BETAS]"
-start_mps
-# one stream per beta, hot start, own dir -- all run side by side under MPS
-i=0
+# generate only the betas that don't already have enough configs (a re-run reuses prior streams)
+gen=""; i=0
 for b in $BETAS; do
-  i=$((i+1))
-  d="$OUT/beta$b"
-  printf 'mkdir -p %q && cd %q && %q --grid %q --beta %q --seed %d --StartingType HotStart --Trajectories %d --accelerator-threads 8 > hmc.log 2>&1\n' \
-    "$d" "$d" "$GEN" "$GRIDSPEC" "$b" "$((i*1000 + 1))" "$NTRAJ"
-done | run_pool "$(echo $BETAS | wc -w)"
-stop_mps
+  i=$((i+1)); d="$OUT/beta$b"
+  have=$(ls -v "$d"/ckpoint_lat.* 2>/dev/null | grep -vcE '\.gz$|rng' || true)
+  if [ "$have" -ge "$NTRAJ" ]; then
+    echo "  beta=$b: $have configs already present -- skipping generation"
+  else
+    gen+=$(printf 'mkdir -p %q && cd %q && %q --grid %q --beta %q --seed %d --StartingType HotStart --Trajectories %d --accelerator-threads 8 > hmc.log 2>&1\n' \
+      "$d" "$d" "$GEN" "$GRIDSPEC" "$b" "$((i*1000 + 1))" "$NTRAJ")$'\n'
+  fi
+done
+if [ -n "$gen" ]; then
+  start_mps
+  printf '%s' "$gen" | run_pool "$(echo $BETAS | wc -w)"   # all missing betas side by side under MPS
+  stop_mps
+fi
 
 # report what generation produced before measuring (so a failed/slow generation is obvious, not silent)
 echo "== generated configs per beta =="
