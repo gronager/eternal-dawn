@@ -7,6 +7,10 @@
 # (tests/hmc, tests/core, ...), which are built only by `make tests`. We run it.
 set -euo pipefail
 
+# Absolute path to the repo's lattice/ dir -- captured NOW, before any `cd`, because later
+# steps cd into the Grid build tree and $0 may be relative (that broke step 6 before).
+LATTICE_DIR="$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)"
+
 PREFIX="${PREFIX:-$HOME/ed-lattice}"
 NPROC="${NPROC:-$(nproc)}"
 CUDA_ARCH="${CUDA_ARCH:-sm_90}"                 # Hopper (GH200)
@@ -113,7 +117,6 @@ fi
 
 # --------------------------------------------------------------------------
 echo "== 6. build our custom measurement programs (static potential, ...) =="
-LATTICE_DIR="$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)"   # the repo's lattice/ dir
 if [ -d "$LATTICE_DIR/src" ]; then
   make -C "$LATTICE_DIR/src" PREFIX="$PREFIX" GRID_CONFIG="$PREFIX/bin/grid-config" \
     && echo "   ok: measurement programs in $LATTICE_DIR/src" \
