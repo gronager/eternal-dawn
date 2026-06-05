@@ -64,10 +64,23 @@ stop_mps() {
 
 run_pool() {
   # run_pool <NPAR> -- read commands (one per line) from stdin, run NPAR at a time.
+  # On Ctrl-C/TERM it kills the launched jobs AND their children -- otherwise backgrounded
+  # jobs ignore SIGINT (POSIX, non-interactive shell) and keep running orphaned, hogging the GPU.
   local npar="$1"
+  local pids=()
+  _pool_kill() {
+    local p
+    for p in "${pids[@]}"; do
+      pkill -TERM -P "$p" 2>/dev/null   # the job's child (e.g. generate_gauge / measure_potential)
+      kill  -TERM    "$p" 2>/dev/null   # the bash -c wrapper
+    done
+  }
+  trap '_pool_kill; trap - INT TERM; echo "[pool] interrupted -- jobs killed" >&2; exit 130' INT TERM
   while IFS= read -r cmd; do
     bash -c "$cmd" &
+    pids+=("$!")
     while [ "$(jobs -rp | wc -l)" -ge "$npar" ]; do wait -n; done
   done
   wait
+  trap - INT TERM
 }
