@@ -60,7 +60,12 @@ for cfg in "${sel[@]}"; do
 done | run_pool "$NPAR"
 stop_mps
 
-cat "${sel[@]/%/.wl}" > "$OUT/wloops_raw.dat"  # combine the per-config results
+# combine per-config results, tagging each row with a config index (for the jackknife error)
+ci=0; : > "$OUT/wloops_raw.dat"
+for cfg in "${sel[@]}"; do
+  ci=$((ci+1))
+  awk -v c=$ci '/^[0-9]/{print c, $0}' "$cfg.wl" >> "$OUT/wloops_raw.dat"
+done
 echo "measured ${#sel[@]} configs"
 
 # --- 3. average over configs, extract V(R), fit the string tension -------------------------
@@ -72,17 +77,17 @@ tmin = int(os.environ.get("TMIN_FIT", "2")); tmax = int(os.environ.get("TMAX_FIT
 rows = []
 for line in open(sys.argv[1]):
     p = line.split()
-    if len(p) == 3:
+    if len(p) == 4:                              # cfg R T W (tagged per config)
         try:
             rows.append([float(x) for x in p])
         except ValueError:
             pass
 raw = np.array(rows)
 if raw.size == 0:
-    sys.exit("no numeric R T W rows found in wloops_raw.dat")
-R, T, W = raw[:,0], raw[:,1], raw[:,2]
+    sys.exit("no numeric 'cfg R T W' rows found in wloops_raw.dat")
+CFG, R, T, W = raw[:,0], raw[:,1], raw[:,2], raw[:,3]
 Ru, Tu, Wu = [], [], []
-for (r,t) in sorted(set(map(tuple, raw[:,:2].astype(int)))):
+for (r,t) in sorted(set(map(tuple, raw[:,1:3].astype(int)))):
     m = (R==r)&(T==t)
     Ru.append(r); Tu.append(t); Wu.append(W[m].mean())
 Ru, Tu, Wu = np.array(Ru), np.array(Tu), np.array(Wu)
@@ -100,12 +105,11 @@ for r in sorted(table):
     line = "".join(f"{cell[t]:>8.3f}" if t in cell and np.isfinite(cell[t]) else f"{'-':>8}" for t in Tcols)
     print(f"    {r:>3d}   {line}")
 
-# (b) V(R) from the plateau window, then the Cornell fit on the clean (monotonic) R range.
+# (b) V(R) from the plateau window for display, then the Cornell fit WITH a jackknife error
+#     over configs -- the error is what tells a real sigma from a noise-dominated fit.
 Rr, Vr = lat.effective_potential(Ru, Tu, Wu, t_window=(tmin, tmax))
 good = np.isfinite(Vr) & (Vr > 0)
-# keep only the leading monotonic-rising run (drop the large-R noise tail)
-keep = []
-last = -np.inf
+keep, last = [], -np.inf
 for i in range(len(Rr)):
     if not good[i]:
         break
@@ -115,14 +119,19 @@ for i in range(len(Rr)):
         break
 keep = np.array(keep, dtype=int)
 print(f"\n  V(R) from plateau T=[{tmin},{tmax}]: R={Rr[keep].astype(int)}  V={np.round(Vr[keep],4)}")
-if keep.size >= 3:
-    fit = lat.static_potential_cornell(Rr[keep], Vr[keep])
-    sqrt_sigma = np.sqrt(fit['sigma']) if fit['sigma'] > 0 else float('nan')
-    print(f"  sigma      = {fit['sigma']:.5f} a^-2   sqrt(sigma) a = {sqrt_sigma:.4f}")
-    print(f"  alpha      = {fit['alpha']:.4f}   (string/Coulomb ~ pi/12 = 0.262)")
-    print(f"  r0(Sommer) = {fit['r0_sommer']:.3f} a")
+jk = lat.string_tension_jackknife(CFG, R, T, W, tmin=tmin, tmax=tmax)
+if np.isfinite(jk["sigma"]):
+    ss = np.sqrt(jk["sigma"]) if jk["sigma"] > 0 else float("nan")
+    print(f"  n_cfg      = {jk['n_cfg']}   R used = {jk['R_used']}")
+    print(f"  sigma      = {jk['sigma']:.5f} +/- {jk['sigma_err']:.5f} a^-2   sqrt(sigma) a = {ss:.4f}")
+    print(f"  alpha      = {jk['alpha']:.4f} +/- {jk['alpha_err']:.4f}   (string/Coulomb ~ pi/12 = 0.262)")
+    print(f"  r0(Sommer) = {jk['r0_sommer']:.3f} a")
+    if jk["sigma_err"] >= abs(jk["sigma"]) or jk["alpha"] < 0:
+        print(f"  WARNING: error >= value (or alpha<0) -- noise-dominated; need more independent configs")
     print(f"  ref (SU3 Wilson, Necco-Sommer): beta=5.6 -> sigma a^2~0.25, r0/a~2.3; "
           f"beta=5.7 -> ~0.157, r0/a~2.92; beta=6.0 -> ~0.0467, sqrt(sigma)a~0.216, r0/a~5.37")
+else:
+    print("  too few clean V(R) points to fit -- raise SMEAR / statistics")
 else:
     print("  too few clean V(R) points -- raise SMEAR, the plateau window, and/or statistics")
 PY
