@@ -38,3 +38,29 @@ note_params() {
   echo "[note] verify flags with '$1 --help'; some Grid HMC tests read parameters from source"
   echo "       or an XML input rather than CLI -- adjust if a parameter below is ignored."
 }
+
+# ---- packing many small jobs onto one big GPU (96 GB GH200) -------------------------------
+# The lattices here use ~1-2 GB each, so the GPU is memory-rich but compute-underutilised by a
+# single small job. MPS lets independent CUDA processes truly share the SMs (not just
+# time-slice), so N parallel measurements run ~N x faster until the GPU saturates.
+start_mps() {
+  command -v nvidia-cuda-mps-control >/dev/null 2>&1 || { echo "[mps] not available; skipping"; return 0; }
+  export CUDA_MPS_PIPE_DIRECTORY="${CUDA_MPS_PIPE_DIRECTORY:-/tmp/nvidia-mps}"
+  export CUDA_MPS_LOG_DIRECTORY="${CUDA_MPS_LOG_DIRECTORY:-/tmp/nvidia-mps-log}"
+  mkdir -p "$CUDA_MPS_PIPE_DIRECTORY" "$CUDA_MPS_LOG_DIRECTORY"
+  nvidia-cuda-mps-control -d 2>/dev/null && echo "[mps] daemon started ($CUDA_MPS_PIPE_DIRECTORY)"
+}
+stop_mps() {
+  command -v nvidia-cuda-mps-control >/dev/null 2>&1 || return 0
+  echo quit | nvidia-cuda-mps-control 2>/dev/null && echo "[mps] daemon stopped"
+}
+
+run_pool() {
+  # run_pool <NPAR> -- read commands (one per line) from stdin, run NPAR at a time.
+  local npar="$1"
+  while IFS= read -r cmd; do
+    bash -c "$cmd" &
+    while [ "$(jobs -rp | wc -l)" -ge "$npar" ]; do wait -n; done
+  done
+  wait
+}
