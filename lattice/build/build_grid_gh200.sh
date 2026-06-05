@@ -110,4 +110,15 @@ if [ "$missing" -ne 0 ]; then
   echo "!! Some expected executables are missing -- Grid's test names vary by version."
   echo "   Pick the matching ones from the list above and edit lattice/run/*.sh accordingly."
 fi
+
+# --------------------------------------------------------------------------
+echo "== 6. build our custom measurement programs (static potential, ...) =="
+LATTICE_DIR="$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)"   # the repo's lattice/ dir
+if [ -d "$LATTICE_DIR/src" ]; then
+  make -C "$LATTICE_DIR/src" PREFIX="$PREFIX" GRID_CONFIG="$PREFIX/bin/grid-config" \
+    && echo "   ok: measurement programs in $LATTICE_DIR/src" \
+    || echo "!! measurement programs did not build -- run 'make -C lattice/src' and paste the error"
+else
+  echo "(lattice/src not found beside the build script; skipping custom programs)"
+fi
 echo "== done =="

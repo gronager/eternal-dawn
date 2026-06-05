@@ -16,6 +16,22 @@ def test_string_tension_recovered_from_synthetic_potential():
     assert fit["r0_sommer"] > 0          # confining -> a finite Sommer scale
 
 
+def test_potential_from_wilson_loops_recovers_tension():
+    # synthetic timelike loops W(R,T) = exp(-V(R) T) with a known Cornell V(R); recover sigma
+    sigma_true, alpha_true, c_true = 0.05, 0.28, 0.6
+    Rgrid = np.arange(1, 9)
+    Tgrid = np.arange(1, 9)
+    Rs, Ts, Ws = [], [], []
+    for r in Rgrid:
+        V = c_true - alpha_true / r + sigma_true * r
+        for t in Tgrid:
+            Rs.append(r); Ts.append(t); Ws.append(np.exp(-V * t))
+    R, V = lat.effective_potential(np.array(Rs), np.array(Ts), np.array(Ws))
+    fit = lat.static_potential_cornell(R, V)
+    assert np.isclose(fit["sigma"], sigma_true, rtol=1e-6)
+    assert np.isclose(fit["alpha"], alpha_true, rtol=1e-6)
+
+
 def test_screening_gives_zero_tension():
     # a pure Coulomb (screened) potential has sigma ~ 0 -> no area law
     r = np.linspace(1.0, 10.0, 20)

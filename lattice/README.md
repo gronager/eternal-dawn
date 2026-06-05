@@ -83,7 +83,10 @@ up front and fail with that same guidance rather than a bare "No such file or di
 ```
 lattice/
 ├── README.md                      # this file
-├── build/build_grid_gh200.sh      # deps + Grid + `make tests` + verification (GH200)
+├── build/build_grid_gh200.sh      # deps + Grid + the 5 test exes + our programs (GH200)
+├── src/                           # custom Grid measurement programs (Grid ships no turnkey ones)
+│   ├── Makefile                   # compiles against libGrid via grid-config
+│   └── measure_potential.cc       # static potential W(R,T) -> sigma (target 1)
 └── run/
     ├── _lib.sh                    # shared: $GRID default, require_exe, note_params
     ├── 01_puregauge_potential.sh  # target 1: string tension
