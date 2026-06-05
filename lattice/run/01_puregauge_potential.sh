@@ -13,12 +13,13 @@ require_exe "$HMC"
 require_exe "$MEAS"
 note_params "$HMC"
 
-L=16 ; T=32            # 16^3 x 32 -- a quick first ensemble (raise once it runs)
-GRIDSPEC="$L.$L.$L.$T"
+L="${L:-16}" ; T="${T:-32}"   # lattice size (env-settable); a bigger box gives more clean R points,
+GRIDSPEC="$L.$L.$L.$T"        # breaks the alpha-sigma fit degeneracy, and -- being throughput- not
+                              # latency-bound -- actually uses the GPU (e.g. L=32 T=64)
 NTRAJ="${NTRAJ:-400}"  # total trajectories (Test_hmc_WilsonGauge: beta=5.6 hardcoded, saveInterval=1)
 THERM="${THERM:-150}"  # discard configs below this trajectory (thermalisation)
 STRIDE="${STRIDE:-20}" # then measure every STRIDE-th config (decorrelation)
-NPAR="${NPAR:-8}"      # parallel measurement jobs on the GPU (tiny lattices -> pack the 96 GB)
+NPAR="${NPAR:-8}"      # parallel measurement jobs (drop toward 1-2 once one big lattice fills the GPU)
 # spatial APE smearing lifts the ground-state overlap so V_eff(R,T) plateaus at small T (the
 # big S/N win for sigma); the plateau window then averages ln[W(R,T)/W(R,T+1)] over clean T.
 SMEAR="${SMEAR:-20}"       # spatial APE smearing steps (0 = unsmeared, the original validated path)
@@ -26,7 +27,8 @@ SALPHA="${SALPHA:-0.5}"    # APE smearing weight
 TMIN_FIT="${TMIN_FIT:-2}"  # plateau window low  T (smearing moves the plateau down to small T)
 TMAX_FIT="${TMAX_FIT:-5}"  # plateau window high T (before large-T noise takes over)
 RMIN_FIT="${RMIN_FIT:-1}"  # Cornell-fit R window low  (drop R=1 if smearing over-smooths it)
-RMAX_FIT="${RMAX_FIT:-6}"  # Cornell-fit R window high: EXCLUDE the noisy R~L/2 tail (stabilises the fit)
+RMAX_FIT="${RMAX_FIT:-$((L/2 - 2))}"  # Cornell-fit R window high: scales with L, EXCLUDES the noisy
+                                      # R~L/2 tail (=6 at L=16, =14 at L=32) -- stabilises the fit
 
 # --- 1. generate the pure-gauge ensemble (skip if configs already exist) -------------------
 # If you ran ./lattice/run/00_generate.sh first (recommended -- K independent streams in
