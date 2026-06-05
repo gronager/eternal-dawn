@@ -15,14 +15,16 @@ L="${L:-16}" ; T="${T:-32}" ; GRIDSPEC="$L.$L.$L.$T"
 BETA="${BETA:-5.6}"
 NTRAJ="${NTRAJ:-200}"        # trajectories per stream
 NSTREAMS="${NSTREAMS:-4}"    # independent parallel streams (raise to fill the GPU)
+MDSTEPS="${MDSTEPS:-20}"     # leapfrog steps/trajectory; raise (~V^1/4) on a bigger lattice to hold acceptance
+SAVE_INTERVAL="${SAVE_INTERVAL:-1}"  # write a config every Nth trajectory (raise to cut I/O on big lattices)
 
-echo "generating $NSTREAMS independent streams x $NTRAJ trajectories (beta=$BETA, $GRIDSPEC)"
+echo "generating $NSTREAMS streams x $NTRAJ trajectories (beta=$BETA, $GRIDSPEC, mdsteps=$MDSTEPS, save=$SAVE_INTERVAL)"
 start_mps
 for k in $(seq 1 "$NSTREAMS"); do
   d="$OUT/stream$k"
   # each stream: own dir, hot start, well-separated seed -> genuinely independent chain
-  printf 'mkdir -p %q && cd %q && %q --grid %q --beta %q --seed %d --StartingType HotStart --Trajectories %d --accelerator-threads 8 > hmc.log 2>&1\n' \
-    "$d" "$d" "$GEN" "$GRIDSPEC" "$BETA" "$((k*1000 + 1))" "$NTRAJ"
+  printf 'mkdir -p %q && cd %q && %q --grid %q --beta %q --seed %d --mdsteps %d --save-interval %d --StartingType HotStart --Trajectories %d --accelerator-threads 8 > hmc.log 2>&1\n' \
+    "$d" "$d" "$GEN" "$GRIDSPEC" "$BETA" "$((k*1000 + 1))" "$MDSTEPS" "$SAVE_INTERVAL" "$NTRAJ"
 done | run_pool "$NSTREAMS"
 stop_mps
 

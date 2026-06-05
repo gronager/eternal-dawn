@@ -19,14 +19,24 @@ int main(int argc, char **argv) {
   typedef GenericHMCRunner<MinimumNorm2> HMCWrapper;
   HMCWrapper TheHMC;
 
-  // ---- our additions: beta and seed from the command line ----
+  // ---- our additions: beta, seed, integrator steps, checkpoint cadence from the command line ----
   RealD beta = 5.6;
   int seed = 1;
+  int mdsteps = 20;        // leapfrog steps per trajectory; raise ~V^{1/4} on a bigger lattice
+  int saveInterval = 1;    // write a NERSC config every Nth trajectory (raise to cut I/O on big lattices)
   if (GridCmdOptionExists(argv, argv + argc, "--beta"))
     beta = std::stod(GridCmdOptionPayload(argv, argv + argc, "--beta"));
   if (GridCmdOptionExists(argv, argv + argc, "--seed")) {
     std::string s = GridCmdOptionPayload(argv, argv + argc, "--seed");
     GridCmdOptionInt(s, seed);
+  }
+  if (GridCmdOptionExists(argv, argv + argc, "--mdsteps")) {
+    std::string s = GridCmdOptionPayload(argv, argv + argc, "--mdsteps");
+    GridCmdOptionInt(s, mdsteps);
+  }
+  if (GridCmdOptionExists(argv, argv + argc, "--save-interval")) {
+    std::string s = GridCmdOptionPayload(argv, argv + argc, "--save-interval");
+    GridCmdOptionInt(s, saveInterval);
   }
 
   TheHMC.Resources.AddFourDimGrid("gauge");
@@ -34,7 +44,7 @@ int main(int argc, char **argv) {
   CheckpointerParameters CPparams;
   CPparams.config_prefix = "ckpoint_lat";
   CPparams.rng_prefix = "ckpoint_rng";
-  CPparams.saveInterval = 1;
+  CPparams.saveInterval = saveInterval;
   CPparams.format = "IEEE64BIG";
   TheHMC.Resources.LoadNerscCheckpointer(CPparams);
 
@@ -52,10 +62,11 @@ int main(int argc, char **argv) {
   Level1.push_back(&Waction);
   TheHMC.TheAction.push_back(Level1);
 
-  TheHMC.Parameters.MD.MDsteps = 20;
+  TheHMC.Parameters.MD.MDsteps = mdsteps;
   TheHMC.Parameters.MD.trajL = 1.0;
 
   std::cout << GridLogMessage << "generate_gauge: beta=" << beta << " seed=" << seed
+            << " mdsteps=" << mdsteps << " saveInterval=" << saveInterval
             << " serial_seeds='" << RNGpar.serial_seeds
             << "' parallel_seeds='" << RNGpar.parallel_seeds << "'" << std::endl;
 
