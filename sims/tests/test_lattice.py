@@ -61,6 +61,25 @@ def test_effective_mass_table_plateaus_at_true_potential():
         assert Tmid[0] == 1.0
 
 
+def test_string_tension_jackknife_recovers_value_with_small_error():
+    # many configs of clean synthetic loops (tiny per-config noise) -> sigma recovered, small error
+    rng = np.random.default_rng(0)
+    sigma_true, alpha_true, c_true = 0.157, 0.28, 0.6
+    cfgs, Rs, Ts, Ws = [], [], [], []
+    for ci in range(40):
+        for r in np.arange(1, 7):
+            V = c_true - alpha_true / r + sigma_true * r
+            for t in np.arange(1, 7):
+                w = np.exp(-V * t) * (1.0 + 0.01 * rng.standard_normal())
+                cfgs.append(ci); Rs.append(r); Ts.append(t); Ws.append(w)
+    out = lat.string_tension_jackknife(np.array(cfgs), np.array(Rs), np.array(Ts), np.array(Ws),
+                                       tmin=2, tmax=5)
+    assert out["n_cfg"] == 40
+    assert np.isclose(out["sigma"], sigma_true, atol=0.02)
+    assert out["sigma_err"] < 0.02                      # small error with clean, plentiful data
+    assert abs(out["alpha"] - alpha_true) < 0.1
+
+
 def test_beta_calibration_interpolates_target_plaquette():
     # synthetic monotonic <P>(beta); recover the beta whose plaquette hits the target
     betas = np.array([5.6, 5.8, 6.0, 6.2])

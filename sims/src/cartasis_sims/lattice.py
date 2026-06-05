@@ -121,6 +121,64 @@ def sommer_scale(alpha, sigma, ref=1.65):
     return float(np.sqrt(val)) if val > 0 else float("nan")
 
 
+def _potential_and_fit(R, T, W, tmin, tmax):
+    """Average W over the (already-selected) rows per (R,T), extract V(R) from the plateau window,
+    keep the leading monotonic-rising R range, and Cornell-fit. Returns (fit_dict, R_used) or
+    (None, None) if fewer than 3 clean points. Shared by the point estimate and the jackknife."""
+    R = np.asarray(R); T = np.asarray(T); W = np.asarray(W, dtype=float)
+    Ru, Tu, Wu = [], [], []
+    for (r, t) in sorted(set(zip(R.astype(int), T.astype(int)))):
+        m = (R == r) & (T == t)
+        Ru.append(r); Tu.append(t); Wu.append(W[m].mean())
+    Rr, Vr = effective_potential(np.array(Ru), np.array(Tu), np.array(Wu), t_window=(tmin, tmax))
+    good = np.isfinite(Vr) & (Vr > 0)
+    keep, last = [], -np.inf
+    for i in range(len(Rr)):
+        if not good[i]:
+            break
+        if Vr[i] >= last - 1e-9:
+            keep.append(i); last = Vr[i]
+        else:
+            break
+    keep = np.array(keep, dtype=int)
+    if keep.size < 3:
+        return None, None
+    return static_potential_cornell(Rr[keep], Vr[keep]), Rr[keep]
+
+
+def string_tension_jackknife(cfg, R, T, W, tmin=2, tmax=4):
+    """String tension with a delete-1 jackknife error over configurations. `cfg` is the per-row
+    configuration id; (R, T, W) are the timelike Wilson loops from every config. The full sample
+    gives the central sigma/alpha; deleting one config at a time and refitting gives the jackknife
+    error sqrt((n-1)/n * sum (x_i - mean)^2). Error bars are what separate a real measurement
+    (sigma small relative to its error) from a noise-dominated fit (error >= the value, e.g. the
+    unphysical negative alpha you get from a handful of correlated configs)."""
+    cfg = np.asarray(cfg); R = np.asarray(R); T = np.asarray(T); W = np.asarray(W, dtype=float)
+    cfgs = np.unique(cfg)
+    n = len(cfgs)
+    full_fit, R_used = _potential_and_fit(R, T, W, tmin, tmax)
+    if full_fit is None or n < 2:
+        return {"sigma": float("nan"), "sigma_err": float("nan"), "alpha": float("nan"),
+                "alpha_err": float("nan"), "n_cfg": int(n), "R_used": []}
+    js, ja = [], []
+    for c in cfgs:
+        m = cfg != c
+        fit, _ = _potential_and_fit(R[m], T[m], W[m], tmin, tmax)
+        if fit is not None:
+            js.append(fit["sigma"]); ja.append(fit["alpha"])
+    js, ja = np.array(js), np.array(ja)
+
+    def jk_err(vals):
+        if vals.size < 2:
+            return float("nan")
+        return float(np.sqrt((vals.size - 1) / vals.size * np.sum((vals - vals.mean()) ** 2)))
+
+    return {"sigma": float(full_fit["sigma"]), "sigma_err": jk_err(js),
+            "alpha": float(full_fit["alpha"]), "alpha_err": jk_err(ja),
+            "r0_sommer": float(full_fit["r0_sommer"]), "n_cfg": int(n),
+            "R_used": [int(x) for x in R_used]}
+
+
 def beta_from_plaquette(betas, plaqs, target=0.5937):
     """Map the bare coupling to a target lattice spacing via the plaquette: given equilibrium
     average plaquettes <P>(beta) measured at a handful of input betas, find the beta whose
