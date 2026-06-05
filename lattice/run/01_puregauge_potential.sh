@@ -20,9 +20,13 @@ NTRAJ="${NTRAJ:-400}"  # total trajectories (Test_hmc_WilsonGauge: beta=5.6 hard
 THERM="${THERM:-150}"  # discard configs below this trajectory (thermalisation)
 STRIDE="${STRIDE:-20}" # then measure every STRIDE-th config (decorrelation)
 NPAR="${NPAR:-8}"      # parallel measurement jobs (drop toward 1-2 once one big lattice fills the GPU)
-# spatial APE smearing lifts the ground-state overlap so V_eff(R,T) plateaus at small T (the
-# big S/N win for sigma); the plateau window then averages ln[W(R,T)/W(R,T+1)] over clean T.
-SMEAR="${SMEAR:-20}"       # spatial APE smearing steps (0 = unsmeared, the original validated path)
+# spatial APE smearing lifts the ground-state overlap so V_eff(R,T) plateaus at small T (an S/N
+# win), BUT it also washes out the short-distance Coulomb: measured at beta=5.7, alpha falls
+# 0.32(unsmeared, ~pi/12) -> 0.13 -> 0.10 as SMEAR goes 0 -> 2 -> 4, and the Cornell fit
+# compensates by inflating sigma (0.175 -> 0.195). The error shrinks with smearing but it is then
+# precisely measuring a BIASED number. So smear LIGHTLY (default 2) and, on a big lattice, read
+# sigma off the large-R linear regime (raise RMIN_FIT), where the small-R smearing bias does not reach.
+SMEAR="${SMEAR:-2}"        # spatial APE smearing steps (0 = unbiased but noisy; >=4 biases sigma high)
 SALPHA="${SALPHA:-0.5}"    # APE smearing weight
 TMIN_FIT="${TMIN_FIT:-2}"  # plateau window low  T (smearing moves the plateau down to small T)
 TMAX_FIT="${TMAX_FIT:-5}"  # plateau window high T (before large-T noise takes over)
