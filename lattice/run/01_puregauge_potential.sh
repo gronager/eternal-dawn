@@ -29,8 +29,10 @@ cfgs=("$OUT"/ckpoint_lat.*)
 [ "${#cfgs[@]}" -gt 0 ] || { echo "no ckpoint_lat.* in $OUT -- did the HMC write configs?"; exit 1; }
 for cfg in "${cfgs[@]}"; do
   [[ "$cfg" == *.gz ]] && continue
+  # keep only the R T W data lines; Grid prints init chatter to stdout too (it starts with
+  # letters: "MPI...", "Grid...", "AcceleratorCudaInit...", "local...", "SharedMemory...").
   "$MEAS" --grid "$GRIDSPEC" --config "$cfg" --rmax $((L/2)) --tmax $((T/2)) \
-      --accelerator-threads 8 | grep -vE '^#' >> "$OUT/wloops_raw.dat"
+      --accelerator-threads 8 | grep -E '^[0-9]' >> "$OUT/wloops_raw.dat"
 done
 
 # --- 3. average over configs, extract V(R), fit the string tension -------------------------
@@ -38,7 +40,18 @@ echo "== analyze: string tension =="
 python3 - "$OUT/wloops_raw.dat" <<'PY'
 import sys, numpy as np
 from cartasis_sims import lattice as lat
-raw = np.loadtxt(sys.argv[1])                  # R  T  W  (stacked over configs)
+# robust: keep only clean R T W triples (in case any Grid stdout chatter slipped through)
+rows = []
+for line in open(sys.argv[1]):
+    p = line.split()
+    if len(p) == 3:
+        try:
+            rows.append([float(x) for x in p])
+        except ValueError:
+            pass
+raw = np.array(rows)
+if raw.size == 0:
+    sys.exit("no numeric R T W rows found in wloops_raw.dat")
 R, T, W = raw[:,0], raw[:,1], raw[:,2]
 # average W over configs for each (R,T)
 keys = sorted(set(map(tuple, raw[:,:2].astype(int))))
