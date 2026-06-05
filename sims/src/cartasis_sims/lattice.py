@@ -49,6 +49,25 @@ def static_potential_cornell(r, V, V_err=None):
             "r0_sommer": sommer_scale(alpha, sigma)}
 
 
+def potential_from_loops_fit(R, T, W, tmin=1, tmax=4):
+    """V(R) as the slope of -ln W(R,T) vs T over [tmin, tmax], fit per R. More robust than a
+    single effective-mass ratio when statistics are limited (it uses all T in the window and
+    is less sensitive to one noisy point). Returns (R, V(R)) for static_potential_cornell.
+    Without ground-state smearing the small-T slope over-estimates V (excited-state
+    contamination), but it still rises with R -- enough to see confinement and sign(sigma)."""
+    R = np.asarray(R); T = np.asarray(T); W = np.asarray(W, dtype=float)
+    Rs = np.unique(R)
+    V = []
+    for r in Rs:
+        m = (R == r) & (T >= tmin) & (T <= tmax) & (W > 0)
+        Tr, lw = T[m], -np.log(W[m])
+        if Tr.size >= 2 and np.unique(Tr).size >= 2:
+            V.append(float(np.polyfit(Tr, lw, 1)[0]))
+        else:
+            V.append(float("nan"))
+    return Rs.astype(float), np.array(V)
+
+
 def effective_potential(R, T, W, t_window=None):
     """The static potential V(R) from timelike Wilson loops W(R,T), via the effective-mass
     ratio V(R) = ln[W(R,T)/W(R,T+1)], averaged over a plateau window in T (default: the upper
