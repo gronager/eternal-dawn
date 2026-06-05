@@ -61,6 +61,19 @@ def test_effective_mass_table_plateaus_at_true_potential():
         assert Tmid[0] == 1.0
 
 
+def test_beta_calibration_interpolates_target_plaquette():
+    # synthetic monotonic <P>(beta); recover the beta whose plaquette hits the target
+    betas = np.array([5.6, 5.8, 6.0, 6.2])
+    plaqs = np.array([0.524, 0.548, 0.567, 0.585])     # monotone rising
+    out = lat.beta_from_plaquette(betas, plaqs, target=0.567)
+    assert out["interpolated"]
+    assert np.isclose(out["beta"], 6.0, atol=1e-6)
+    # target above the scanned range -> extrapolate, flagged not-interpolated
+    out2 = lat.beta_from_plaquette(betas, plaqs, target=0.60)
+    assert not out2["interpolated"]
+    assert out2["beta"] > 6.2
+
+
 def test_screening_gives_zero_tension():
     # a pure Coulomb (screened) potential has sigma ~ 0 -> no area law
     r = np.linspace(1.0, 10.0, 20)
