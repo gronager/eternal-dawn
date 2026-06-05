@@ -34,19 +34,29 @@ for b in $BETAS; do
 done | run_pool "$(echo $BETAS | wc -w)"
 stop_mps
 
-# measure the equilibrium plaquette of each beta (average over thermalised configs)
+# report what generation produced before measuring (so a failed/slow generation is obvious, not silent)
+echo "== generated configs per beta =="
+for b in $BETAS; do
+  d="$OUT/beta$b"
+  cnt=$(ls -v "$d"/ckpoint_lat.* 2>/dev/null | grep -vcE '\.gz$|rng' || true)
+  echo "  beta=$b  $cnt configs in $d  (see $d/hmc.log if 0)"
+done
+
+# measure the equilibrium plaquette of each beta (average over thermalised configs).
+# Defensive against set -e/pipefail: extraction can return empty without aborting the run.
+plaq_of() {  # plaq_of <config>  -> our own avgPlaquette line, or empty
+  "$MEAS" --grid "$GRIDSPEC" --config "$1" --rmax 1 --tmax 1 --accelerator-threads 8 2>/dev/null \
+    | grep -m1 '^# config' | sed -n 's/.*plaquette //p' | awk '{print $1}' || true
+}
 echo "== equilibrium plaquette per beta =="
 : > "$OUT/plaq_vs_beta.dat"
 for b in $BETAS; do
   d="$OUT/beta$b"
   vals=()
-  for c in $(ls -v "$d"/ckpoint_lat.* 2>/dev/null | grep -vE '\.gz$|rng'); do
+  for c in $(ls -v "$d"/ckpoint_lat.* 2>/dev/null | grep -vE '\.gz$|rng' || true); do
     n="${c##*.}"; [[ "$n" =~ ^[0-9]+$ ]] || continue
     (( n >= THERM )) || continue
-    # take ONLY our own "# config ... plaquette X" line (NerscIO also echoes the header's stored
-    # plaquette, which would otherwise be averaged in twice)
-    p=$("$MEAS" --grid "$GRIDSPEC" --config "$c" --rmax 1 --tmax 1 --accelerator-threads 8 2>/dev/null \
-        | grep -m1 '^# config' | sed -n 's/.*plaquette //p' | awk '{print $1}')
+    p="$(plaq_of "$c")"
     [ -n "$p" ] && vals+=("$p")
   done
   if [ "${#vals[@]}" -gt 0 ]; then
@@ -54,7 +64,7 @@ for b in $BETAS; do
     echo "  beta=$b  <P>=$pbar  (over ${#vals[@]} configs)"
     echo "$b $pbar" >> "$OUT/plaq_vs_beta.dat"
   else
-    echo "  beta=$b  -- no thermalised configs (raise NTRAJ)"
+    echo "  beta=$b  -- no thermalised configs >= traj $THERM (raise NTRAJ, or check $d/hmc.log)"
   fi
 done
 
