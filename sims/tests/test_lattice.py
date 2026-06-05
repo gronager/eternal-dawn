@@ -32,6 +32,19 @@ def test_potential_from_wilson_loops_recovers_tension():
     assert np.isclose(fit["alpha"], alpha_true, rtol=1e-6)
 
 
+def test_potential_linear_fit_recovers_tension():
+    # same synthetic loops, extracted by the -ln W vs T slope fit (the robust extractor)
+    sigma_true, alpha_true, c_true = 0.05, 0.28, 0.6
+    Rs, Ts, Ws = [], [], []
+    for r in np.arange(1, 9):
+        V = c_true - alpha_true / r + sigma_true * r
+        for t in np.arange(1, 9):
+            Rs.append(r); Ts.append(t); Ws.append(np.exp(-V * t))
+    R, V = lat.potential_from_loops_fit(np.array(Rs), np.array(Ts), np.array(Ws), tmin=1, tmax=6)
+    fit = lat.static_potential_cornell(R, V)
+    assert np.isclose(fit["sigma"], sigma_true, rtol=1e-6)
+
+
 def test_screening_gives_zero_tension():
     # a pure Coulomb (screened) potential has sigma ~ 0 -> no area law
     r = np.linspace(1.0, 10.0, 20)
