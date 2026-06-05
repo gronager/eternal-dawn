@@ -18,6 +18,7 @@ GRIDSPEC="$L.$L.$L.$T"
 NTRAJ="${NTRAJ:-400}"  # total trajectories (Test_hmc_WilsonGauge: beta=5.6 hardcoded, saveInterval=1)
 THERM="${THERM:-150}"  # discard configs below this trajectory (thermalisation)
 STRIDE="${STRIDE:-20}" # then measure every STRIDE-th config (decorrelation)
+NPAR="${NPAR:-8}"      # parallel measurement jobs on the GPU (tiny lattices -> pack the 96 GB)
 
 # --- 1. generate the pure-gauge ensemble --------------------------------------------------
 # Test_hmc_WilsonGauge fixes beta=5.6 in source and saves a NERSC ckpoint_lat.<n> EVERY
@@ -26,23 +27,29 @@ STRIDE="${STRIDE:-20}" # then measure every STRIDE-th config (decorrelation)
 ( cd "$OUT" && "$HMC" --grid "$GRIDSPEC" --Trajectories "$NTRAJ" --accelerator-threads 8 \
     2>&1 | tee hmc.log )
 
-# --- 2. measure W(R,T) on THERMALISED, DECORRELATED configs --------------------------------
-: > "$OUT/wloops_raw.dat"        # columns: R  T  W   (one block per selected config)
+# --- 2. measure W(R,T) on THERMALISED, DECORRELATED configs (parallel on the GPU) ----------
 shopt -s nullglob
-nmeas=0
+sel=()
 for cfg in "$OUT"/ckpoint_lat.*; do
   [[ "$cfg" == *.gz ]] && continue
   n="${cfg##*.}"; [[ "$n" =~ ^[0-9]+$ ]] || continue
   (( n >= THERM )) || continue                 # thermalisation cut
   (( n % STRIDE == 0 )) || continue            # decorrelation stride
-  echo "-- measuring $cfg --"
-  # keep only the R T W data lines; Grid prints init chatter to stdout (starts with letters).
-  "$MEAS" --grid "$GRIDSPEC" --config "$cfg" --rmax $((L/2)) --tmax $((T/2)) \
-      --accelerator-threads 8 | grep -E '^[0-9]' >> "$OUT/wloops_raw.dat"
-  nmeas=$((nmeas+1))
+  sel+=("$cfg")
 done
-[ "$nmeas" -gt 0 ] || { echo "no thermalised configs (n>=$THERM, stride $STRIDE) -- raise NTRAJ"; exit 1; }
-echo "measured $nmeas configs"
+[ "${#sel[@]}" -gt 0 ] || { echo "no thermalised configs (n>=$THERM, stride $STRIDE) -- raise NTRAJ"; exit 1; }
+echo "measuring ${#sel[@]} configs, $NPAR in parallel on the GPU"
+
+start_mps                                      # true SM-sharing for the small jobs (no-op if absent)
+# one self-contained measurement command per config (data lines only), run NPAR at a time
+for cfg in "${sel[@]}"; do
+  printf '%q --grid %q --config %q --rmax %d --tmax %d --accelerator-threads 8 | grep -E "^[0-9]" > %q\n' \
+    "$MEAS" "$GRIDSPEC" "$cfg" $((L/2)) $((T/2)) "$cfg.wl"
+done | run_pool "$NPAR"
+stop_mps
+
+cat "${sel[@]/%/.wl}" > "$OUT/wloops_raw.dat"  # combine the per-config results
+echo "measured ${#sel[@]} configs"
 
 # --- 3. average over configs, extract V(R), fit the string tension -------------------------
 echo "== analyze: string tension =="
