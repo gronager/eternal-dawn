@@ -121,19 +121,26 @@ def sommer_scale(alpha, sigma, ref=1.65):
     return float(np.sqrt(val)) if val > 0 else float("nan")
 
 
-def _potential_and_fit(R, T, W, tmin, tmax):
+def _potential_and_fit(R, T, W, tmin, tmax, rmin=1, rmax=None):
     """Average W over the (already-selected) rows per (R,T), extract V(R) from the plateau window,
-    keep the leading monotonic-rising R range, and Cornell-fit. Returns (fit_dict, R_used) or
-    (None, None) if fewer than 3 clean points. Shared by the point estimate and the jackknife."""
+    restrict to the fit window [rmin, rmax], keep the leading monotonic-rising R range, and
+    Cornell-fit. Returns (fit_dict, R_used) or (None, None) if fewer than 3 clean points. Shared
+    by the point estimate and the jackknife. Capping rmax matters: the largest loops (R ~ L/2)
+    are the noisiest, and letting them flip in and out of the kept range across jackknife samples
+    inflates the error -- excluding them is what stabilises the fit."""
     R = np.asarray(R); T = np.asarray(T); W = np.asarray(W, dtype=float)
     Ru, Tu, Wu = [], [], []
     for (r, t) in sorted(set(zip(R.astype(int), T.astype(int)))):
         m = (R == r) & (T == t)
         Ru.append(r); Tu.append(t); Wu.append(W[m].mean())
     Rr, Vr = effective_potential(np.array(Ru), np.array(Tu), np.array(Wu), t_window=(tmin, tmax))
-    good = np.isfinite(Vr) & (Vr > 0)
+    if rmax is None:
+        rmax = np.inf
+    good = np.isfinite(Vr) & (Vr > 0) & (Rr >= rmin) & (Rr <= rmax)
     keep, last = [], -np.inf
     for i in range(len(Rr)):
+        if Rr[i] < rmin:                  # skip below the window without breaking the run
+            continue
         if not good[i]:
             break
         if Vr[i] >= last - 1e-9:
@@ -146,7 +153,7 @@ def _potential_and_fit(R, T, W, tmin, tmax):
     return static_potential_cornell(Rr[keep], Vr[keep]), Rr[keep]
 
 
-def string_tension_jackknife(cfg, R, T, W, tmin=2, tmax=4):
+def string_tension_jackknife(cfg, R, T, W, tmin=2, tmax=4, rmin=1, rmax=None):
     """String tension with a delete-1 jackknife error over configurations. `cfg` is the per-row
     configuration id; (R, T, W) are the timelike Wilson loops from every config. The full sample
     gives the central sigma/alpha; deleting one config at a time and refitting gives the jackknife
@@ -156,14 +163,14 @@ def string_tension_jackknife(cfg, R, T, W, tmin=2, tmax=4):
     cfg = np.asarray(cfg); R = np.asarray(R); T = np.asarray(T); W = np.asarray(W, dtype=float)
     cfgs = np.unique(cfg)
     n = len(cfgs)
-    full_fit, R_used = _potential_and_fit(R, T, W, tmin, tmax)
+    full_fit, R_used = _potential_and_fit(R, T, W, tmin, tmax, rmin, rmax)
     if full_fit is None or n < 2:
         return {"sigma": float("nan"), "sigma_err": float("nan"), "alpha": float("nan"),
                 "alpha_err": float("nan"), "n_cfg": int(n), "R_used": []}
     js, ja = [], []
     for c in cfgs:
         m = cfg != c
-        fit, _ = _potential_and_fit(R[m], T[m], W[m], tmin, tmax)
+        fit, _ = _potential_and_fit(R[m], T[m], W[m], tmin, tmax, rmin, rmax)
         if fit is not None:
             js.append(fit["sigma"]); ja.append(fit["alpha"])
     js, ja = np.array(js), np.array(ja)
