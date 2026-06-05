@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# Calibrate the bare coupling against the plaquette (Eternal Dawn lattice).
-# The input "beta" fed to the gauge action need not equal the standard 6/g^2 -- the equilibrium
-# is set by the action, and the only convention-free anchor is a MEASURED observable. The SU(3)
-# Wilson reference is <P> = 0.5669 at beta = 5.6. We scan several input betas (one per stream, in
-# parallel under MPS), let each equilibrate, measure the equilibrium plaquette, and interpolate
-# the input beta whose plaquette hits the target. That calibrated beta is what 00/01 should use.
+# Map the bare coupling to a target lattice spacing via the plaquette (Eternal Dawn lattice).
+# Grid's input "beta" IS the standard 6/g^2 (verified: input 6.0 -> <P>=0.5937, 6.2 -> 0.6136,
+# matching the literature), so this picks the beta for a chosen reference point rather than fixing
+# any convention. We scan several betas (one per stream, parallel under MPS), equilibrate, measure
+# <P>(beta), and interpolate the beta whose plaquette hits the target. SU(3) Wilson reference
+# plaquettes: beta=5.7 -> 0.549, 5.8 -> 0.567, 6.0 -> 0.5937, 6.2 -> 0.6136.
 #
-#   ./lattice/run/02_calibrate_beta.sh                 # default scan around 5.6..6.2
-#   BETAS="5.8 5.9 6.0 6.1" TARGET=0.5669 ./lattice/run/02_calibrate_beta.sh
+#   ./lattice/run/02_calibrate_beta.sh                       # default scan; target beta=6.0 point
+#   BETAS="5.7 5.9 6.0 6.2" TARGET=0.5937 ./lattice/run/02_calibrate_beta.sh
 set -euo pipefail
 source "$(dirname "$0")/_lib.sh"                    # GRID, require_exe, start_mps/stop_mps, run_pool
 HERE="$(cd "$(dirname "$0")" && pwd)"
@@ -20,7 +20,7 @@ L="${L:-16}" ; T="${T:-32}" ; GRIDSPEC="$L.$L.$L.$T"
 BETAS="${BETAS:-5.7 5.9 6.0 6.2}"   # input betas to scan (plaquette is monotone in beta)
 NTRAJ="${NTRAJ:-80}"                # plaquette is UV-fast: ~40 traj to equilibrate, measure the rest
 THERM="${THERM:-40}"                # discard below this trajectory (plaquette equilibration)
-TARGET="${TARGET:-0.5669}"          # SU(3) Wilson reference plaquette at standard beta=5.6
+TARGET="${TARGET:-0.5937}"          # SU(3) Wilson reference plaquette at beta=6.0 (a~0.093 fm)
 
 echo "calibrating beta against the plaquette (target <P>=$TARGET): scanning betas [$BETAS]"
 # generate only the betas that don't already have enough configs (a re-run reuses prior streams)
@@ -88,5 +88,5 @@ out = lat.beta_from_plaquette(betas, plaqs, target=target)
 how = "interpolated" if out["interpolated"] else "EXTRAPOLATED (scan a wider BETAS range to confirm)"
 print(f"  measured: " + "  ".join(f"b={b:.3f}:<P>={p:.4f}" for b, p in zip(betas, plaqs)))
 print(f"  -> input beta giving <P>={target}:  beta* = {out['beta']:.3f}   [{how}]")
-print(f"  use this beta* in 00_generate.sh / 01_puregauge_potential.sh for true beta=5.6 physics")
+print(f"  use this beta* in 00_generate.sh / 01_puregauge_potential.sh to land on that spacing")
 PY

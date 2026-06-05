@@ -121,12 +121,13 @@ def sommer_scale(alpha, sigma, ref=1.65):
     return float(np.sqrt(val)) if val > 0 else float("nan")
 
 
-def beta_from_plaquette(betas, plaqs, target=0.5669):
-    """Calibrate the bare coupling: given equilibrium average plaquettes <P>(beta) measured at a
-    handful of input betas, find the beta whose equilibrium plaquette equals `target`. The bare
-    `beta` an action is fed need not equal the standard 6/g^2 a chosen normalisation implies, so
-    the only trustworthy anchor is a measured, convention-free observable -- the plaquette (or the
-    string tension). The standard SU(3) Wilson value at beta=5.6 is <P> ~ 0.5669.
+def beta_from_plaquette(betas, plaqs, target=0.5937):
+    """Map the bare coupling to a target lattice spacing via the plaquette: given equilibrium
+    average plaquettes <P>(beta) measured at a handful of input betas, find the beta whose
+    equilibrium plaquette equals `target`. Useful for landing on a chosen reference point. Grid's
+    `beta` is the standard 6/g^2 (verified: input 6.0 -> <P>=0.5937, 6.2 -> 0.6136, both matching
+    the literature), so this is calibration to a spacing, not a convention fix. Reference SU(3)
+    Wilson plaquettes: beta=5.7 -> <P>~0.549, 5.8 -> ~0.567, 6.0 -> ~0.5937, 6.2 -> ~0.6136.
 
     Monotonic in beta, so we interpolate (linearly in beta vs <P>) and, if `target` lies outside
     the scanned range, linearly extrapolate from the two nearest points. Returns the calibrated

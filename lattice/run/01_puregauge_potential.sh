@@ -121,7 +121,8 @@ if keep.size >= 3:
     print(f"  sigma      = {fit['sigma']:.5f} a^-2   sqrt(sigma) a = {sqrt_sigma:.4f}")
     print(f"  alpha      = {fit['alpha']:.4f}   (string/Coulomb ~ pi/12 = 0.262)")
     print(f"  r0(Sommer) = {fit['r0_sommer']:.3f} a")
-    print(f"  ref (SU3 Wilson beta=5.6): sigma*a^2 ~ 0.046, sqrt(sigma) a ~ 0.22, r0/a ~ 4.9")
+    print(f"  ref (SU3 Wilson, Necco-Sommer): beta=5.6 -> sigma a^2~0.25, r0/a~2.3; "
+          f"beta=5.7 -> ~0.157, r0/a~2.92; beta=6.0 -> ~0.0467, sqrt(sigma)a~0.216, r0/a~5.37")
 else:
     print("  too few clean V(R) points -- raise SMEAR, the plateau window, and/or statistics")
 PY
