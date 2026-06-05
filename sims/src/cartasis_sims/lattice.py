@@ -121,6 +121,31 @@ def sommer_scale(alpha, sigma, ref=1.65):
     return float(np.sqrt(val)) if val > 0 else float("nan")
 
 
+def beta_from_plaquette(betas, plaqs, target=0.5669):
+    """Calibrate the bare coupling: given equilibrium average plaquettes <P>(beta) measured at a
+    handful of input betas, find the beta whose equilibrium plaquette equals `target`. The bare
+    `beta` an action is fed need not equal the standard 6/g^2 a chosen normalisation implies, so
+    the only trustworthy anchor is a measured, convention-free observable -- the plaquette (or the
+    string tension). The standard SU(3) Wilson value at beta=5.6 is <P> ~ 0.5669.
+
+    Monotonic in beta, so we interpolate (linearly in beta vs <P>) and, if `target` lies outside
+    the scanned range, linearly extrapolate from the two nearest points. Returns the calibrated
+    beta and a flag for whether it was interpolated (in-range) or extrapolated."""
+    betas = np.asarray(betas, dtype=float)
+    plaqs = np.asarray(plaqs, dtype=float)
+    order = np.argsort(plaqs)                      # plaquette increases monotonically with beta
+    betas, plaqs = betas[order], plaqs[order]
+    inside = plaqs.min() <= target <= plaqs.max()
+    beta_star = float(np.interp(target, plaqs, betas))
+    if not inside:                                 # np.interp clamps; extrapolate from the nearest edge instead
+        if target > plaqs.max():
+            (p0, p1), (b0, b1) = plaqs[-2:], betas[-2:]
+        else:
+            (p0, p1), (b0, b1) = plaqs[:2], betas[:2]
+        beta_star = float(b0 + (b1 - b0) * (target - p0) / (p1 - p0))
+    return {"beta": beta_star, "target_plaq": float(target), "interpolated": bool(inside)}
+
+
 # ---------------------------------------------------------------------------
 # 2. Deconfinement temperature from the Polyakov susceptibility (the melting)
 # ---------------------------------------------------------------------------
