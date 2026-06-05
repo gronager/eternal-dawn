@@ -132,6 +132,4 @@ if np.isfinite(jk["sigma"]):
           f"beta=5.7 -> ~0.157, r0/a~2.92; beta=6.0 -> ~0.0467, sqrt(sigma)a~0.216, r0/a~5.37")
 else:
     print("  too few clean V(R) points to fit -- raise SMEAR / statistics")
-else:
-    print("  too few clean V(R) points -- raise SMEAR, the plateau window, and/or statistics")
 PY
