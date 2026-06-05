@@ -25,6 +25,8 @@ SMEAR="${SMEAR:-20}"       # spatial APE smearing steps (0 = unsmeared, the orig
 SALPHA="${SALPHA:-0.5}"    # APE smearing weight
 TMIN_FIT="${TMIN_FIT:-2}"  # plateau window low  T (smearing moves the plateau down to small T)
 TMAX_FIT="${TMAX_FIT:-5}"  # plateau window high T (before large-T noise takes over)
+RMIN_FIT="${RMIN_FIT:-1}"  # Cornell-fit R window low  (drop R=1 if smearing over-smooths it)
+RMAX_FIT="${RMAX_FIT:-6}"  # Cornell-fit R window high: EXCLUDE the noisy R~L/2 tail (stabilises the fit)
 
 # --- 1. generate the pure-gauge ensemble (skip if configs already exist) -------------------
 # If you ran ./lattice/run/00_generate.sh first (recommended -- K independent streams in
@@ -70,10 +72,12 @@ echo "measured ${#sel[@]} configs"
 
 # --- 3. average over configs, extract V(R), fit the string tension -------------------------
 echo "== analyze: string tension =="
-TMIN_FIT="$TMIN_FIT" TMAX_FIT="$TMAX_FIT" python3 - "$OUT/wloops_raw.dat" <<'PY'
+TMIN_FIT="$TMIN_FIT" TMAX_FIT="$TMAX_FIT" RMIN_FIT="$RMIN_FIT" RMAX_FIT="$RMAX_FIT" \
+python3 - "$OUT/wloops_raw.dat" <<'PY'
 import os, sys, numpy as np
 from cartasis_sims import lattice as lat
 tmin = int(os.environ.get("TMIN_FIT", "2")); tmax = int(os.environ.get("TMAX_FIT", "5"))
+rmin = int(os.environ.get("RMIN_FIT", "1")); rmax = int(os.environ.get("RMAX_FIT", "6"))
 rows = []
 for line in open(sys.argv[1]):
     p = line.split()
@@ -119,10 +123,10 @@ for i in range(len(Rr)):
         break
 keep = np.array(keep, dtype=int)
 print(f"\n  V(R) from plateau T=[{tmin},{tmax}]: R={Rr[keep].astype(int)}  V={np.round(Vr[keep],4)}")
-jk = lat.string_tension_jackknife(CFG, R, T, W, tmin=tmin, tmax=tmax)
+jk = lat.string_tension_jackknife(CFG, R, T, W, tmin=tmin, tmax=tmax, rmin=rmin, rmax=rmax)
 if np.isfinite(jk["sigma"]):
     ss = np.sqrt(jk["sigma"]) if jk["sigma"] > 0 else float("nan")
-    print(f"  n_cfg      = {jk['n_cfg']}   R used = {jk['R_used']}")
+    print(f"  n_cfg      = {jk['n_cfg']}   R used = {jk['R_used']}  (fit window R=[{rmin},{rmax}])")
     print(f"  sigma      = {jk['sigma']:.5f} +/- {jk['sigma_err']:.5f} a^-2   sqrt(sigma) a = {ss:.4f}")
     print(f"  alpha      = {jk['alpha']:.4f} +/- {jk['alpha_err']:.4f}   (string/Coulomb ~ pi/12 = 0.262)")
     print(f"  r0(Sommer) = {jk['r0_sommer']:.3f} a")

@@ -80,6 +80,30 @@ def test_string_tension_jackknife_recovers_value_with_small_error():
     assert abs(out["alpha"] - alpha_true) < 0.1
 
 
+def test_rmax_cap_stabilises_jackknife_against_noisy_tail():
+    # clean Cornell at R=1..6, then two GARBAGE large-R points (R=7,8) like the lattice L/2 tail.
+    # capping the fit at rmax=6 must give a far smaller jackknife error than letting 7,8 in.
+    rng = np.random.default_rng(1)
+    sigma_true, alpha_true, c_true = 0.157, 0.28, 0.6
+    cfgs, Rs, Ts, Ws = [], [], [], []
+    for ci in range(30):
+        for r in range(1, 9):
+            V = c_true - alpha_true / r + sigma_true * r
+            noise = 0.02
+            if r >= 7:                                  # steep, KEPT-but-noisy tail (like V~L/2)
+                V += 0.4 * (r - 6)                      # rises too fast -> stays monotonic, gets kept
+                noise = 0.3                             # but with large per-config scatter
+            for t in range(1, 7):
+                w = np.exp(-V * t) * (1 + noise * rng.standard_normal())
+                cfgs.append(ci); Rs.append(r); Ts.append(t); Ws.append(w)
+    cfgs, Rs, Ts, Ws = map(np.array, (cfgs, Rs, Ts, Ws))
+    capped = lat.string_tension_jackknife(cfgs, Rs, Ts, Ws, tmin=2, tmax=5, rmin=1, rmax=6)
+    wild = lat.string_tension_jackknife(cfgs, Rs, Ts, Ws, tmin=2, tmax=5, rmin=1, rmax=8)
+    assert max(capped["R_used"]) <= 6
+    assert np.isclose(capped["sigma"], sigma_true, atol=0.03)     # capped fit recovers sigma
+    assert capped["sigma_err"] < wild["sigma_err"]                # and is far more stable
+
+
 def test_beta_calibration_interpolates_target_plaquette():
     # synthetic monotonic <P>(beta); recover the beta whose plaquette hits the target
     betas = np.array([5.6, 5.8, 6.0, 6.2])
