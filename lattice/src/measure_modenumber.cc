@@ -31,6 +31,13 @@ static RealD cli_real(char **a, char **e, const std::string &flag, RealD def) {
   return std::stod(GridCmdOptionPayload(a, e, flag));
 }
 
+// Fundamental Wilson fermion, double precision. Bound to the primary template + the explicit
+// double impl (WilsonImplD) -- this Grid build dropped the WilsonFermionR/D convenience typedefs,
+// and vComplexD matches the SIMD layout the grids below are built with.
+typedef WilsonImplD                  FermImpl;
+typedef WilsonFermion<FermImpl>      FermionAction;
+typedef FermionAction::FermionField  FermionField;
+
 int main(int argc, char **argv) {
   Grid_init(&argc, &argv);
 
@@ -52,10 +59,10 @@ int main(int argc, char **argv) {
 
   // ---- fundamental Wilson Dirac operator (Grid's own, tested) ----
   RealD mass = cli_real(argv, argv + argc, "--mass", -0.5);   // Wilson mass; near-critical for light modes
-  WilsonFermionR Dw(Umu, *UGrid, *UrbGrid, mass);
+  FermionAction Dw(Umu, *UGrid, *UrbGrid, mass);
 
   // Hermitian positive operator M^dag M; its eigenvalues are |lambda|^2
-  MdagMLinearOperator<WilsonFermionR, LatticeFermion> HermOp(Dw);
+  MdagMLinearOperator<FermionAction, FermionField> HermOp(Dw);
 
   // ---- IRL knobs (CLI-tunable so convergence is fixed without a recompile) ----
   int Nstop   = cli_int(argv, argv + argc, "--Nstop", 60);    // eigenvalues we want converged
@@ -67,14 +74,14 @@ int main(int argc, char **argv) {
   RealD chHi  = cli_real(argv, argv + argc, "--cheb-hi", 64.0);  // above max eigenvalue of M^dag M
   int chOrd   = cli_int(argv, argv + argc, "--cheb-ord", 60);
 
-  Chebyshev<LatticeFermion> Cheby(chLo, chHi, chOrd);          // amplify the low end for IRL
-  FunctionHermOp<LatticeFermion> AccelOp(Cheby, HermOp);
-  PlainHermOp<LatticeFermion> PlainOp(HermOp);
-  ImplicitlyRestartedLanczos<LatticeFermion> IRL(AccelOp, PlainOp, Nstop, Nk, Nm, resid, MaxIt);
+  Chebyshev<FermionField> Cheby(chLo, chHi, chOrd);            // amplify the low end for IRL
+  FunctionHermOp<FermionField> AccelOp(Cheby, HermOp);
+  PlainHermOp<FermionField> PlainOp(HermOp);
+  ImplicitlyRestartedLanczos<FermionField> IRL(AccelOp, PlainOp, Nstop, Nk, Nm, resid, MaxIt);
 
   std::vector<RealD> eval(Nm);
-  std::vector<LatticeFermion> evec(Nm, UGrid);
-  LatticeFermion src(UGrid);
+  std::vector<FermionField> evec(Nm, UGrid);
+  FermionField src(UGrid);
   GridParallelRNG RNG(UGrid);
   RNG.SeedFixedIntegers(std::vector<int>({1, 2, 3, 4}));
   gaussian(RNG, src);
