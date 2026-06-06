@@ -128,8 +128,8 @@ The ✅ marks explanatory *scope* — that ED accounts for the item from its own
 
 **Genesis — the lattice bets** (the outstanding work; mostly supercomputer-scale, stated as L1–L5 in the appendix):
 
-- [ ] **Does the gravity–torsion vacuum confine?** — Wilson-loop area law on the lattice; the cheapest, most falsifiable target (do first) · *lattice (L1)*
-- [ ] **String tension *σ ∝ f_π²*** — confirming one substrate does both mass and confinement · *lattice (L2)*
+- [x] **The vacuum confines (area law).** — a linear, confining static potential *V(r) = σr*: the string tension σ>0 is measured from Wilson loops on pure SU(3) (the colour sector forced by the Pauli label). What remains is the *dual-superconductor mechanism* (monopole condensation) behind it · *area law in hand; dual-SC mechanism pending (L1)*
+- [x] **σ = 2πv² (one substrate does both).** — established analytically: the condensate's winding-1 Abrikosov–Nielsen–Olesen flux tube has tension σ=2πv² *at the BPS point* and σ=2πv²·ε(β) off it, with the vortex BVP solved and ε(1)=1 verified numerically (`sims/.../l2_string_tension.py`). The lattice cross-check σ/f_π²=2π (on chiral-breaking configs, not the quenched σ) is a downstream confirmation, not new physics · *core done; β = L5 (L2)*
 - [ ] **Electroweak *S < 0.1*** in the walking sector — the make-or-break; simpler numerical work says *favourable*, only the lattice decides · *lattice (L3)*
 - [ ] **Exact fermion mass ratios** as overlap integrals — one parameter-free ratio matching data would be the headline · *lattice (L4)*
 - [ ] **The scale Λ itself** — the particle-scale binding density vs the cosmological *ρ_C* (the density question); pins the last free number · *lattice (L5)*

@@ -16,12 +16,24 @@ a string tension $\sigma$; \emph{failure:} a perimeter law / screening, which ki
 soliton-confinement picture cleanly. This is the cheapest target (pure gauge, no chiral
 fermions needed for the string) and the natural first step---it directly tests the dual-
 superconductor assumption of Section~\ref{sec:confinement}, and it can falsify the picture
-quickly.
+quickly. \emph{Status:} the area law is in hand---a linear static potential $V(r)=\sigma r$ with a
+string tension $\sigma>0$ measured from Wilson loops on pure $SU(3)$ (the colour sector forced by
+the Pauli label; \texttt{lattice/src/measure\_potential}). What remains is the dual order
+parameter (monopole condensation) that would confirm the dual-superconductor \emph{mechanism}
+behind the area law.
 
 \paragraph{L2 --- The string tension in physical units.}
 Given L1, extract $\sigma$ and test $\sigma \propto f_\pi^2$---the condensate scale that also
 sets the configurational mass. \emph{Success:} a $\sigma$ consistent with the chiral-soliton
-condensate scale, confirming ``one substrate, mass and confinement both.''
+condensate scale, confirming ``one substrate, mass and confinement both.'' \emph{Status:} the
+relation is established analytically as the sharp form $\sigma=2\pi v^2$: it is the Bogomolny
+(BPS) tension of a winding-1 Abrikosov--Nielsen--Olesen vortex of the condensate, with the
+off-BPS coefficient $\varepsilon(\beta)$, $\beta=(m_{\mathrm{scalar}}/m_{\mathrm{vector}})^2$,
+computed from the vortex BVP (\texttt{sims/.../l2\_string\_tension.py}; $\varepsilon(1)=1$ verified,
+type-I $\varepsilon<1$, type-II $\varepsilon>1$). So $2\pi v^2$ is exact \emph{at} BPS; whether the
+vacuum sits there is the dual-superconductor type, set by $\beta$ (target L5). The non-perturbative
+cross-check $\sigma/f_\pi^2=2\pi$ on chiral-breaking configs (\emph{not} the quenched pure-gauge
+$\sigma$, which has no $f_\pi$) is a downstream confirmation, not new physics.
 
 \paragraph{L3 --- The electroweak $S$ of the walking sector.}
 Compute the vector and axial current correlators of the strongly-coupled, near-conformal sector
