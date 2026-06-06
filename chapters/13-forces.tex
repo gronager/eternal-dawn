@@ -62,8 +62,15 @@ whose energy grows linearly with length (Figure~\ref{fig:flux}). At the Bogomoln
 string tension saturates the topological bound, $\sigma = 2\pi v^2$---so the \emph{same}
 condensate that sets configurational mass sets the confinement scale. One substrate does both
 jobs; the potential is the Cornell sum $V(r)\approx -\kappa/r + \sigma L$, the overlap dressing
-the short distance, the substrate confining the long. Whether the gravity--torsion vacuum
-actually realises dual superconductivity is the cleanest lattice question (Appendix).
+the short distance, the substrate confining the long. The Bogomolny value is not assumed: solving
+the winding-1 Abrikosov--Nielsen--Olesen vortex of the condensate gives $\sigma = 2\pi v^2\,
+\varepsilon(\beta)$ with $\beta=(m_{\mathrm{scalar}}/m_{\mathrm{vector}})^2$, and the vortex BVP
+returns $\varepsilon(1)=1$ exactly at the BPS point (type-I $\varepsilon<1$, type-II $\varepsilon>1$;
+\texttt{sims/.../l2\_string\_tension.py}). So $\sigma=2\pi v^2$ holds precisely \emph{when the
+vacuum is BPS}, and the residual factor is fixed by $\beta$ alone. The area law itself is already
+in hand---a measured $\sigma>0$ from Wilson loops on pure $SU(3)$. What remains is whether the
+gravity--torsion vacuum actually realises dual superconductivity (the dual order parameter), the
+cleanest lattice question (Appendix), and $\beta$, which sets whether the saturation is exact.
 
 \begin{figure}[t]
   \centering
