@@ -82,6 +82,13 @@ int main(int argc, char **argv) {
                             // (absent) smearing chain. Without this the sea-quark force is zeroed
                             // -- the action is still evaluated (Metropolis is correct) but the MD
                             // sees no fermion force, i.e. the ensemble is quenched-in-disguise.
+                            // NOTE: Grid's "Level Force Log" prints "force max 0" for this action
+                            // even when it works -- the representation force goes through a separate
+                            // path (update_P_hireps: deriv(Rep.U) -> RtoFundamentalProject -> Mom),
+                            // which that logger does not instrument. The force IS applied: proof is
+                            // energy conservation -- dH ~ 0.1 against a fermion-dominated H ~ 2e6 is
+                            // impossible with a zeroed million-scale force. Judge the sea by dH and
+                            // the plaquette shift vs pure gauge, NOT by the force log.
 
   WilsonGaugeActionR Waction(beta);
 
