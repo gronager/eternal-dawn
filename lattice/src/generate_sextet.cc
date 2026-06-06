@@ -78,6 +78,10 @@ int main(int argc, char **argv) {
   FermionAction FermOp(U, *GridPtr, *GridRBPtr, mass);
   ConjugateGradient<FermionField> CG(1.0e-8, 2000, false);
   TwoFlavourPseudoFermionAction<FermionImplPolicy> Nf2(FermOp, CG, CG);
+  Nf2.is_smeared = false;   // CRITICAL: route the force through the representation chain, not the
+                            // (absent) smearing chain. Without this the sea-quark force is zeroed
+                            // -- the action is still evaluated (Metropolis is correct) but the MD
+                            // sees no fermion force, i.e. the ensemble is quenched-in-disguise.
 
   WilsonGaugeActionR Waction(beta);
 
