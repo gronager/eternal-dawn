@@ -38,6 +38,9 @@ def main():
     ap.add_argument("--npts", type=int, default=40)
     ap.add_argument("--free", nargs=2, type=int, metavar=("L", "T"),
                     help="also print the analytic free Wilson answer on an L^3 x T lattice")
+    ap.add_argument("--rep", choices=["fundamental", "sextet"], default="fundamental",
+                    help="representation of the measured moments (scales the free reference: "
+                         "sextet has 6 colours vs 3, so its free mode number is doubled)")
     a = ap.parse_args()
 
     xmax, mu = parse_moments(a.file)
@@ -48,11 +51,13 @@ def main():
     print(f"gamma_m = {out['gamma_m']:+.4f}  (slope {out['slope']:.3f})  on M in [{a.mlo}, {a.mhi}]")
 
     if a.free:
-        nuf = lat.free_wilson_mode_number(a.free[0], a.free[1], M)
+        colour_factor = 2.0 if a.rep == "sextet" else 1.0   # sextet: 6 colours vs fundamental 3
+        nuf = colour_factor * lat.free_wilson_mode_number(a.free[0], a.free[1], M)
         of = lat.anomalous_dimension_from_mode_number(M, nuf, window=(a.mlo, a.mhi))
         rel = np.abs(nu - nuf) / np.maximum(nuf, 1)
-        print(f"free analytic gamma_m = {of['gamma_m']:+.4f}  (KPM should match this)")
-        print(f"nu(M) KPM vs analytic free: median rel.err = {np.median(rel):.3f}")
+        print(f"free analytic gamma_m = {of['gamma_m']:+.4f}  (KPM should match this; "
+              f"gamma_m is rep-independent for free fields)")
+        print(f"nu(M) KPM vs analytic free ({a.rep}): median rel.err = {np.median(rel):.3f}")
 
 
 if __name__ == "__main__":
