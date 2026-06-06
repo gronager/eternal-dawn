@@ -152,6 +152,36 @@ def test_free_field_mode_number_gives_gamma_zero():
     assert abs(out["gamma_m"]) < 1e-6
 
 
+def test_mode_number_counter_recovers_power_law():
+    # eigenvalues drawn so the cumulative count nu(M) ~ M^4 -> the counter + fit recover gamma_m=0
+    rng = np.random.default_rng(0)
+    eig = rng.random(200000) ** 0.25            # CDF(M) ~ M^4 on [0,1]
+    M = np.linspace(0.1, 0.6, 30)
+    nu = lat.mode_number_from_eigenvalues(eig, M)
+    assert np.all(np.diff(nu) >= 0)              # monotone cumulative count
+    out = lat.anomalous_dimension_from_mode_number(M, nu, window=(0.15, 0.55))
+    assert abs(out["gamma_m"]) < 0.1
+
+
+def test_free_wilson_mode_number_recovers_gamma_zero():
+    # the EXACT free Wilson-Dirac spectrum (no gauge field) must give gamma_m = 0, slope = 4.
+    # needs a fine momentum grid (32^3+): on a coarse lattice the IR spectrum is gapped, not M^4
+    # -- the same 'too coarse a grid' lesson as the string tension, now for the gate observable.
+    M = np.linspace(0.10, 0.70, 60)
+    nu = lat.free_wilson_mode_number(32, 32, M, m=0.0)
+    out = lat.anomalous_dimension_from_mode_number(M, nu, window=(0.20, 0.50))
+    assert abs(out["slope"] - 4.0) < 0.15       # nu ~ M^4
+    assert abs(out["gamma_m"]) < 0.04           # gamma_m ~ 0
+
+
+def test_free_wilson_too_coarse_has_no_scaling_window():
+    # the negative control: on 16^3 the free spectrum is gapped, so the fit CANNOT recover gamma=0
+    M = np.linspace(0.10, 0.70, 60)
+    nu = lat.free_wilson_mode_number(16, 16, M, m=0.0)
+    out = lat.anomalous_dimension_from_mode_number(M, nu, window=(0.20, 0.50))
+    assert abs(out["gamma_m"]) > 0.1            # coarse grid -> no trustworthy gamma_m
+
+
 def test_gradient_flow_w0_recovered():
     # construct t^2<E>(t) so that W = t d/dt(t^2 E) crosses 0.3 at a known t -> recover w0
     t = np.linspace(0.01, 4.0, 400)
