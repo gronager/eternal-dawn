@@ -255,14 +255,20 @@ def free_wilson_mode_number(L, T, M_grid, m=0.0, r=1.0):
     so nu(M) ~ M^4 at small M; feeding this to anomalous_dimension_from_mode_number must return
     gamma_m ~ 0. This is the first rung: validate the nu(M) -> gamma_m pipeline against an exact
     answer before trusting any interacting (Grid) measurement, and long before the sextet."""
-    dims = (L, L, L, T)
-    axes = [2.0 * np.pi * np.arange(n) / n for n in dims]
+    lam = np.sort(_free_wilson_abs_lambda(L, T, m=m, r=r))
+    M = np.asarray(M_grid, dtype=float)
+    return 12.0 * np.searchsorted(lam, M, side="right").astype(float)   # x12 spin*colour
+
+
+def _free_wilson_abs_lambda(L, T, m=0.0, r=1.0):
+    """The |lambda| of the free Wilson-Dirac operator on an L^3 x T lattice, one entry per lattice
+    momentum (spin x colour multiplicity of 12 applied by the caller): the diagonal, gauge-free
+    spectrum |lambda(p)| = sqrt(sum_mu sin^2 p_mu + W(p)^2), W(p) = m + r sum_mu (1 - cos p_mu)."""
+    axes = [2.0 * np.pi * np.arange(n) / n for n in (L, L, L, T)]
     P = np.meshgrid(*axes, indexing="ij")
     s2 = sum(np.sin(p) ** 2 for p in P)
     W = m + r * sum(1.0 - np.cos(p) for p in P)
-    lam = np.sort(np.sqrt(s2 + W**2).ravel())
-    M = np.asarray(M_grid, dtype=float)
-    return 12.0 * np.searchsorted(lam, M, side="right").astype(float)   # x12 spin*colour
+    return np.sqrt(s2 + W**2).ravel()
 
 
 def anomalous_dimension_from_mode_number(M, nu, window=None):
@@ -281,6 +287,70 @@ def anomalous_dimension_from_mode_number(M, nu, window=None):
     slope, _ = np.polyfit(lnM, lnnu, 1)
     gamma_m = 4.0 / slope - 1.0
     return {"gamma_m": float(gamma_m), "slope": float(slope)}
+
+
+# ---------------------------------------------------------------------------
+# 3b. Mode number the scalable way: stochastic Chebyshev moments (KPM)
+# ---------------------------------------------------------------------------
+# The Lanczos route (compute the low eigenvalues, count them) needs a high-order Chebyshev filter
+# and convergence babysitting. The Kernel Polynomial Method sidesteps both: estimate the Chebyshev
+# moments mu_k = Tr T_k(Xtilde) of the rescaled operator Xtilde = (D^dag D)/(xmax/2) - 1 in [-1,1]
+# by a stochastic trace (random sources, D^dag D matvecs only -- no eigenvalues, no solves), then
+# combine them with the Jackson-damped Chebyshev expansion of the step theta(M^2 - x) to get the
+# mode number nu(M). One set of moments yields nu(M) for the whole M grid. This is the division of
+# labour with the Grid code: Grid supplies the moments; the functions below do the rest.
+def jackson_kernel(N):
+    """Jackson damping factors g_0..g_N that suppress the Gibbs oscillations of an order-N
+    Chebyshev expansion of a discontinuous function (here the spectral step). Standard KPM kernel
+    (Weisse et al., Rev. Mod. Phys. 78, 275)."""
+    k = np.arange(N + 1)
+    t = np.pi / (N + 1)
+    return ((N - k + 1) * np.cos(k * t) + np.sin(k * t) / np.tan(t)) / (N + 1)
+
+
+def chebyshev_moments_from_eigenvalues(eigenvalues, N, xmax):
+    """Exact Chebyshev moments mu_k = sum_i T_k(xtilde_i), xtilde = (lambda^2)/(xmax/2) - 1, for a
+    known Dirac spectrum (eigenvalues = |lambda|). This is the noise-free limit of the stochastic
+    trace the Grid measurement estimates -- used to validate the moments -> nu(M) pipeline against
+    an exact answer before any gauge field."""
+    x = np.asarray(eigenvalues, dtype=float) ** 2
+    half = xmax / 2.0
+    xt = np.clip(x / half - 1.0, -1.0, 1.0)
+    mu = np.empty(N + 1)
+    Tkm1 = np.ones_like(xt)
+    mu[0] = Tkm1.sum()
+    if N >= 1:
+        Tk = xt.copy()
+        mu[1] = Tk.sum()
+        for k in range(2, N + 1):
+            Tkm1, Tk = Tk, 2.0 * xt * Tk - Tkm1
+            mu[k] = Tk.sum()
+    return mu
+
+
+def mode_number_from_chebyshev_moments(moments, M_grid, xmax):
+    """nu(M) from Chebyshev moments mu_k of the rescaled operator Xtilde = (D^dag D)/(xmax/2) - 1.
+    Combines them with the Jackson-damped Chebyshev expansion of the step theta(M^2 - x):
+        nu(M) = sum_k g_k c_k(M) mu_k,
+        c_0 = 1 - arccos(Mt)/pi,  c_k = -2 sin(k arccos Mt)/(k pi),  Mt = M^2/(xmax/2) - 1.
+    `xmax` must exceed the largest eigenvalue of D^dag D (the spectral bound). Feed the result to
+    anomalous_dimension_from_mode_number. This is the cheap post-processing of the Grid moments;
+    one moment set covers the entire M grid."""
+    mu = np.asarray(moments, dtype=float)
+    N = len(mu) - 1
+    g = jackson_kernel(N)
+    half = xmax / 2.0
+    M = np.asarray(M_grid, dtype=float)
+    Mt = np.clip(M ** 2 / half - 1.0, -1.0, 1.0)
+    ac = np.arccos(Mt)
+    k = np.arange(1, N + 1)
+    nu = np.empty_like(M)
+    for j in range(len(M)):
+        c = np.empty(N + 1)
+        c[0] = 1.0 - ac[j] / np.pi
+        c[1:] = -2.0 * np.sin(k * ac[j]) / (k * np.pi)
+        nu[j] = float((g * c * mu).sum())
+    return nu
 
 
 # ---------------------------------------------------------------------------

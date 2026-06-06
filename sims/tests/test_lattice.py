@@ -182,6 +182,37 @@ def test_free_wilson_too_coarse_has_no_scaling_window():
     assert abs(out["gamma_m"]) > 0.1            # coarse grid -> no trustworthy gamma_m
 
 
+def test_kpm_moments_recover_gamma_on_smooth_spectrum():
+    # KPM (Chebyshev moments -> Jackson-damped step) must reproduce the mode number on a smooth
+    # nu(M)~M^4 spectrum (gamma_m = 0). Validates moments -> nu(M) -> gamma_m end to end.
+    rng = np.random.default_rng(0)
+    lam = 8.0 * rng.random(300000) ** 0.25       # CDF(lambda) = (lambda/8)^4 -> nu ~ M^4
+    M = np.linspace(1.0, 4.0, 30)
+    win = (1.2, 3.6)
+    mu = lat.chebyshev_moments_from_eigenvalues(lam, N=400, xmax=64.2)
+    nu_kpm = lat.mode_number_from_chebyshev_moments(mu, M, xmax=64.2)
+    nu_exact = lat.mode_number_from_eigenvalues(lam, M)
+    g_kpm = lat.anomalous_dimension_from_mode_number(M, nu_kpm, window=win)["gamma_m"]
+    g_exact = lat.anomalous_dimension_from_mode_number(M, nu_exact, window=win)["gamma_m"]
+    assert abs(g_kpm - g_exact) < 0.02           # KPM tracks the exact mode number's slope
+    assert abs(g_kpm) < 0.05                      # and recovers gamma_m ~ 0
+
+
+def test_kpm_moments_match_exact_count_free_wilson():
+    # on the exact free Wilson spectrum, moments -> nu(M) must reproduce the direct eigenvalue
+    # count where the spectrum is DENSE (many modes). At small M the count is a coarse staircase
+    # and KPM correctly returns its smooth trend -- a pointwise match there would be comparing a
+    # smooth curve to a step function, so we validate in the dense regime instead.
+    M = np.linspace(2.0, 4.5, 24)
+    lam = lat._free_wilson_abs_lambda(24, 24)    # |lambda| list on a 24^4 free lattice
+    mu = lat.chebyshev_moments_from_eigenvalues(lam, N=600, xmax=64.2)
+    nu_kpm = lat.mode_number_from_chebyshev_moments(mu, M, xmax=64.2)
+    nu_exact = lat.mode_number_from_eigenvalues(lam, M)
+    rel = np.abs(nu_kpm - nu_exact) / nu_exact
+    assert np.median(rel) < 0.01                 # KPM reproduces the exact count in the dense bulk
+    assert rel.max() < 0.05
+
+
 def test_gradient_flow_w0_recovered():
     # construct t^2<E>(t) so that W = t d/dt(t^2 E) crosses 0.3 at a known t -> recover w0
     t = np.linspace(0.01, 4.0, 400)
