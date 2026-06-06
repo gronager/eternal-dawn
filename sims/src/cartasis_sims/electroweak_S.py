@@ -30,6 +30,24 @@ S = 4 pi (f_pi/M_V)^2 (1 + M_V^2/M_A^2)). Whether the anharmonic, minimal,
 Pauli-flattened soliton sector walks enough is a genuine open question requiring RPA
 correlators -- beyond this module. So: leading S is in the graveyard; the escape is
 undecided, exactly Part III's 'live possibility of being wrong'.
+
+CONVERGENCE IS NOT THE SOLUTION -- the honest caveats. Even a fully converged number
+here is the answer of a MODEL with stacked approximations, in the right theory (the
+torsion sector; the W/Z are composite torsiton vectors, so the V/A currents ARE the
+torsion currents) but NOT the exact field theory:
+  * mean-field (Hartree) factorization of the four-fermion term (beyond-MF correlations
+    dropped -- the piece 'owed to the lattice');
+  * the VALENCE/no-Dirac-sea condensate: <psi-bar psi> is a vacuum quantity with an
+    infinite, UV-divergent negative-energy sea; sourcing sigma from the bound valence
+    levels alone leaves a hidden cutoff Lambda and a missing sea piece (the dominant
+    relativistic systematic);
+  * the second-order (Schrodinger) reduction of the first-order Dirac (G,F) system drops
+    spin-orbit and the small component, whose G^2 - F^2 cancellation matters in a deep well;
+  * s-wave single channel; RPA truncation; NJL cutoff/scheme dependence.
+The single quantity that decides graveyard-vs-escape is M_V/f_pi, and pinning it from the
+dynamics is exactly where the sea/cutoff/RPA approximations bite hardest. So we report S
+as a BAND over the plausible M_V/f_pi, not a settled number -- the absolute value is the
+non-perturbative torsion-sector question, never a borrowed proxy.
 """
 
 from __future__ import annotations
@@ -76,6 +94,41 @@ def s_walking(fpi_over_MV, MA_over_MV=1.4):
     S = 4 pi (f_pi/M_V)^2 (1 + M_V^2/M_A^2). S < 0.1 needs f_pi/M_V <~ 0.075."""
     x = 1.0 / MA_over_MV**2
     return 4.0 * np.pi * fpi_over_MV**2 * (1.0 + x)
+
+
+def s_band(MV_over_fpi=(8.0, 15.0), MA_over_MV=1.4, Nc=3, n_doublets=1.0, npts=60):
+    """S across the plausible walking range M_V/f_pi -- reported as an HONEST BAND, because
+    M_V/f_pi (the single quantity that decides graveyard-vs-escape) is the cutoff/RPA-sensitive
+    output we cannot yet pin from mean field. f_pi = v comes from the converged soliton; M_V/f_pi
+    does not. QCD sits at ~8.3 (S in the graveyard); walking must reach the returned threshold for
+    S < 0.1. The Weinberg-sum-rule resonance form S = 4 pi (f_pi/M_V)^2 (1 + M_V^2/M_A^2)."""
+    lo, hi = MV_over_fpi
+    ratios = np.linspace(lo, hi, npts)
+    S = n_doublets * np.array([s_walking(1.0 / r, MA_over_MV) for r in ratios])
+    need = 1.0 / np.sqrt(S_LEP_BOUND / (n_doublets * 4 * np.pi * (1 + 1 / MA_over_MV**2)))
+    return {
+        "MV_over_fpi": ratios, "S": S,
+        "S_leading": s_leading(Nc, n_doublets),
+        "qcd_MV_over_fpi": 776.0 / 93.0,
+        "MV_over_fpi_for_S0p1": float(need),
+        "S_min": float(S.min()), "S_max": float(S.max()),
+    }
+
+
+def wsr_continuum_divergence(M, cutoffs, Nc=3):
+    """The concrete face of the 'relativistic shit'. The first Weinberg sum rule
+    int (rho_V - rho_A) ds must equal f_pi^2 (finite) in the full theory -- but evaluated on the
+    constituent CONTINUUM alone (rho_V - rho_A ~ 1/s at large s) it grows ~ log(Lambda) with the
+    cutoff s = Lambda^2. So the loop alone does NOT converge: a cutoff-free f_pi^2 (and hence the
+    resonance corrections that escape the graveyard) cannot come from the loop -- they need the
+    Dirac sea / a regulator. (The LEADING S itself, the int .../s integral, IS cutoff-free at
+    N_c/6pi; it is the *escape* that is cutoff-laden.) Returns the running integral vs cutoff."""
+    trapezoid = getattr(np, "trapezoid", getattr(np, "trapz", None))
+    out = []
+    for L in cutoffs:
+        s = np.linspace(4 * M**2 * (1 + 1e-9), L**2, 40000)
+        out.append(float(trapezoid(spectral_difference(s, M, Nc), s)))
+    return np.array(out)
 
 
 def verdict(Nc=3, n_doublets=1.0):
