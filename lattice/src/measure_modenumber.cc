@@ -70,9 +70,15 @@ int main(int argc, char **argv) {
   int Nm      = cli_int(argv, argv + argc, "--Nm", 160);      // Krylov dimension (Nm > Nk > Nstop)
   RealD resid = cli_real(argv, argv + argc, "--resid", 1e-8);
   int MaxIt   = cli_int(argv, argv + argc, "--MaxIt", 200);
-  RealD chLo  = cli_real(argv, argv + argc, "--cheb-lo", 0.05);  // low edge to resolve
-  RealD chHi  = cli_real(argv, argv + argc, "--cheb-hi", 64.0);  // above max eigenvalue of M^dag M
-  int chOrd   = cli_int(argv, argv + argc, "--cheb-ord", 60);
+  // Chebyshev low-mode filter for IRL. Convention (cf. Grid tests/lanczos/Test_dwf_lanczos.cc,
+  // which uses Cheby(6e-7, 5.5, 4001)): cheb-lo ~ 0 (bottom of spectrum), cheb-hi = the spectral
+  // MAX of M^dag M (so the whole bulk is in-band and suppressed), and cheb-ord must be LARGE
+  // (thousands) -- that order is what actually amplifies the low modes. A small order (we had 60)
+  // gives no separation and IRL returns junk biased to the high end. For free Wilson the M^dag M
+  // max is 8^2 = 64, so cheb-hi defaults just above that.
+  RealD chLo  = cli_real(argv, argv + argc, "--cheb-lo", 0.001);
+  RealD chHi  = cli_real(argv, argv + argc, "--cheb-hi", 70.0);
+  int chOrd   = cli_int(argv, argv + argc, "--cheb-ord", 2000);
 
   // IRL requires Nm > Nk > Nstop. Enforce it here with a clear message rather than letting Grid
   // trip a cryptic 'k < Nm' assert deep in ImplicitlyRestartedLanczos (e.g. when --Nm is lowered
