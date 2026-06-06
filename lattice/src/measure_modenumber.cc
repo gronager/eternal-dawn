@@ -1,0 +1,92 @@
+// measure_modenumber.cc -- the low Dirac spectrum of a gauge config (Eternal Dawn, gamma_m gate).
+// RUNG 1 of the gamma_m ladder: measure the eigenvalues of the Hermitian Dirac operator on a real
+// gauge configuration, using Grid's FUNDAMENTAL Wilson fermion (its own tested operator -- we add
+// no representation code here). The program prints the lowest |lambda| (one "EIG <value>" line
+// each); the validated Python side (cartasis_sims.lattice: mode_number_from_eigenvalues ->
+// anomalous_dimension_from_mode_number) counts nu(M) and fits gamma_m. Keeping the C++ to just the
+// spectrum shrinks the debug surface.
+//
+// VALIDATION FIRST (stand on the analytic answer of rung 0):
+//   measure_modenumber --grid 32.32.32.32 --free --mass <m_crit> --Nstop 80
+//     -> identity links = free field; the |lambda| must reproduce free_wilson_mode_number(),
+//        i.e. nu(M)~M^4, gamma_m~0. Only once that matches do we trust an interacting config:
+//   measure_modenumber --grid 32.32.32.64 --config <NERSC cfg> --mass <m>
+//
+// The eigenvalues come from Grid's ImplicitlyRestartedLanczos on M^dag M (eigenvalues |lambda|^2),
+// Chebyshev-accelerated at the low end. The IRL/Chebyshev knobs are CLI flags -- tune convergence
+// without recompiling (watch the "Nconv" line; raise --Nm / --cheb-ord if it under-converges).
+//
+// Build via lattice/src/Makefile (adds this to PROGS).
+#include <Grid/Grid.h>
+#include <cmath>
+
+using namespace Grid;
+
+static int cli_int(char **a, char **e, const std::string &flag, int def) {
+  if (!GridCmdOptionExists(a, e, flag)) return def;
+  std::string s = GridCmdOptionPayload(a, e, flag); int v = def; GridCmdOptionInt(s, v); return v;
+}
+static RealD cli_real(char **a, char **e, const std::string &flag, RealD def) {
+  if (!GridCmdOptionExists(a, e, flag)) return def;
+  return std::stod(GridCmdOptionPayload(a, e, flag));
+}
+
+int main(int argc, char **argv) {
+  Grid_init(&argc, &argv);
+
+  GridCartesian *UGrid = SpaceTimeGrid::makeFourDimGrid(
+      GridDefaultLatt(), GridDefaultSimd(Nd, vComplexD::Nsimd()), GridDefaultMpi());
+  GridRedBlackCartesian *UrbGrid = SpaceTimeGrid::makeFourDimRedBlackGrid(UGrid);
+
+  // ---- gauge field: identity (--free, the analytic validation) or a NERSC config ----
+  LatticeGaugeField Umu(UGrid);
+  if (GridCmdOptionExists(argv, argv + argc, "--free")) {
+    SU<Nc>::ColdConfiguration(Umu);                 // U = 1 everywhere -> free Dirac operator
+    std::cout << GridLogMessage << "measure_modenumber: FREE field (identity links)" << std::endl;
+  } else {
+    std::string cfg = GridCmdOptionPayload(argv, argv + argc, "--config");
+    FieldMetaData header;
+    NerscIO::readConfiguration(Umu, header, cfg);
+    std::cout << GridLogMessage << "measure_modenumber: config " << cfg << std::endl;
+  }
+
+  // ---- fundamental Wilson Dirac operator (Grid's own, tested) ----
+  RealD mass = cli_real(argv, argv + argc, "--mass", -0.5);   // Wilson mass; near-critical for light modes
+  WilsonFermionR Dw(Umu, *UGrid, *UrbGrid, mass);
+
+  // Hermitian positive operator M^dag M; its eigenvalues are |lambda|^2
+  MdagMLinearOperator<WilsonFermionR, LatticeFermion> HermOp(Dw);
+
+  // ---- IRL knobs (CLI-tunable so convergence is fixed without a recompile) ----
+  int Nstop   = cli_int(argv, argv + argc, "--Nstop", 60);    // eigenvalues we want converged
+  int Nk      = cli_int(argv, argv + argc, "--Nk", 80);       // working set
+  int Nm      = cli_int(argv, argv + argc, "--Nm", 160);      // Krylov dimension (Nm > Nk > Nstop)
+  RealD resid = cli_real(argv, argv + argc, "--resid", 1e-8);
+  int MaxIt   = cli_int(argv, argv + argc, "--MaxIt", 200);
+  RealD chLo  = cli_real(argv, argv + argc, "--cheb-lo", 0.05);  // low edge to resolve
+  RealD chHi  = cli_real(argv, argv + argc, "--cheb-hi", 64.0);  // above max eigenvalue of M^dag M
+  int chOrd   = cli_int(argv, argv + argc, "--cheb-ord", 60);
+
+  Chebyshev<LatticeFermion> Cheby(chLo, chHi, chOrd);          // amplify the low end for IRL
+  FunctionHermOp<LatticeFermion> AccelOp(Cheby, HermOp);
+  PlainHermOp<LatticeFermion> PlainOp(HermOp);
+  ImplicitlyRestartedLanczos<LatticeFermion> IRL(AccelOp, PlainOp, Nstop, Nk, Nm, resid, MaxIt);
+
+  std::vector<RealD> eval(Nm);
+  std::vector<LatticeFermion> evec(Nm, UGrid);
+  LatticeFermion src(UGrid);
+  GridParallelRNG RNG(UGrid);
+  RNG.SeedFixedIntegers(std::vector<int>({1, 2, 3, 4}));
+  gaussian(RNG, src);
+
+  int Nconv = 0;
+  IRL.calc(eval, evec, src, Nconv);
+
+  std::cout << GridLogMessage << "measure_modenumber: Nconv=" << Nconv
+            << " (eigenvalues of M^dag M; |lambda| = sqrt)" << std::endl;
+  for (int i = 0; i < Nconv; ++i)
+    std::cout << "EIG " << std::setprecision(12) << std::sqrt(std::abs(eval[i])) << std::endl;
+
+  Grid_finalize();
+  return 0;
+}
