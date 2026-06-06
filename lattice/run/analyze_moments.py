@@ -47,7 +47,8 @@ def main():
     M = np.linspace(a.mlo * 0.8, a.mhi * 1.2, a.npts)
     nu = lat.mode_number_from_chebyshev_moments(mu, M, xmax)
     out = lat.anomalous_dimension_from_mode_number(M, nu, window=(a.mlo, a.mhi))
-    print(f"xmax={xmax:.4f}  moments={len(mu) - 1}  mu0={mu[0]:.0f} (= 12*sites)")
+    ncol = 6 if a.rep == "sextet" else 3
+    print(f"xmax={xmax:.4f}  moments={len(mu) - 1}  mu0={mu[0]:.0f} (= 4*{ncol}*sites, {a.rep})")
     print(f"gamma_m = {out['gamma_m']:+.4f}  (slope {out['slope']:.3f})  on M in [{a.mlo}, {a.mhi}]")
 
     if a.free:
