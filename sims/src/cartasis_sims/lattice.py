@@ -236,6 +236,35 @@ def deconfinement_beta_c(beta, chi_L):
 # ---------------------------------------------------------------------------
 # 3. Mass anomalous dimension from the Dirac mode number (the GATE)
 # ---------------------------------------------------------------------------
+def mode_number_from_eigenvalues(eigenvalues, M_grid):
+    """nu(M) = number of eigenvalues of the Hermitian Dirac operator with |lambda| < M, as a
+    function of the threshold M. The mode number is just the cumulative count of the spectrum;
+    this is the bridge from a measured (or analytic) Dirac spectrum to the gamma_m fit. Per
+    config -- average nu(M) over configs before fitting. eigenvalues are |lambda| (>=0)."""
+    eig = np.sort(np.abs(np.asarray(eigenvalues, dtype=float)))
+    M = np.asarray(M_grid, dtype=float)
+    return np.searchsorted(eig, M, side="right").astype(float)
+
+
+def free_wilson_mode_number(L, T, M_grid, m=0.0, r=1.0):
+    """Analytic free Wilson-Dirac mode number nu(M) on an L^3 x T lattice -- the exact, gauge-free
+    reference that the measurement chain must reproduce. The free spectrum is diagonal in momentum
+    space: for lattice momentum p_mu = 2*pi*n_mu/N_mu the Hermitian operator has
+        |lambda(p)| = sqrt( sum_mu sin^2 p_mu + W(p)^2 ),   W(p) = m + r * sum_mu (1 - cos p_mu),
+    each with multiplicity 12 (4 spin x 3 colour). A free (non-interacting) theory has gamma_m = 0,
+    so nu(M) ~ M^4 at small M; feeding this to anomalous_dimension_from_mode_number must return
+    gamma_m ~ 0. This is the first rung: validate the nu(M) -> gamma_m pipeline against an exact
+    answer before trusting any interacting (Grid) measurement, and long before the sextet."""
+    dims = (L, L, L, T)
+    axes = [2.0 * np.pi * np.arange(n) / n for n in dims]
+    P = np.meshgrid(*axes, indexing="ij")
+    s2 = sum(np.sin(p) ** 2 for p in P)
+    W = m + r * sum(1.0 - np.cos(p) for p in P)
+    lam = np.sort(np.sqrt(s2 + W**2).ravel())
+    M = np.asarray(M_grid, dtype=float)
+    return 12.0 * np.searchsorted(lam, M, side="right").astype(float)   # x12 spin*colour
+
+
 def anomalous_dimension_from_mode_number(M, nu, window=None):
     """The mass anomalous dimension gamma_m from the Dirac mode number nu(M) (the number of
     eigenvalues of the massless Dirac operator below M). In the near-conformal scaling regime
