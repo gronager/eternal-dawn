@@ -74,6 +74,14 @@ int main(int argc, char **argv) {
   RealD chHi  = cli_real(argv, argv + argc, "--cheb-hi", 64.0);  // above max eigenvalue of M^dag M
   int chOrd   = cli_int(argv, argv + argc, "--cheb-ord", 60);
 
+  // IRL requires Nm > Nk > Nstop. Enforce it here with a clear message rather than letting Grid
+  // trip a cryptic 'k < Nm' assert deep in ImplicitlyRestartedLanczos (e.g. when --Nm is lowered
+  // below the default --Nk). eval/evec are sized from Nm just below, so fixing it now is safe.
+  if (Nk <= Nstop) { Nk = Nstop + std::max(1, Nstop / 2); std::cout << GridLogMessage
+      << "measure_modenumber: Nk <= Nstop; bumping Nk to " << Nk << std::endl; }
+  if (Nm <= Nk)    { Nm = Nk + Nstop;                     std::cout << GridLogMessage
+      << "measure_modenumber: Nm <= Nk; bumping Nm to " << Nm << std::endl; }
+
   Chebyshev<FermionField> Cheby(chLo, chHi, chOrd);            // amplify the low end for IRL
   FunctionHermOp<FermionField> AccelOp(Cheby, HermOp);
   PlainHermOp<FermionField> PlainOp(HermOp);
