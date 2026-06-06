@@ -1,22 +1,25 @@
-// measure_modenumber.cc -- the low Dirac spectrum of a gauge config (Eternal Dawn, gamma_m gate).
-// RUNG 1 of the gamma_m ladder: measure the eigenvalues of the Hermitian Dirac operator on a real
-// gauge configuration, using Grid's FUNDAMENTAL Wilson fermion (its own tested operator -- we add
-// no representation code here). The program prints the lowest |lambda| (one "EIG <value>" line
-// each); the validated Python side (cartasis_sims.lattice: mode_number_from_eigenvalues ->
-// anomalous_dimension_from_mode_number) counts nu(M) and fits gamma_m. Keeping the C++ to just the
-// spectrum shrinks the debug surface.
+// measure_modenumber.cc -- Chebyshev moments of the Dirac mode number (Eternal Dawn, gamma_m gate).
+// The gamma_m gate via the Kernel Polynomial Method (KPM), the scalable, solver-free route used in
+// the mode-number literature. Instead of computing eigenvalues (the Lanczos route, which needs a
+// high-order filter and convergence babysitting) we estimate the Chebyshev moments
+//     mu_k = Tr T_k(Xtilde),   Xtilde = (D^dag D)/(xmax/2) - 1   in [-1,1]
+// by a stochastic trace -- random sources and D^dag D matvecs ONLY, no eigenvalues, no CG. The
+// validated Python side (cartasis_sims.lattice.mode_number_from_chebyshev_moments) combines the
+// moments with the Jackson-damped step to give nu(M) for the whole M grid, then gamma_m. One run
+// of moments covers every threshold M.
 //
-// VALIDATION FIRST (stand on the analytic answer of rung 0):
-//   measure_modenumber --grid 32.32.32.32 --free --mass <m_crit> --Nstop 80
-//     -> identity links = free field; the |lambda| must reproduce free_wilson_mode_number(),
-//        i.e. nu(M)~M^4, gamma_m~0. Only once that matches do we trust an interacting config:
-//   measure_modenumber --grid 32.32.32.64 --config <NERSC cfg> --mass <m>
+// VALIDATION FIRST (stand on the analytic answer): run --free and check the moments reproduce the
+// free Wilson mode number that cartasis_sims already validates analytically:
+//     measure_modenumber --grid 16.16.16.16 --free --mass 0.0 --Nmom 600 --Nnoise 12 > moments.txt
+// then in Python: parse XMAX and the MOMENT lines, mode_number_from_chebyshev_moments(mu, M, xmax),
+// compare to free_wilson_mode_number. Only then an interacting config:
+//     measure_modenumber --grid 32.32.32.64 --config <NERSC cfg> --mass <m> --Nmom 800
 //
-// The eigenvalues come from Grid's ImplicitlyRestartedLanczos on M^dag M (eigenvalues |lambda|^2),
-// Chebyshev-accelerated at the low end. The IRL/Chebyshev knobs are CLI flags -- tune convergence
-// without recompiling (watch the "Nconv" line; raise --Nm / --cheb-ord if it under-converges).
+// Uses Grid's FUNDAMENTAL Wilson D^dag D (MdagMLinearOperator) -- its own tested operator; the only
+// matvec, already confirmed correct (its spectral ceiling matched the free maximum). The recurrence
+// stays bounded because Xtilde maps the spectrum into [-1,1] (|T_k| <= 1), so high Nmom is stable.
 //
-// Build via lattice/src/Makefile (adds this to PROGS).
+// Output (stdout): "XMAX <value>" then "MOMENT <k> <mu_k>" for k=0..Nmom. Build via the Makefile.
 #include <Grid/Grid.h>
 #include <cmath>
 
@@ -57,56 +60,70 @@ int main(int argc, char **argv) {
     std::cout << GridLogMessage << "measure_modenumber: config " << cfg << std::endl;
   }
 
-  // ---- fundamental Wilson Dirac operator (Grid's own, tested) ----
+  // ---- fundamental Wilson D^dag D (Grid's own, tested) ----
   RealD mass = cli_real(argv, argv + argc, "--mass", -0.5);   // Wilson mass; near-critical for light modes
   FermionAction Dw(Umu, *UGrid, *UrbGrid, mass);
-
-  // Hermitian positive operator M^dag M; its eigenvalues are |lambda|^2
   MdagMLinearOperator<FermionAction, FermionField> HermOp(Dw);
 
-  // ---- IRL knobs (CLI-tunable so convergence is fixed without a recompile) ----
-  int Nstop   = cli_int(argv, argv + argc, "--Nstop", 60);    // eigenvalues we want converged
-  int Nk      = cli_int(argv, argv + argc, "--Nk", 80);       // working set
-  int Nm      = cli_int(argv, argv + argc, "--Nm", 160);      // Krylov dimension (Nm > Nk > Nstop)
-  RealD resid = cli_real(argv, argv + argc, "--resid", 1e-8);
-  int MaxIt   = cli_int(argv, argv + argc, "--MaxIt", 200);
-  // Chebyshev low-mode filter for IRL. Convention (cf. Grid tests/lanczos/Test_dwf_lanczos.cc,
-  // which uses Cheby(6e-7, 5.5, 4001)): cheb-lo ~ 0 (bottom of spectrum), cheb-hi = the spectral
-  // MAX of M^dag M (so the whole bulk is in-band and suppressed), and cheb-ord must be LARGE
-  // (thousands) -- that order is what actually amplifies the low modes. A small order (we had 60)
-  // gives no separation and IRL returns junk biased to the high end. For free Wilson the M^dag M
-  // max is 8^2 = 64, so cheb-hi defaults just above that.
-  RealD chLo  = cli_real(argv, argv + argc, "--cheb-lo", 0.001);
-  RealD chHi  = cli_real(argv, argv + argc, "--cheb-hi", 70.0);
-  int chOrd   = cli_int(argv, argv + argc, "--cheb-ord", 2000);
+  // ---- KPM knobs ----
+  int Nmom    = cli_int(argv, argv + argc, "--Nmom", 600);       // Chebyshev moments (k = 0..Nmom)
+  int Nnoise  = cli_int(argv, argv + argc, "--Nnoise", 12);      // stochastic sources
+  RealD xmax  = cli_real(argv, argv + argc, "--xmax", 0.0);      // spectral bound; <=0 => estimate
+  int powIts  = cli_int(argv, argv + argc, "--power-iters", 30); // power iterations for the estimate
+  int seed    = cli_int(argv, argv + argc, "--seed", 1234);
 
-  // IRL requires Nm > Nk > Nstop. Enforce it here with a clear message rather than letting Grid
-  // trip a cryptic 'k < Nm' assert deep in ImplicitlyRestartedLanczos (e.g. when --Nm is lowered
-  // below the default --Nk). eval/evec are sized from Nm just below, so fixing it now is safe.
-  if (Nk <= Nstop) { Nk = Nstop + std::max(1, Nstop / 2); std::cout << GridLogMessage
-      << "measure_modenumber: Nk <= Nstop; bumping Nk to " << Nk << std::endl; }
-  if (Nm <= Nk)    { Nm = Nk + Nstop;                     std::cout << GridLogMessage
-      << "measure_modenumber: Nm <= Nk; bumping Nm to " << Nm << std::endl; }
-
-  Chebyshev<FermionField> Cheby(chLo, chHi, chOrd);            // amplify the low end for IRL
-  FunctionHermOp<FermionField> AccelOp(Cheby, HermOp);
-  PlainHermOp<FermionField> PlainOp(HermOp);
-  ImplicitlyRestartedLanczos<FermionField> IRL(AccelOp, PlainOp, Nstop, Nk, Nm, resid, MaxIt);
-
-  std::vector<RealD> eval(Nm);
-  std::vector<FermionField> evec(Nm, UGrid);
-  FermionField src(UGrid);
   GridParallelRNG RNG(UGrid);
-  RNG.SeedFixedIntegers(std::vector<int>({1, 2, 3, 4}));
-  gaussian(RNG, src);
+  RNG.SeedFixedIntegers(std::vector<int>({seed, seed + 1, seed + 2, seed + 3}));
 
-  int Nconv = 0;
-  IRL.calc(eval, evec, src, Nconv);
+  // ---- spectral bound: largest eigenvalue of D^dag D via power iteration (must bound the
+  //      spectrum so Xtilde stays in [-1,1]). Override with --xmax on a known case. ----
+  if (xmax <= 0.0) {
+    FermionField v(UGrid), w(UGrid);
+    gaussian(RNG, v);
+    v = v * (1.0 / std::sqrt(norm2(v)));
+    RealD lam = 0.0;
+    for (int i = 0; i < powIts; ++i) {
+      HermOp.HermOp(v, w);
+      lam = std::sqrt(norm2(w));                    // -> largest eigenvalue as v aligns
+      v = w * (1.0 / lam);
+    }
+    xmax = 1.1 * lam;                               // 10% headroom
+    std::cout << GridLogMessage << "measure_modenumber: power-method lambda_max(D^dag D) ~ "
+              << lam << std::endl;
+  }
+  std::cout << "XMAX " << std::setprecision(12) << xmax << std::endl;
+  const RealD a = xmax / 2.0;                        // Xtilde = HermOp/a - 1
 
-  std::cout << GridLogMessage << "measure_modenumber: Nconv=" << Nconv
-            << " (eigenvalues of M^dag M; |lambda| = sqrt)" << std::endl;
-  for (int i = 0; i < Nconv; ++i)
-    std::cout << "EIG " << std::setprecision(12) << std::sqrt(std::abs(eval[i])) << std::endl;
+  // mu_0 = Tr T_0(Xtilde) = Tr I = 12 * (sites). Known exactly -> used to fix the noise
+  // normalisation (rescale all moments so mu_0 hits this), independent of the gaussian convention.
+  const RealD dim = 12.0 * (RealD)UGrid->gSites();
+
+  // ---- stochastic Chebyshev moments: mu_k = (1/Nnoise) sum_s Re( eta_s^dag T_k(Xtilde) eta_s ) ----
+  std::vector<RealD> mu(Nmom + 1, 0.0);
+  FermionField eta(UGrid), T0(UGrid), T1(UGrid), T2(UGrid), tmp(UGrid);
+  for (int s = 0; s < Nnoise; ++s) {
+    gaussian(RNG, eta);
+    T0 = eta;                                        // T_0(Xtilde) eta = eta
+    HermOp.HermOp(eta, tmp);                         // T_1 = Xtilde eta = HermOp(eta)/a - eta
+    T1 = tmp * (1.0 / a) - eta;
+    mu[0] += real(innerProduct(eta, T0));
+    mu[1] += real(innerProduct(eta, T1));
+    for (int k = 2; k <= Nmom; ++k) {
+      HermOp.HermOp(T1, tmp);                        // T_{k} = 2 Xtilde T_{k-1} - T_{k-2}
+      T2 = tmp * (2.0 / a) - T1 * 2.0 - T0;
+      mu[k] += real(innerProduct(eta, T2));
+      T0 = T1;
+      T1 = T2;
+    }
+    std::cout << GridLogMessage << "measure_modenumber: noise source " << (s + 1) << "/" << Nnoise
+              << " done" << std::endl;
+  }
+  for (auto &m : mu) m /= (RealD)Nnoise;
+  const RealD scale = dim / mu[0];                   // force mu_0 == 12*sites (noise normalisation)
+  for (auto &m : mu) m *= scale;
+
+  for (int k = 0; k <= Nmom; ++k)
+    std::cout << "MOMENT " << k << " " << std::setprecision(12) << mu[k] << std::endl;
 
   Grid_finalize();
   return 0;
