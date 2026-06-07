@@ -125,11 +125,13 @@ int main(int argc, char **argv) {
       LatticeSpinMatrixD Scc = peekColour(prop, c, cp);
       // P_+ applied to the spectator block:  Pscc = (Scc + gamma_t Scc)/2
       LatticeSpinMatrixD Pscc = 0.5 * (Scc + gT * Scc);
-      // the C*g5 diquark of the (a,b) pair, with a spin transpose on the b-leg
-      LatticeSpinMatrixD Dab = Cg5 * Saa * Cg5 * transposeSpin(Sbb);
+      // the C*g5 diquark of the (a,b) pair, with a spin transpose on the b-leg. Sbb is a bare
+      // LatticeSpinMatrix (colour peeled off), so its only matrix index is spin: plain transpose()
+      // is the spin transpose (this Grid's transposeSpin is the index-templated variant).
+      LatticeSpinMatrixD Dab = Cg5 * Saa * Cg5 * transpose(Sbb);
       // term 1 (direct):   Tr[P_+ S^cc'] * Tr[ Dab ]
       // term 2 (exchange): Tr[ P_+ S^cc' * (Cg5 (S^bb')^T Cg5 S^aa') ]
-      LatticeSpinMatrixD Dex = Cg5 * transposeSpin(Sbb) * Cg5 * Saa;
+      LatticeSpinMatrixD Dex = Cg5 * transpose(Sbb) * Cg5 * Saa;
       nucl = nucl + s_eps * (trace(Pscc) * trace(Dab) + trace(Pscc * Dex));
     }
   }
