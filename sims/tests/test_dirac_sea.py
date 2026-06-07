@@ -31,3 +31,13 @@ def test_box_sea_reproduces_continuum_number():
     box = _ds.box_sea_condensate(M, Lam, kmax=30)
     cont = _ds.continuum_condensate(M, Lam)
     assert abs(box / cont - 1.0) < 0.06          # matches the continuum number
+
+
+def test_soliton_sea_reinforces_bag_and_is_localized():
+    # vacuum-subtracted sea condensate in a tanh bag: POSITIVE in the core (restores chiral symmetry
+    # alongside the valence -> reinforces the bag) and LOCALISED (vanishes outside the bag)
+    r = np.linspace(9.0 / 200, 9.0, 200)
+    M = np.tanh(r / 1.0)                               # bag well, M_vac = 1
+    sub = dsea.soliton_sea_condensate(M, 4.0, r, kmax=30)
+    assert sub[np.argmin(np.abs(r - 0.7))] > 0.1      # positive (reinforcing) in the bag
+    assert abs(sub[np.argmin(np.abs(r - 4.0))]) < 0.05  # localised: ~0 outside
