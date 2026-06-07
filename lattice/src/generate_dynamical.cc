@@ -28,7 +28,8 @@ int main(int argc, char **argv) {
 
   typedef GenericHMCRunner<MinimumNorm2> HMCWrapper;     // fundamental: no Hirep machinery
   typedef WilsonImplR FermionImplPolicy;
-  typedef WilsonFermionR FermionAction;
+  typedef WilsonFermion<FermionImplPolicy> FermionAction;  // this Grid lacks the WilsonFermionR
+                                                           // typedef; instantiate the template
   typedef typename FermionAction::FermionField FermionField;
 
   HMCWrapper TheHMC;
