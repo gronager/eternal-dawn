@@ -20,3 +20,14 @@ def test_free_sea_has_condensate_structure():
     vals = [dsea.free_sea_scalar_sum(M) for M in (0.5, 1.0, 1.5, 2.0)]
     assert all(v < 0 for v in vals)                 # condensate is negative
     assert vals[0] > vals[1] > vals[2] > vals[3]    # more negative with larger M
+
+
+def test_box_sea_reproduces_continuum_number():
+    # with enough partial waves the box mode sum hits the continuum 3-momentum condensate (~3%,
+    # the residual is finite-box). The number, not just the sign.
+    import numpy as _np
+    from cartasis_sims import dirac_sea as _ds
+    M, Lam = 1.0, 4.0
+    box = _ds.box_sea_condensate(M, Lam, kmax=30)
+    cont = _ds.continuum_condensate(M, Lam)
+    assert abs(box / cont - 1.0) < 0.06          # matches the continuum number
