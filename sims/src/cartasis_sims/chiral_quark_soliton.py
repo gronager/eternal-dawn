@@ -33,12 +33,14 @@ WHAT IS NOT YET TRUSTWORTHY (the honest wall -- see sea_energy):
     amplitude: E_sea ~ +15-25 M and still climbing, which would give an absurd unbound mass. This is
     the known reason CQSM is done in the KAHANA-RIPKA basis (discrete spherical-Bessel box states),
     which represents the centrifugal barrier exactly, converges exponentially in K, and has a clean
-    box-consistent subtraction. Porting build_hamiltonian to that basis is the next step; until then
-    the absolute mass is handed to lattice target L4, and Appendix C's estimate M_torsiton ~ N_c M
-    stands as the mean-field expectation, not a computed number.
+    box-consistent subtraction. That basis is now built in cartasis_sims.kahana_ripka (reusing the
+    angular machinery here); there the sea sum CONVERGES and is box-stable, and the B=1 mass comes out
+    M_torsiton ~ N_c M ~ 3 M, confirming Appendix C from an actual mode sum. Use kahana_ripka for the
+    converged energetics; this module is the readable reference for the angular couplings, the
+    Hamiltonian structure, and the exact-limit validations.
 
 The VALENCE / excited-orbital spectrum (ingap_levels) is exact for a GIVEN profile -- it is the
-robust part -- but the physical (self-consistent) profile itself awaits the converged sea above.
+robust part. kahana_ripka.ingap_levels gives the same spectrum in the convergent basis.
 """
 from __future__ import annotations
 

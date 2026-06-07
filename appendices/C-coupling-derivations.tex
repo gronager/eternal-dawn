@@ -114,10 +114,11 @@ $r_0\simeq1.5\,M^{-1}$ and does not cross zero until $r_0\simeq2\,M^{-1}$, where
 There is therefore \emph{no} self-bound minimum below the constituent sum: the infimum is the trivial
 limit $r_0\!\to\!0$, where $E_2\!\to\!0$ and the $N_c$ valence quarks unbind to the gap edge, i.e.
 $E\to N_cM$, approached from above. This is not a failure of the framework; it is the textbook
-result. The two-derivative term alone never binds a nucleon below $N_cM$---what stabilises the size
-and lands the mass \emph{at} $\sim N_cM$ is the four-derivative (Skyrme) term, equivalently the full
-regularised Dirac-sea Casimir energy, the next order of the same quark loop: a large \emph{negative}
-contribution that cancels the spurious positive $E_2$.
+result. The two-derivative term alone never binds a nucleon below $N_cM$. The question is whether the
+higher orders of the same quark loop---the four-derivative (Skyrme) term, equivalently the full
+regularised Dirac-sea Casimir energy---bend the curve into a stable interior minimum. Computing that
+sea energy in full (next section) settles it: at these couplings they do \emph{not}, and the soliton
+sits at the constituent sum.
 
 The torsiton mass is therefore fixed near the constituent sum,
 \begin{equation}
@@ -135,20 +136,31 @@ minimisation and the Derrick collapse are reproduced in \texttt{cartasis\_sims.h
 
 \paragraph{The full sea sum.} Replacing the two-derivative estimate by the full regularised Dirac-sea
 energy means diagonalising the hedgehog Hamiltonian in every grand-spin sector $K=\mathbf J+\mathbf T$
-and summing the vacuum-subtracted negative-energy levels with the proper-time cutoff. That apparatus
-is built in \texttt{cartasis\_sims.chiral\_quark\_soliton}: the grand-spin angular couplings (the
-matrix elements of $\boldsymbol\tau\!\cdot\!\hat{\mathbf r}$, verified by $(\boldsymbol\tau
-\!\cdot\!\hat{\mathbf r})^2=1$), the reduced-radial Dirac Hamiltonian (whose free spectrum is
-parity-degenerate with no spurious in-gap level, and whose $K{=}0$ sector reproduces the valence dive
-of \texttt{hedgehog}), and the regularised sea sum---which in the small-amplitude limit returns a
-clean gradient term with $f_\pi\simeq0.44\,M$, consistent with Eq.~\eqref{eq:fpi}. What it does
-\emph{not} yet deliver is the absolute mass: on a finite-difference radial grid the high-$K$
-centrifugal barrier is poorly resolved, so the grand-spin sum converges only as $\sim K^{-1.2}$ and
-the subtracted energy drifts with the box size. Both are the textbook reasons CQSM is solved in the
-Kahana--Ripka spherical-Bessel basis, which resolves the barrier exactly and converges exponentially.
-Porting the Hamiltonian to that basis---or going straight to the lattice (L4)---is what turns
-Eq.~\eqref{eq:torsitonmass} from a mean-field expectation into a number, and gives the excited
-in-gap orbitals (the candidate higher torsiton generations) their spectrum.
+and summing the vacuum-subtracted negative-energy levels with the proper-time cutoff. The apparatus is
+built in two stages. \texttt{cartasis\_sims.chiral\_quark\_soliton} provides the grand-spin angular
+couplings (the matrix elements of $\boldsymbol\tau\!\cdot\!\hat{\mathbf r}$, verified by $(\boldsymbol
+\tau\!\cdot\!\hat{\mathbf r})^2=1$) and the Dirac Hamiltonian, whose free spectrum is parity-degenerate
+with no spurious in-gap level and whose $K{=}0$ sector reproduces the valence dive of
+\texttt{hedgehog}. On a finite-difference radial grid, though, the high-$K$ centrifugal barrier is
+poorly resolved: the grand-spin sum crawls ($\sim K^{-1.2}$) and the subtracted energy drifts with the
+box. The cure---and the standard way CQSM is solved---is the Kahana--Ripka basis of free
+spherical-Bessel Dirac partial waves in a box (\texttt{cartasis\_sims.kahana\_ripka}), where the
+barrier and the $r^l$ origin behaviour are exact, $\boldsymbol\sigma\!\cdot\!\mathbf p$ acts through
+Bessel recurrences, and the vacuum subtraction is basis-consistent. There the sum \emph{converges}
+($\Delta\!\sim\!10^{-3}$ by $K_{\max}\!\sim\!16$) and is box-stable, and the small-amplitude limit
+returns a clean gradient term with $f_\pi\simeq0.39\,M$, consistent with Eq.~\eqref{eq:fpi}.
+
+With the sea converged, the B=1 mass $M_\mathrm{sol}=N_c\,\varepsilon_\mathrm{val}+E_\mathrm{sea}$ can be
+minimised. The outcome confirms Eq.~\eqref{eq:torsitonmass} from an actual mode sum: $E_\mathrm{sea}$ is
+positive and grows with the soliton size while the valence level dives only to $\varepsilon_\mathrm{val}
+\simeq+0.2\,M$, so at the derived (weak, $f_\pi/M\simeq0.4$) couplings the soliton has no deep interior
+minimum---it relaxes toward the point limit where $E_\mathrm{sea}\to0$ and the $N_c$ valence quarks sit
+at the gap edge, i.e.\ the constituent sum. Across cutoffs $\Lambda=2.5\text{--}4\,M$ the infimum is
+robustly $N_cM$, approached from above (e.g.\ $M_\mathrm{sol}\simeq3.6\,M$ at the most compact size for
+$\Lambda=2.5\,M$). So, computed and converged, $M_\mathrm{torsiton}\simeq N_cM\simeq3\,M$. Whether the
+\emph{full} self-consistent profile (beyond the one-parameter family minimised here) dips a few per
+cent below $3M$ is $\Lambda$-sensitive and is lattice target~L4; the excited in-gap orbitals
+(\texttt{ingap\_levels} at higher $K$) are the candidate higher torsiton generations.
 
 \bigskip
 \noindent\emph{Reproducibility.} The Fierz coefficients are in \texttt{cartasis\_sims.fierz}; the
