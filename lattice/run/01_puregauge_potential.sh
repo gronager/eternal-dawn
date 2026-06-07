@@ -39,12 +39,16 @@ RMAX_FIT="${RMAX_FIT:-$((L/2 - 2))}"  # Cornell-fit R window high: scales with L
 # parallel), the configs are already in $OUT/stream*/ and this step is skipped. Otherwise it
 # falls back to a single serial chain with the stock Test_hmc_WilsonGauge (beta=5.6 hardcoded).
 shopt -s nullglob
-if ls "$OUT"/ckpoint_lat.* "$OUT"/stream*/ckpoint_lat.* >/dev/null 2>&1; then
-  echo "using existing configs in $OUT (run/00 streams or a previous run)"
+# NOTE: under `nullglob` an unmatched glob expands to NOTHING, so `ls "$OUT"/ckpoint_lat.*` on an
+# empty dir would run `ls` with no args (listing the cwd, exit 0) and wrongly report "configs exist"
+# -- skipping generation forever. Collect into an array and count it instead.
+_existing=( "$OUT"/ckpoint_lat.* "$OUT"/stream*/ckpoint_lat.* )
+if [ "${#_existing[@]}" -gt 0 ]; then
+  echo "using existing configs in $OUT (${#_existing[@]} found; run/00 streams or a previous run)"
 else
   echo "no configs found -- generating a single serial chain (or run run/00 first for streams)"
-  ( cd "$OUT" && "$HMC" --grid "$GRIDSPEC" --Trajectories "$NTRAJ" --accelerator-threads 8 \
-      2>&1 | tee hmc.log )
+  ( cd "$OUT" && "$HMC" --grid "$GRIDSPEC" --StartingType HotStart --Trajectories "$NTRAJ" \
+      --accelerator-threads 8 2>&1 | tee hmc.log )
 fi
 
 # --- 2. measure W(R,T) on THERMALISED, DECORRELATED configs (parallel on the GPU) ----------
