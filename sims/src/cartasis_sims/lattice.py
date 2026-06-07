@@ -374,12 +374,67 @@ def gradient_flow_w0(t, t2E, ref=0.3):
     return float(np.sqrt(t_star))
 
 
+def _effective_mass(C):
+    """m_eff(t) = ln[C(t)/C(t+1)] for a correlator C(t); length len(C)-1 (index t)."""
+    C = np.asarray(C, dtype=float)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        return np.log(C[:-1] / C[1:])
+
+
+def baryon_spectrum(raw, T, tmin=None, tmax=None):
+    """The pion and nucleon (torsiton) masses from quenched valence correlators (L4 pilot).
+
+    `raw` is the (n_rows, 4) array of rows [cfg, t, C_pi(t), C_N(t)] (measure_baryon output, tagged
+    per config). Returns {'pion': ..., 'nucleon': ...}, each a dict with the config-averaged
+    effective mass m_eff(t)=ln[C(t)/C(t+1)], and a plateau-window mass with a jackknife-over-configs
+    error. Default window [T//8, T//3] avoids small-t excited states and large-t noise; read the
+    printed m_eff(t) and narrow it if the plateau sits elsewhere. A clean plateau at m_N > 0 is the
+    torsiton's rest mass -- the bound ground state, found non-perturbatively."""
+    raw = np.asarray(raw, dtype=float)
+    cfg = raw[:, 0].astype(int)
+    tt = raw[:, 1].astype(int)
+    ts = np.arange(tt.max() + 1)
+    configs = np.unique(cfg)
+    n = len(configs)
+    lo = tmin if tmin is not None else max(1, T // 8)
+    hi = tmax if tmax is not None else max(lo + 1, T // 3)
+    out = {}
+    for name, col in (("pion", 2), ("nucleon", 3)):
+        C = raw[:, col]
+        Cbar = np.array([C[tt == s].mean() for s in ts])
+        meff = _effective_mass(Cbar)
+        idx = np.arange(lo, min(hi, len(meff)))
+        idx = idx[np.isfinite(meff[idx])]
+        res = {"t": ts[:-1], "meff": meff, "tmin": int(lo), "tmax": int(hi), "n_cfg": n}
+        if len(idx) < 2:
+            res.update(mass=float("nan"), mass_err=float("nan"))
+        else:
+            mass = float(np.mean(meff[idx]))
+            js = []
+            for cc in configs:                       # jackknife: drop one config at a time
+                keep = cfg != cc
+                Cj = np.array([C[keep & (tt == s)].mean() for s in ts])
+                mj = _effective_mass(Cj)
+                js.append(np.mean(mj[idx]))
+            js = np.array(js)
+            err = float(np.sqrt((n - 1) / n * np.sum((js - js.mean()) ** 2))) if n > 1 else 0.0
+            res.update(mass=mass, mass_err=err)
+        out[name] = res
+    return out
+
+
+# The lattice theory for the torsiton (L4). NOT the sextet -- that was a walking proxy for the
+# electroweak S parameter (L3), a different question, and the wrong turn for the soliton (CLAUDE.md:
+# "the sextet is DEAD"). The torsiton is the SU(3)-fundamental baryon (colour from the Pauli label),
+# QCD-like; its mass and spectrum are standard baryon spectroscopy (measure_baryon).
 CANDIDATE_THEORY = {
     "gauge_group": "SU(3)",
-    "fermions": "N_f = 2 Dirac in the sextet (2-index symmetric) representation",
-    "why": "leading near-conformal/walking candidate with a light flavour-singlet scalar "
-           "(the composite-Higgs/dilaton our Part III needs); SU(3) matches the colour the "
-           "Pauli label forces; substantial existing lattice literature to validate against.",
-    "gate_observable": "gamma_m via the Dirac mode number",
-    "expected_gamma_m": "order 0.3 if walking (literature, debated); the sign that decides it.",
+    "fermions": "fundamental Dirac quarks (colour forced by the Pauli label)",
+    "object": "the torsiton = the SU(3)-fundamental baryon (three quarks, one of each colour)",
+    "why": "the faithful realisation of the torsiton soliton; QCD-like, confining, chiral-breaking. "
+           "The baryon ground-state mass (and excited spectrum) is standard lattice spectroscopy.",
+    "gate_observable": "the nucleon (torsiton) effective-mass plateau m_N; the pion m_pi calibrates "
+                       "the quark mass and probes the chiral condensate.",
+    "first_step": "quenched valence on the L1 pure-gauge ensemble (measure_baryon), then dynamical "
+                  "fundamental fermions near the chiral limit for the real spectrum.",
 }

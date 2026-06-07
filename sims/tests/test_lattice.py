@@ -220,3 +220,24 @@ def test_gradient_flow_w0_recovered():
     t2E = 0.15 * t
     w0 = lat.gradient_flow_w0(t, t2E, ref=0.3)
     assert np.isclose(w0, np.sqrt(2.0), rtol=1e-2)
+
+
+def test_baryon_spectrum_recovers_synthetic_masses():
+    # synthetic correlators C(t) = exp(-m t) with known masses, a few "configs" with small noise;
+    # baryon_spectrum should recover m_pi and m_N from the effective-mass plateau
+    import numpy as np
+    from cartasis_sims import lattice as lat
+    rng = np.random.default_rng(0)
+    T = 32
+    m_pi, m_N = 0.25, 0.70
+    rows = []
+    for cfg in range(1, 9):
+        for t in range(T):
+            cpi = np.exp(-m_pi * t) * (1 + 0.01 * rng.standard_normal())
+            cn = np.exp(-m_N * t) * (1 + 0.01 * rng.standard_normal())
+            rows.append([cfg, t, cpi, cn])
+    res = lat.baryon_spectrum(np.array(rows), T=T)
+    assert abs(res["pion"]["mass"] - m_pi) < 0.02
+    assert abs(res["nucleon"]["mass"] - m_N) < 0.03
+    assert res["pion"]["mass_err"] < 0.02 and res["nucleon"]["mass_err"] < 0.05
+    assert res["nucleon"]["mass"] > res["pion"]["mass"]      # the baryon is heavier (bound, m_N>0)
