@@ -113,3 +113,51 @@ def soliton_sea_condensate(M_profile, Lambda, r, kmax=30, Nc=3):
     sol = _local_sea(M_profile, Lambda, r, D, h, kmax, Nc)
     vac = _local_sea(M_profile[-1] * np.ones(N), Lambda, r, D, h, kmax, Nc)
     return sol - vac
+
+
+def _lowest_valence(M, r, D, h):
+    N = len(r)
+    kr = np.diag(-1.0 / r)
+    H = np.block([[np.diag(M), -D + kr], [D + kr, np.diag(-M)]])
+    H = 0.5 * (H + H.T)
+    w, v = np.linalg.eigh(H)
+    Mvac = abs(M[-1])
+    best = None
+    for j, e in enumerate(w):
+        if 0 < e < Mvac * 0.999:
+            vec = v[:, j] / np.sqrt(h)
+            G, F = vec[:N], vec[N:]
+            if np.trapezoid(G**2 + F**2, r) > 0.3 and (best is None or e < best[0]):
+                best = (float(e), G, F)
+    return best
+
+
+def solve_sea_soliton(M_vac=1.0, Lambda=4.0, R=8.0, N=140, kmax=16, Nc=3,
+                      iters=60, mix=0.25, seed=None):
+    """Self-consistent chiral-quark-soliton: M(r) = M_vac - 2 G_S [sea_sub(r) + valence(r)], the mass
+    sourced by the FULL condensate (Dirac sea + valence), with NO by-hand double-well. G_S is fixed
+    by the gap equation M_vac = -2 G_S <qbar q>_vac (continuum_condensate, same Hamiltonian scheme),
+    so the only inputs are M_vac (the unit) and the cutoff Lambda. Returns the converged M(r), the
+    core depth M(0)/M_vac, the valence energy, and G_S.
+
+    FINDING (leading order, single-channel valence): at the derived QCD-like couplings the sea
+    reinforces an externally imposed bag (soliton_sea_condensate gives a positive, localised
+    restoration), but the bag is NOT self-sustaining -- starting from M(0)=0 the loop returns
+    M_new(0) ~ 0.5 > 0, so it climbs back to the trivial vacuum M=M_vac, the only stable fixed
+    point. So the leading mean-field PLUS the sea does not robustly self-bind the torsiton; the
+    proper chiral-quark-soliton bookkeeping (the hedgehog ansatz that binds the QCD nucleon) or the
+    non-perturbative lattice is what would. The laptop has carried Eq. 6.2 to the edge -- a marginal,
+    non-self-sustaining bag -- and the spectrum honestly hands off."""
+    r = np.linspace(R / N, R, N)
+    h = r[1] - r[0]
+    D = slac_derivative(N, h)
+    G_S = -M_vac / (2.0 * continuum_condensate(M_vac, Lambda, Nc))
+    M = seed.copy() if seed is not None else M_vac * np.tanh(r / 1.0)
+    Eval = None
+    for _ in range(iters):
+        lb = _lowest_valence(M, r, D, h)
+        val = (Nc / (4.0 * np.pi)) * (lb[1] ** 2 - lb[2] ** 2) / r**2 if lb else np.zeros(N)
+        Eval = lb[0] if lb else None
+        sea = soliton_sea_condensate(M, Lambda, r, kmax=kmax, Nc=Nc)
+        M = (1 - mix) * M + mix * (M_vac - 2.0 * G_S * (sea + val))
+    return {"r": r, "M": M, "core": float(M[0] / M_vac), "valence_E": Eval, "G_S": float(G_S)}
