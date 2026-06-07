@@ -4,7 +4,7 @@
 Chapter~\ref{chap:solitons} writes the torsiton as a bound state of one nonlinear Dirac field, but
 the self-consistent solver needs numbers: the scalar coupling $g$, the repulsive vector coupling
 $g_v$, the meson masses $m_\sigma,m_\omega$, and the chiral-potential quartic $\lambda$. None of
-these is free. They all descend from the single Hehl--Datta coupling $G_{\rm HD}=\tfrac34\kappa$ by
+these is free. They all descend from the single Hehl--Datta coupling $G_\mathrm{HD}=\tfrac34\kappa$ by
 Nambu--Jona-Lasinio bosonisation \citep{nambu1961}, leaving exactly \emph{one} dimensionful input,
 the cutoff $\Lambda$ (the scale of Chapter~\ref{chap:weltformel} and lattice target~L5). Everything
 else is a ratio. This appendix derives them; the algebra is reproduced symbolically in
@@ -12,14 +12,14 @@ else is a ratio. This appendix derives them; the algebra is reproduced symbolica
 \texttt{sims/.../njl\_couplings.py}.
 
 \section{The Fierz channels}
-The interaction is a single axial--axial term, $\mathcal{L}_{\rm int}=-G_{\rm HD}\,(\bar\psi
+The interaction is a single axial--axial term, $\mathcal{L}_\mathrm{int}=-G_\mathrm{HD}\,(\bar\psi
 \gamma_5\gamma^\mu\psi)(\bar\psi\gamma_5\gamma_\mu\psi)$. A Fierz transformation re-expresses it in
 the bilinear channels (Section~\ref{sec:fierz}); carried out with the Dirac matrices it gives
 \[
   c_S=\tfrac14,\quad c_P=-\tfrac14,\quad c_V=\tfrac12,\quad c_A=\tfrac12,\quad c_T=0,
 \]
-so the two mean-field-relevant couplings are the scalar $G_S=\tfrac14 G_{\rm HD}$ (attractive, the
-chiral condensate) and the vector $G_V=\tfrac12 G_{\rm HD}$ (repulsive), with the
+so the two mean-field-relevant couplings are the scalar $G_S=\tfrac14 G_\mathrm{HD}$ (attractive, the
+chiral condensate) and the vector $G_V=\tfrac12 G_\mathrm{HD}$ (repulsive), with the
 \emph{walking-favourable} equality $G_A=G_V$. The ratio that matters is
 \begin{equation}
   G_V/G_S = 2 .
@@ -91,6 +91,47 @@ polarisation, Eq.~\eqref{eq:condensate}, computed not in the uniform vacuum but 
 background---the chiral-quark-soliton mode sum, whose vacuum-subtracted condensate reinforces the
 bag. Carrying that sum out, de-doubled and regularised, is the calculation that decides whether the
 torsiton stands self-bound at its own couplings or hands the spectrum to the lattice (L4).
+
+\section{The hedgehog, and the torsiton mass}
+\label{sec:hedgehog-mass}
+The single-channel bag was marginal; the chiral soliton binds the way the QCD nucleon does---through
+the \emph{hedgehog}. The chiral field is rotated radially in isospin, $M_\mathrm{vac}\exp(i\gamma_5\,
+\boldsymbol\tau\!\cdot\!\hat{\mathbf r}\,\theta(r))$, locking spin and isospin into the conserved
+grand spin $K=\mathbf J+\mathbf T$. In the $K{=}0$ sector a quark level dives out of the continuum
+deep into the mass gap as the chiral angle winds from $\theta(0)=\pi$ to $\theta(\infty)=0$ (one unit
+of winding, baryon number one): the valence quark, bound (\texttt{cartasis\_sims.hedgehog}).
+
+Minimising the leading-order energy of the unit-winding soliton over its size $r_0$,
+\begin{equation}
+  E(r_0) = N_c\,E_\mathrm{val}(r_0) + \underbrace{\int 4\pi r^2\,dr\;\tfrac12 f_\pi^2
+  \Big[\theta'^2 + \tfrac{2\sin^2\theta}{r^2}\Big]}_{E_2(r_0)\ \propto\ r_0},
+  \label{eq:hhE}
+\end{equation}
+exposes the same Derrick balance that governs every three-dimensional chiral soliton. At the derived
+coupling $f_\pi=M/g$ with $g\simeq3$ (so $f_\pi\simeq0.33\,M$) the two-derivative term $E_2$ grows
+\emph{linearly} in $r_0$, while the valence level dives only to $E_\mathrm{val}\simeq+0.2\,M$ at
+$r_0\simeq1.5\,M^{-1}$ and does not cross zero until $r_0\simeq2\,M^{-1}$, where $E_2\simeq8\,M$.
+There is therefore \emph{no} self-bound minimum below the constituent sum: the infimum is the trivial
+limit $r_0\!\to\!0$, where $E_2\!\to\!0$ and the $N_c$ valence quarks unbind to the gap edge, i.e.
+$E\to N_cM$, approached from above. This is not a failure of the framework; it is the textbook
+result. The two-derivative term alone never binds a nucleon below $N_cM$---what stabilises the size
+and lands the mass \emph{at} $\sim N_cM$ is the four-derivative (Skyrme) term, equivalently the full
+regularised Dirac-sea Casimir energy, the next order of the same quark loop: a large \emph{negative}
+contribution that cancels the spurious positive $E_2$.
+
+The torsiton mass is therefore fixed near the constituent sum,
+\begin{equation}
+  \boxed{\ M_\mathrm{torsiton}\ \simeq\ N_c\,M(\Lambda)\ }
+  \label{eq:torsitonmass}
+\end{equation}
+with $M(\Lambda)$ set by the gap equation~\eqref{eq:condensate} from the single Hehl--Datta cutoff
+$\Lambda$---one dimensionful number for the whole spectrum. With $N_c=3$ this is $M_\mathrm{torsiton}
+\simeq3\,M$, the analogue of the proton sitting at three constituent quarks. The precise binding
+fraction (whether the sea cancellation leaves the mass a few per cent above or below $3M$) is the
+delicate, regularisation-sensitive piece that the non-perturbative lattice---target~L4---settles; the
+mean-field calculation here fixes the \emph{scale} and hands off the last few per cent. The
+minimisation and the Derrick collapse are reproduced in \texttt{cartasis\_sims.hedgehog}
+(\texttt{minimize\_b1\_soliton}).
 
 \bigskip
 \noindent\emph{Reproducibility.} The Fierz coefficients are in \texttt{cartasis\_sims.fierz}; the
