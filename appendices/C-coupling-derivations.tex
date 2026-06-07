@@ -212,9 +212,67 @@ $\Lambda_I\simeq2.4/M$, so the torsiton ($J{=}\tfrac12$) is followed by a ``$\De
 ($J{=}\tfrac32$) a splitting $3/2\Lambda_I\simeq0.6\,M$ above---the same fraction of the constituent
 mass as the physical $N$--$\Delta$ gap ($\sim0.7$), a non-trivial check that the collective dynamics
 is right. (The Dirac sea adds a positive correction to $\Lambda_I$ that lowers the splitting; the
-valence value is the leading estimate.) These are \emph{spin} excitations. Genuine higher
-\emph{generations}---heavier $J{=}\tfrac12$ copies, the analogue of the Roper resonance---are
-radial/breathing excitations of the profile, a separate mode left to future work.
+valence value is the leading estimate.) These are \emph{spin} excitations---they change $J$. They are
+\emph{not} the generations, which keep $J$ and climb the \emph{radial} ladder of the well
+(Section~\ref{sec:generations}); the two must not be confused, for the reason the next section makes
+quantitative.
+
+\section{The collective quantum numbers: spin, isospin, charge}
+\label{sec:collective-qn}
+The cranked band carries more than energies---its quantum numbers are the torsiton's. The hedgehog is
+not an eigenstate of spin or isospin: it locks the two together (the grand spin $K=\mathbf J+\mathbf
+T$) and points in a single direction of that frame. Quantising the (iso)rotational zero modes projects
+it back onto good $J$ and $I$, and for an odd number of colours the projection is forced to be
+\emph{fermionic}---half-integer $J$. This is the Finkelstein--Rubinstein result that a soliton of a
+purely \emph{bosonic} chiral field is a fermion: ``matter is fermionic'' is then not an input but a
+consequence of the winding. The allowed tower is $J=I=\tfrac12,\tfrac32,\dots$, and the ground state
+\begin{equation}
+  J=\tfrac12,\qquad I=\tfrac12
+\end{equation}
+is a spin-$\tfrac12$ fermion---consistent with the Dirac-$s$-wave reading of
+Chapter~\ref{chap:solitons}, but here \emph{derived} from the soliton---that is simultaneously a
+\emph{weak-isospin doublet}. The electric charges of its two members follow from
+Gell-Mann--Nishijima,
+\begin{equation}
+  Q = I_3 + \tfrac12 Y,\qquad I_3 = \pm\tfrac12,
+  \label{eq:gmn}
+\end{equation}
+with $Y$ the soliton's conserved winding (hyper)charge---the same $B\!-\!L$-type number the bounce
+preserves (Chapter~\ref{chap:genesis}). The doublet members split by exactly one unit, $\Delta Q=1$:
+the $(\nu,e)$ or $(u,d)$ structure, recovered rather than assumed. (The \emph{value} of $Y$---which
+doublet: lepton $Y=-1$ or quark $Y=\tfrac13$---is the lepton/quark distinction tied to the colour
+label, carried in Chapter~\ref{chap:forces}, not here.)
+
+These collective numbers are \emph{orthogonal} to the torsiton's other two labels, and it is worth
+tabulating which mechanism fixes which, because they are independent axes:
+
+\begin{center}\small
+\begin{tabular}{lll}
+\hline
+quantum number & origin & where \\
+\hline
+spin $J=\tfrac12$ & collective (iso)rotation; fermionic by Finkelstein--Rubinstein & here / Ch.~\ref{chap:solitons} \\
+weak isospin $I=\tfrac12$ (doublet) & collective isorotation, $J{=}I$ locked & here \\
+electric charge $Q=I_3+\tfrac12Y$ & Gell-Mann--Nishijima, $Y=$ winding & here \\
+colour (triplet) & the three-valued Pauli label & Ch.~\ref{chap:forces} \\
+generation $n=1,2,3$ & radial rung of the well; mass $=$ overlap & Ch.~\ref{chap:solitons} \\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent The decisive point is \emph{why spin excitations and generations are different ladders}. A
+spin excitation ($J:\tfrac12\!\to\!\tfrac32$) costs an \emph{additive} rigid-rotor energy
+$\sim1/\Lambda_I\sim0.4\,M$---the $\Delta$-torsiton. A generation ($n:1\!\to\!2$) keeps every charge
+and climbs the radial ladder, whose level spacing is also only $O(M)$; but its observable mass is
+\emph{not} that level energy. By the configurational-mass result (Eq.~\ref{eq:configmass}) the mass is
+the \emph{overlap} of the rung's wavefunction with the sharp condensate substrate, and overlaps are
+exponentially sensitive to the rung, $O_n\sim e^{-cn}$, so $m_n\sim|O_n|^2\sim e^{-2cn}$: the
+arithmetic radial ladder becomes a \emph{geometric} mass ladder spanning $10^{3}$--$10^{4}$
+(Section~\ref{sec:generations}). Spin costs an additive $\sim M$; a generation costs a multiplicative
+$\sim10^{2}$. The collective band of this appendix fixes the \emph{spin and isospin} of the torsiton;
+the \emph{generation hierarchy} is the overlap calculation of Chapter~\ref{chap:solitons}, and the
+CKM/PMNS mixings are the overlaps between rungs (Chapter~\ref{chap:forces}). One torsiton, three
+independent ladders.
 
 \bigskip
 \noindent\emph{Reproducibility.} The Fierz coefficients are in \texttt{cartasis\_sims.fierz}; the
