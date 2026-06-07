@@ -241,3 +241,29 @@ def test_baryon_spectrum_recovers_synthetic_masses():
     assert abs(res["nucleon"]["mass"] - m_N) < 0.03
     assert res["pion"]["mass_err"] < 0.02 and res["nucleon"]["mass_err"] < 0.05
     assert res["nucleon"]["mass"] > res["pion"]["mass"]      # the baryon is heavier (bound, m_N>0)
+
+
+def test_gevp_recovers_excited_states():
+    # synthetic N-operator correlator matrix C_ij(t) = sum_n Z[n,i] Z[n,j] exp(-E_n t) with KNOWN
+    # energies; the GEVP should recover the ground AND excited masses (the excited-torsiton test)
+    import numpy as np
+    from cartasis_sims import lattice as lat
+    rng = np.random.default_rng(1)
+    N, T = 3, 24
+    E = np.array([0.45, 0.80, 1.20])                 # ground + two excited (the three rungs)
+    Z = np.array([[1.0, 0.7, 0.4],                   # Z[state, operator]
+                  [0.5, 1.1, 0.9],
+                  [0.3, 0.6, 1.3]])
+    rows = []
+    for cfg in range(1, 13):
+        for t in range(T):
+            for i in range(N):
+                for j in range(N):
+                    c = sum(Z[n, i] * Z[n, j] * np.exp(-E[n] * t) for n in range(N))
+                    c *= (1 + 0.003 * rng.standard_normal())
+                    rows.append([cfg, i, j, t, c])
+    res = lat.gevp_spectrum(np.array(rows), N=N, T=T, t0=2, tmin=3, tmax=8)
+    assert abs(res["masses"][0] - 0.45) < 0.03        # ground
+    assert abs(res["masses"][1] - 0.80) < 0.06        # first excited (2nd generation)
+    assert abs(res["masses"][2] - 1.20) < 0.15        # second excited (3rd generation)
+    assert res["masses"][0] < res["masses"][1] < res["masses"][2]
