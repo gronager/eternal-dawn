@@ -238,62 +238,63 @@ two halves of one crossing, and configurational mass is why the crossing is allo
 \label{sec:generations}
 
 The radial eigenvalue problem \eqref{eq:schrodinger} does not have one bound state but a
-\emph{tower} of them, $n=1,2,3,\dots$, just as the hydrogen atom has $1s,2s,3s$. We identify the
-three generations of each fermion with the lowest three rungs of this tower---same charge,
+\emph{tower} of them, $n=1,2,3,\dots$, just as the hydrogen atom has $1s,2s,3s$. We \emph{conjecture}
+that the three generations of each fermion are the lowest three rungs of this tower---same charge,
 colour, and isospin, different radial excitation. The level energies $E_n$ are roughly evenly
-spaced (arithmetic). But the observable mass is not the level energy; by \eqref{eq:configmass}
-it is the overlap of the level's wavefunction with the localized, mass-giving substrate, and
-overlaps are exponentially sensitive to the rung. A higher, more spread-out level overlaps the
-sharp substrate exponentially less,
+spaced (arithmetic). The appeal is that the observable mass is not the level energy; by
+\eqref{eq:configmass} it is the overlap of the level's wavefunction with the localized, mass-giving
+substrate, and \emph{if} that substrate is sharp, the overlaps are exponentially sensitive to the
+rung. A higher, more spread-out level would overlap a sharp substrate exponentially less,
 \begin{equation}
   O_n \sim e^{-c\,n}, \qquad m_n \sim |O_n|^2 \sim e^{-2cn},
 \end{equation}
-so an \emph{arithmetic} ladder in $n$ becomes a \emph{geometric} ladder in mass. The
-``unnaturally tiny'' electron Yukawa ($\sim3\times10^{-6}$) is then not a fine-tuned small number
+so an \emph{arithmetic} ladder in $n$ would become a \emph{geometric} ladder in mass, and the
+``unnaturally tiny'' electron Yukawa ($\sim3\times10^{-6}$) would be not a fine-tuned small number
 but the exponential of an order-one overlap---a large hierarchy from $O(1)$ inputs, exactly the
-structure the Standard Model lacks \citep{koide1983}. And the tower is finite: the excitation
-budget that binds the soliton runs out, capping it (Figure~\ref{fig:gencap}), which is why there
-are three families and not thirty.
+structure the Standard Model lacks \citep{koide1983}. That is the mechanism's promise. Whether the
+soliton delivers it is another matter, and the honest computation is sobering.
 
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=\textwidth]{generations_cap}
-  \caption{Generations as a capped ladder. The internal excitation budget is finite, so the
-  geometric mass tower terminates---a structural reason for a small, fixed number of
-  generations.}
-  \label{fig:gencap}
-\end{figure}
+Carry the mechanism to the firmer ground of the \emph{full} self-consistent well, with the
+four-fermion couplings derived from the Hehl--Datta scale (Appendix~\ref{app:couplings}) rather than
+a hand-set toy depth, and two facts emerge that the earlier toy-well treatment hid. First, the
+\emph{configurational mass itself}---Eq.~\eqref{eq:configmass}, the overlap of each rung with the
+\emph{local} mass $M(r)$---gives almost no hierarchy: the three rungs land within a factor
+$\sim\!1.5$ of one another, because $M(r)$ is broad and every rung samples it alike. A large
+geometric spread appears only against a \emph{sharper} substrate than $M(r)$ itself---and that sharp
+substrate is an extra assumption, not the configurational mass. Second, and more basic: binding
+three \emph{compact} radial rungs at all requires a chiral-restored core several Compton wavelengths
+across, whereas the minimal self-consistent soliton---at the derived couplings---digs a core only
+$\sim\!1$ wavelength wide and binds essentially \emph{one} rung. Forcing three rungs needs an
+unphysically large core, and in that limit the configurational-mass spread collapses back to
+$\sim\!1$ (Figure~\ref{fig:substrate}).
 
-How steep the ladder is depends on what the level overlaps. Overlapped with the soliton's own
-\emph{broad} condensate the spread is only $\sim\!1$--$3$---no hierarchy at all; overlapped with the
-sharp \emph{substrate}---the chiral-restored core, its width fixed by the well's own healing length
-$\xi=w/\sqrt{\text{depth}}$, not fitted---it becomes \emph{geometric} and steepens with the well
-depth (Figure~\ref{fig:substrate}). This is now computed in the \emph{full} self-consistent well,
-with the four-fermion couplings derived from the Hehl--Datta scale (Appendix~\ref{app:couplings})
-rather than a hand-set toy depth: the lowest three rungs come out arithmetic, the broad-overlap
-masses span only $\sim\!1$, and the sharp-substrate masses are geometric with a spread of
-$\sim\!50$ and the \emph{right shape}---the lightest generation anomalously light, the gap widening
-toward it just as in the observed leptons ($m_\mu/m_e\!\simeq\!200$, then $m_\tau/m_\mu\!\simeq\!17$).
-That is roughly two orders of magnitude of the hierarchy from $O(1)$ inputs with no fit to any
-fermion mass, and the right \emph{structure}: arithmetic levels, geometric masses, the electron's
-lightness as an overlap suppression. What the mean field does \emph{not} reach is the full size: the
-observed lepton spread is $\sim\!3500$, and the climb from the self-consistent $\sim\!50$ to there
-needs a steeper well---a deeper chiral substrate than the minimal mean field digs---which, together
-with the exact ratios, is the non-perturbative refinement owed to the lattice
-(Appendix~\ref{app:lattice}). The \emph{mechanism}---why generations span orders of magnitude---is
-the soliton's, derived; the precise \emph{magnitude} is the lattice's.
+So the generation mechanism, as a \emph{derivation}, is not realised by the minimal soliton. The
+qualitative idea stands---an arithmetic level ladder \emph{would} become a geometric mass ladder, and
+a tiny electron Yukawa \emph{would} be the exponential of an order-one overlap---and where a tower of
+rungs is imposed it does carry the right \emph{shape} (the lightest generation anomalously light, the
+gap widening toward it as in the leptons). But its delivery hinges on two non-perturbative facts the
+mean field does not settle: whether the true torsiton core is deep and wide enough to bind a compact
+tower of three, and whether the mass-giving substrate is sharp enough to steepen the overlaps. Both
+are the same strong-dynamics question that sets the well depth (Section~\ref{sec:ir-potential})---and
+that depth is the strong torsion coupling, not gravity, a lattice number (Appendix~\ref{app:lattice}).
+We therefore keep generations as a \emph{conjecture} with an appealing mechanism and the right shape,
+not as a result: the soliton makes the hierarchy \emph{possible}, but whether it is realised, and at
+what size, the lattice must decide.
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\textwidth]{generations_overlap}
-  \caption{The substrate-overlap pass, in the \emph{self-consistent} well (derived couplings, no
-  fitted shape). \emph{Left:} the three radial rungs have nearly even (arithmetic) level energies,
-  but their configurational masses are flat under the broad condensate (spread $\sim\!1$) and
-  geometric under the sharp core (spread $\sim\!50$), tracking the observed lepton shape (the
-  lightest generation anomalously light) though falling short of its full size ($3477$).
-  \emph{Right:} the sharp-overlap spread grows with the well depth; the self-consistent wells reach
-  $\sim\!50$, with the remaining climb to the observed value the deeper chiral dynamics owed to the
-  lattice. Reproducible as \texttt{figures/scripts/appC\_generations.py}.}
+  \caption{The generation overlap in the \emph{self-consistent} well (derived couplings, no fitted
+  shape), and why it is a conjecture not a result. \emph{Left:} the three radial rungs have nearly
+  even (arithmetic) level energies, but the physical configurational mass, Eq.~\eqref{eq:configmass},
+  is \emph{flat}---spread $\sim\!1$, no hierarchy---because the local mass $M(r)$ is broad. A
+  geometric spread appears only against an \emph{imposed} sharp core (the dashed curve), which is an
+  extra assumption beyond the configurational mass; where imposed, it does track the observed lepton
+  \emph{shape} (lightest generation anomalously light) but not its size ($3477$). \emph{Right:} the
+  imposed-substrate spread grows with the well depth, but the minimal self-consistent soliton binds
+  only $\sim\!1$ compact rung; a three-rung tower needs a far deeper/wider core than the mean field
+  digs---the strong-dynamics question (the well depth) owed to the lattice. Reproducible as
+  \texttt{figures/scripts/appC\_generations.py}.}
   \label{fig:substrate}
 \end{figure}
 

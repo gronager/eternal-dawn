@@ -43,9 +43,10 @@ def main():
 
     idx = np.arange(3)
     axL.semilogy(idx, lv / lv.min(), "s--", color="0.6", label="level energy $E_n$ (arithmetic)")
-    axL.semilogy(idx, broad / broad.min(), "o-", color="C0", label=r"broad overlap (spread $\sim1$)")
-    axL.semilogy(idx, sharp / sharp.min(), "o-", color="C3",
-                 label=rf"sharp-core overlap (spread ${h['sharp_spread']:.0f}$)")
+    axL.semilogy(idx, broad / broad.min(), "o-", color="C0",
+                 label=r"configurational mass (physical): flat, spread $\sim1$")
+    axL.semilogy(idx, sharp / sharp.min(), "o--", color="C3",
+                 label=rf"imposed sharp core (extra assumption): ${h['sharp_spread']:.0f}$")
     axL.semilogy(idx, LEPTONS / LEPTONS.min(), "*-", color="C2", ms=11,
                  label="observed $e,\\mu,\\tau$ (3477)")
     axL.set_xticks(idx); axL.set_xticklabels(["gen I", "gen II", "gen III"])

@@ -63,20 +63,29 @@ def overlap_masses(levels, source_size=0.25, kind="linear", depth=6.0, width=1.0
 
 def self_consistent_hierarchy(g=14.0, m_sigma=0.5, ngen=3, substrate=0.4, R=14.0, N=1200,
                               iters=900, mix=0.12):
-    r"""The generation hierarchy from the REAL self-consistent torsiton well (not the toy).
+    r"""The generation hierarchy from the REAL self-consistent torsiton well -- and an HONEST verdict.
 
     Solve the self-consistent four-fermion bag (self_consistent.solve_soliton), read off the lowest
-    `ngen` radial rungs (the generations: same charge/colour/isospin, different radial excitation),
-    and form the configurational mass of each as a DENSITY overlap m_n = \int u_n^2 chi(r) dr -- the
-    structure of Eq.~(configmass). Two substrates are returned: the BROAD condensate sigma(r), and a
-    SHARP core of width `substrate` (the chiral-restored core, the localized mass-giving region of
-    Section 11.5). The decisive result: the level energies E_n are ~arithmetic, the broad-overlap
-    masses span only ~3, but the sharp-overlap masses span ~10^2-10^3 -- the arithmetic level ladder
-    becomes the geometric MASS ladder, the observed size of the generation hierarchy, with NO fit to
-    any fermion mass. The sharp spread SATURATES as the substrate narrows, so it is a robust limit.
+    `ngen` radial rungs (the conjectured generations), and form each rung's configurational mass as a
+    DENSITY overlap m_n = \int u_n^2 chi(r) dr -- the structure of Eq.~(configmass). Two substrates:
+    the BROAD condensate sigma(r) (and equivalently the local mass M(r)), and a SHARP core of width
+    `substrate`.
 
-    Returns a dict: levels E_n, the broad and sharp overlap masses (normalised, lightest=1), their
-    spreads, and the number of bound rungs found."""
+    THE SOBERING FINDING (the firmer ground walks the toy-well claim back). The PHYSICAL
+    configurational mass -- the overlap with the local mass M(r), Eq.~(configmass) -- gives almost NO
+    hierarchy: the rungs land within a factor ~1.5 (broad_spread), because M(r) is broad. A large
+    geometric spread (sharp_spread ~ 10-50) appears ONLY against an IMPOSED sharp substrate, which is
+    an extra assumption, not the configurational mass. Worse, binding three COMPACT rungs needs a
+    chiral-restored core several Compton wavelengths wide; the minimal self-consistent soliton (at the
+    derived couplings) binds essentially ONE compact rung, and forcing three needs an unphysically
+    large core (this routine uses a long-range sigma to do so) in which the configmass spread is ~1.
+    So the generation mechanism is a CONJECTURE with the right shape, not a derived result: the
+    soliton makes the hierarchy possible, but whether it is realised, and at what size, hinges on the
+    non-perturbative well depth (the strong torsion coupling) -- the lattice. See Chapter 11, Sec.
+    Generations.
+
+    Returns a dict: levels E_n, the broad (configmass) and sharp (imposed) overlap masses (normalised,
+    lightest=1), their spreads, and the number of bound rungs found."""
     from . import self_consistent as sc
     from .self_consistent import _solve_levels
 
