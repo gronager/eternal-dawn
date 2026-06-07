@@ -61,3 +61,19 @@ def test_soliton_mass_near_constituent_sum():
     Msol, ev, es = kr.soliton_mass(prof, Lam=3.0, Kmax=12, Nb=30)
     assert es > 0                                         # sea energy is positive
     assert 3.0 <= Msol < 5.0                              # near (and above) the constituent sum 3 M
+
+
+def test_self_consistent_vacuum_is_a_fixed_point():
+    # theta=0 must be stationary: the pseudoscalar source vanishes in the vacuum
+    rq, w_r2 = kr._grid(10.0, 1200)
+    P = sum((2 * K + 1) * kr._sector_densities(K, P_, np.zeros_like(rq), 1.0, 2.5, 22, 10.0, rq, w_r2)[1]
+            for K in range(0, 6) for P_ in (1, -1))
+    assert np.max(np.abs(P)) < 0.05                      # vacuum sources no pion
+
+
+def test_self_consistent_critical_coupling():
+    # the full self-consistent solution: strong coupling binds a soliton, weak coupling collapses
+    _, th_strong, ev_s = kr.self_consistent_profile(Lam=2.0, Kmax=8, Nb=24, Nq=1200, iters=20)
+    _, th_weak, ev_w = kr.self_consistent_profile(Lam=3.0, Kmax=8, Nb=24, Nq=1200, iters=22)
+    assert th_strong[0] > 1.5 and ev_s is not None       # stable torsiton soliton (theta(0) ~ pi)
+    assert th_weak[0] < 0.5                               # collapses to the trivial vacuum

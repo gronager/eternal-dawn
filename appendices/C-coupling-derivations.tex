@@ -157,10 +157,40 @@ positive and grows with the soliton size while the valence level dives only to $
 minimum---it relaxes toward the point limit where $E_\mathrm{sea}\to0$ and the $N_c$ valence quarks sit
 at the gap edge, i.e.\ the constituent sum. Across cutoffs $\Lambda=2.5\text{--}4\,M$ the infimum is
 robustly $N_cM$, approached from above (e.g.\ $M_\mathrm{sol}\simeq3.6\,M$ at the most compact size for
-$\Lambda=2.5\,M$). So, computed and converged, $M_\mathrm{torsiton}\simeq N_cM\simeq3\,M$. Whether the
-\emph{full} self-consistent profile (beyond the one-parameter family minimised here) dips a few per
-cent below $3M$ is $\Lambda$-sensitive and is lattice target~L4; the excited in-gap orbitals
-(\texttt{ingap\_levels} at higher $K$) are the candidate higher torsiton generations.
+$\Lambda=2.5\,M$). So, computed and converged, $M_\mathrm{torsiton}\simeq N_cM\simeq3\,M$.
+
+\paragraph{The self-consistent soliton, and a critical coupling.} The minimisation above fixes
+$\theta(r)$ to a one-parameter family. Removing even that assumption---solving the model
+\emph{fully} self-consistently, the chiral angle determined by the quark source itself,
+$\theta(r)=\operatorname{atan2}(M_p,M_s)$ with $(M_s,M_p)=-2G_S(S,P)$ the regularised scalar and
+pseudoscalar densities, iterated to a fixed point (\texttt{kahana\_ripka.self\_consistent\_profile})---turns
+the question of binding into a sharp threshold. For $\Lambda\gtrsim2.2\,M$ (the weak, derived regime)
+the iteration \emph{collapses} to the trivial vacuum, $\theta\to0$: there is no soliton, and the B=1
+sector is the unbound constituent sum $N_cM$. For $\Lambda\lesssim2.2\,M$ (strong coupling) a
+\emph{stable} torsiton soliton forms: the profile winds $\theta(0)=\pi\to0$ over $\sim2/M$, the
+valence binds at $\varepsilon_\mathrm{val}\simeq0.7\,M$, and the mass settles at
+$M_\mathrm{torsiton}=N_c\varepsilon_\mathrm{val}+E_\mathrm{sea}\simeq3.6\,M$, just above the
+constituent sum. The torsiton therefore exists as a chiral soliton precisely when propagating torsion
+(the $\Lambda$ of lattice target~L5) is strongly enough coupled; whether the physical $\Lambda$ lies
+above or below the critical value is for the lattice (L4/L5) to decide. At this coupling only the
+valence orbital binds---no excited in-gap level---so higher torsiton generations are not radial
+orbitals of a single soliton here, but would be collective or grand-spin-excited solitons, a
+separate calculation.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{torsiton_profile}
+  \caption{The torsiton as a self-consistent chiral soliton. \emph{Left:} the chiral angle
+    $\theta(r)$ of the B=1 torsiton, solved fully self-consistently (the profile determined by the
+    quark source, not assumed) in the Kahana--Ripka chiral-quark-soliton model at strong coupling
+    $\Lambda=2\,M$---a clean hedgehog winding $\theta(0)=\pi\to0$ over $\sim2/M$, with mass
+    $M_\mathrm{torsiton}=N_c\varepsilon_\mathrm{val}+E_\mathrm{sea}\simeq3.6\,M\simeq N_cM$.
+    \emph{Right:} the converged central angle $\theta(0)$ versus the cutoff $\Lambda$ (the L5 scale),
+    showing the critical coupling $\Lambda_c\simeq2.2\,M$: below it a stable torsiton forms
+    ($\theta(0)=\pi$); above it the soliton dissolves to the vacuum and the B=1 sector is the unbound
+    constituent sum. Reproduced by \texttt{figures/scripts/appC\_torsiton\_profile.py}.}
+  \label{fig:torsiton-profile}
+\end{figure}
 
 \bigskip
 \noindent\emph{Reproducibility.} The Fierz coefficients are in \texttt{cartasis\_sims.fierz}; the
