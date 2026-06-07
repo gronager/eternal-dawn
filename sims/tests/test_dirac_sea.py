@@ -41,3 +41,11 @@ def test_soliton_sea_reinforces_bag_and_is_localized():
     sub = dsea.soliton_sea_condensate(M, 4.0, r, kmax=30)
     assert sub[np.argmin(np.abs(r - 0.7))] > 0.1      # positive (reinforcing) in the bag
     assert abs(sub[np.argmin(np.abs(r - 4.0))]) < 0.05  # localised: ~0 outside
+
+
+def test_sea_soliton_gap_and_marginal_binding():
+    # the gap equation fixes G_S = -M_vac/(2 <qbar q>_vac); and at the derived couplings the
+    # leading-order sea-sourced bag is NOT self-sustaining -- it relaxes to the trivial vacuum
+    out = dsea.solve_sea_soliton(M_vac=1.0, Lambda=4.0, iters=40, N=120, kmax=14)
+    assert out["G_S"] > 0
+    assert out["core"] > 0.5            # bag did not self-form (core ~ M_vac): hands off to lattice
