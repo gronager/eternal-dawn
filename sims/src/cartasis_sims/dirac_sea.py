@@ -81,3 +81,35 @@ def continuum_condensate(M, Lambda, Nc=3):
     pmax = np.sqrt(max(Lambda**2 - M**2, 0.0))
     integral = quad(lambda p: p**2 / np.sqrt(p**2 + M**2), 0.0, pmax)[0]
     return -Nc * M / np.pi**2 * integral
+
+
+def _local_sea(M_arr, Lambda, r, D, h, kmax, Nc):
+    """Local sea condensate density (N_c/4pi) sum_kappa 2|kappa| sum_n (G_n^2-F_n^2)/r^2 over the
+    filled (E<0, |E|<Lambda) modes, de-doubled (SLAC), summed over partial waves."""
+    N = len(r)
+    rho = np.zeros(N)
+    for k in list(range(-kmax, 0)) + list(range(1, kmax + 1)):
+        kr = np.diag(k / r)
+        H = np.block([[np.diag(M_arr), -D + kr], [D + kr, np.diag(-M_arr)]])
+        H = 0.5 * (H + H.T)
+        w, v = np.linalg.eigh(H)
+        for j in np.where((w < 0) & (np.abs(w) < Lambda))[0]:
+            vec = v[:, j] / np.sqrt(h)
+            rho += 2 * abs(k) * (vec[:N] ** 2 - vec[N:] ** 2)
+    return (Nc / (4.0 * np.pi)) * rho / r**2
+
+
+def soliton_sea_condensate(M_profile, Lambda, r, kmax=30, Nc=3):
+    """The VACUUM-SUBTRACTED sea condensate density <qbar q>(r) in a soliton well M_profile(r),
+    minus the uniform vacuum M_vac = M_profile[-1] -- the finite, physical sea-polarisation piece
+    (the divergence and the box artefacts cancel in the subtraction). The vacuum condensate is
+    negative, so a POSITIVE subtracted value in the core means the sea has RESTORED chiral symmetry
+    there, alongside the valence -- it reinforces the bag (the chiral-quark-soliton mechanism that
+    adds binding). Converged in kmax (~30 for Lambda~4M, bag~1/M); localised to the bag."""
+    M_profile = np.asarray(M_profile, dtype=float)
+    N = len(r)
+    h = r[1] - r[0]
+    D = slac_derivative(N, h)
+    sol = _local_sea(M_profile, Lambda, r, D, h, kmax, Nc)
+    vac = _local_sea(M_profile[-1] * np.ones(N), Lambda, r, D, h, kmax, Nc)
+    return sol - vac
