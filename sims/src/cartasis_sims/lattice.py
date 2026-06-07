@@ -423,6 +423,81 @@ def baryon_spectrum(raw, T, tmin=None, tmax=None):
     return out
 
 
+def _gevp_lambdas(Cmat, t0):
+    """Generalized eigenvalues lambda_n(t) of C(t) v = lambda C(t0) v, sorted DESCENDING (largest =
+    ground state). Cmat is [Nt, N, N]; both matrices symmetrised. NaN where the solve fails."""
+    from scipy.linalg import eigh
+    Nt, N, _ = Cmat.shape
+    C0 = 0.5 * (Cmat[t0] + Cmat[t0].T)
+    lam = np.full((Nt, N), np.nan)
+    for t in range(Nt):
+        Ct = 0.5 * (Cmat[t] + Cmat[t].T)
+        try:
+            w = eigh(Ct, C0, eigvals_only=True)
+            lam[t] = np.sort(w)[::-1]
+        except Exception:
+            pass
+    return lam
+
+
+def gevp_spectrum(raw, N, T, t0=2, tmin=None, tmax=None):
+    """The excited torsiton spectrum from the variational (GEVP) correlator matrix.
+
+    `raw` is the (n_rows, 5) array of rows [cfg, i, j, t, C_ij(t)] (measure_baryon_gevp output, tagged
+    per config), i,j the N smearing operators. Solves the generalized eigenvalue problem
+    C(t) v = lambda(t) C(t0) v on the config-averaged matrix: its N eigenvalues decay as
+    lambda_n(t) ~ e^{-E_n (t-t0)}, so an N-operator basis resolves N states (ground .. highest).
+    Returns the N masses (ascending) with jackknife-over-configs errors.
+
+    The test of the three-generation thesis: how many clean nucleon levels appear, and whether a
+    fourth fails to materialise. A state whose mass plateau is clean and stable is a real rung; one
+    that is noise (huge error, no plateau) is the basis running out -- the tower's end."""
+    raw = np.asarray(raw, dtype=float)
+    cfg = raw[:, 0].astype(int)
+    ii = raw[:, 1].astype(int)
+    jj = raw[:, 2].astype(int)
+    tt = raw[:, 3].astype(int)
+    C = raw[:, 4]
+    configs = np.unique(cfg)
+    ncfg = len(configs)
+    Nt = int(tt.max()) + 1
+
+    def matrix(keep):
+        M = np.zeros((Nt, N, N))
+        cnt = np.zeros((Nt, N, N))
+        np.add.at(M, (tt[keep], ii[keep], jj[keep]), C[keep])
+        np.add.at(cnt, (tt[keep], ii[keep], jj[keep]), 1.0)
+        return M / np.maximum(cnt, 1.0)
+
+    lo = tmin if tmin is not None else max(t0 + 1, T // 6)
+    hi = tmax if tmax is not None else max(lo + 1, T // 3)
+
+    def fit(lam):
+        with np.errstate(divide="ignore", invalid="ignore"):
+            meff = np.log(lam[:-1] / lam[1:])                  # [Nt-1, N], E_n per state
+        m = np.full(N, np.nan)
+        for n in range(N):
+            idx = np.arange(lo, min(hi, Nt - 1))
+            idx = idx[np.isfinite(meff[idx, n])]
+            if len(idx) >= 2:
+                m[n] = float(np.mean(meff[idx, n]))
+        return m, meff
+
+    masses, meff = fit(_gevp_lambdas(matrix(np.ones(len(C), bool)), t0))
+    masses = np.sort(masses)                                   # ascending: ground first
+    jk = np.full((ncfg, N), np.nan)
+    for a, cc in enumerate(configs):
+        mj, _ = fit(_gevp_lambdas(matrix(cfg != cc), t0))
+        jk[a] = np.sort(mj)
+    err = np.full(N, np.nan)
+    for n in range(N):
+        v = jk[:, n][np.isfinite(jk[:, n])]
+        if len(v) > 1:
+            err[n] = float(np.sqrt((len(v) - 1) / len(v) * np.sum((v - v.mean()) ** 2)))
+    return {"masses": masses, "mass_err": err, "meff": meff, "t0": t0,
+            "tmin": int(lo), "tmax": int(hi), "n_cfg": ncfg}
+
+
 # The lattice theory for the torsiton (L4). NOT the sextet -- that was a walking proxy for the
 # electroweak S parameter (L3), a different question, and the wrong turn for the soliton (CLAUDE.md:
 # "the sextet is DEAD"). The torsiton is the SU(3)-fundamental baryon (colour from the Pauli label),

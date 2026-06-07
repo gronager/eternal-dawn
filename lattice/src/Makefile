@@ -11,7 +11,7 @@ CXXFLAGS := $(shell $(GRID_CONFIG) --cxxflags 2>/dev/null)
 LDFLAGS  := $(shell $(GRID_CONFIG) --ldflags 2>/dev/null)
 LIBS     := $(shell $(GRID_CONFIG) --libs 2>/dev/null)
 
-PROGS := measure_potential generate_gauge measure_baryon generate_dynamical measure_modenumber generate_sextet
+PROGS := measure_potential generate_gauge measure_baryon measure_baryon_gevp generate_dynamical measure_modenumber generate_sextet
 
 all: check $(PROGS)
 

@@ -61,13 +61,32 @@ baryon's ≈ 2.1. The pilot proves the *object and its qualitative physics*, not
 quenched scan walls near m_crit where exceptional configurations (near-zero Wilson modes, unsuppressed
 without a sea) make the plateau wild.
 
-## L4 production — dynamical (in progress)
+## L4 production — dynamical (first ensemble)
 
-The physical mass, the true (fluctuating) condensate, and any excited rungs (candidate further
-generations) need the **fermion determinant**. `generate_dynamical` (SU(3) N_f=2 fundamental Wilson
-HMC) + `run/07_dynamical_torsiton.sh` set this up; the same `measure_baryon` spectroscopy runs on the
-dynamical configs. Leadership-class cost (the CG sea force is dear per trajectory) — start small,
-watch acceptance and dH, scale up.
+The first **dynamical** torsiton: the fermion determinant is in the path integral, so the vacuum is
+the real, fluctuating, chiral-breaking condensate — sea-quark loops included. SU(3) N_f=2 fundamental
+Wilson HMC (`generate_dynamical`, `run/07`), 12³×24, β=5.6, sea mass = −0.5, 48 thermalised configs.
+HMC healthy (sea force ≠ 0, CG ~50 iters, dH ~ O(0.4) against H ~ 1.8M, acceptance high). Valence =
+sea (the unitary point). The nucleon plateaus *later* than the pion, so each is fit in its own window
+(pion t∈[4,10], nucleon t∈[8,11]):
+
+| | m a | m/√σ |
+|---|---|---|
+| pion | 1.299(4) | 3.36 |
+| nucleon (torsiton) | 2.109(14) | 5.45 |
+
+with **m_N/m_π = 1.623**. Scale on *this* ensemble (`run/01` on the dynamical configs):
+√σ a = 0.387(18), r₀/a = 3.166 — the string tension **drops vs quenched** (√σ a: 0.56 → 0.39, r₀/a:
+2.28 → 3.17), i.e. the sea quarks soften confinement and make the lattice finer at fixed β: a real,
+expected back-reaction, the vacuum the quenched pilot could not have.
+
+**Reading it honestly.** This is a *single, heavy* sea mass: m_π/√σ ≈ 3.4 (the physical pion is ≈ 0.3),
+so m_N/√σ ≈ 5.5 is the heavy-baryon value, not the physical one — a QCD-like nucleon at m_π ~ 1.5 GeV
+sits at the same ~5.5. The physical torsiton mass needs the **chiral extrapolation** (several sea
+masses, each a fresh ensemble) plus finer lattices and bigger boxes — the production campaign. What
+this first ensemble establishes: the torsiton **binds in the real dynamical vacuum**, the sea visibly
+dresses the gauge dynamics (the scale shift), and the pion is a genuine sea-quark Goldstone. The
+method works unquenched, end to end.
 
 ## L1 — confinement (status)
 
