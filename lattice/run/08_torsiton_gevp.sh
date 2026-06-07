@@ -19,10 +19,10 @@ require_exe "$MEAS"
 
 L="${L:-12}" ; T="${T:-24}" ; GRIDSPEC="$L.$L.$L.$T"
 MASS="${MASS:--0.5}"
-WIDTHS="${WIDTHS:-0,3,5}"      # Gaussian smearing radii (lattice units); 0 = point. N of these = N operators.
-SMEAR_N="${SMEAR_N:-30}"       # Wuppertal iterations
+ITERS="${ITERS:-0,20,50}"      # Wuppertal smearing-step counts; one operator each; 0 = point. radius ~ sqrt(2*iters*alpha)
+SALPHA="${SALPHA:-0.25}"       # smearing weight (normalised form -- stable for any alpha)
 THERM="${THERM:-40}" ; STRIDE="${STRIDE:-10}" ; NPAR="${NPAR:-4}" ; CGTOL="${CGTOL:-1e-8}"
-NOP=$(awk -F, '{print NF}' <<<"$WIDTHS")
+NOP=$(awk -F, '{print NF}' <<<"$ITERS")
 
 shopt -s nullglob
 sel=()
@@ -34,12 +34,12 @@ for cfg in "$OUT"/ckpoint_lat.* "$OUT"/stream*/ckpoint_lat.*; do
   sel+=("$cfg")
 done
 [ "${#sel[@]}" -gt 0 ] || { echo "no configs in $OUT (n>=$THERM, stride $STRIDE)"; exit 1; }
-echo "GEVP on ${#sel[@]} configs, $NOP operators (widths $WIDTHS), mass=$MASS, $NPAR in parallel"
+echo "GEVP on ${#sel[@]} configs, $NOP operators (smear-iters $ITERS), mass=$MASS, $NPAR in parallel"
 
 start_mps
 for cfg in "${sel[@]}"; do
-  printf '%q --grid %q --config %q --mass %q --smear-widths %q --smear-n %d --cg-tol %q --accelerator-threads 8 | grep -E "^[0-9]" > %q\n' \
-    "$MEAS" "$GRIDSPEC" "$cfg" "$MASS" "$WIDTHS" "$SMEAR_N" "$CGTOL" "$cfg.gevp"
+  printf '%q --grid %q --config %q --mass %q --smear-iters %q --smear-alpha %q --cg-tol %q --accelerator-threads 8 | grep -E "^[0-9]" > %q\n' \
+    "$MEAS" "$GRIDSPEC" "$cfg" "$MASS" "$ITERS" "$SALPHA" "$CGTOL" "$cfg.gevp"
 done | run_pool "$NPAR"
 stop_mps
 
