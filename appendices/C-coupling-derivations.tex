@@ -133,6 +133,23 @@ mean-field calculation here fixes the \emph{scale} and hands off the last few pe
 minimisation and the Derrick collapse are reproduced in \texttt{cartasis\_sims.hedgehog}
 (\texttt{minimize\_b1\_soliton}).
 
+\paragraph{The full sea sum.} Replacing the two-derivative estimate by the full regularised Dirac-sea
+energy means diagonalising the hedgehog Hamiltonian in every grand-spin sector $K=\mathbf J+\mathbf T$
+and summing the vacuum-subtracted negative-energy levels with the proper-time cutoff. That apparatus
+is built in \texttt{cartasis\_sims.chiral\_quark\_soliton}: the grand-spin angular couplings (the
+matrix elements of $\boldsymbol\tau\!\cdot\!\hat{\mathbf r}$, verified by $(\boldsymbol\tau
+\!\cdot\!\hat{\mathbf r})^2=1$), the reduced-radial Dirac Hamiltonian (whose free spectrum is
+parity-degenerate with no spurious in-gap level, and whose $K{=}0$ sector reproduces the valence dive
+of \texttt{hedgehog}), and the regularised sea sum---which in the small-amplitude limit returns a
+clean gradient term with $f_\pi\simeq0.44\,M$, consistent with Eq.~\eqref{eq:fpi}. What it does
+\emph{not} yet deliver is the absolute mass: on a finite-difference radial grid the high-$K$
+centrifugal barrier is poorly resolved, so the grand-spin sum converges only as $\sim K^{-1.2}$ and
+the subtracted energy drifts with the box size. Both are the textbook reasons CQSM is solved in the
+Kahana--Ripka spherical-Bessel basis, which resolves the barrier exactly and converges exponentially.
+Porting the Hamiltonian to that basis---or going straight to the lattice (L4)---is what turns
+Eq.~\eqref{eq:torsitonmass} from a mean-field expectation into a number, and gives the excited
+in-gap orbitals (the candidate higher torsiton generations) their spectrum.
+
 \bigskip
 \noindent\emph{Reproducibility.} The Fierz coefficients are in \texttt{cartasis\_sims.fierz}; the
 loop integrals, condensate, and the relations \eqref{eq:lambda}, \eqref{eq:vector},
