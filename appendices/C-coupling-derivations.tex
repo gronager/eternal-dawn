@@ -4,7 +4,7 @@
 Chapter~\ref{chap:solitons} writes the torsiton as a bound state of one nonlinear Dirac field, but
 the self-consistent solver needs numbers: the scalar coupling $g$, the repulsive vector coupling
 $g_v$, the meson masses $m_\sigma,m_\omega$, and the chiral-potential quartic $\lambda$. None of
-these is free. They all descend from the single Hehl--Datta coupling $G_{\rm HD}=\tfrac34\kappa$ by
+these is free. They all descend from the single Hehl--Datta coupling $G_\mathrm{HD}=\tfrac34\kappa$ by
 Nambu--Jona-Lasinio bosonisation \citep{nambu1961}, leaving exactly \emph{one} dimensionful input,
 the cutoff $\Lambda$ (the scale of Chapter~\ref{chap:weltformel} and lattice target~L5). Everything
 else is a ratio. This appendix derives them; the algebra is reproduced symbolically in
@@ -12,14 +12,14 @@ else is a ratio. This appendix derives them; the algebra is reproduced symbolica
 \texttt{sims/.../njl\_couplings.py}.
 
 \section{The Fierz channels}
-The interaction is a single axial--axial term, $\mathcal{L}_{\rm int}=-G_{\rm HD}\,(\bar\psi
+The interaction is a single axial--axial term, $\mathcal{L}_\mathrm{int}=-G_\mathrm{HD}\,(\bar\psi
 \gamma_5\gamma^\mu\psi)(\bar\psi\gamma_5\gamma_\mu\psi)$. A Fierz transformation re-expresses it in
 the bilinear channels (Section~\ref{sec:fierz}); carried out with the Dirac matrices it gives
 \[
   c_S=\tfrac14,\quad c_P=-\tfrac14,\quad c_V=\tfrac12,\quad c_A=\tfrac12,\quad c_T=0,
 \]
-so the two mean-field-relevant couplings are the scalar $G_S=\tfrac14 G_{\rm HD}$ (attractive, the
-chiral condensate) and the vector $G_V=\tfrac12 G_{\rm HD}$ (repulsive), with the
+so the two mean-field-relevant couplings are the scalar $G_S=\tfrac14 G_\mathrm{HD}$ (attractive, the
+chiral condensate) and the vector $G_V=\tfrac12 G_\mathrm{HD}$ (repulsive), with the
 \emph{walking-favourable} equality $G_A=G_V$. The ratio that matters is
 \begin{equation}
   G_V/G_S = 2 .
@@ -91,6 +91,188 @@ polarisation, Eq.~\eqref{eq:condensate}, computed not in the uniform vacuum but 
 background---the chiral-quark-soliton mode sum, whose vacuum-subtracted condensate reinforces the
 bag. Carrying that sum out, de-doubled and regularised, is the calculation that decides whether the
 torsiton stands self-bound at its own couplings or hands the spectrum to the lattice (L4).
+
+\section{The hedgehog, and the torsiton mass}
+\label{sec:hedgehog-mass}
+The single-channel bag was marginal; the chiral soliton binds the way the QCD nucleon does---through
+the \emph{hedgehog}. The chiral field is rotated radially in isospin, $M_\mathrm{vac}\exp(i\gamma_5\,
+\boldsymbol\tau\!\cdot\!\hat{\mathbf r}\,\theta(r))$, locking spin and isospin into the conserved
+grand spin $K=\mathbf J+\mathbf T$. In the $K{=}0$ sector a quark level dives out of the continuum
+deep into the mass gap as the chiral angle winds from $\theta(0)=\pi$ to $\theta(\infty)=0$ (one unit
+of winding, baryon number one): the valence quark, bound (\texttt{cartasis\_sims.hedgehog}).
+
+Minimising the leading-order energy of the unit-winding soliton over its size $r_0$,
+\begin{equation}
+  E(r_0) = N_c\,E_\mathrm{val}(r_0) + \underbrace{\int 4\pi r^2\,dr\;\tfrac12 f_\pi^2
+  \Big[\theta'^2 + \tfrac{2\sin^2\theta}{r^2}\Big]}_{E_2(r_0)\ \propto\ r_0},
+  \label{eq:hhE}
+\end{equation}
+exposes the same Derrick balance that governs every three-dimensional chiral soliton. At the derived
+coupling $f_\pi=M/g$ with $g\simeq3$ (so $f_\pi\simeq0.33\,M$) the two-derivative term $E_2$ grows
+\emph{linearly} in $r_0$, while the valence level dives only to $E_\mathrm{val}\simeq+0.2\,M$ at
+$r_0\simeq1.5\,M^{-1}$ and does not cross zero until $r_0\simeq2\,M^{-1}$, where $E_2\simeq8\,M$.
+There is therefore \emph{no} self-bound minimum below the constituent sum: the infimum is the trivial
+limit $r_0\!\to\!0$, where $E_2\!\to\!0$ and the $N_c$ valence quarks unbind to the gap edge, i.e.
+$E\to N_cM$, approached from above. This is not a failure of the framework; it is the textbook
+result. The two-derivative term alone never binds a nucleon below $N_cM$. The question is whether the
+higher orders of the same quark loop---the four-derivative (Skyrme) term, equivalently the full
+regularised Dirac-sea Casimir energy---bend the curve into a stable interior minimum. Computing that
+sea energy in full (next section) settles it: at these couplings they do \emph{not}, and the soliton
+sits at the constituent sum.
+
+The torsiton mass is therefore fixed near the constituent sum,
+\begin{equation}
+  \boxed{\ M_\mathrm{torsiton}\ \simeq\ N_c\,M(\Lambda)\ }
+  \label{eq:torsitonmass}
+\end{equation}
+with $M(\Lambda)$ set by the gap equation~\eqref{eq:condensate} from the single Hehl--Datta cutoff
+$\Lambda$---one dimensionful number for the whole spectrum. With $N_c=3$ this is $M_\mathrm{torsiton}
+\simeq3\,M$, the analogue of the proton sitting at three constituent quarks. The precise binding
+fraction (whether the sea cancellation leaves the mass a few per cent above or below $3M$) is the
+delicate, regularisation-sensitive piece that the non-perturbative lattice---target~L4---settles; the
+mean-field calculation here fixes the \emph{scale} and hands off the last few per cent. The
+minimisation and the Derrick collapse are reproduced in \texttt{cartasis\_sims.hedgehog}
+(\texttt{minimize\_b1\_soliton}).
+
+\paragraph{The full sea sum.} Replacing the two-derivative estimate by the full regularised Dirac-sea
+energy means diagonalising the hedgehog Hamiltonian in every grand-spin sector $K=\mathbf J+\mathbf T$
+and summing the vacuum-subtracted negative-energy levels with the proper-time cutoff. The apparatus is
+built in two stages. \texttt{cartasis\_sims.chiral\_quark\_soliton} provides the grand-spin angular
+couplings (the matrix elements of $\boldsymbol\tau\!\cdot\!\hat{\mathbf r}$, verified by $(\boldsymbol
+\tau\!\cdot\!\hat{\mathbf r})^2=1$) and the Dirac Hamiltonian, whose free spectrum is parity-degenerate
+with no spurious in-gap level and whose $K{=}0$ sector reproduces the valence dive of
+\texttt{hedgehog}. On a finite-difference radial grid, though, the high-$K$ centrifugal barrier is
+poorly resolved: the grand-spin sum crawls ($\sim K^{-1.2}$) and the subtracted energy drifts with the
+box. The cure---and the standard way CQSM is solved---is the Kahana--Ripka basis of free
+spherical-Bessel Dirac partial waves in a box (\texttt{cartasis\_sims.kahana\_ripka}), where the
+barrier and the $r^l$ origin behaviour are exact, $\boldsymbol\sigma\!\cdot\!\mathbf p$ acts through
+Bessel recurrences, and the vacuum subtraction is basis-consistent. There the sum \emph{converges}
+($\Delta\!\sim\!10^{-3}$ by $K_{\max}\!\sim\!16$) and is box-stable, and the small-amplitude limit
+returns a clean gradient term with $f_\pi\simeq0.39\,M$, consistent with Eq.~\eqref{eq:fpi}.
+
+With the sea converged, the B=1 mass $M_\mathrm{sol}=N_c\,\varepsilon_\mathrm{val}+E_\mathrm{sea}$ can be
+minimised. The outcome confirms Eq.~\eqref{eq:torsitonmass} from an actual mode sum: $E_\mathrm{sea}$ is
+positive and grows with the soliton size while the valence level dives only to $\varepsilon_\mathrm{val}
+\simeq+0.2\,M$, so at the derived (weak, $f_\pi/M\simeq0.4$) couplings the soliton has no deep interior
+minimum---it relaxes toward the point limit where $E_\mathrm{sea}\to0$ and the $N_c$ valence quarks sit
+at the gap edge, i.e.\ the constituent sum. Across cutoffs $\Lambda=2.5\text{--}4\,M$ the infimum is
+robustly $N_cM$, approached from above (e.g.\ $M_\mathrm{sol}\simeq3.6\,M$ at the most compact size for
+$\Lambda=2.5\,M$). So, computed and converged, $M_\mathrm{torsiton}\simeq N_cM\simeq3\,M$.
+
+\paragraph{The self-consistent soliton, and a critical coupling.} The minimisation above fixes
+$\theta(r)$ to a one-parameter family. Removing even that assumption---solving the model
+\emph{fully} self-consistently, the chiral angle determined by the quark source itself,
+$\theta(r)=\operatorname{atan2}(M_p,M_s)$ with $(M_s,M_p)=-2G_S(S,P)$ the regularised scalar and
+pseudoscalar densities, iterated to a fixed point (\texttt{kahana\_ripka.self\_consistent\_profile})---turns
+the question of binding into a sharp threshold. For $\Lambda\gtrsim2.2\,M$ (the weak, derived regime)
+the iteration \emph{collapses} to the trivial vacuum, $\theta\to0$: there is no soliton, and the B=1
+sector is the unbound constituent sum $N_cM$. For $\Lambda\lesssim2.2\,M$ (strong coupling) a
+\emph{stable} torsiton soliton forms: the profile winds $\theta(0)=\pi\to0$ over $\sim2/M$, the
+valence binds at $\varepsilon_\mathrm{val}\simeq0.7\,M$, and the mass settles at
+$M_\mathrm{torsiton}=N_c\varepsilon_\mathrm{val}+E_\mathrm{sea}\simeq3.6\,M$, just above the
+constituent sum. The torsiton therefore exists as a chiral soliton precisely when propagating torsion
+(the $\Lambda$ of lattice target~L5) is strongly enough coupled; whether the physical $\Lambda$ lies
+above or below the critical value is for the lattice (L4/L5) to decide. At this coupling only the
+valence orbital binds---no excited in-gap level---so higher torsiton generations are not radial
+orbitals of a single soliton here, but would be collective or grand-spin-excited solitons, a
+separate calculation.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{torsiton_profile}
+  \caption{The torsiton as a self-consistent chiral soliton. \emph{Left:} the chiral angle
+    $\theta(r)$ of the B=1 torsiton, solved fully self-consistently (the profile determined by the
+    quark source, not assumed) in the Kahana--Ripka chiral-quark-soliton model at strong coupling
+    $\Lambda=2\,M$---a clean hedgehog winding $\theta(0)=\pi\to0$ over $\sim2/M$, with mass
+    $M_\mathrm{torsiton}=N_c\varepsilon_\mathrm{val}+E_\mathrm{sea}\simeq3.6\,M\simeq N_cM$.
+    \emph{Centre:} the converged central angle $\theta(0)$ versus the cutoff $\Lambda$ (the L5 scale),
+    showing the critical coupling $\Lambda_c\simeq2.2\,M$: below it a stable torsiton forms
+    ($\theta(0)=\pi$); above it the soliton dissolves to the vacuum and the B=1 sector is the unbound
+    constituent sum. \emph{Right:} the collective isorotational band $E(J)=M_\mathrm{cl}+J(J{+}1)/2
+    \Lambda_I$ from cranking the soliton ($\Lambda_I\simeq2.4/M$): the torsiton ($J{=}\tfrac12$), the
+    ``$\Delta$-torsiton'' ($J{=}\tfrac32$) $0.6\,M$ above it, and $J{=}\tfrac52$. Reproduced by
+    \texttt{figures/scripts/appC\_torsiton\_profile.py}.}
+  \label{fig:torsiton-profile}
+\end{figure}
+
+\paragraph{The collective band.} The hedgehog singles out a direction in the locked space--isospin
+frame, and rotating it costs almost nothing: those are the soliton's collective zero modes, and
+quantising them gives the torsiton its spin. Cranking---the soliton's linear response to an
+isorotation $\boldsymbol\omega\!\cdot\!\boldsymbol\tau$---fixes the moment of inertia
+\begin{equation}
+  \Lambda_I = \frac{N_c}{2}\sum_{m\,\mathrm{unocc}}
+  \frac{|\langle m|\tau_3|\mathrm{val}\rangle|^2}{\varepsilon_m-\varepsilon_\mathrm{val}},
+  \label{eq:moi}
+\end{equation}
+with the intermediate states the positive-energy $K{=}1$ levels ($\tau_3$ carries grand spin $1$,
+connecting the $K{=}0$ valence to $K{=}1$). The spectrum is then the rigid-top band
+$E(J)=M_\mathrm{cl}+J(J{+}1)/2\Lambda_I$ with $J=I=\tfrac12,\tfrac32,\dots$
+(\texttt{kahana\_ripka.rotational\_band}). At $\Lambda=2\,M$ the valence moment of inertia is
+$\Lambda_I\simeq2.4/M$, so the torsiton ($J{=}\tfrac12$) is followed by a ``$\Delta$-torsiton''
+($J{=}\tfrac32$) a splitting $3/2\Lambda_I\simeq0.6\,M$ above---the same fraction of the constituent
+mass as the physical $N$--$\Delta$ gap ($\sim0.7$), a non-trivial check that the collective dynamics
+is right. (The Dirac sea adds a positive correction to $\Lambda_I$ that lowers the splitting; the
+valence value is the leading estimate.) These are \emph{spin} excitations---they change $J$. They are
+\emph{not} the generations, which keep $J$ and climb the \emph{radial} ladder of the well
+(Section~\ref{sec:generations}); the two must not be confused, for the reason the next section makes
+quantitative.
+
+\section{The collective quantum numbers: spin, isospin, charge}
+\label{sec:collective-qn}
+The cranked band carries more than energies---its quantum numbers are the torsiton's. The hedgehog is
+not an eigenstate of spin or isospin: it locks the two together (the grand spin $K=\mathbf J+\mathbf
+T$) and points in a single direction of that frame. Quantising the (iso)rotational zero modes projects
+it back onto good $J$ and $I$, and for an odd number of colours the projection is forced to be
+\emph{fermionic}---half-integer $J$. This is the Finkelstein--Rubinstein result that a soliton of a
+purely \emph{bosonic} chiral field is a fermion: ``matter is fermionic'' is then not an input but a
+consequence of the winding. The allowed tower is $J=I=\tfrac12,\tfrac32,\dots$, and the ground state
+\begin{equation}
+  J=\tfrac12,\qquad I=\tfrac12
+\end{equation}
+is a spin-$\tfrac12$ fermion---consistent with the Dirac-$s$-wave reading of
+Chapter~\ref{chap:solitons}, but here \emph{derived} from the soliton---that is simultaneously a
+\emph{weak-isospin doublet}. The electric charges of its two members follow from
+Gell-Mann--Nishijima,
+\begin{equation}
+  Q = I_3 + \tfrac12 Y,\qquad I_3 = \pm\tfrac12,
+  \label{eq:gmn}
+\end{equation}
+with $Y$ the soliton's conserved winding (hyper)charge---the same $B\!-\!L$-type number the bounce
+preserves (Chapter~\ref{chap:genesis}). The doublet members split by exactly one unit, $\Delta Q=1$:
+the $(\nu,e)$ or $(u,d)$ structure, recovered rather than assumed. (The \emph{value} of $Y$---which
+doublet: lepton $Y=-1$ or quark $Y=\tfrac13$---is the lepton/quark distinction tied to the colour
+label, carried in Chapter~\ref{chap:forces}, not here.)
+
+These collective numbers are \emph{orthogonal} to the torsiton's other two labels, and it is worth
+tabulating which mechanism fixes which, because they are independent axes:
+
+\begin{center}\small
+\begin{tabular}{lll}
+\hline
+quantum number & origin & where \\
+\hline
+spin $J=\tfrac12$ & collective (iso)rotation; fermionic by Finkelstein--Rubinstein & here / Ch.~\ref{chap:solitons} \\
+weak isospin $I=\tfrac12$ (doublet) & collective isorotation, $J{=}I$ locked & here \\
+electric charge $Q=I_3+\tfrac12Y$ & Gell-Mann--Nishijima, $Y=$ winding & here \\
+colour (triplet) & the three-valued Pauli label & Ch.~\ref{chap:forces} \\
+generation $n=1,2,3$ & radial rung of the well; mass $=$ overlap & Ch.~\ref{chap:solitons} \\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent The decisive point is \emph{why spin excitations and generations are different ladders}. A
+spin excitation ($J:\tfrac12\!\to\!\tfrac32$) costs an \emph{additive} rigid-rotor energy
+$\sim1/\Lambda_I\sim0.4\,M$---the $\Delta$-torsiton. A generation ($n:1\!\to\!2$) keeps every charge
+and climbs the radial ladder, whose level spacing is also only $O(M)$; but its observable mass is
+\emph{not} that level energy. By the configurational-mass result (Eq.~\ref{eq:configmass}) the mass is
+the \emph{overlap} of the rung's wavefunction with the sharp condensate substrate, and overlaps are
+exponentially sensitive to the rung, $O_n\sim e^{-cn}$, so $m_n\sim|O_n|^2\sim e^{-2cn}$: the
+arithmetic radial ladder becomes a \emph{geometric} mass ladder spanning $10^{3}$--$10^{4}$
+(Section~\ref{sec:generations}). Spin costs an additive $\sim M$; a generation costs a multiplicative
+$\sim10^{2}$. The collective band of this appendix fixes the \emph{spin and isospin} of the torsiton;
+the \emph{generation hierarchy} is the overlap calculation of Chapter~\ref{chap:solitons}, and the
+CKM/PMNS mixings are the overlaps between rungs (Chapter~\ref{chap:forces}). One torsiton, three
+independent ladders.
 
 \bigskip
 \noindent\emph{Reproducibility.} The Fierz coefficients are in \texttt{cartasis\_sims.fierz}; the

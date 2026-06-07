@@ -61,6 +61,61 @@ def overlap_masses(levels, source_size=0.25, kind="linear", depth=6.0, width=1.0
     return ov**2
 
 
+def self_consistent_hierarchy(g=14.0, m_sigma=0.5, ngen=3, substrate=0.4, R=14.0, N=1200,
+                              iters=900, mix=0.12):
+    r"""The generation hierarchy from the REAL self-consistent torsiton well -- and an HONEST verdict.
+
+    Solve the self-consistent four-fermion bag (self_consistent.solve_soliton), read off the lowest
+    `ngen` radial rungs (the conjectured generations), and form each rung's configurational mass as a
+    DENSITY overlap m_n = \int u_n^2 chi(r) dr -- the structure of Eq.~(configmass). Two substrates:
+    the BROAD condensate sigma(r) (and equivalently the local mass M(r)), and a SHARP core of width
+    `substrate`.
+
+    THE SOBERING FINDING (the firmer ground walks the toy-well claim back). The PHYSICAL
+    configurational mass -- the overlap with the local mass M(r), Eq.~(configmass) -- gives almost NO
+    hierarchy: the rungs land within a factor ~1.5 (broad_spread), because M(r) is broad. A large
+    geometric spread (sharp_spread ~ 10-50) appears ONLY against an IMPOSED sharp substrate, which is
+    an extra assumption, not the configurational mass. Worse, binding three COMPACT rungs needs a
+    chiral-restored core several Compton wavelengths wide; the minimal self-consistent soliton (at the
+    derived couplings) binds essentially ONE compact rung, and forcing three needs an unphysically
+    large core (this routine uses a long-range sigma to do so) in which the configmass spread is ~1.
+    So the generation mechanism is a CONJECTURE with the right shape, not a derived result: the
+    soliton makes the hierarchy possible, but whether it is realised, and at what size, hinges on the
+    non-perturbative well depth (the strong torsion coupling) -- the lattice. See Chapter 11, Sec.
+    Generations.
+
+    Returns a dict: levels E_n, the broad (configmass) and sharp (imposed) overlap masses (normalised,
+    lightest=1), their spreads, and the number of bound rungs found."""
+    from . import self_consistent as sc
+    from .self_consistent import _solve_levels
+
+    out = sc.solve_soliton(m0=1.0, g=g, m_sigma=m_sigma, n_fermions=1, n_levels=max(10, ngen + 2),
+                           R=R, N=N, iters=iters, mix=mix)
+    r = out["r"]
+    h = r[1] - r[0]
+    E, u = _solve_levels(out["M"], r, h, max(10, ngen + 2))
+    n_bound = int(np.sum(E < 1.0))                    # rungs below the constituent mass m0=1
+    n = min(ngen, max(n_bound, 1))
+
+    def density_overlap(chi):
+        m = np.array([_trapz(u[:, k] ** 2 * chi, r) for k in range(n)])
+        m = np.abs(m)
+        return m / m.min()
+
+    broad = density_overlap(out["sigma"])
+    sharp = density_overlap(np.exp(-(r / substrate) ** 2))
+    return {
+        "levels": np.asarray(E[:n]),
+        "level_spacings": np.diff(E[:n]),
+        "broad_masses": broad,
+        "sharp_masses": sharp,
+        "broad_spread": float(broad.max() / broad.min()),
+        "sharp_spread": float(sharp.max() / sharp.min()),
+        "n_bound": n_bound,
+        "converged": bool(out["converged"]),
+    }
+
+
 def geometric_factor(masses):
     """The per-generation mass ratio from a log-linear fit: each rung is `factor` x
     the next. A constant factor == a clean geometric hierarchy."""

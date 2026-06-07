@@ -30,6 +30,23 @@ def test_overlap_hierarchy_is_geometric():
     assert rms < 0.15                                 # log-linear (geometric) to ~15%
 
 
+def test_self_consistent_hierarchy_broad_vs_sharp():
+    # the real (self-consistent-well) calculation: arithmetic levels, broad overlap = NO hierarchy,
+    # sharp overlap = a geometric hierarchy, with the light generation anomalously light
+    h = gen.self_consistent_hierarchy(g=14.0, m_sigma=0.5)
+    assert h["converged"] and h["n_bound"] >= 3
+    # level energies roughly arithmetic (spacings within a factor ~2)
+    s = np.abs(h["level_spacings"])
+    assert s.max() / s.min() < 2.5
+    # broad substrate gives essentially no hierarchy; the sharp core gives a real one
+    assert h["broad_spread"] < 2.0
+    assert h["sharp_spread"] > 10.0
+    m = h["sharp_masses"]
+    assert m[0] < m[1] < m[2]                              # monotonic, geometric tower
+    # the big jump is at the light end (the "electron is anomalously light" shape), as observed
+    assert np.log(m[1] / m[0]) > np.log(m[2] / m[1])
+
+
 def test_steeper_source_gives_bigger_factor():
     # tightening the core source localises the mass-source -> steeper hierarchy
     lv = so.energy_levels(n_levels=4, kind="linear", depth=6.0, E_max=18.0, n_scan=100)
