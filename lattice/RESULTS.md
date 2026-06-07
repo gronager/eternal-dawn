@@ -29,6 +29,12 @@ turn for the soliton).
 | −0.60 | 1.414(9) | 2.492(19) | 1.762 |
 | −0.70 | 1.273(9) | 2.300(19) | 1.806 |
 | −0.80 | 1.118(9) | 2.093(20) | 1.871 |
+| −0.90 | 0.944(9) | 1.866(23) | 1.976 |
+| −1.00 | 0.742(10) | 1.611(28) | 2.172 |
+| −1.05 | 0.623(10) | 1.471(34) | 2.361 |
+
+m_π² stays linear in the bare mass right down to the last point → m_crit ≈ −1.15. Below m ≈ −1.05
+(m_π a ≈ 0.6) the nucleon error grows as the quenched exceptional configurations switch on — the wall.
 
 **What it establishes (robust):**
 - The torsiton **binds** — a clean effective-mass plateau at m_N > m_π > 0, non-perturbatively, with
@@ -37,10 +43,17 @@ turn for the soliton).
 - **Constituent counting.** At heavy quark mass m_N/m_π → 3/2 (a baryon is three quarks, a pion two);
   we sit just above it (1.635 at the heaviest point). This is the lattice confirming the mean-field
   result **M_torsiton ≈ N_c·M** (Appendix C, `kahana_ripka`) — the two halves of the program agree.
-- **Chiral trend.** m_π² is linear in the bare mass (GMOR), giving a critical mass m_crit ≈ −1.12;
-  as the quark lightens, m_N/m_π **rises** (1.635 → 1.871, the increments accelerating) — the mass
-  going condensate-dominated. Rough chiral extrapolation: m_N(chiral) a ≈ 1.4, i.e. m_N/√σ ≈ 2.8
-  (β=5.6 → √σ a ≈ 0.5).
+- **Chiral trend.** m_π² is linear in the bare mass (GMOR), giving m_crit ≈ −1.15; as the quark
+  lightens, m_N/m_π **rises** (1.64 → 2.36, the increments accelerating) — the mass going
+  condensate-dominated. Extrapolating m_N vs m_π² to the chiral point: **m_N(chiral)·a ≈ 1.15**.
+- **The torsiton lands at the baryon mass.** The static-potential run (`run/01`) gives the scale
+  r₀/a = 2.28 — dead on the β=5.6 reference (2.3), so the scale is trustworthy even though σ itself is
+  noisy (σ a² = 0.31(13), smearing-inflated). Hence **m_N·r₀ ≈ 2.6** (equivalently m_N/√σ ≈ 2.1),
+  against the **physical baryon's m_N·r₀ ≈ 2.4** (m_N/√σ ≈ 2.1). The torsiton comes out within ~10%
+  of the nucleon — exactly the agreement quenched QCD gives for the baryon spectrum. So the pilot
+  shows not just that the torsiton *binds* but that it binds at the *right mass relative to its own
+  confinement scale*. Call it **m_N·r₀ ≈ 2.6(5)** given the small box, coarse spacing, quenching, and
+  short chiral extrapolation.
 
 **What it does NOT establish (the honest caveats):** this is **quenched** (no sea quarks), **coarse**
 (β=5.6), and **small** (12³). All three bias the number — the chiral m_N/√σ ≈ 2.8 here vs a real
