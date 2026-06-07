@@ -16,8 +16,9 @@
 // N x N matrix C_ij(t) = <N_i(t) Nbar_j(0)>, source-smeared i, sink-smeared j.
 //
 //   measure_baryon_gevp --grid Lx.Ly.Lz.Lt --config <cfg> --mass <m> \
-//                       --smear-widths 0,3,5 --smear-n 30 [--cg-tol 1e-8]
-// (width 0 = point/no smearing; widths in lattice units; smear-n = Wuppertal iterations.)
+//                       --smear-iters 0,20,50 [--smear-alpha 0.25] [--cg-tol 1e-8]
+// (smear-iters = a list of Wuppertal step counts, one operator each; 0 = point. radius ~
+//  sqrt(2*iters*alpha). NORMALISED smearing -- stable for any alpha, unlike the un-normalised form.)
 // Self-contained core-Grid primitives (covariant Laplacian via Cshift + links, as the APE smearing
 // in measure_potential). The nucleon contraction is measure_baryon's, validated there.
 #include <Grid/Grid.h>
@@ -27,21 +28,21 @@
 
 using namespace Grid;
 
-// gauge-covariant Gaussian (Wuppertal) smearing on the SPATIAL directions: prop <- (1 + a Lap)^N
-// prop, a = width^2/(4N), Lap = sum_{i spatial} [U_i(x) P(x+i) + U_i^dag(x-i) P(x-i) - 2 P(x)].
-static void gauss_smear(LatticePropagatorD &prop, const LatticeGaugeFieldD &U, RealD width, int Niter) {
-  if (width <= 0.0 || Niter <= 0) return;
-  RealD a = width * width / (4.0 * Niter);
+// gauge-covariant Gaussian (Wuppertal) smearing on the SPATIAL directions, NORMALISED form -- a
+// convex average, stable for any alpha>0 (the un-normalised (1+a Lap) blows up once a>1/6):
+//   prop <- (prop + alpha * sum_i[U_i(x) P(x+i) + U_i^dag(x-i) P(x-i)]) / (1 + 2*Nspatial*alpha)
+// The smearing radius grows as ~sqrt(2*Niter*alpha); Niter is the operator knob (0 = point).
+static void gauss_smear(LatticePropagatorD &prop, const LatticeGaugeFieldD &U, RealD alpha, int Niter) {
+  if (Niter <= 0) return;
+  RealD norm = 1.0 / (1.0 + 2.0 * (Nd - 1) * alpha);
   for (int n = 0; n < Niter; ++n) {
-    LatticePropagatorD lap(prop.Grid());
-    lap = Zero();
+    LatticePropagatorD nbr(prop.Grid());
+    nbr = Zero();
     for (int mu = 0; mu < Nd - 1; ++mu) {                      // spatial only
       LatticeColourMatrixD Umu = PeekIndex<LorentzIndex>(U, mu);
-      lap += Umu * Cshift(prop, mu, +1)
-           + adj(Cshift(Umu, mu, -1)) * Cshift(prop, mu, -1)
-           - 2.0 * prop;
+      nbr += Umu * Cshift(prop, mu, +1) + adj(Cshift(Umu, mu, -1)) * Cshift(prop, mu, -1);
     }
-    prop = prop + a * lap;
+    prop = norm * (prop + alpha * nbr);
   }
 }
 
@@ -88,35 +89,33 @@ int main(int argc, char **argv) {
   if (!GridCmdOptionExists(argv, argv + argc, "--config") ||
       !GridCmdOptionExists(argv, argv + argc, "--mass")) {
     std::cout << "usage: measure_baryon_gevp --grid L.L.L.T --config <cfg> --mass <m> "
-                 "--smear-widths 0,3,5 [--smear-n 30] [--cg-tol 1e-8]" << std::endl;
+                 "--smear-iters 0,20,50 [--smear-alpha 0.25] [--cg-tol 1e-8]" << std::endl;
     Grid_finalize();
     return 1;
   }
   std::string cfg = GridCmdOptionPayload(argv, argv + argc, "--config");
   RealD mass = std::stod(GridCmdOptionPayload(argv, argv + argc, "--mass"));
   RealD cg_tol = 1.0e-8;
-  int smear_n = 30;
+  RealD smear_alpha = 0.25;
   if (GridCmdOptionExists(argv, argv + argc, "--cg-tol"))
     cg_tol = std::stod(GridCmdOptionPayload(argv, argv + argc, "--cg-tol"));
-  if (GridCmdOptionExists(argv, argv + argc, "--smear-n")) {
-    std::string s = GridCmdOptionPayload(argv, argv + argc, "--smear-n");
-    GridCmdOptionInt(s, smear_n);
-  }
-  std::vector<RealD> widths{0.0, 3.0, 5.0};
-  if (GridCmdOptionExists(argv, argv + argc, "--smear-widths")) {
-    widths.clear();
-    std::stringstream ss(GridCmdOptionPayload(argv, argv + argc, "--smear-widths"));
+  if (GridCmdOptionExists(argv, argv + argc, "--smear-alpha"))
+    smear_alpha = std::stod(GridCmdOptionPayload(argv, argv + argc, "--smear-alpha"));
+  std::vector<int> iters{0, 20, 50};                          // smearing-step counts = the operators
+  if (GridCmdOptionExists(argv, argv + argc, "--smear-iters")) {
+    iters.clear();
+    std::stringstream ss(GridCmdOptionPayload(argv, argv + argc, "--smear-iters"));
     std::string tok;
-    while (std::getline(ss, tok, ',')) widths.push_back(std::stod(tok));
+    while (std::getline(ss, tok, ',')) iters.push_back(std::stoi(tok));
   }
-  const int N = widths.size();
+  const int N = iters.size();
 
   LatticeGaugeFieldD Umu(UGrid);
   FieldMetaData header;
   NerscIO::readConfiguration(Umu, header, cfg);
   RealD plaq = WilsonLoops<PeriodicGimplR>::avgPlaquette(Umu);
   std::cout << "# config " << cfg << "  plaquette " << std::setprecision(10) << plaq
-            << "  mass " << mass << "  smear_n " << smear_n << std::endl;
+            << "  mass " << mass << "  smear_alpha " << smear_alpha << std::endl;
 
   WilsonFermionD Dw(Umu, *UGrid, *UrbGrid, mass);
   MdagMLinearOperator<WilsonFermionD, LatticeFermionD> HermOp(Dw);
@@ -137,7 +136,7 @@ int main(int argc, char **argv) {
   std::vector<LatticePropagatorD> prop_src;
   for (int i = 0; i < N; ++i) {
     LatticePropagatorD src = src0;
-    gauss_smear(src, Umu, widths[i], smear_n);
+    gauss_smear(src, Umu, smear_alpha, iters[i]);
     LatticePropagatorD prop(UGrid);
     prop = Zero();
     for (int s = 0; s < Ns; ++s) {
@@ -151,7 +150,7 @@ int main(int argc, char **argv) {
       }
     }
     prop_src.push_back(prop);
-    std::cout << "# solved source smearing " << i << " width " << widths[i] << std::endl;
+    std::cout << "# solved source smearing " << i << " iters " << iters[i] << std::endl;
   }
 
   // C_ij(t): source i, SINK smearing j (smear the propagator's sink, then contract)
@@ -159,7 +158,7 @@ int main(int argc, char **argv) {
   for (int i = 0; i < N; ++i) {
     for (int j = 0; j < N; ++j) {
       LatticePropagatorD prop = prop_src[i];
-      gauss_smear(prop, Umu, widths[j], smear_n);
+      gauss_smear(prop, Umu, smear_alpha, iters[j]);
       std::vector<ComplexD> C = nucleon_corr(prop, Tdir);
       for (size_t t = 0; t < C.size(); ++t)
         std::cout << i << " " << j << " " << t << " " << std::setprecision(12) << real(C[t])

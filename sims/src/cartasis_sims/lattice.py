@@ -423,20 +423,28 @@ def baryon_spectrum(raw, T, tmin=None, tmax=None):
     return out
 
 
-def _gevp_lambdas(Cmat, t0):
-    """Generalized eigenvalues lambda_n(t) of C(t) v = lambda C(t0) v, sorted DESCENDING (largest =
-    ground state). Cmat is [Nt, N, N]; both matrices symmetrised. NaN where the solve fails."""
-    from scipy.linalg import eigh
+def _gevp_lambdas(Cmat, t0, eps=1e-6):
+    """Robust generalized eigenvalues lambda_n(t) of C(t) v = lambda C(t0) v, sorted DESCENDING.
+    Rather than require C(t0) positive-definite (it rarely is, once a point operator is mixed with
+    wide smearings -- the matrix is badly conditioned), WHITEN with C(t0)'s positive subspace: drop
+    directions with eigenvalue < eps * max (noise), build C0^{-1/2} on the rest, and diagonalise the
+    standard problem C0^{-1/2} C(t) C0^{-1/2}. The number of resolved states is the kept subspace
+    dimension (< N if the operators are near-degenerate -- which is itself the answer: the basis
+    only supports that many rungs)."""
     Nt, N, _ = Cmat.shape
     C0 = 0.5 * (Cmat[t0] + Cmat[t0].T)
+    w0, V0 = np.linalg.eigh(C0)
+    keep = w0 > eps * w0.max()
     lam = np.full((Nt, N), np.nan)
+    if keep.sum() == 0:
+        return lam
+    Winv = V0[:, keep] / np.sqrt(w0[keep])                 # C0^{-1/2} on the kept subspace, (N, k)
+    k = int(keep.sum())
     for t in range(Nt):
         Ct = 0.5 * (Cmat[t] + Cmat[t].T)
-        try:
-            w = eigh(Ct, C0, eigvals_only=True)
-            lam[t] = np.sort(w)[::-1]
-        except Exception:
-            pass
+        A = Winv.T @ Ct @ Winv                            # k x k, well-conditioned
+        ev = np.linalg.eigvalsh(A)
+        lam[t, :k] = np.sort(ev)[::-1]
     return lam
 
 
