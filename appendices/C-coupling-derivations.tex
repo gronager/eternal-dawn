@@ -1,0 +1,99 @@
+\chapter{The Torsiton Couplings from the Hehl--Datta Scale}
+\label{app:couplings}
+
+Chapter~\ref{chap:solitons} writes the torsiton as a bound state of one nonlinear Dirac field, but
+the self-consistent solver needs numbers: the scalar coupling $g$, the repulsive vector coupling
+$g_v$, the meson masses $m_\sigma,m_\omega$, and the chiral-potential quartic $\lambda$. None of
+these is free. They all descend from the single Hehl--Datta coupling $G_{\rm HD}=\tfrac34\kappa$ by
+Nambu--Jona-Lasinio bosonisation \citep{nambu1961}, leaving exactly \emph{one} dimensionful input,
+the cutoff $\Lambda$ (the scale of Chapter~\ref{chap:weltformel} and lattice target~L5). Everything
+else is a ratio. This appendix derives them; the algebra is reproduced symbolically in
+\texttt{sims/.../coupling\_derivation.py} (SymPy) and supplied numerically by
+\texttt{sims/.../njl\_couplings.py}.
+
+\section{The Fierz channels}
+The interaction is a single axial--axial term, $\mathcal{L}_{\rm int}=-G_{\rm HD}\,(\bar\psi
+\gamma_5\gamma^\mu\psi)(\bar\psi\gamma_5\gamma_\mu\psi)$. A Fierz transformation re-expresses it in
+the bilinear channels (Section~\ref{sec:fierz}); carried out with the Dirac matrices it gives
+\[
+  c_S=\tfrac14,\quad c_P=-\tfrac14,\quad c_V=\tfrac12,\quad c_A=\tfrac12,\quad c_T=0,
+\]
+so the two mean-field-relevant couplings are the scalar $G_S=\tfrac14 G_{\rm HD}$ (attractive, the
+chiral condensate) and the vector $G_V=\tfrac12 G_{\rm HD}$ (repulsive), with the
+\emph{walking-favourable} equality $G_A=G_V$. The ratio that matters is
+\begin{equation}
+  G_V/G_S = 2 .
+  \label{eq:GVGS}
+\end{equation}
+
+\section{Bosonisation and the loop}
+Introduce auxiliary fields $\sigma$ (scalar) and $\omega_\mu$ (vector) and integrate out the
+fermions, whose dynamical mass is $M$. The one-loop integrals (4D Euclidean, sharp cutoff
+$\Lambda$, $x\equiv\Lambda^2/M^2$) are
+\begin{equation}
+  I_0=\frac{1}{16\pi^2}\Big[\Lambda^2-M^2\ln(1+x)\Big],\qquad
+  I_1=\frac{1}{16\pi^2}\Big[\ln(1+x)-\frac{x}{1+x}\Big].
+  \label{eq:loops}
+\end{equation}
+$I_0$ carries the quadratic divergence, $I_1$ the logarithmic one. The chiral condensate is the
+filled Dirac sea,
+\begin{equation}
+  \langle\bar\psi\psi\rangle = -4 N_c M\,I_0 ,
+  \label{eq:condensate}
+\end{equation}
+and the gap equation $M=-2G_S\langle\bar\psi\psi\rangle$ fixes $M$ against $\Lambda$ and $G_S$---the
+one place the absolute scale enters. The pion decay constant is
+\begin{equation}
+  f_\pi^2 = 4 N_c M^2 I_1 ,
+  \label{eq:fpi}
+\end{equation}
+and we define the scalar Yukawa coupling by the Goldberger--Treiman relation $g\equiv M/f_\pi$, so
+$v=f_\pi=M/g$.
+
+\section{The scalar sector}
+Chiral NJL gives the $\sigma$ at the $\bar q q$ threshold,
+\begin{equation}
+  m_\sigma = 2M .
+  \label{eq:msigma}
+\end{equation}
+Matching the double-well $U(\sigma)=\tfrac{\lambda}{4}(\sigma^2-v^2)^2$, whose curvature is
+$m_\sigma^2=2\lambda v^2$, fixes the quartic:
+\begin{equation}
+  \boxed{\ \lambda=\frac{m_\sigma^2}{2v^2}=\frac{4M^2}{2v^2}=2g^2\ }
+  \label{eq:lambda}
+\end{equation}
+---derived, not the value-$8$ placeholder the solver had been using.
+
+\section{The vector sector}
+The NJL vector pole gives $m_\omega=\sqrt6\,M$ (with $M\simeq330$~MeV this is $\simeq810$~MeV, the
+$\rho$), and the KSRF relation $m_\omega^2=2 g_v^2 f_\pi^2$ fixes the repulsive coupling:
+\begin{equation}
+  \boxed{\ m_\omega=\sqrt6\,M,\qquad g_v=\sqrt{\frac{m_\omega^2}{2v^2}}=\sqrt3\,g\ }
+  \label{eq:vector}
+\end{equation}
+
+\section{Consistency, and the resolution of the unbinding}
+The decisive check is that the bosonised masses and couplings reproduce
+Eq.~\eqref{eq:GVGS}:
+\begin{equation}
+  \frac{G_V}{G_S}=\frac{g_v^2/m_\omega^2}{g^2/m_\sigma^2}
+  =\frac{3g^2/6M^2}{g^2/4M^2}=2\ \checkmark
+  \label{eq:consistency}
+\end{equation}
+This is why the soliton unbound when the repulsion was first switched on: the naive guess
+$g_v=g\sqrt2$ with $m_\omega=gv$ violates Eq.~\eqref{eq:consistency}. The true coupling is
+\emph{stronger} ($\sqrt3\,g$) but much \emph{shorter-ranged} ($\sqrt6\,M\gg m_\sigma$); the two
+recombine to the Fierz ratio $2$ in integrated strength, leaving the spatial \emph{shape}---and the
+relativistic $G^2\!\mp\!F^2$ balance of the first-order Dirac solver---to decide binding. At the
+derived, QCD-like couplings ($g\simeq3$) the leading mean-field bag is \emph{marginal}: it binds
+only when the colour levels are filled, and shallowly. The missing depth is the Dirac sea's own
+polarisation, Eq.~\eqref{eq:condensate}, computed not in the uniform vacuum but in the soliton
+background---the chiral-quark-soliton mode sum, whose vacuum-subtracted condensate reinforces the
+bag. Carrying that sum out, de-doubled and regularised, is the calculation that decides whether the
+torsiton stands self-bound at its own couplings or hands the spectrum to the lattice (L4).
+
+\bigskip
+\noindent\emph{Reproducibility.} The Fierz coefficients are in \texttt{cartasis\_sims.fierz}; the
+loop integrals, condensate, and the relations \eqref{eq:lambda}, \eqref{eq:vector},
+\eqref{eq:consistency} are derived symbolically in \texttt{cartasis\_sims.coupling\_derivation}
+and returned numerically by \texttt{cartasis\_sims.njl\_couplings}.
