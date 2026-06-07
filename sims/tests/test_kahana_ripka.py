@@ -77,3 +77,20 @@ def test_self_consistent_critical_coupling():
     _, th_weak, ev_w = kr.self_consistent_profile(Lam=3.0, Kmax=8, Nb=24, Nq=1200, iters=22)
     assert th_strong[0] > 1.5 and ev_s is not None       # stable torsiton soliton (theta(0) ~ pi)
     assert th_weak[0] < 0.5                               # collapses to the trivial vacuum
+
+
+def test_tau3_connects_k0_hedgehog_to_k1():
+    # the cranking operator: <tau_3>=0 in the K=0 isosinglet, non-zero into K=1
+    from cartasis_sims import chiral_quark_soliton as cqs
+    s0 = cqs.grandspin_states(0)[0]
+    assert abs(cqs.tau3_angular(0, s0, 0, s0)) < 1e-9                  # isosinglet
+    assert abs(cqs.tau3_angular(0, s0, 1, s0)) > 0.5                   # connects to K=1
+
+
+def test_rotational_band_is_ordered_and_physical():
+    # cranking the soliton gives a J(J+1) band with an N-Delta-scale splitting
+    prof = lambda r: np.pi * np.exp(-((r / 1.0) ** 2))
+    band = kr.rotational_band(prof, M_classical=3.6, Nb=26, Nq=1400)
+    assert band["Lambda_I"] > 0                                        # positive moment of inertia
+    assert band[0.5] < band[1.5] < band[2.5]                          # ordered tower
+    assert 0.2 < (band[1.5] - band[0.5]) < 1.2                        # N-Delta-like splitting scale

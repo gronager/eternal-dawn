@@ -185,12 +185,36 @@ separate calculation.
     quark source, not assumed) in the Kahana--Ripka chiral-quark-soliton model at strong coupling
     $\Lambda=2\,M$---a clean hedgehog winding $\theta(0)=\pi\to0$ over $\sim2/M$, with mass
     $M_\mathrm{torsiton}=N_c\varepsilon_\mathrm{val}+E_\mathrm{sea}\simeq3.6\,M\simeq N_cM$.
-    \emph{Right:} the converged central angle $\theta(0)$ versus the cutoff $\Lambda$ (the L5 scale),
+    \emph{Centre:} the converged central angle $\theta(0)$ versus the cutoff $\Lambda$ (the L5 scale),
     showing the critical coupling $\Lambda_c\simeq2.2\,M$: below it a stable torsiton forms
     ($\theta(0)=\pi$); above it the soliton dissolves to the vacuum and the B=1 sector is the unbound
-    constituent sum. Reproduced by \texttt{figures/scripts/appC\_torsiton\_profile.py}.}
+    constituent sum. \emph{Right:} the collective isorotational band $E(J)=M_\mathrm{cl}+J(J{+}1)/2
+    \Lambda_I$ from cranking the soliton ($\Lambda_I\simeq2.4/M$): the torsiton ($J{=}\tfrac12$), the
+    ``$\Delta$-torsiton'' ($J{=}\tfrac32$) $0.6\,M$ above it, and $J{=}\tfrac52$. Reproduced by
+    \texttt{figures/scripts/appC\_torsiton\_profile.py}.}
   \label{fig:torsiton-profile}
 \end{figure}
+
+\paragraph{The collective band.} The hedgehog singles out a direction in the locked space--isospin
+frame, and rotating it costs almost nothing: those are the soliton's collective zero modes, and
+quantising them gives the torsiton its spin. Cranking---the soliton's linear response to an
+isorotation $\boldsymbol\omega\!\cdot\!\boldsymbol\tau$---fixes the moment of inertia
+\begin{equation}
+  \Lambda_I = \frac{N_c}{2}\sum_{m\,\mathrm{unocc}}
+  \frac{|\langle m|\tau_3|\mathrm{val}\rangle|^2}{\varepsilon_m-\varepsilon_\mathrm{val}},
+  \label{eq:moi}
+\end{equation}
+with the intermediate states the positive-energy $K{=}1$ levels ($\tau_3$ carries grand spin $1$,
+connecting the $K{=}0$ valence to $K{=}1$). The spectrum is then the rigid-top band
+$E(J)=M_\mathrm{cl}+J(J{+}1)/2\Lambda_I$ with $J=I=\tfrac12,\tfrac32,\dots$
+(\texttt{kahana\_ripka.rotational\_band}). At $\Lambda=2\,M$ the valence moment of inertia is
+$\Lambda_I\simeq2.4/M$, so the torsiton ($J{=}\tfrac12$) is followed by a ``$\Delta$-torsiton''
+($J{=}\tfrac32$) a splitting $3/2\Lambda_I\simeq0.6\,M$ above---the same fraction of the constituent
+mass as the physical $N$--$\Delta$ gap ($\sim0.7$), a non-trivial check that the collective dynamics
+is right. (The Dirac sea adds a positive correction to $\Lambda_I$ that lowers the splitting; the
+valence value is the leading estimate.) These are \emph{spin} excitations. Genuine higher
+\emph{generations}---heavier $J{=}\tfrac12$ copies, the analogue of the Roper resonance---are
+radial/breathing excitations of the profile, a separate mode left to future work.
 
 \bigskip
 \noindent\emph{Reproducibility.} The Fierz coefficients are in \texttt{cartasis\_sims.fierz}; the

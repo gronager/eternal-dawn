@@ -134,6 +134,26 @@ def _kappa(j, l):
     return -(int(2 * j + 1) // 2) if abs(l - (j - R(1, 2))) < 1e-9 else (int(2 * j + 1) // 2)
 
 
+def tau3_angular(K, jl, Kp, jlp):
+    """The grand-spin angular matrix element <Kp M=0 (j' l')| tau_3 | K M=0 (j l)>: tau_3 is the
+    identity on space and spin and +/-1 on the isospin projection m_t, so it is non-zero only for
+    l'=l, and (being an isovector) it connects grand spin K to K' = K, K+/-1. This is the
+    isorotation-cranking operator whose response gives the soliton moment of inertia. Real, and (for
+    a scalar combination) M-independent; evaluated here at M=0."""
+    from sympy import Rational as R, N as Num
+    (j, l), (jp, lp) = jl, jlp
+    if l != lp:
+        return 0.0
+    v = _gs_vector(K, j, l, R(0))
+    vp = _gs_vector(Kp, jp, lp, R(0))
+    tot = 0
+    for key, a in v.items():
+        if key in vp:
+            _, _, mt = key
+            tot += vp[key] * a * (2 * mt)
+    return float(complex(Num(tot, 20)).real)
+
+
 def taurhat_matrix(K, parity):
     """The tau.rhat coupling matrix t[b, a] = <lower_b| tau.rhat |upper_a> for sector (K, parity)."""
     S = grandspin_states(K)

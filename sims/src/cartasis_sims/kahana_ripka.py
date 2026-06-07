@@ -31,9 +31,15 @@ winds theta(0) = pi -> 0 over ~2/M, the valence binds at eps_val ~ 0.7 M, and
     M_torsiton  ~=  3 N_c-th... = 3 eps_val + E_sea  ~=  3.6 M  ~=  N_c M ,
 slightly above the constituent sum. So the torsiton exists as a chiral soliton when propagating
 torsion (the L5 scale Lambda) is strongly enough coupled, with mass ~ N_c M; whether the physical
-Lambda sits above or below the critical coupling is for the lattice (L4/L5). At this coupling only
-the valence orbital binds (no excited in-gap level), so higher torsiton generations are not excited
-orbitals of one soliton here -- they would be collective/radial excitations, a separate question.
+Lambda sits above or below the critical coupling is for the lattice (L4/L5).
+
+COLLECTIVE SPECTRUM. The hedgehog is an isorotational top: cranking it (moment_of_inertia,
+rotational_band) gives the spin-isospin band E(J) = M_cl + J(J+1)/(2 Lambda_I), J=I=1/2 (the
+torsiton), 3/2 (the 'Delta-torsiton'), .... At Lambda=2 M the valence moment of inertia is
+Lambda_I ~ 2.4/M and the J=3/2-1/2 splitting is ~0.6 M -- the same scale as the QCD N--Delta
+splitting (~0.7 constituent masses), a non-trivial first-principles check. These are spin
+excitations, the canonical collective band. Genuine higher generations (heavier J=1/2 copies, the
+Roper analogue) are radial/breathing excitations -- a separate mode, not computed here.
 """
 from __future__ import annotations
 
@@ -193,6 +199,60 @@ def _sector_densities(K, parity, theta, M, Lam, Nb, D, rq, w_r2):
             jv = ingap[np.argmin(np.abs(w[ingap]))]; eps_val = float(w[jv])
             U, Wp = UW(V[:, jv]); S += rho_s(U, Wp); P += rho_p(U, Wp)
     return S, P, eps_val
+
+
+def _chan_wavefuncs(c, G, F, CH, nchan):
+    """per-channel upper/lower radial profiles of the eigenvector c."""
+    U = []; W = []
+    for ci in range(nchan):
+        sel = CH == ci
+        U.append(c[sel] @ G[sel]); W.append(c[sel] @ F[sel])
+    return U, W
+
+
+def moment_of_inertia(theta_func, M=1.0, Nc=3, Nb=28, D=10.0, Nq=1600):
+    r"""The isorotational (cranking) moment of inertia Lambda_I of the B=1 hedgehog, VALENCE part:
+        Lambda_I = (N_c/2) sum_{m unocc} |<m| tau_3 |val>|^2 / (eps_m - eps_val),
+    with the valence the K=0 (parity +) in-gap level and the intermediate states m the positive-energy
+    K=1 (parity +) levels (tau_3 connects grand spin 0 -> 1). The collective rotational band is then
+    E(J) = M_classical + J(J+1)/(2 Lambda_I). Returns (Lambda_I, eps_val).
+
+    NOTE: this is the valence (leading) moment of inertia; the Dirac-sea cranking adds a positive
+    correction that increases Lambda_I and so reduces the splitting -- the value here is the leading
+    estimate, good to the N--Delta-like scale."""
+    rq, w_r2 = _grid(D, Nq)
+    theta = theta_func(rq)
+    H0, E0, G0, F0, CH0, ch0, t0 = _assemble(0, 1, theta, M, Nb, D, rq, w_r2)
+    w0, V0 = np.linalg.eigh(H0)
+    ingap = np.where((w0 > -M + 1e-4) & (w0 < M - 1e-4))[0]
+    jv = ingap[np.argmin(np.abs(w0[ingap]))]; eps_val = float(w0[jv])
+    Uv, Wv = _chan_wavefuncs(V0[:, jv], G0, F0, CH0, len(ch0))
+    H1, E1, G1, F1, CH1, ch1, t1 = _assemble(1, 1, theta, M, Nb, D, rq, w_r2)
+    w1, V1 = np.linalg.eigh(H1)
+    Lam_I = 0.0
+    for m in np.where(w1 > 1e-6)[0]:
+        Um, Wm = _chan_wavefuncs(V1[:, m], G1, F1, CH1, len(ch1))
+        me = 0.0
+        for c0, (j0, lu0, ll0, *_) in enumerate(ch0):
+            for c1, (j1, lu1, ll1, *_) in enumerate(ch1):
+                a_up = cqs.tau3_angular(0, (j0, lu0), 1, (j1, lu1))
+                a_lo = cqs.tau3_angular(0, (j0, ll0), 1, (j1, ll1))
+                if a_up:
+                    me += a_up * np.einsum("r,r,r->", Uv[c0], Um[c1], w_r2)
+                if a_lo:
+                    me += a_lo * np.einsum("r,r,r->", Wv[c0], Wm[c1], w_r2)
+        Lam_I += (Nc / 2.0) * me ** 2 / (w1[m] - eps_val)
+    return Lam_I, eps_val
+
+
+def rotational_band(theta_func, M_classical, M=1.0, Nc=3, Nb=28, D=10.0, Nq=1600, Js=(0.5, 1.5, 2.5)):
+    """The collective isorotational band of the torsiton: E(J) = M_classical + J(J+1)/(2 Lambda_I),
+    the spin-isospin tower (J=I=1/2 the torsiton, 3/2 the 'Delta-torsiton', ...). Returns a dict
+    {J: E(J)} together with the moment of inertia under key 'Lambda_I'."""
+    Lam_I, _ = moment_of_inertia(theta_func, M, Nc, Nb, D, Nq)
+    band = {J: M_classical + J * (J + 1) / (2 * Lam_I) for J in Js}
+    band["Lambda_I"] = Lam_I
+    return band
 
 
 def self_consistent_profile(Lam, M=1.0, Kmax=10, Nb=26, D=10.0, Nq=1600,

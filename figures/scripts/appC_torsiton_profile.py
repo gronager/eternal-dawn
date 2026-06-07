@@ -27,7 +27,11 @@ os.makedirs(PDF_DIR, exist_ok=True)
 def main():
     # the stable self-consistent profile at strong coupling
     rq, theta, eps_val = kr.self_consistent_profile(Lam=2.0, Kmax=10, Nb=26, Nq=1600, iters=30)
-    Msol, ev, es = kr.soliton_mass(lambda r: np.interp(r, rq, theta), Lam=2.0, Kmax=12, Nb=26)
+    thf = lambda r: np.interp(r, rq, theta)
+    Msol, ev, es = kr.soliton_mass(thf, Lam=2.0, Kmax=12, Nb=26)
+
+    # the collective rotational band (cranking)
+    band = kr.rotational_band(thf, M_classical=Msol, Nb=26, Nq=1600)
 
     # central angle vs coupling: the critical threshold
     lams = [1.8, 2.0, 2.15, 2.3, 2.5, 3.0]
@@ -36,7 +40,7 @@ def main():
         _, th, _ = kr.self_consistent_profile(Lam=L, Kmax=8, Nb=24, Nq=1300, iters=24)
         th0.append(th[0])
 
-    fig, (axL, axR) = plt.subplots(1, 2, figsize=(9.6, 3.9))
+    fig, (axL, axR, axB) = plt.subplots(1, 3, figsize=(13.6, 3.9))
 
     axL.plot(rq, theta, color="C3", lw=2.2)
     axL.axhline(np.pi, color="0.6", ls=":", lw=1)
@@ -65,6 +69,18 @@ def main():
     axR.text(1.82, 0.35, "stable\ntorsiton", fontsize=8.5, color="C3")
     axR.text(2.5, 1.4, "no soliton\n(constituent sum)", fontsize=8.5, color="0.4")
     axR.grid(True, alpha=0.2)
+
+    # collective rotational band
+    labels = {0.5: r"torsiton  $J=\frac{1}{2}$", 1.5: r"$\Delta$-torsiton  $J=\frac{3}{2}$", 2.5: r"$J=\frac{5}{2}$"}
+    for J in (0.5, 1.5, 2.5):
+        E = band[J]
+        axB.hlines(E, 0.1, 0.9, color="C2", lw=2.2)
+        axB.text(0.95, E, f"{labels[J]}   ({E:.2f} M)", va="center", fontsize=9)
+    axB.set_xlim(0, 2.6)
+    axB.set_ylim(band[0.5] - 0.25, band[2.5] + 0.25)
+    axB.set_xticks([])
+    axB.set_ylabel(r"$E(J) = M_{\rm cl} + J(J{+}1)/2\Lambda_I$  $[M]$")
+    axB.set_title(rf"rotational band ($\Lambda_I\!=\!{band['Lambda_I']:.1f}/M$)", fontsize=10.5)
 
     fig.tight_layout()
     out = os.path.join(PDF_DIR, "torsiton_profile.pdf")
