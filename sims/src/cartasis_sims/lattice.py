@@ -691,6 +691,57 @@ def bag_chiral_trend(points, window=(0.43, 0.70), r0_over_a=3.166):
             "verdict": verdict}
 
 
+def _twostate_profile(p3, sr, t_snk, r0_over_a, taumin=1):
+    """Ground-state condensate profile from a TWO-STATE fit in the insertion time tau (the right tool
+    for the SHAPE: it removes the time-direction excited-state contamination of a POINT source without
+    the spatial broadening that source smearing imposes). At fixed sink, the 3-pt ratio has the form
+        G3(r,tau) = M(r) + A(r) * [ e^{-dE*tau} + e^{-dE*(t_snk-tau)} ],
+    M(r) the ground-state matrix element. We fix the gap dE from the integrated 3-pt SR(tau) (best
+    signal/noise), then a per-shell LINEAR fit gives M(r). Returns (r, rho_gs, R0, s_T, dE) or None."""
+    try:
+        from scipy.optimize import curve_fit
+    except Exception:
+        return None
+    p3 = np.asarray(p3, dtype=float)
+    sr = np.asarray(sr, dtype=float)
+    taus = np.arange(taumin, t_snk - taumin + 1)
+    if len(taus) < 4:
+        return None
+    SRbar = np.array([sr[sr[:, 1].astype(int) == t, 2].mean() if np.any(sr[:, 1].astype(int) == t)
+                      else np.nan for t in taus])
+    if not np.all(np.isfinite(SRbar)):
+        return None
+    g = lambda tau, dE: np.exp(-dE * tau) + np.exp(-dE * (t_snk - tau))
+    try:                                                  # gap dE from the integrated 3-pt
+        popt, _ = curve_fit(lambda tau, a, b, dE: a + b * g(tau, dE), taus, SRbar,
+                            p0=[SRbar.mean(), float(np.ptp(SRbar)) or 1.0, 0.5],
+                            bounds=([-np.inf, -np.inf, 0.05], [np.inf, np.inf, 3.0]), maxfev=20000)
+        dE = float(popt[2])
+    except Exception:
+        return None
+    gvec = g(taus.astype(float), dE)
+    # per-shell linear fit M(r) + A(r) gvec, aggregated over configs
+    r2s = np.unique(p3[:, 1]).astype(int)
+    r, M = [], []
+    for b in r2s:
+        rows = p3[p3[:, 1].astype(int) == b]
+        y = np.array([rows[rows[:, 2].astype(int) == t, 3].sum() /
+                      max(rows[rows[:, 2].astype(int) == t, 4].sum(), 1.0)
+                      for t in taus])
+        if not np.all(np.isfinite(y)):
+            continue
+        A = np.vstack([np.ones_like(gvec), gvec]).T
+        coef, *_ = np.linalg.lstsq(A, y, rcond=None)
+        r.append(np.sqrt(b)); M.append(coef[0])           # coef[0] = ground-state M(r)
+    r, M = np.asarray(r, float), np.asarray(M, float)
+    order = np.argsort(r); r, M = r[order], M[order]
+    if len(M) < 3 or M[0] == 0:
+        return None
+    rho_gs = M / M[0]
+    R0 = _half_density_radius(r, rho_gs)
+    return {"r": r, "rho_gs": rho_gs, "R0": float(R0), "s_T": float(R0 / r0_over_a), "dE": dE}
+
+
 def condensate_3pt(p3, c2, sr, chk, T, t_snk, tau_window=None, r0_over_a=3.166, selfcheck_tol=2e-2):
     """The connected nucleon scalar 3-point <N|qbar q(r)|N> -- the genuine in-medium condensate bag
     (measure_condensate_3pt), the definitive s_T (Eternal Dawn, Ch. 11 Generations).
@@ -749,6 +800,11 @@ def condensate_3pt(p3, c2, sr, chk, T, t_snk, tau_window=None, r0_over_a=3.166, 
     R0 = _half_density_radius(r, rho3)
     s_T = R0 / r0_over_a
 
+    # ground-state shape via the two-state fit in tau (the right tool -- point source, no smearing)
+    gs = _twostate_profile(p3, sr, t_snk, r0_over_a)
+    gs_s_T = gs["s_T"] if gs else float("nan")
+    gs_R0 = gs["R0"] if gs else float("nan")
+
     cfgs = np.unique(p3[:, 0]).astype(int)
     n = len(cfgs)
     js = []
@@ -769,16 +825,24 @@ def condensate_3pt(p3, c2, sr, chk, T, t_snk, tau_window=None, r0_over_a=3.166, 
                    f"the sign-normalised 2-pt turns over at t={node_t} (backward-propagating wrong-"
                    f"parity state), and t_snk={t_snk} is at/beyond it. The s_T={s_T:.3f} here is "
                    f"backward-contaminated; rerun with SINKT < {node_t}.")
+    elif gs is not None:
+        gw = ("IN" if lo_p <= gs_s_T <= hi_p else ("below" if gs_s_T < lo_p else "above"))
+        verdict = (f"self-check PASSED, sink on the plateau (t_snk={t_snk} < node {node_t}); g_S = "
+                   f"{abs(g_S):.3f}. GROUND-STATE bag (two-state fit in tau, dE={gs['dE']:.2f}): "
+                   f"s_T = R0/r0 = {gs_s_T:.3f} r0 ({gw} the window [{lo_p},{hi_p}]). "
+                   f"[the tau-plateau average {s_T:.3f} is excited-contaminated; use a POINT source "
+                   f"-- source smearing convolves the spatial profile with the source blob.]")
     else:
         verdict = (f"self-check PASSED (resid {sc_resid:.1%}), sink on the plateau (t_snk={t_snk} < "
-                   f"node {node_t}); scalar charge g_S = {abs(g_S):.3f}. Condensate bag s_T = R0/r0 = "
+                   f"node {node_t}); scalar charge g_S = {abs(g_S):.3f}. tau-plateau bag s_T = R0/r0 = "
                    f"{s_T:.3f}+/-{s_T_err:.3f} r0 ({where} the window [{lo_p},{hi_p}]). NOTE: point-source "
-                   f"3-pt -- treat as indicative until source/sink SMEARING isolates the ground state "
-                   f"(a narrow t_snk window sits between excited-state contamination and the node).")
+                   f"3-pt, plateau average -- excited-contaminated; the two-state fit needs more tau "
+                   f"points (bigger T) to isolate the ground state.")
 
     return {"self_check_ok": sc_ok, "self_check_resid": sc_resid, "recon": recon, "cn_snk": cn_snk,
             "sink_ok": sink_ok, "node_t": int(node_t), "g_S": g_S, "g_S_tau": gS_tau, "r": r,
             "rho3": rho3, "R0": R0, "s_T": s_T, "s_T_err": s_T_err, "n_cfg": n,
+            "gs_s_T": gs_s_T, "gs_R0": gs_R0, "gs": gs,
             "tau_window": tau_window, "verdict": verdict}
 
 

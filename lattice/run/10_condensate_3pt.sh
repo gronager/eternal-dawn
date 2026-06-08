@@ -28,10 +28,12 @@ SINKT="${SINKT:-$((3 * T / 8))}"
 THERM="${THERM:-40}" ; STRIDE="${STRIDE:-2}" ; NPAR="${NPAR:-4}" ; CGTOL="${CGTOL:-1e-8}"
 TAU_LO="${TAU_LO:-}" ; TAU_HI="${TAU_HI:-}"      # tau plateau (default: midway between source and sink)
 R0A="${R0A:-3.166}"
-# source SMEARING: widens the ground-state overlap so the 3-pt plateaus at small t_snk (a point
-# source needs ~8 slices; smeared, far fewer). 0 = point (excited-state contaminated -- biases s_T
-# LOW). radius ~ sqrt(2*iters*alpha); 20 x 0.25 ~ 3 lattice units, a nucleon-scale source.
-SMEAR_ITERS="${SMEAR_ITERS:-20}" ; SMEAR_ALPHA="${SMEAR_ALPHA:-0.25}"
+# source SMEARING: default 0 (POINT source). Smearing is the right tool for the CHARGE g_S (an
+# overlap-independent integral) but the WRONG tool for the SHAPE -- it convolves the spatial profile
+# rho3(r) with the ~sqrt(2*iters*alpha) source blob, so a smeared R0 just measures the smearing kernel
+# (at 20x0.25 the blob half-radius ~2.6a swamps a ~1a bag). The ground-state SHAPE comes instead from
+# the two-state fit in tau on the POINT-source data (analysis below). Leave SMEAR_ITERS=0 for s_T.
+SMEAR_ITERS="${SMEAR_ITERS:-0}" ; SMEAR_ALPHA="${SMEAR_ALPHA:-0.25}"
 
 shopt -s nullglob
 sel=()
@@ -88,7 +90,12 @@ if res["self_check_ok"] and res["sink_ok"]:
     for r, rr in zip(res["r"], res["rho3"]):
         bar = "#" * int(50 * abs(rr) / (max(abs(res['rho3'])) + 1e-300))
         print(f"    r={r:5.2f}  G3={rr:+10.4e}  {bar}")
-    print(f"  half-density radius R0 = {res['R0']:.2f} a   s_T = R0/r0 = "
-          f"{res['s_T']:.3f} +/- {res['s_T_err']:.3f}")
+    print(f"  tau-plateau R0 = {res['R0']:.2f} a   s_T = {res['s_T']:.3f} +/- {res['s_T_err']:.3f}"
+          f"   (excited-contaminated -- not the ground state)")
+    if res["gs"] is not None:
+        print(f"  GROUND STATE (two-state fit, dE={res['gs']['dE']:.2f}): R0 = {res['gs_R0']:.2f} a"
+              f"   s_T = R0/r0 = {res['gs_s_T']:.3f}")
+    else:
+        print(f"  (two-state fit not resolved -- need more tau points: bigger T or lower SINKT)")
 print(f"  VERDICT: {res['verdict']}")
 PY

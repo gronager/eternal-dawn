@@ -448,3 +448,47 @@ def test_generation_count_three_vs_four():
     # a noisy second breaks the contiguous tower at one
     n1, _ = lat._count_generations([0.5, 0.9, 1.4], [0.01, 0.9, 0.05])
     assert n1 == 1
+
+
+def _synthetic_3pt_twostate(R0_gs=1.4, R0_ex=0.7, dE=0.6, amp_ex=0.8, t_snk=12, T=24, L=12, ncfg=6, seed=5):
+    """3-pt rows where G3(r,tau) = M_gs(r) + amp_ex*M_ex(r)*[e^{-dE tau}+e^{-dE(t_snk-tau)}], a known
+    ground-state Fermi bag (R0_gs) plus a more-compact excited state (R0_ex<R0_gs). The tau-plateau
+    average is contaminated; the two-state fit must recover R0_gs."""
+    from collections import defaultdict
+    cnt = defaultdict(int)
+    for x in range(L):
+        dx = min(x, L - x)
+        for y in range(L):
+            dy = min(y, L - y)
+            for z in range(L):
+                dz = min(z, L - z)
+                cnt[dx * dx + dy * dy + dz * dz] += 1
+    fg = lambda r, R: 1.0 / (1.0 + np.exp((r - R) / 0.5))
+    g = lambda tau: np.exp(-dE * tau) + np.exp(-dE * (t_snk - tau))
+    rng = np.random.default_rng(seed)
+    cn = -1.0                                            # negative convention (sign-robust path)
+    p3, sr, c2, chk = [], [], [], []
+    for c in range(1, ncfg + 1):
+        chk.append([c, cn, cn])
+        for t in range(T):
+            SR = 0.0
+            for r2, k in cnt.items():
+                val = fg(np.sqrt(r2), R0_gs) + amp_ex * fg(np.sqrt(r2), R0_ex) * g(t)
+                SR += val * k
+                p3.append([c, r2, t, val * k * (1 + 0.004 * rng.standard_normal()), k])
+            sr.append([c, t, SR]); c2.append([c, t, cn])
+    return np.array(p3), np.array(c2), np.array(sr), np.array(chk)
+
+
+def test_twostate_fit_recovers_groundstate_shape():
+    p3, c2, sr, chk = _synthetic_3pt_twostate(R0_gs=1.4, R0_ex=0.7)
+    gs = lat._twostate_profile(p3, sr, t_snk=12, r0_over_a=3.166)
+    assert gs is not None and abs(gs["R0"] - 1.4) < 0.3      # ground state recovered, not the mix
+    assert abs(gs["dE"] - 0.6) < 0.2                         # the gap comes out right too
+
+
+def test_condensate_3pt_reports_groundstate_bag():
+    p3, c2, sr, chk = _synthetic_3pt_twostate(R0_gs=1.4, R0_ex=0.7)
+    res = lat.condensate_3pt(p3, c2, sr, chk, T=24, t_snk=12, tau_window=(4, 8), r0_over_a=3.166)
+    assert res["self_check_ok"] and abs(res["gs_R0"] - 1.4) < 0.3
+    assert "GROUND-STATE" in res["verdict"]
