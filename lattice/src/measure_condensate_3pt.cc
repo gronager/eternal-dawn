@@ -37,6 +37,25 @@
 
 using namespace Grid;
 
+// gauge-covariant Gaussian (Wuppertal) smearing on the SPATIAL directions, NORMALISED form (a convex
+// average, stable for any alpha) -- ported from measure_baryon_gevp. Smearing the SOURCE widens the
+// ground-state overlap so the 3-pt plateaus at smaller t_snk (the point source needs ~8 slices to
+// reach the ground state; smearing shortens that). It leaves the self-check intact: sigma_seq and the
+// forward prop both use the SAME smeared-source propagator, so sigma_seq . S = C_N still holds.
+static void gauss_smear(LatticePropagatorD &prop, const LatticeGaugeFieldD &U, RealD alpha, int Niter) {
+  if (Niter <= 0) return;
+  RealD norm = 1.0 / (1.0 + 2.0 * (Nd - 1) * alpha);
+  for (int n = 0; n < Niter; ++n) {
+    LatticePropagatorD nbr(prop.Grid());
+    nbr = Zero();
+    for (int mu = 0; mu < Nd - 1; ++mu) {                  // spatial only
+      LatticeColourMatrixD Umu = PeekIndex<LorentzIndex>(U, mu);
+      nbr += Umu * Cshift(prop, mu, +1) + adj(Cshift(Umu, mu, -1)) * Cshift(prop, mu, -1);
+    }
+    prop = norm * (prop + alpha * nbr);
+  }
+}
+
 int main(int argc, char **argv) {
   Grid_init(&argc, &argv);
   typedef WilsonImplD FImpl;
@@ -50,7 +69,7 @@ int main(int argc, char **argv) {
   if (!GridCmdOptionExists(argv, argv + argc, "--config") ||
       !GridCmdOptionExists(argv, argv + argc, "--mass")) {
     std::cout << "usage: measure_condensate_3pt --grid L.L.L.T --config <cfg> --mass <m> "
-                 "[--sink-time t] [--cg-tol 1e-8]" << std::endl;
+                 "[--sink-time t] [--cg-tol 1e-8] [--smear-iters 0] [--smear-alpha 0.25]" << std::endl;
     Grid_finalize();
     return 1;
   }
@@ -64,19 +83,28 @@ int main(int argc, char **argv) {
   RealD cg_tol = 1.0e-8;
   if (GridCmdOptionExists(argv, argv + argc, "--cg-tol"))
     cg_tol = std::stod(GridCmdOptionPayload(argv, argv + argc, "--cg-tol"));
+  int smear_iters = 0;                                  // Wuppertal source-smearing steps (0 = point)
+  RealD smear_alpha = 0.25;                             // smearing weight; radius ~ sqrt(2*iters*alpha)
+  if (GridCmdOptionExists(argv, argv + argc, "--smear-iters")) {
+    std::string s = GridCmdOptionPayload(argv, argv + argc, "--smear-iters");
+    GridCmdOptionInt(s, smear_iters);
+  }
+  if (GridCmdOptionExists(argv, argv + argc, "--smear-alpha"))
+    smear_alpha = std::stod(GridCmdOptionPayload(argv, argv + argc, "--smear-alpha"));
 
   LatticeGaugeFieldD Umu(UGrid);
   FieldMetaData header;
   NerscIO::readConfiguration(Umu, header, cfg);
   RealD plaq = WilsonLoops<PeriodicGimplR>::avgPlaquette(Umu);
   std::cout << "# config " << cfg << "  plaquette " << std::setprecision(10) << plaq
-            << "  mass " << mass << "  sink-time " << t_snk << std::endl;
+            << "  mass " << mass << "  sink-time " << t_snk << "  smear-iters " << smear_iters
+            << "  smear-alpha " << smear_alpha << std::endl;
 
   WilsonFermionD Dw(Umu, *UGrid, *UrbGrid, mass);
   MdagMLinearOperator<WilsonFermionD, LatticeFermionD> HermOp(Dw);
   ConjugateGradient<LatticeFermionD> CG(cg_tol, 30000);
 
-  // ---- forward propagator S(x;0) from a point source at the origin (as measure_baryon) ----
+  // ---- forward propagator S(x;0) from a (smeared) source at the origin (as measure_baryon) ----
   LatticePropagatorD src(UGrid);
   src = Zero();
   {
@@ -86,6 +114,7 @@ int main(int argc, char **argv) {
     Coordinate origin({0, 0, 0, 0});
     pokeSite(Sid, src, origin);
   }
+  gauss_smear(src, Umu, smear_alpha, smear_iters);       // widen the source -> ground state at small t
   LatticePropagatorD prop(UGrid);
   prop = Zero();
   for (int s = 0; s < Ns; ++s)
