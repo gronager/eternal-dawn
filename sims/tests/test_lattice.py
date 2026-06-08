@@ -267,3 +267,44 @@ def test_gevp_recovers_excited_states():
     assert abs(res["masses"][1] - 0.80) < 0.06        # first excited (2nd generation)
     assert abs(res["masses"][2] - 1.20) < 0.15        # second excited (3rd generation)
     assert res["masses"][0] < res["masses"][1] < res["masses"][2]
+
+
+def _synthetic_bag(R0_true, a_true=0.5, L=12, peak=1.0, ncfg=5, plateau=(4, 10), seed=0):
+    """measure_bag_profile-style PROF rows [cfg, r2, t, rho_sum, count] for a known Fermi bag
+    rho_norm(r)=1/(1+exp((r-R0)/a)), with the exact lattice r^2 shell counts (nearest image)."""
+    from collections import defaultdict
+    cnt = defaultdict(int)
+    for x in range(L):
+        dx = min(x, L - x)
+        for y in range(L):
+            dy = min(y, L - y)
+            for z in range(L):
+                dz = min(z, L - z)
+                cnt[dx * dx + dy * dy + dz * dz] += 1
+    fermi = lambda r: 1.0 / (1.0 + np.exp((r - R0_true) / a_true))
+    rng = np.random.default_rng(seed)
+    rows = []
+    for c in range(1, ncfg + 1):
+        for t in range(plateau[0], plateau[1] + 1):
+            for r2, k in cnt.items():
+                rho_site = peak * fermi(np.sqrt(r2)) * (1.0 + 0.02 * rng.standard_normal())
+                rows.append([c, r2, t, rho_site * k, k])     # rho_sum = per-site density x count
+    return np.array(rows, dtype=float)
+
+
+def test_bag_profile_recovers_half_density_radius():
+    # a known bag of half-density radius R0=2.5 (lattice units) is recovered from rho(r)
+    prof = _synthetic_bag(R0_true=2.5)
+    res = lat.bag_profile(prof, T=24, plateau=(4, 10), r0_over_a=3.166)
+    assert abs(res["R0"] - 2.5) < 0.3
+    assert np.isclose(res["s_T"], res["R0"] / 3.166)
+    assert res["span"] > 0 and res["n_cfg"] == 5
+
+
+def test_bag_profile_sharper_bag_gives_larger_span():
+    # the lever direction: a SMALLER (sharper) bag -> larger generation span
+    sharp = lat.bag_profile(_synthetic_bag(R0_true=1.5), T=24, r0_over_a=3.166)
+    broad = lat.bag_profile(_synthetic_bag(R0_true=3.5), T=24, r0_over_a=3.166)
+    assert sharp["s_T"] < broad["s_T"]
+    assert sharp["span"] > broad["span"]
+    assert "SHARP" in sharp["verdict"] or sharp["span"] > broad["span"]

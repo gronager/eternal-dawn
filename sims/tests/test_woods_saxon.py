@@ -17,9 +17,15 @@ def test_a_fourth_rung_appears_only_when_deeper():
     assert len(ws.ws_spectrum(V0=7.0, R0=3.0, a=0.5)[1]) == 4
 
 
-def test_overlap_mass_falls_with_generation():
-    # mass = overlap with the condensate; higher rungs spread/nodal -> less overlap -> lighter
+def test_overlap_mass_rises_with_generation():
+    # Eq. configmass weights the density by the LOCAL mass M(r), large in the VACUUM (M = 1 - sigma).
+    # The ground rung sits in the core where M is small (lightest); higher rungs spread into the
+    # vacuum where M is large -> heavier. This is the physical ordering (electron < mu < tau).
     r, states = ws.ws_spectrum(V0=5.0, R0=3.0, a=0.5)
-    cond = 1.0 / (1.0 + np.exp((r - 3.0) / 0.5))
-    m = ws.overlap_masses(r, states, cond)
-    assert m[0] > m[1] > m[2] > 0
+    cond = 1.0 / (1.0 + np.exp((r - 3.0) / 0.5))              # condensate sigma(r), large inside the bag
+    mass_r = 1.0 - cond                                       # local mass M(r), large in the vacuum
+    m = ws.overlap_masses(r, states, mass_r)
+    assert 0 < m[0] < m[1] < m[2]
+    # and weighting by sigma instead would give the WRONG (falling) order -- the catch that fixed this
+    msig = ws.overlap_masses(r, states, cond)
+    assert msig[0] > msig[1] > msig[2] > 0

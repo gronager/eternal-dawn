@@ -423,6 +423,125 @@ def baryon_spectrum(raw, T, tmin=None, tmax=None):
     return out
 
 
+def _bag_rho(prof, plateau):
+    """Config- and plateau-averaged radial scalar density rho(r) from measure_bag_profile rows.
+
+    `prof` is an (n,5) array of [cfg, r2, t, rho_sum, cnt] (shell-summed scalar density and the
+    site count of that r^2 shell on that time slice). Returns (r, rho), r=sqrt(r2) in lattice units,
+    sorted, with rho the shell-AVERAGED density (sum/count) summed over configs and plateau slices,
+    normalised so rho(r_min)=1."""
+    lo, hi = plateau
+    m = (prof[:, 2] >= lo) & (prof[:, 2] <= hi)
+    p = prof[m]
+    r2 = np.unique(p[:, 1]).astype(int)
+    r, rho = [], []
+    for b in r2:
+        sel = p[:, 1].astype(int) == b
+        cnt = p[sel, 4].sum()
+        if cnt <= 0:
+            continue
+        r.append(np.sqrt(b))
+        rho.append(p[sel, 3].sum() / cnt)              # shell average over configs+plateau
+    r = np.asarray(r, dtype=float)
+    rho = np.asarray(rho, dtype=float)
+    order = np.argsort(r)
+    r, rho = r[order], rho[order]
+    if rho[0] != 0:
+        rho = rho / rho[0]                              # normalise to the peak (r->0)
+    return r, rho
+
+
+def _half_density_radius(r, rho):
+    """The radius where the (normalised, peak=1) profile falls to 1/2, by linear interpolation in
+    the first downward crossing -- the bag's size R0 in lattice units."""
+    half = 0.5
+    for i in range(1, len(rho)):
+        if rho[i] <= half <= rho[i - 1]:
+            f = (rho[i - 1] - half) / (rho[i - 1] - rho[i] + 1e-300)
+            return float(r[i - 1] + f * (r[i] - r[i - 1]))
+    return float(r[-1])                                 # never crosses: bag larger than the box
+
+
+def bag_profile(prof, T, plateau=(4, 10), r0_over_a=3.166):
+    """The torsiton bag shape and the lepton lever (Eternal Dawn, Ch. 11 Generations).
+
+    From the gauge-invariant scalar density rho(r)=Tr[S(x;0)^dag S(x;0)] (measure_bag_profile), the
+    config-averaged plateau profile is the dressed-constituent BAG. Its half-density radius R0 (the
+    bag size) in units of the Sommer scale r0 gives a dimensionless sharpness
+
+        s_T  ~  R0 / r0 ,
+
+    the size of the mass-giving core relative to the confinement length -- exactly the lever input of
+    cartasis_sims.fermion_masses (a SMALL bag = a sharp, concentrated mass-giving core = a STEEP
+    generation ladder; a bag of order r0 = broad = a flat ladder). Crossing s_T against the lever
+    gives the implied charged-lepton span (observed 3477).
+
+    HONEST on the dictionary: rho(r) is the one-body constituent profile, and the map s_T ~ R0/r0 is a
+    first-order identification between the lattice bag and the lever's well-relative core (the absolute
+    normalisation would be fixed by matching the Woods-Saxon bag to the overlap model; the genuine
+    three-body condensate <N|qbar q(r)|N> is the sequential-source 3-point refinement). What is ROBUST
+    here is the MEASURED profile rho(r), R0 in r0 units, and the trend: sharp bag -> large span.
+
+    Returns rho(r), R0 (lattice units), the Fermi-fit wall thickness `a` if it converges, s_T, the
+    lever span, jackknife errors over configs, and a verdict."""
+    prof = np.asarray(prof, dtype=float)
+    from . import fermion_masses as fm
+
+    def lever_span(s):
+        s = float(np.clip(s, 0.30, 1.5))               # the lever's well-behaved, monotonic range
+        lad = fm._ascending_ladder(s, well=fm.WELL)
+        return float(lad[-1] / lad[0])
+
+    r, rho = _bag_rho(prof, plateau)
+    R0 = _half_density_radius(r, rho)
+    s_T = R0 / r0_over_a
+    span = lever_span(s_T)
+
+    # optional Fermi (Woods-Saxon) wall thickness, a secondary shape number
+    wall = float("nan")
+    try:
+        from scipy.optimize import curve_fit
+        fermi = lambda rr, R, a: 1.0 / (1.0 + np.exp((rr - R) / a))
+        popt, _ = curve_fit(fermi, r, rho, p0=[max(R0, 0.5), 0.5],
+                            bounds=([0.1, 0.05], [r.max(), r.max()]), maxfev=20000)
+        wall = float(popt[1])
+    except Exception:
+        pass
+
+    # jackknife over configs for s_T and span
+    cfgs = np.unique(prof[:, 0]).astype(int)
+    n = len(cfgs)
+    js_sT, js_span = [], []
+    for c in cfgs:
+        rj, rhoj = _bag_rho(prof[prof[:, 0].astype(int) != c], plateau)
+        R0j = _half_density_radius(rj, rhoj)
+        s = R0j / r0_over_a
+        js_sT.append(s)
+        js_span.append(lever_span(s))
+    js_sT, js_span = np.array(js_sT), np.array(js_span)
+    if n > 1:
+        sT_err = float(np.sqrt((n - 1) / n * np.sum((js_sT - js_sT.mean()) ** 2)))
+        span_err = float(np.sqrt((n - 1) / n * np.sum((js_span - js_span.mean()) ** 2)))
+    else:
+        sT_err = span_err = float("nan")
+
+    if s_T <= 0.55:
+        verdict = (f"SHARP bag (s_T={s_T:.2f} r0): the lever gives span ~{span:.0f}, in reach of the "
+                   f"observed 3477 -- the hierarchy is consistent with DERIVED.")
+    elif s_T >= 0.9:
+        verdict = (f"BROAD bag (s_T={s_T:.2f} r0): span ~{span:.0f} << 3477 -- the minimal bag "
+                   f"under-shoots; the mechanism needs sharper IR dynamics (or it fails).")
+    else:
+        verdict = (f"INTERMEDIATE bag (s_T={s_T:.2f} r0): span ~{span:.0f}; suggestive but not "
+                   f"decisive at this box/spacing -- sharpen with stats and a finer lattice.")
+
+    return {
+        "r": r, "rho": rho, "R0": R0, "wall": wall, "s_T": s_T, "span": span,
+        "s_T_err": sT_err, "span_err": span_err, "n_cfg": n, "verdict": verdict,
+        "r0_over_a": r0_over_a, "plateau": plateau,
+    }
+
+
 def _gevp_lambdas(Cmat, t0, eps=1e-6):
     """Robust generalized eigenvalues lambda_n(t) of C(t) v = lambda C(t0) v, sorted DESCENDING.
     Rather than require C(t0) positive-definite (it rarely is, once a point operator is mixed with
