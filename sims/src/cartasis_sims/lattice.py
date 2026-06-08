@@ -471,10 +471,12 @@ def bag_profile(prof, T, plateau=(4, 10), r0_over_a=3.166):
 
         s_T  ~  R0 / r0 ,
 
-    the size of the mass-giving core relative to the confinement length -- exactly the lever input of
-    cartasis_sims.fermion_masses (a SMALL bag = a sharp, concentrated mass-giving core = a STEEP
-    generation ladder; a bag of order r0 = broad = a flat ladder). Crossing s_T against the lever
-    gives the implied charged-lepton span (observed 3477).
+    the size of the mass-giving core relative to the confinement length -- the lever input of
+    cartasis_sims.fermion_masses. The lever (harmonic overlap) reproduces the full span only in a
+    PRODUCTIVE window s_T in [0.43, 0.70] r0 (it peaks near 0.5 and turns over for sharper cores -- a
+    Gaussian-overlap model artifact, so a too-small s_T does NOT mean a bigger hierarchy). The verdict
+    flags whether the measured bag lands in that window, and never quotes an out-of-window span as a
+    result.
 
     HONEST on the dictionary: rho(r) is the one-body constituent profile, and the map s_T ~ R0/r0 is a
     first-order identification between the lattice bag and the lever's well-relative core (the absolute
@@ -488,8 +490,11 @@ def bag_profile(prof, T, plateau=(4, 10), r0_over_a=3.166):
     from . import fermion_masses as fm
 
     def lever_span(s):
-        s = float(np.clip(s, 0.30, 1.5))               # the lever's well-behaved, monotonic range
-        lad = fm._ascending_ladder(s, well=fm.WELL)
+        # the harmonic overlap lever is NOT monotonic: span rises as the core sharpens only down to a
+        # peak near s~0.5, then turns over for s<~0.43 (a model artifact of the Gaussian-core overlap).
+        # Trust it in the productive window s in [0.43, 0.70] r0; flag, don't quote-as-fact, outside it.
+        sc = float(np.clip(s, 0.30, 1.5))
+        lad = fm._ascending_ladder(sc, well=fm.WELL)
         return float(lad[-1] / lad[0])
 
     r, rho = _bag_rho(prof, plateau)
@@ -525,21 +530,132 @@ def bag_profile(prof, T, plateau=(4, 10), r0_over_a=3.166):
     else:
         sT_err = span_err = float("nan")
 
-    if s_T <= 0.55:
-        verdict = (f"SHARP bag (s_T={s_T:.2f} r0): the lever gives span ~{span:.0f}, in reach of the "
-                   f"observed 3477 -- the hierarchy is consistent with DERIVED.")
-    elif s_T >= 0.9:
-        verdict = (f"BROAD bag (s_T={s_T:.2f} r0): span ~{span:.0f} << 3477 -- the minimal bag "
-                   f"under-shoots; the mechanism needs sharper IR dynamics (or it fails).")
+    lo_p, hi_p = 0.43, 0.70                            # the lever's trustworthy (productive) window
+    under_resolved = R0 < 1.5                          # half-density inside ~1 spacing: barely resolved
+    note = (" NOTE: bag barely resolved (R0 < 1.5a to half-density) -- heavy-mass / UV-limited;"
+            " read the chiral/continuum trend, not this single point.") if under_resolved else ""
+
+    if s_T < lo_p:
+        verdict = (f"bag SMALL/SHARP (R0={R0:.2f}a = {s_T:.2f} r0), BELOW the lever's productive window "
+                   f"[{lo_p},{hi_p}] r0. The harmonic lever turns over here, so its span read-out "
+                   f"({span:.0f}) is a MODEL ARTIFACT, not a result -- do not read it as the hierarchy. "
+                   f"At this heavy pion the constituent is tightly localized; lighter quarks grow the "
+                   f"bag toward the productive window. Chase the mass dependence and the 3-pt "
+                   f"condensate.{note}")
+    elif s_T <= hi_p:
+        ratio = span / 3477.0
+        tag = ("consistent with DERIVED" if 1.0 / 3 < ratio < 3
+               else ("over-shoots" if ratio >= 3 else "under-shoots"))
+        verdict = (f"bag in the PRODUCTIVE window (s_T={s_T:.2f} r0): lever span {span:.0f} vs observed "
+                   f"3477 -- {tag} (factor {max(ratio,1/ratio):.1f}).{note}")
     else:
-        verdict = (f"INTERMEDIATE bag (s_T={s_T:.2f} r0): span ~{span:.0f}; suggestive but not "
-                   f"decisive at this box/spacing -- sharpen with stats and a finer lattice.")
+        verdict = (f"bag BROAD (s_T={s_T:.2f} r0): span {span:.0f} << 3477 -- the minimal bag is too "
+                   f"soft; the mechanism needs sharper IR dynamics (or it fails).{note}")
 
     return {
         "r": r, "rho": rho, "R0": R0, "wall": wall, "s_T": s_T, "span": span,
         "s_T_err": sT_err, "span_err": span_err, "n_cfg": n, "verdict": verdict,
         "r0_over_a": r0_over_a, "plateau": plateau,
+        "under_resolved": bool(under_resolved), "productive_window": (lo_p, hi_p),
     }
+
+
+def correlator_mass(raw, T, tmin=None, tmax=None):
+    """Plateau effective mass of a single correlator C(t), with a jackknife-over-configs error.
+
+    `raw` is (n,3) rows [cfg, t, C(t)] (e.g. the pion C_pi=sum_x rho from measure_bag_profile). Returns
+    {mass, mass_err, meff, t, n_cfg} from m_eff(t)=ln[C(t)/C(t+1)] averaged over the window [tmin,tmax]
+    (defaults [T//8, T//3]). The lean, one-correlator sibling of baryon_spectrum, reused to read m_pi
+    at each valence mass in the bag-profile chiral scan."""
+    raw = np.asarray(raw, dtype=float)
+    cfg = raw[:, 0].astype(int)
+    tt = raw[:, 1].astype(int)
+    C = raw[:, 2]
+    ts = np.arange(tt.max() + 1)
+    configs = np.unique(cfg)
+    n = len(configs)
+    lo = tmin if tmin is not None else max(1, T // 8)
+    hi = tmax if tmax is not None else max(lo + 1, T // 3)
+    Cbar = np.array([C[tt == s].mean() for s in ts])
+    meff = _effective_mass(Cbar)
+    idx = np.arange(lo, min(hi, len(meff)))
+    idx = idx[np.isfinite(meff[idx])]
+    if len(idx) < 1:
+        return {"mass": float("nan"), "mass_err": float("nan"), "meff": meff, "t": ts[:-1], "n_cfg": n}
+    mass = float(np.mean(meff[idx]))
+    js = []
+    for cc in configs:
+        keep = cfg != cc
+        Cj = np.array([C[keep & (tt == s)].mean() for s in ts])
+        js.append(np.mean(_effective_mass(Cj)[idx]))
+    js = np.array(js)
+    err = float(np.sqrt((n - 1) / n * np.sum((js - js.mean()) ** 2))) if n > 1 else 0.0
+    return {"mass": mass, "mass_err": err, "meff": meff, "t": ts[:-1], "n_cfg": n}
+
+
+def bag_chiral_trend(points, window=(0.43, 0.70), r0_over_a=3.166):
+    """Chiral extrapolation of the bag sharpness s_T=R0/r0 vs the pion mass squared (Eternal Dawn,
+    Ch. 11 Generations -- the real test, not a single heavy point).
+
+    `points` is a list of (m_pi2, s_T, s_T_err) across valence masses (m_pi2 in lattice units (m_pi a)^2;
+    s_T = R0/r0 dimensionless). A heavy quark gives a SMALL bag (small s_T); the question is whether,
+    as m_pi2 -> 0, s_T RISES into the lever's productive window [0.43,0.70] r0 (where the consecutive
+    ladder reproduces the observed lepton span ~3477). We fit s_T = c0 + c1 m_pi2 (weighted by 1/err^2)
+    and read the chiral intercept c0 = s_T(m_pi=0).
+
+    Returns the chiral s_T and error, the slope, whether the trend RISES toward chiral (c1<0), whether
+    the chiral bag lands IN the window, the implied span there (only quoted if in-window), and a
+    verdict. HONEST: this is the VALENCE (partially-quenched) chiral limit at fixed sea; the unitary
+    limit and the absolute lever normalisation are the further steps."""
+    pts = np.asarray(points, dtype=float)
+    if pts.ndim == 1:
+        pts = pts.reshape(1, -1)
+    x = pts[:, 0]
+    y = pts[:, 1]
+    e = pts[:, 2] if pts.shape[1] > 2 else np.full_like(y, np.nan)
+    lo, hi = window
+
+    if len(x) < 2:
+        return {"chiral_s_T": float(y[0]), "chiral_s_T_err": float("nan"), "slope": float("nan"),
+                "rising": None, "in_window": bool(lo <= y[0] <= hi), "span": float("nan"),
+                "points": pts, "fit": (float(y[0]), 0.0),
+                "verdict": "single mass only -- need >=2 valence points to extrapolate the chiral trend."}
+
+    w = 1.0 / np.clip(e, 1e-9, None) ** 2
+    if not np.all(np.isfinite(w)):
+        w = np.ones_like(y)
+    A = np.vstack([np.ones_like(x), x]).T
+    AtW = A.T * w
+    cov = np.linalg.inv(AtW @ A)
+    c0, c1 = cov @ (AtW @ y)
+    c0_err = float(np.sqrt(cov[0, 0]))
+    rising = bool(c1 < 0)                               # s_T grows as m_pi2 falls toward chiral
+    in_window = bool(lo <= c0 <= hi)
+
+    span = float("nan")
+    if in_window:
+        from . import fermion_masses as fm
+        lad = fm._ascending_ladder(float(np.clip(c0, 0.30, 1.5)), well=fm.WELL)
+        span = float(lad[-1] / lad[0])
+
+    if in_window:
+        verdict = (f"the bag GROWS into the productive window: chiral s_T = {c0:.2f}+/-{c0_err:.2f} r0 "
+                   f"in [{lo},{hi}] -> lever span ~{span:.0f} vs observed 3477. CONSISTENT WITH "
+                   f"DERIVED (valence chiral limit; unitary + 3-pt confirmation owed).")
+    elif rising and c0 < lo:
+        verdict = (f"the bag RISES toward chiral but extrapolates to s_T = {c0:.2f}+/-{c0_err:.2f} r0, "
+                   f"still BELOW the window [{lo},{hi}] -- the one-body bag under-shoots; push to "
+                   f"lighter mass and measure the 3-pt condensate <N|qbar q(r)|N>.")
+    elif not rising:
+        verdict = (f"the bag does NOT grow toward chiral (slope {c1:+.2f}); chiral s_T = {c0:.2f} r0. "
+                   f"The one-body proxy under-shoots -- the hierarchy needs the 3-pt condensate.")
+    else:
+        verdict = (f"chiral s_T = {c0:.2f}+/-{c0_err:.2f} r0 ABOVE the window [{lo},{hi}] -- bag over-"
+                   f"broad; the lever over-/under-shoots, recheck the scale and window.")
+
+    return {"chiral_s_T": float(c0), "chiral_s_T_err": c0_err, "slope": float(c1), "rising": rising,
+            "in_window": in_window, "span": span, "points": pts, "fit": (float(c0), float(c1)),
+            "verdict": verdict}
 
 
 def _gevp_lambdas(Cmat, t0, eps=1e-6):
