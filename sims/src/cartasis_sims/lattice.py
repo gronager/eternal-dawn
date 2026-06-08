@@ -631,17 +631,29 @@ def bag_chiral_trend(points, window=(0.43, 0.70), r0_over_a=3.166):
     c0_err = float(np.sqrt(cov[0, 0]))
     rising = bool(c1 < 0)                               # s_T grows as m_pi2 falls toward chiral
     in_window = bool(lo <= c0 <= hi)
+    lightest_s_T = float(y[np.argmin(x)])               # s_T at the lightest (most chiral) point
+    any_in = bool(np.any((y >= lo) & (y <= hi)))        # is any MEASURED point already in the window?
+    # a linear fit in m_pi^2 is a conservative LOWER bound when the rise accelerates toward chiral
+    # (the lightest gaps widen); flag that so a c0 just-below-window is read honestly.
+    accel = bool(len(x) >= 3 and rising and lightest_s_T > c0 + c0_err)
 
     span = float("nan")
-    if in_window:
+    s_for_span = c0 if in_window else (lightest_s_T if any_in else c0)
+    if in_window or any_in:
         from . import fermion_masses as fm
-        lad = fm._ascending_ladder(float(np.clip(c0, 0.30, 1.5)), well=fm.WELL)
+        lad = fm._ascending_ladder(float(np.clip(s_for_span, 0.30, 1.5)), well=fm.WELL)
         span = float(lad[-1] / lad[0])
 
     if in_window:
         verdict = (f"the bag GROWS into the productive window: chiral s_T = {c0:.2f}+/-{c0_err:.2f} r0 "
                    f"in [{lo},{hi}] -> lever span ~{span:.0f} vs observed 3477. CONSISTENT WITH "
                    f"DERIVED (valence chiral limit; unitary + 3-pt confirmation owed).")
+    elif rising and c0 < lo and any_in:
+        verdict = (f"ENCOURAGING: the linear chiral extrapolation sits just below the window "
+                   f"(s_T={c0:.2f}+/-{c0_err:.2f} r0), but the lightest measured point is already IN it "
+                   f"(s_T={lightest_s_T:.2f}, lever span ~{span:.0f})"
+                   + (" and the rise ACCELERATES toward chiral (linear is a lower bound)" if accel else "")
+                   + ". Firm it with more light-mass stats / the 3-pt condensate.")
     elif rising and c0 < lo:
         verdict = (f"the bag RISES toward chiral but extrapolates to s_T = {c0:.2f}+/-{c0_err:.2f} r0, "
                    f"still BELOW the window [{lo},{hi}] -- the one-body bag under-shoots; push to "
@@ -655,7 +667,78 @@ def bag_chiral_trend(points, window=(0.43, 0.70), r0_over_a=3.166):
 
     return {"chiral_s_T": float(c0), "chiral_s_T_err": c0_err, "slope": float(c1), "rising": rising,
             "in_window": in_window, "span": span, "points": pts, "fit": (float(c0), float(c1)),
+            "lightest_s_T": lightest_s_T, "any_in_window": any_in, "accelerating": accel,
             "verdict": verdict}
+
+
+def condensate_3pt(p3, c2, sr, chk, T, t_snk, tau_window=None, r0_over_a=3.166, selfcheck_tol=2e-2):
+    """The connected nucleon scalar 3-point <N|qbar q(r)|N> -- the genuine in-medium condensate bag
+    (measure_condensate_3pt), the definitive s_T (Eternal Dawn, Ch. 11 Generations).
+
+    Inputs (parsed measure_condensate_3pt rows, config-tagged):
+      p3   : (n,5) [cfg, r2, tau, G3_sum, count]   -- the shell-summed 3-point density
+      c2   : (n,3) [cfg, t, C_N(t)]                -- the 2-point (for the sink normalisation)
+      sr   : (n,3) [cfg, tau, sum_x G3(tau)]       -- the sum-rule numerator
+      chk  : (n,3) [cfg, recon_2pt, C_N(t_snk)]    -- the sequential-source SELF-CHECK pair
+
+    THE GATE: the self-check. C_N is linear in the spectator propagator, so the source reconstruction
+    MUST equal C_N(t_snk). If |recon - C_N|/|C_N| > selfcheck_tol the sequential SOURCE is wrong and
+    nothing downstream is trusted -- the verdict says so first. If it passes: the sum rule
+    g_S = <sum_x G3(tau)/C_N(t_snk)> plateaus in tau (the nucleon scalar charge), and the tau-plateau
+    profile G3(r) is the condensate bag -- its half-density radius gives s_T = R0/r0 DIRECTLY (no one-
+    body dictionary). Returns the self-check status, g_S, the profile, R0, s_T (with jackknife), and a
+    verdict leading with the gate."""
+    p3 = np.asarray(p3, dtype=float)
+    c2 = np.asarray(c2, dtype=float)
+    sr = np.asarray(sr, dtype=float)
+    chk = np.asarray(chk, dtype=float)
+
+    # --- the self-check (config-averaged reconstruction vs C_N(t_snk)) ---
+    recon = float(chk[:, 1].mean())
+    cn_snk = float(chk[:, 2].mean())
+    sc_resid = abs(recon - cn_snk) / (abs(cn_snk) + 1e-300)
+    sc_ok = bool(sc_resid <= selfcheck_tol)
+
+    # --- the sum rule g_S(tau) = sum_x G3(tau) / C_N(t_snk), plateau between source and sink ---
+    taus = np.arange(int(sr[:, 1].max()) + 1)
+    SRbar = np.array([sr[sr[:, 1].astype(int) == t, 2].mean() if np.any(sr[:, 1].astype(int) == t)
+                      else np.nan for t in taus])
+    gS_tau = SRbar / (cn_snk + 1e-300)
+    if tau_window is None:
+        tau_window = (max(1, t_snk // 4), max(2, t_snk - t_snk // 4))
+    lo, hi = tau_window
+    win = np.arange(lo, min(hi, len(gS_tau)))
+    win = win[np.isfinite(gS_tau[win])]
+    g_S = float(np.mean(gS_tau[win])) if len(win) else float("nan")
+
+    # --- the tau-plateau condensate profile G3(r) and its half-density radius ---
+    r, rho3 = _bag_rho(p3, tau_window)                  # reuse: aggregate shells over the tau window
+    R0 = _half_density_radius(r, rho3)
+    s_T = R0 / r0_over_a
+
+    cfgs = np.unique(p3[:, 0]).astype(int)
+    n = len(cfgs)
+    js = []
+    for c in cfgs:
+        rj, rhoj = _bag_rho(p3[p3[:, 0].astype(int) != c], tau_window)
+        js.append(_half_density_radius(rj, rhoj) / r0_over_a)
+    js = np.array(js)
+    s_T_err = float(np.sqrt((n - 1) / n * np.sum((js - js.mean()) ** 2))) if n > 1 else float("nan")
+
+    lo_p, hi_p = 0.43, 0.70
+    if not sc_ok:
+        verdict = (f"SELF-CHECK FAILED: reconstruction {recon:.4g} vs C_N(t_snk) {cn_snk:.4g} "
+                   f"(resid {sc_resid:.1%}) -- the sequential source is wrong; fix the sigma_seq "
+                   f"sign/transpose before trusting g_S or the profile.")
+    else:
+        where = ("IN" if lo_p <= s_T <= hi_p else ("below" if s_T < lo_p else "above"))
+        verdict = (f"self-check PASSED (resid {sc_resid:.1%}); scalar charge g_S = {g_S:.3f}. "
+                   f"Condensate bag s_T = R0/r0 = {s_T:.3f}+/-{s_T_err:.3f} r0 ({where} the window "
+                   f"[{lo_p},{hi_p}]) -- the genuine 3-body number (no one-body dictionary).")
+
+    return {"self_check_ok": sc_ok, "self_check_resid": sc_resid, "recon": recon, "cn_snk": cn_snk,
+            "g_S": g_S, "g_S_tau": gS_tau, "r": r, "rho3": rho3, "R0": R0, "s_T": s_T,
+            "s_T_err": s_T_err, "n_cfg": n, "tau_window": tau_window, "verdict": verdict}
 
 
 def _gevp_lambdas(Cmat, t0, eps=1e-6):

@@ -347,3 +347,46 @@ def test_bag_chiral_trend_undershoots_below_window():
 def test_bag_chiral_trend_single_point_no_extrapolation():
     tr = lat.bag_chiral_trend([(1.7, 0.27, 0.01)])
     assert "single mass" in tr["verdict"] and np.isnan(tr["chiral_s_T_err"])
+
+
+def _synthetic_3pt(R0_true, T=24, t_snk=12, cn=5.0, gS=0.8, ncfg=6, selfcheck="pass", seed=2):
+    """measure_condensate_3pt-style rows: a known Fermi condensate bag G3(r) over a tau plateau, a
+    2pt C_N(t_snk)=cn, a flat sum rule SR=gS*cn, and a CHK pair (recon vs C_N)."""
+    from collections import defaultdict
+    L = 12
+    cnt = defaultdict(int)
+    for x in range(L):
+        dx = min(x, L - x)
+        for y in range(L):
+            dy = min(y, L - y)
+            for z in range(L):
+                dz = min(z, L - z)
+                cnt[dx * dx + dy * dy + dz * dz] += 1
+    fermi = lambda r: 1.0 / (1.0 + np.exp((r - R0_true) / 0.5))
+    rng = np.random.default_rng(seed)
+    chk, c2, sr, p3 = [], [], [], []
+    recon = cn if selfcheck == "pass" else 0.3 * cn       # mismatch => self-check fails
+    for c in range(1, ncfg + 1):
+        chk.append([c, recon * (1 + 0.001 * rng.standard_normal()), cn])
+        for t in range(T):
+            c2.append([c, t, cn * np.exp(-0.0 * t)])      # flat enough near the sink for the test
+            sr.append([c, t, gS * cn * (1 + 0.01 * rng.standard_normal())])
+            for r2, k in cnt.items():
+                p3.append([c, r2, t, gS * fermi(np.sqrt(r2)) * k, k])
+    return (np.array(p3), np.array(c2), np.array(sr), np.array(chk))
+
+
+def test_condensate_3pt_selfcheck_passes_and_recovers_bag():
+    p3, c2, sr, chk = _synthetic_3pt(R0_true=1.4)
+    res = lat.condensate_3pt(p3, c2, sr, chk, T=24, t_snk=12, tau_window=(4, 8), r0_over_a=3.166)
+    assert res["self_check_ok"] is True
+    assert abs(res["g_S"] - 0.8) < 0.05
+    assert abs(res["R0"] - 1.4) < 0.3 and np.isclose(res["s_T"], res["R0"] / 3.166)
+    assert "PASSED" in res["verdict"]
+
+
+def test_condensate_3pt_selfcheck_failure_is_flagged():
+    p3, c2, sr, chk = _synthetic_3pt(R0_true=1.4, selfcheck="fail")
+    res = lat.condensate_3pt(p3, c2, sr, chk, T=24, t_snk=12, tau_window=(4, 8))
+    assert res["self_check_ok"] is False
+    assert "SELF-CHECK FAILED" in res["verdict"]

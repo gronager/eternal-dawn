@@ -20,12 +20,16 @@ require_exe "$MEAS"
 
 OUT="${OUT:-out/dyn_L12x24_m-0.5}"
 L="${L:-12}" ; T="${T:-24}" ; GRIDSPEC="$L.$L.$L.$T"
-# valence masses (partially quenched), heavy -> light toward m_crit ~ -1.15; stay >= -1.05 (below
-# that quenched exceptional configs switch on, RESULTS.md). A single value reproduces the old behaviour.
-VALMASS="${VALMASS:--0.5 -0.7 -0.85 -0.95 -1.05}"
+# valence masses (partially quenched), heavy -> light toward m_crit ~ -1.15; stop BEFORE the wall
+# (m <~ -1.0): below it the valence quark goes critical and exceptional configs delocalise the bag to
+# the whole box (m_pi -> 0, R0 -> L/2). A single value reproduces the old single-point behaviour.
+VALMASS="${VALMASS:--0.5 -0.7 -0.85 -0.95}"
 THERM="${THERM:-40}" ; STRIDE="${STRIDE:-2}" ; NPAR="${NPAR:-4}" ; CGTOL="${CGTOL:-1e-8}"
 PLAT_LO="${PLAT_LO:-4}" ; PLAT_HI="${PLAT_HI:-10}"      # rho(r,t) / pion plateau window
 R0A="${R0A:-3.166}"                                     # r0/a on this ensemble (run/01 dynamical)
+# quality guard: drop exceptional points (delocalised bag or near-massless pion) from the trend
+MAXR0FRAC="${MAXR0FRAC:-0.30}"                          # drop if R0 > MAXR0FRAC*L (bag fills the box)
+MIN_MPI="${MIN_MPI:-0.10}"                              # drop if m_pi a < MIN_MPI (exceptional zero mode)
 
 shopt -s nullglob
 sel=()
@@ -61,11 +65,13 @@ done
 
 # --- analyze: per-mass bag s_T and m_pi, then the chiral extrapolation -----------------------------
 echo "== analyze: the bag shape s_T(m_pi) and the chiral trend =="
-python3 - "$T" "$PLAT_LO" "$PLAT_HI" "$R0A" "${py_args[@]}" <<'PY'
+python3 - "$T" "$PLAT_LO" "$PLAT_HI" "$R0A" "$L" "$MAXR0FRAC" "$MIN_MPI" "${py_args[@]}" <<'PY'
 import sys, numpy as np
 from cartasis_sims import lattice as lat
 T, lo, hi, r0a = int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]), float(sys.argv[4])
-items = [a.split("=", 1) for a in sys.argv[5:]]          # [(mass, file), ...]
+L, maxr0frac, min_mpi = int(sys.argv[5]), float(sys.argv[6]), float(sys.argv[7])
+items = [a.split("=", 1) for a in sys.argv[8:]]          # [(mass, file), ...]
+r0_cut = maxr0frac * L
 
 pts, table = [], []
 single = None
@@ -76,20 +82,32 @@ for mass, fn in items:
     res = lat.bag_profile(prof, T=T, plateau=(lo, hi), r0_over_a=r0a)
     mpi = lat.correlator_mass(pion, T=T, tmin=lo, tmax=hi)
     single = (res, mpi, mass)
-    table.append((float(mass), mpi["mass"], mpi["mass_err"], res["R0"], res["s_T"], res["s_T_err"]))
-    pts.append((mpi["mass"] ** 2, res["s_T"], res["s_T_err"]))
+    # quality flag: a delocalised bag (fills the box) or a near-massless pion = exceptional config
+    ok = (res["R0"] < r0_cut) and (mpi["mass"] > min_mpi)
+    table.append((float(mass), mpi["mass"], res["R0"], res["s_T"], res["s_T_err"], ok))
+    if ok:
+        pts.append((mpi["mass"] ** 2, res["s_T"], res["s_T_err"]))
 
-print(f"  {'m_q':>7} {'m_pi a':>9} {'R0/a':>7} {'s_T=R0/r0':>11}  window[{0.43},{0.70}]")
-for mq, mp, mpe, R0, sT, sTe in sorted(table, key=lambda z: z[1]):
+print(f"  {'m_q':>7} {'m_pi a':>9} {'R0/a':>7} {'s_T=R0/r0':>13}  window[0.43,0.70]")
+for mq, mp, R0, sT, sTe, ok in sorted(table, key=lambda z: z[1]):
     where = "IN" if 0.43 <= sT <= 0.70 else ("below" if sT < 0.43 else "above")
-    print(f"  {mq:>7.3f} {mp:>9.4f} {R0:>7.2f} {sT:>7.3f}+/-{sTe:<4.3f}  {where}")
+    flag = "" if ok else "  <- EXCEPTIONAL (delocalised / massless): DROPPED"
+    print(f"  {mq:>7.3f} {mp:>9.4f} {R0:>7.2f} {sT:>7.3f}+/-{sTe:<5.3f}  {where}{flag}")
+ndrop = sum(1 for *_, ok in table if not ok)
+if ndrop:
+    print(f"  ({ndrop} exceptional point(s) excluded from the chiral fit: R0 > {r0_cut:.1f}a or "
+          f"m_pi a < {min_mpi})")
 
 if len(pts) >= 2:
     tr = lat.bag_chiral_trend(pts, r0_over_a=r0a)
     print(f"\n  chiral extrapolation s_T = c0 + c1 m_pi^2 :  slope c1 = {tr['slope']:+.3f}, "
           f"rises toward chiral = {tr['rising']}")
-    print(f"  chiral s_T(m_pi=0) = {tr['chiral_s_T']:.3f} +/- {tr['chiral_s_T_err']:.3f} r0")
+    print(f"  chiral s_T(m_pi=0) = {tr['chiral_s_T']:.3f} +/- {tr['chiral_s_T_err']:.3f} r0   "
+          f"(lightest measured s_T = {tr['lightest_s_T']:.3f}, in-window={tr['any_in_window']})")
     print(f"  VERDICT: {tr['verdict']}")
+elif len(pts) == 1:
+    print(f"\n  only one clean mass survived the quality cut -- need >=2 to extrapolate; "
+          f"loosen the scan or the cut.")
 else:
     res, mpi, mass = single
     print(f"\n  single mass {mass} (m_pi a={mpi['mass']:.3f}): {res['verdict']}")
