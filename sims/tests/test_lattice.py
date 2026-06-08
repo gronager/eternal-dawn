@@ -308,3 +308,42 @@ def test_bag_profile_sharper_bag_gives_larger_span():
     assert sharp["s_T"] < broad["s_T"]
     assert sharp["span"] > broad["span"]
     assert "SHARP" in sharp["verdict"] or sharp["span"] > broad["span"]
+
+
+def test_correlator_mass_recovers_known_decay():
+    # C(t) = A exp(-m t) across configs; recover m from the effective-mass plateau
+    m_true, A, T, ncfg = 0.42, 3.0, 24, 6
+    rng = np.random.default_rng(1)
+    rows = []
+    for c in range(1, ncfg + 1):
+        for t in range(T):
+            rows.append([c, t, A * np.exp(-m_true * t) * (1 + 0.01 * rng.standard_normal())])
+    res = lat.correlator_mass(np.array(rows), T=T, tmin=4, tmax=10)
+    assert abs(res["mass"] - m_true) < 0.02
+    assert res["n_cfg"] == ncfg
+
+
+def test_bag_chiral_trend_rises_into_window():
+    # s_T grows as m_pi^2 -> 0 and extrapolates INTO the productive window [0.43, 0.70]
+    mpi2 = np.array([1.7, 1.0, 0.5, 0.2])
+    s_T = 0.58 - 0.18 * mpi2                     # intercept 0.58 (in window), negative slope = rising
+    pts = list(zip(mpi2, s_T, 0.01 * np.ones_like(s_T)))
+    tr = lat.bag_chiral_trend(pts)
+    assert tr["rising"] is True
+    assert 0.43 <= tr["chiral_s_T"] <= 0.70 and tr["in_window"]
+    assert tr["span"] > 0 and "DERIVED" in tr["verdict"]
+
+
+def test_bag_chiral_trend_undershoots_below_window():
+    # rises toward chiral but extrapolates BELOW the window -> honest "under-shoots"
+    mpi2 = np.array([1.7, 1.0, 0.5, 0.2])
+    s_T = 0.38 - 0.07 * mpi2                     # intercept 0.38 < 0.43
+    pts = list(zip(mpi2, s_T, 0.01 * np.ones_like(s_T)))
+    tr = lat.bag_chiral_trend(pts)
+    assert tr["rising"] is True and not tr["in_window"]
+    assert tr["chiral_s_T"] < 0.43 and "under-shoots" in tr["verdict"]
+
+
+def test_bag_chiral_trend_single_point_no_extrapolation():
+    tr = lat.bag_chiral_trend([(1.7, 0.27, 0.01)])
+    assert "single mass" in tr["verdict"] and np.isnan(tr["chiral_s_T_err"])
