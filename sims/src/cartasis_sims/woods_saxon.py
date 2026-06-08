@@ -11,8 +11,10 @@ a flat chiral-restored floor of depth V0, radius R0, surface thickness a. A fini
 FINITE number of s-wave rungs -- the generations -- with the textbook hydrogen-like node structure
 (0, 1, 2, ... interior nodes), and the count is set by the depth x width (sqrt(2 m V0) R0 / pi ~ N):
 the cap. At V0=5, R0=3, a=0.5 it binds exactly three; a fourth appears by V0~6. The mass of each rung
-is its overlap with the localized condensate (Eq. configmass), so the figure shows the three
-wavefunctions against the condensate and the overlap-per-generation -- the mass mechanism, visible.
+is its overlap with the LOCAL dynamical mass M(r) (Eq. configmass weights the scalar density by M, not
+by the condensate sigma) -- and M is large in the VACUUM, small in the chiral-restored core. So the
+mass RISES with generation: the ground rung is tucked in the core (lightest), higher rungs spread into
+the vacuum (heavier). The figure shows the wavefunctions, sigma(r), M(r), and the overlap-per-rung.
 
 This is a MODEL (a single fermion in a fixed well), deliberately: it makes the shape, the node
 structure, the cap, and the overlap mechanism legible. The depth and width are what the lattice
@@ -56,8 +58,10 @@ def interior_nodes(u):
     return int(np.sum(np.diff(s) != 0))
 
 
-def overlap_masses(r, states, condensate):
-    """Configurational mass of each rung as the density overlap with the condensate substrate:
-    m_n = int u_n(r)^2 condensate(r) dr. Returns the array (same order as states)."""
-    cond = np.asarray(condensate, dtype=float)
-    return np.array([_trapz(u**2 * cond, r) for _, u in states])
+def overlap_masses(r, states, weight):
+    """Configurational mass of each rung as the density overlap with a radial weight:
+    m_n = int u_n(r)^2 weight(r) dr. For the physical (rising) ordering pass the LOCAL dynamical mass
+    M(r) = 1 - sigma(r) (Eq. configmass: large in the vacuum); passing sigma(r) gives the wrong
+    (falling) order. Returns the array (same order as states)."""
+    w = np.asarray(weight, dtype=float)
+    return np.array([_trapz(u**2 * w, r) for _, u in states])
