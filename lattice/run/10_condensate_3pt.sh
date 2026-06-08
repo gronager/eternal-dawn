@@ -28,6 +28,10 @@ SINKT="${SINKT:-$((3 * T / 8))}"
 THERM="${THERM:-40}" ; STRIDE="${STRIDE:-2}" ; NPAR="${NPAR:-4}" ; CGTOL="${CGTOL:-1e-8}"
 TAU_LO="${TAU_LO:-}" ; TAU_HI="${TAU_HI:-}"      # tau plateau (default: midway between source and sink)
 R0A="${R0A:-3.166}"
+# source SMEARING: widens the ground-state overlap so the 3-pt plateaus at small t_snk (a point
+# source needs ~8 slices; smeared, far fewer). 0 = point (excited-state contaminated -- biases s_T
+# LOW). radius ~ sqrt(2*iters*alpha); 20 x 0.25 ~ 3 lattice units, a nucleon-scale source.
+SMEAR_ITERS="${SMEAR_ITERS:-20}" ; SMEAR_ALPHA="${SMEAR_ALPHA:-0.25}"
 
 shopt -s nullglob
 sel=()
@@ -39,12 +43,12 @@ for cfg in "$OUT"/ckpoint_lat.* "$OUT"/stream*/ckpoint_lat.*; do
   sel+=("$cfg")
 done
 [ "${#sel[@]}" -gt 0 ] || { echo "no configs in $OUT (n>=$THERM, stride $STRIDE)"; exit 1; }
-echo "condensate 3pt on ${#sel[@]} configs, mass=$MASS, sink-time=$SINKT, $NPAR in parallel"
+echo "condensate 3pt on ${#sel[@]} configs, mass=$MASS, sink-time=$SINKT, smear=${SMEAR_ITERS}x${SMEAR_ALPHA}, $NPAR in parallel"
 
 start_mps
 for cfg in "${sel[@]}"; do
-  printf '%q --grid %q --config %q --mass %q --sink-time %q --cg-tol %q --accelerator-threads 8 | grep -E "^(CHK|C2|SR|P3)" > %q\n' \
-    "$MEAS" "$GRIDSPEC" "$cfg" "$MASS" "$SINKT" "$CGTOL" "$cfg.c3pt"
+  printf '%q --grid %q --config %q --mass %q --sink-time %q --cg-tol %q --smear-iters %q --smear-alpha %q --accelerator-threads 8 | grep -E "^(CHK|C2|SR|P3)" > %q\n' \
+    "$MEAS" "$GRIDSPEC" "$cfg" "$MASS" "$SINKT" "$CGTOL" "$SMEAR_ITERS" "$SMEAR_ALPHA" "$cfg.c3pt"
 done | run_pool "$NPAR"
 stop_mps
 
