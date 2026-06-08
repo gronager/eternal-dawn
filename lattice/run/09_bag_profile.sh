@@ -4,8 +4,9 @@
 # config we solve a point-source propagator and bin its gauge-invariant scalar density
 # rho(r)=Tr[S(x;0)^dag S(x;0)] by spatial radius on each time slice (measure_bag_profile). The
 # config-averaged rho(r) in the plateau is the bag: its half-density radius R0 and wall thickness a
-# fix the sharpness s_T = a/R0, which the analysis crosses against the lepton lever
-# (cartasis_sims.fermion_masses). Sharp bag -> the full x3477 span is DERIVED; broad -> it is not.
+# fix the sharpness s_T = R0/r0, which the analysis crosses against the lepton lever
+# (cartasis_sims.fermion_masses). The lever reproduces 3477 only for s_T in a productive window
+# [0.43,0.70] r0; the verdict flags whether the measured bag lands there (heavy pions make it small).
 #
 # Runs on the dynamical ensemble (set OUT to the run/07 output). Cheap: one propagator solve per
 # config, no sink contraction -- packs many in parallel under MPS like run/06.
@@ -60,8 +61,9 @@ print(f"  config-averaged bag rho(r), plateau t in [{lo},{hi}], n_cfg={res['n_cf
 for r, rr in zip(res["r"], res["rho"]):
     bar = "#" * int(60 * rr / max(res["rho"]))
     print(f"    r={r:5.2f}  rho={rr:10.4e}  {bar}")
-print(f"  half-density radius R0 = {res['R0']:.2f} a   wall thickness a = {res['wall']:.2f} a")
-print(f"  sharpness  s_T = a/R0 = {res['s_T']:.3f}")
-print(f"  -> lepton span implied by the lever: {res['span']:.0f}   (observed 3477)")
+print(f"  half-density radius R0 = {res['R0']:.2f} a   (Fermi wall thickness {res['wall']:.2f} a)")
+print(f"  sharpness  s_T = R0/r0 = {res['s_T']:.3f} +/- {res['s_T_err']:.3f}   (r0/a = {res['r0_over_a']:.3f})")
+print(f"  -> lever span at this s_T: {res['span']:.0f} +/- {res['span_err']:.0f}   "
+      f"(observed 3477; trustworthy only for s_T in {res['productive_window']} r0)")
 print(f"  VERDICT: {res['verdict']}")
 PY

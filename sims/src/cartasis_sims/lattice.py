@@ -471,10 +471,12 @@ def bag_profile(prof, T, plateau=(4, 10), r0_over_a=3.166):
 
         s_T  ~  R0 / r0 ,
 
-    the size of the mass-giving core relative to the confinement length -- exactly the lever input of
-    cartasis_sims.fermion_masses (a SMALL bag = a sharp, concentrated mass-giving core = a STEEP
-    generation ladder; a bag of order r0 = broad = a flat ladder). Crossing s_T against the lever
-    gives the implied charged-lepton span (observed 3477).
+    the size of the mass-giving core relative to the confinement length -- the lever input of
+    cartasis_sims.fermion_masses. The lever (harmonic overlap) reproduces the full span only in a
+    PRODUCTIVE window s_T in [0.43, 0.70] r0 (it peaks near 0.5 and turns over for sharper cores -- a
+    Gaussian-overlap model artifact, so a too-small s_T does NOT mean a bigger hierarchy). The verdict
+    flags whether the measured bag lands in that window, and never quotes an out-of-window span as a
+    result.
 
     HONEST on the dictionary: rho(r) is the one-body constituent profile, and the map s_T ~ R0/r0 is a
     first-order identification between the lattice bag and the lever's well-relative core (the absolute
@@ -488,8 +490,11 @@ def bag_profile(prof, T, plateau=(4, 10), r0_over_a=3.166):
     from . import fermion_masses as fm
 
     def lever_span(s):
-        s = float(np.clip(s, 0.30, 1.5))               # the lever's well-behaved, monotonic range
-        lad = fm._ascending_ladder(s, well=fm.WELL)
+        # the harmonic overlap lever is NOT monotonic: span rises as the core sharpens only down to a
+        # peak near s~0.5, then turns over for s<~0.43 (a model artifact of the Gaussian-core overlap).
+        # Trust it in the productive window s in [0.43, 0.70] r0; flag, don't quote-as-fact, outside it.
+        sc = float(np.clip(s, 0.30, 1.5))
+        lad = fm._ascending_ladder(sc, well=fm.WELL)
         return float(lad[-1] / lad[0])
 
     r, rho = _bag_rho(prof, plateau)
@@ -525,20 +530,33 @@ def bag_profile(prof, T, plateau=(4, 10), r0_over_a=3.166):
     else:
         sT_err = span_err = float("nan")
 
-    if s_T <= 0.55:
-        verdict = (f"SHARP bag (s_T={s_T:.2f} r0): the lever gives span ~{span:.0f}, in reach of the "
-                   f"observed 3477 -- the hierarchy is consistent with DERIVED.")
-    elif s_T >= 0.9:
-        verdict = (f"BROAD bag (s_T={s_T:.2f} r0): span ~{span:.0f} << 3477 -- the minimal bag "
-                   f"under-shoots; the mechanism needs sharper IR dynamics (or it fails).")
+    lo_p, hi_p = 0.43, 0.70                            # the lever's trustworthy (productive) window
+    under_resolved = R0 < 1.5                          # half-density inside ~1 spacing: barely resolved
+    note = (" NOTE: bag barely resolved (R0 < 1.5a to half-density) -- heavy-mass / UV-limited;"
+            " read the chiral/continuum trend, not this single point.") if under_resolved else ""
+
+    if s_T < lo_p:
+        verdict = (f"bag SMALL/SHARP (R0={R0:.2f}a = {s_T:.2f} r0), BELOW the lever's productive window "
+                   f"[{lo_p},{hi_p}] r0. The harmonic lever turns over here, so its span read-out "
+                   f"({span:.0f}) is a MODEL ARTIFACT, not a result -- do not read it as the hierarchy. "
+                   f"At this heavy pion the constituent is tightly localized; lighter quarks grow the "
+                   f"bag toward the productive window. Chase the mass dependence and the 3-pt "
+                   f"condensate.{note}")
+    elif s_T <= hi_p:
+        ratio = span / 3477.0
+        tag = ("consistent with DERIVED" if 1.0 / 3 < ratio < 3
+               else ("over-shoots" if ratio >= 3 else "under-shoots"))
+        verdict = (f"bag in the PRODUCTIVE window (s_T={s_T:.2f} r0): lever span {span:.0f} vs observed "
+                   f"3477 -- {tag} (factor {max(ratio,1/ratio):.1f}).{note}")
     else:
-        verdict = (f"INTERMEDIATE bag (s_T={s_T:.2f} r0): span ~{span:.0f}; suggestive but not "
-                   f"decisive at this box/spacing -- sharpen with stats and a finer lattice.")
+        verdict = (f"bag BROAD (s_T={s_T:.2f} r0): span {span:.0f} << 3477 -- the minimal bag is too "
+                   f"soft; the mechanism needs sharper IR dynamics (or it fails).{note}")
 
     return {
         "r": r, "rho": rho, "R0": R0, "wall": wall, "s_T": s_T, "span": span,
         "s_T_err": sT_err, "span_err": span_err, "n_cfg": n, "verdict": verdict,
         "r0_over_a": r0_over_a, "plateau": plateau,
+        "under_resolved": bool(under_resolved), "productive_window": (lo_p, hi_p),
     }
 
 
