@@ -195,24 +195,43 @@ percent level---a quantitative check the current treatment has not done.
 
 \section{Theoretical issues}
 
-\paragraph{Q20a. Does the bounce set particle masses? (speculative)}
-At the bounce the spin--spin (Hehl--Datta) four-fermion interaction is strong: its
-energy per particle is comparable to the thermal scale---the same $\Delta/T\sim
-\mathcal{O}(1)$ that fixes the membrane pass-fraction $f\approx1/6$
-(\S\ref{sec:membrane-f}). A strong four-fermion coupling is precisely the
-Nambu--Jona-Lasinio setting in which chiral symmetry breaks dynamically and a
-fermion \emph{mass gap} opens---the same mechanism that generates the constituent
-quark mass in QCD. This raises a genuinely tempting possibility: that the torsion
-interaction at the bounce wall does not merely cap the density but \emph{dynamically
-generates} mass scales, tying the membrane microphysics to the particle spectrum and
-so QCD and cosmology together. What is solid: the coupling is of NJL strength there,
-and an NJL gap equation is standard and cheap to solve. What is wildly open: whether
-this yields anything like the observed mass \emph{eigenvalues} and hierarchy, rather
-than a single dynamically-generated scale. The cosmological bounce potential itself
-(\Cref{eq:bounce-potential}) is a single turning-wall with no spectrum; any mass
-spectrum would have to come from the \emph{field-theoretic} effective potential at
-the wall, not the scale-factor potential. This is flagged as speculation, not a
-result---a direction, not a claim.
+\paragraph{Q20a. Do the torsion dynamics set the particle masses? (the torsiton programme)}
+The strong (Hehl--Datta) four-fermion interaction is of Nambu--Jona-Lasinio strength---the
+setting in which chiral symmetry breaks dynamically and a fermion \emph{mass gap} opens, the
+same mechanism that gives the QCD constituent mass. Chapter~\ref{chap:solitons} develops this
+from the tempting possibility it once was into a concrete programme: the elementary fermion is a
+\emph{torsiton}, a chiral soliton of the Hehl--Datta nonlinear Dirac equation, and its mass is
+configurational (Eq.~\ref{eq:configmass}). The status is honestly mixed, and worth stating plainly
+point by point.
+\begin{itemize}
+  \item \emph{The torsiton exists.} The mean-field soliton is a genuine bound solution, and the
+  lattice confirms that the corresponding object---the SU(3)-fundamental baryon---binds, with a
+  clean effective-mass plateau at the right scale relative to its own confinement
+  (Appendix~\ref{app:lattice}). Good reason to believe it is real, not a mean-field artefact.
+  \item \emph{The hierarchy is the right size.} The configurational mass, modulated by charge and
+  colour, spans the observed factor $>10^{3}$: one bag-sharpness parameter reproduces the full
+  charged-lepton span ($\sim\!3500$), with the electron's tiny mass a \emph{prediction} and the
+  neutrino's lightness the weakest condensate grip (\S\ref{sec:generations}). The magnitude is
+  reduced to a single number---the sharpness $s_T$ of the mass-giving bag.
+  \item \emph{Three generations, but no number yet.} The bag is \emph{finite}, so it binds a finite
+  radial tower---the cap that makes ``three'' something the framework can produce rather than
+  postulate. But the actual count follows from the actual well depth, which we have not pinned: the
+  mean field hints at a small number; the lattice must settle it.
+  \item \emph{A clarifying toy.} A Woods--Saxon bag (reproducible in the simulation code) makes the
+  depth\,$\leftrightarrow$\,cap\,$\leftrightarrow$\,radial-node structure legible and shape-matches
+  the soliton ground state, but the depth and sharpness that would fix the generation count and the
+  mass eigenvalues are \emph{inputs} to it, not yet outputs.
+  \item \emph{The couplings are unmeasured.} The whole scale---and with it the well depth---hangs on
+  the infrared scale $\Lambda$, equivalently the strong-torsion coupling $g$ and its $\beta$-function
+  coefficient $b_0$ (Eq.~\ref{eq:transmutation}). These are not yet estimated from first principles
+  (lattice target~L5, Appendix~\ref{app:lattice}). A lattice scan of the bag \emph{shape} is under
+  way and indicates $s_T$ rising into the productive window as the quark mass is lowered toward the
+  chiral limit---encouraging, but a clean number still awaits source/sink smearing, more statistics,
+  and the unitary (rather than partially-quenched) limit.
+\end{itemize}
+So this is no longer ``speculation, not a result.'' It is a programme with an existence result, a
+right-sized mechanism, and a lattice arm returning encouraging partial numbers---with the generation
+\emph{count}, the mass \emph{eigenvalues}, and the couplings $g,b_0$ all still genuinely owed.
 
 \paragraph{Q21. Connection to string theory / loop quantum gravity}
 How does Eternal Dawn relate to other proposed extensions of GR? Could string theory or
