@@ -20,7 +20,11 @@ require_exe "$MEAS"
 OUT="${OUT:-out/dyn_L12x24_m-0.5}"
 L="${L:-12}" ; T="${T:-24}" ; GRIDSPEC="$L.$L.$L.$T"
 MASS="${MASS:--0.5}"                    # start at a clean heavy mass to VALIDATE the self-check
-SINKT="${SINKT:-$((T/2))}"             # nucleon sink time slice (insertion scanned 0<tau<SINKT)
+# nucleon sink time slice (insertion scanned 0<tau<SINKT). MUST sit in the 2-pt plateau where C_N>0:
+# a heavy nucleon decays fast, so T/2 can be PAST the plateau where the backward (wrong-parity) state
+# flips C_N negative and contaminates the profile. ~3T/8 lands in the plateau here; the analysis warns
+# if C_N(t_snk)<=0. Lower SINKT (heavier mass) / raise it (lighter) to track the 2-pt plateau.
+SINKT="${SINKT:-$((3 * T / 8))}"
 THERM="${THERM:-40}" ; STRIDE="${STRIDE:-2}" ; NPAR="${NPAR:-4}" ; CGTOL="${CGTOL:-1e-8}"
 TAU_LO="${TAU_LO:-}" ; TAU_HI="${TAU_HI:-}"      # tau plateau (default: midway between source and sink)
 R0A="${R0A:-3.166}"
@@ -72,7 +76,9 @@ res = lat.condensate_3pt(p3, c2, sr, chk, T=T, t_snk=t_snk, tau_window=tw, r0_ov
 
 print(f"  SELF-CHECK: recon {res['recon']:.6g}  vs  C_N(t_snk) {res['cn_snk']:.6g}  "
       f"(resid {res['self_check_resid']:.2%})  -> {'PASS' if res['self_check_ok'] else 'FAIL'}")
-if res["self_check_ok"]:
+print(f"  SINK     : C_N(t_snk={t_snk}) = {res['cn_snk']:.3e}  (2-pt turns non-positive at t={res['node_t']})"
+      f"  -> {'OK' if res['sink_ok'] else 'TOO FAR (reduce SINKT)'}")
+if res["self_check_ok"] and res["sink_ok"]:
     print(f"  scalar charge g_S = {res['g_S']:.3f}  (sum-rule plateau, tau in {res['tau_window']})")
     print(f"  condensate bag rho3(r):")
     for r, rr in zip(res["r"], res["rho3"]):
