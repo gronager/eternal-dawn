@@ -71,6 +71,6 @@ fin = np.isfinite(res["masses"])
 if fin.sum() >= 2:
     g = res["masses"][0]
     print("  gaps above ground:", "  ".join(f"{(res['masses'][n]-g):.3f}" for n in range(1, N) if fin[n]))
-print("  VERDICT: count the CLEAN levels -- three clean rungs + a noisy fourth supports the thesis;")
-print("           a clean fourth (or no clean second) does not. Sharpen with stats/operators/box.")
+print(f"  GENERATIONS RESOLVED: {res['n_clean']}")
+print(f"  VERDICT: {res['verdict']}")
 PY
