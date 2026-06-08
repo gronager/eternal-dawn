@@ -23,8 +23,8 @@ os.makedirs(PDF_DIR, exist_ok=True)
 
 
 def main():
-    V0, R0, a = 5.0, 3.0, 0.5
-    r, states = ws.ws_spectrum(V0, R0, a, rmax=14.0, N=1400)
+    V0, R0, a = 1.0, 5.0, 1.0                                 # tuned: 3 rungs AND ground rms ~ torsiton
+    r, states = ws.ws_spectrum(V0, R0, a, rmax=16.0, N=1600)
     V = ws.ws_potential(r, V0, R0, a)
     cond = 1.0 / (1.0 + np.exp((r - R0) / a))                 # condensate: the bag-filling substrate
     masses = ws.overlap_masses(r, states, cond)
@@ -33,26 +33,44 @@ def main():
     labels = ["gen I", "gen II", "gen III"]
     cols = ["C3", "C0", "C2"]
 
+    # the ACTUAL torsiton ground state (self-consistent well, lattice-confirmed to bind), for overlay
+    from cartasis_sims import self_consistent as scc
+    from cartasis_sims.self_consistent import _solve_levels
+    o = scc.solve_soliton(m0=1.0, g=4.0, m_sigma=1.5, n_fermions=1, n_levels=4, R=16.0, N=1600,
+                          iters=900, mix=0.12)
+    rt = o["r"]
+    _, ut = _solve_levels(o["M"], rt, rt[1] - rt[0], 4)
+    u_t = ut[:, 0]
+    u_t = u_t / np.max(np.abs(u_t))                           # normalise to unit peak for shape overlay
+
     fig, (axL, axR) = plt.subplots(1, 2, figsize=(11.2, 4.6), gridspec_kw={"width_ratios": [2.0, 1.0]})
 
     # --- left: the well, the rungs riding on their levels, the condensate ---
-    axL.fill_between(r, V, 0.2, color="0.92", zorder=0)        # the well body
+    axL.fill_between(r, V, 0.15, color="0.92", zorder=0)       # the well body
     axL.plot(r, V, color="0.35", lw=1.6)
-    axL.fill_between(r, -V0 - 0.3, -V0 - 0.3 + 1.4 * cond, color="C1", alpha=0.18, zorder=0)
-    axL.plot(r, -V0 - 0.3 + 1.4 * cond, color="C1", lw=1.4, label="condensate $\\sigma(r)$")
+    axL.fill_between(r, -V0 - 0.5, -V0 - 0.5 + 0.45 * cond, color="C1", alpha=0.18, zorder=0)
+    axL.plot(r, -V0 - 0.5 + 0.45 * cond, color="C1", lw=1.4, label="condensate $\\sigma(r)$")
     axL.axhline(0.0, color="0.5", ls=":", lw=1)               # dissociation threshold
-    axL.text(11.6, 0.08, "threshold (4th rung\nwould dissociate)", fontsize=8, color="0.4", va="bottom")
-    sc = 1.5
+    axL.text(11.4, 0.02, "threshold\n(4th dissociates)", fontsize=8, color="0.4", va="bottom")
+    sc = 0.30
+    E0 = states[0][0]
+    u0 = states[0][1] / np.max(np.abs(states[0][1]))          # WS ground, unit peak
     for n, (E, u) in enumerate(states):
-        axL.axhline(E, xmin=0.02, xmax=0.62, color=cols[n], ls="--", lw=0.8, alpha=0.6)
-        axL.plot(r, E + sc * u, color=cols[n], lw=2.0)
-        axL.fill_between(r, E, E + sc * u, color=cols[n], alpha=0.12)
-        axL.text(8.6, E, f"{labels[n]}  ({nodes[n]} node{'s' if nodes[n]!=1 else ''})",
+        un = u / np.max(np.abs(states[0][1]))                 # common scale (WS ground peak = 1)
+        axL.axhline(E, xmin=0.02, xmax=0.60, color=cols[n], ls="--", lw=0.7, alpha=0.5)
+        axL.plot(r, E + sc * un, color=cols[n], lw=2.0)
+        axL.fill_between(r, E, E + sc * un, color=cols[n], alpha=0.10)
+        axL.text(9.4, E, f"{labels[n]}  ({nodes[n]} node{'s' if nodes[n]!=1 else ''})",
                  color=cols[n], fontsize=9, va="center")
-    axL.set_xlim(0, 13); axL.set_ylim(-V0 - 0.6, 1.4)
+    # overlay the ACTUAL torsiton ground state on the gen-I level (sign-matched)
+    if np.sum(u0 * np.interp(r, rt, u_t)) < 0:
+        u_t = -u_t
+    axL.plot(r, E0 + sc * np.interp(r, rt, u_t), color="k", lw=1.7, ls=(0, (4, 2)),
+             label="actual torsiton $\\psi_0$ (self-consistent)")
+    axL.set_xlim(0, 13); axL.set_ylim(-V0 - 0.7, 0.5)
     axL.set_xlabel("$r$"); axL.set_ylabel("energy  /  $V(r)$")
-    axL.set_title("the torsiton bag: three rungs, capped", fontsize=11)
-    axL.legend(loc="lower right", fontsize=8.5)
+    axL.set_title("the torsiton bag: three rungs, capped (shape-matched to $\\psi_0$)", fontsize=10.5)
+    axL.legend(loc="lower right", fontsize=8)
 
     # --- right: the overlap mass per generation (the mass mechanism) ---
     x = np.arange(len(states))
