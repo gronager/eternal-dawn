@@ -719,14 +719,18 @@ def condensate_3pt(p3, c2, sr, chk, T, t_snk, tau_window=None, r0_over_a=3.166, 
     sc_resid = abs(recon - cn_snk) / (abs(cn_snk) + 1e-300)
     sc_ok = bool(sc_resid <= selfcheck_tol)
 
-    # --- sink quality: C_N(t_snk) must be POSITIVE and on the plateau. A heavy nucleon decays fast,
-    # so t_snk = T/2 can sit PAST the plateau where the backward-propagating (wrong-parity) state
-    # takes over and C_N flips sign -- there the profile is backward-contaminated, not the nucleon. ---
+    # --- sink quality: the nucleon 2pt must be on the plateau (forward state dominant) at t_snk.
+    # The contraction's OVERALL SIGN is a convention (C_N can be uniformly negative), so judge by the
+    # SIGN-NORMALISED correlator: positive & decaying on the forward side, turning over near T/2 where
+    # the backward-propagating wrong-parity state takes over (the real node). ---
     tt2 = c2[:, 1].astype(int)
     c2bar = np.array([c2[tt2 == t, 2].mean() if np.any(tt2 == t) else np.nan
                       for t in range(int(tt2.max()) + 1)])
-    node_t = next((t for t in range(1, len(c2bar)) if not (c2bar[t] > 0)), len(c2bar))
-    sink_ok = bool(cn_snk > 0 and t_snk < node_t)
+    ref = c2bar[2:7][np.isfinite(c2bar[2:7])]            # signal region, past the contact term
+    sgn = -1.0 if (len(ref) and np.sum(ref) < 0) else 1.0
+    sc2 = sgn * c2bar                                    # sign-normalised: forward side > 0, decaying
+    node_t = next((t for t in range(2, len(sc2)) if not (sc2[t] > 0)), len(sc2))
+    sink_ok = bool(sgn * cn_snk > 0 and t_snk < node_t)
 
     # --- the sum rule g_S(tau) = sum_x G3(tau) / C_N(t_snk), plateau between source and sink ---
     taus = np.arange(int(sr[:, 1].max()) + 1)
@@ -761,16 +765,16 @@ def condensate_3pt(p3, c2, sr, chk, T, t_snk, tau_window=None, r0_over_a=3.166, 
                    f"(resid {sc_resid:.1%}) -- the sequential source is wrong; fix the sigma_seq "
                    f"sign/transpose before trusting g_S or the profile.")
     elif not sink_ok:
-        verdict = (f"self-check PASSED (the contraction is correct), BUT the SINK IS TOO FAR: "
-                   f"C_N(t_snk={t_snk}) = {cn_snk:.2e} is {'<=0 (sign-flipped)' if cn_snk <= 0 else 'tiny'}"
-                   f" -- the nucleon 2-pt turns non-positive at t={node_t} (backward-propagating wrong-"
-                   f"parity state). The s_T={s_T:.3f} here is backward-contaminated; rerun with "
-                   f"SINKT < {node_t} (in the nucleon plateau, where C_N > 0).")
+        verdict = (f"self-check PASSED (the contraction is correct), BUT the SINK IS PAST THE PLATEAU: "
+                   f"the sign-normalised 2-pt turns over at t={node_t} (backward-propagating wrong-"
+                   f"parity state), and t_snk={t_snk} is at/beyond it. The s_T={s_T:.3f} here is "
+                   f"backward-contaminated; rerun with SINKT < {node_t}.")
     else:
-        verdict = (f"self-check PASSED (resid {sc_resid:.1%}), sink OK (C_N(t_snk)={cn_snk:.2e}>0); "
-                   f"scalar charge g_S = {g_S:.3f}. Condensate bag s_T = R0/r0 = {s_T:.3f}+/-{s_T_err:.3f}"
-                   f" r0 ({where} the window [{lo_p},{hi_p}]) -- the genuine 3-body number (no one-body "
-                   f"dictionary).")
+        verdict = (f"self-check PASSED (resid {sc_resid:.1%}), sink on the plateau (t_snk={t_snk} < "
+                   f"node {node_t}); scalar charge g_S = {abs(g_S):.3f}. Condensate bag s_T = R0/r0 = "
+                   f"{s_T:.3f}+/-{s_T_err:.3f} r0 ({where} the window [{lo_p},{hi_p}]). NOTE: point-source "
+                   f"3-pt -- treat as indicative until source/sink SMEARING isolates the ground state "
+                   f"(a narrow t_snk window sits between excited-state contamination and the node).")
 
     return {"self_check_ok": sc_ok, "self_check_resid": sc_resid, "recon": recon, "cn_snk": cn_snk,
             "sink_ok": sink_ok, "node_t": int(node_t), "g_S": g_S, "g_S_tau": gS_tau, "r": r,

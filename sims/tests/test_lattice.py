@@ -401,4 +401,13 @@ def test_condensate_3pt_far_sink_is_flagged():
     chk[:, 1] = -1.0; chk[:, 2] = -1.0            # recon==C_N(t_snk)<0: self-check ok, sink bad
     res = lat.condensate_3pt(p3, c2, sr, chk, T=24, t_snk=12, tau_window=(4, 8))
     assert res["self_check_ok"] is True and res["sink_ok"] is False
-    assert res["node_t"] == 10 and "SINK IS TOO FAR" in res["verdict"]
+    assert res["node_t"] == 10 and "PAST THE PLATEAU" in res["verdict"]
+
+
+def test_condensate_3pt_negative_convention_sink_ok():
+    # a globally NEGATIVE nucleon 2pt (sign convention) with a clean plateau must NOT be flagged
+    p3, c2, sr, chk = _synthetic_3pt(R0_true=1.4)
+    c2 = c2.copy(); c2[:, 2] *= -1.0                  # flip the whole correlator negative
+    chk = chk.copy(); chk[:, 1] *= -1.0; chk[:, 2] *= -1.0
+    res = lat.condensate_3pt(p3, c2, sr, chk, T=24, t_snk=8, tau_window=(3, 6))
+    assert res["self_check_ok"] is True and res["sink_ok"] is True   # sign-robust: not a node
