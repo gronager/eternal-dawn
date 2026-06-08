@@ -100,10 +100,12 @@ if ndrop:
 
 if len(pts) >= 2:
     tr = lat.bag_chiral_trend(pts, r0_over_a=r0a)
-    print(f"\n  chiral extrapolation s_T = c0 + c1 m_pi^2 :  slope c1 = {tr['slope']:+.3f}, "
-          f"rises toward chiral = {tr['rising']}")
-    print(f"  chiral s_T(m_pi=0) = {tr['chiral_s_T']:.3f} +/- {tr['chiral_s_T_err']:.3f} r0   "
-          f"(lightest measured s_T = {tr['lightest_s_T']:.3f}, in-window={tr['any_in_window']})")
+    print(f"\n  chiral extrapolation s_T(m_pi^2 -> 0), heaviest points dropped progressively:")
+    for k, c, ce in tr["stability"]:
+        mark = "IN" if 0.43 <= c <= 0.70 else ("below" if c < 0.43 else "above")
+        print(f"    lightest {k}: s_T = {c:.3f} +/- {ce:.3f}   {mark}")
+    print(f"  ({tr['n_in_window']} measured point(s) already in the window; "
+          f"rise accelerates = {tr['accelerating']})")
     print(f"  VERDICT: {tr['verdict']}")
 elif len(pts) == 1:
     print(f"\n  only one clean mass survived the quality cut -- need >=2 to extrapolate; "

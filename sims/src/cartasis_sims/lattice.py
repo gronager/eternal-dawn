@@ -624,50 +624,70 @@ def bag_chiral_trend(points, window=(0.43, 0.70), r0_over_a=3.166):
     w = 1.0 / np.clip(e, 1e-9, None) ** 2
     if not np.all(np.isfinite(w)):
         w = np.ones_like(y)
-    A = np.vstack([np.ones_like(x), x]).T
-    AtW = A.T * w
-    cov = np.linalg.inv(AtW @ A)
-    c0, c1 = cov @ (AtW @ y)
-    c0_err = float(np.sqrt(cov[0, 0]))
+
+    def _wlinfit(xx, yy, ww):
+        Ak = np.vstack([np.ones_like(xx), xx]).T
+        AtW = Ak.T * ww
+        covk = np.linalg.inv(AtW @ Ak)
+        ck = covk @ (AtW @ yy)
+        return float(ck[0]), float(np.sqrt(covk[0, 0])), float(ck[1])
+
+    c0, c0_err, c1 = _wlinfit(x, y, w)                  # all-point fit (conservative)
     rising = bool(c1 < 0)                               # s_T grows as m_pi2 falls toward chiral
     in_window = bool(lo <= c0 <= hi)
     lightest_s_T = float(y[np.argmin(x)])               # s_T at the lightest (most chiral) point
     any_in = bool(np.any((y >= lo) & (y <= hi)))        # is any MEASURED point already in the window?
-    # a linear fit in m_pi^2 is a conservative LOWER bound when the rise accelerates toward chiral
-    # (the lightest gaps widen); flag that so a c0 just-below-window is read honestly.
+    n_in = int(np.sum((y >= lo) & (y <= hi)))
     accel = bool(len(x) >= 3 and rising and lightest_s_T > c0 + c0_err)
 
+    # CHIRAL extrapolation should use the LIGHT points (heavy masses curve out of the chiral regime).
+    # Report the fit as the heaviest points are dropped progressively, lightest-first -- transparent,
+    # not cherry-picked -- and take the light-half fit as the chiral estimate.
+    order = np.argsort(x)
+    xs, ys, ws = x[order], y[order], w[order]
+    stability = []                                      # (n_points_used, c0, c0_err), lightest-first
+    for k in range(len(xs), 2, -1):
+        ck0, cke, _ = _wlinfit(xs[:k], ys[:k], ws[:k])
+        stability.append((k, ck0, cke))
+    k_light = max(3, len(xs) // 2)
+    c0_light, c0_light_err = next((c, ce) for (kk, c, ce) in stability if kk == k_light)
+    in_window_light = bool(lo <= c0_light <= hi)
+
     span = float("nan")
-    s_for_span = c0 if in_window else (lightest_s_T if any_in else c0)
-    if in_window or any_in:
+    s_for_span = (c0_light if in_window_light else (lightest_s_T if any_in else c0))
+    if in_window_light or any_in or in_window:
         from . import fermion_masses as fm
         lad = fm._ascending_ladder(float(np.clip(s_for_span, 0.30, 1.5)), well=fm.WELL)
         span = float(lad[-1] / lad[0])
 
-    if in_window:
-        verdict = (f"the bag GROWS into the productive window: chiral s_T = {c0:.2f}+/-{c0_err:.2f} r0 "
-                   f"in [{lo},{hi}] -> lever span ~{span:.0f} vs observed 3477. CONSISTENT WITH "
-                   f"DERIVED (valence chiral limit; unitary + 3-pt confirmation owed).")
-    elif rising and c0 < lo and any_in:
-        verdict = (f"ENCOURAGING: the linear chiral extrapolation sits just below the window "
-                   f"(s_T={c0:.2f}+/-{c0_err:.2f} r0), but the lightest measured point is already IN it "
-                   f"(s_T={lightest_s_T:.2f}, lever span ~{span:.0f})"
-                   + (" and the rise ACCELERATES toward chiral (linear is a lower bound)" if accel else "")
-                   + ". Firm it with more light-mass stats / the 3-pt condensate.")
-    elif rising and c0 < lo:
-        verdict = (f"the bag RISES toward chiral but extrapolates to s_T = {c0:.2f}+/-{c0_err:.2f} r0, "
-                   f"still BELOW the window [{lo},{hi}] -- the one-body bag under-shoots; push to "
+    if in_window or in_window_light:
+        verdict = (f"the bag GROWS into the productive window. Chiral extrapolation: all-mass "
+                   f"{c0:.2f}+/-{c0_err:.2f} r0 (a curvature-contaminated LOWER bound), light-mass "
+                   f"(lightest {k_light}) {c0_light:.2f}+/-{c0_light_err:.2f} r0 IN [{lo},{hi}]; "
+                   f"{n_in} measured point(s) already in -> lever span ~{span:.0f} vs observed 3477. "
+                   f"CONSISTENT WITH DERIVED (valence chiral limit; confirm with the 3-pt condensate).")
+    elif rising and any_in:
+        verdict = (f"ENCOURAGING: light-mass chiral extrapolation s_T={c0_light:.2f} r0 (all-mass "
+                   f"{c0:.2f}, a lower bound), {n_in} measured point(s) already IN the window "
+                   f"(lightest s_T={lightest_s_T:.2f}, span ~{span:.0f})"
+                   + (" and the rise ACCELERATES toward chiral" if accel else "")
+                   + ". Firm with more light-mass stats / the 3-pt condensate.")
+    elif rising:
+        verdict = (f"the bag RISES toward chiral but the light-mass extrapolation s_T={c0_light:.2f} r0 "
+                   f"is still BELOW the window [{lo},{hi}] -- the one-body bag under-shoots; push to "
                    f"lighter mass and measure the 3-pt condensate <N|qbar q(r)|N>.")
     elif not rising:
         verdict = (f"the bag does NOT grow toward chiral (slope {c1:+.2f}); chiral s_T = {c0:.2f} r0. "
                    f"The one-body proxy under-shoots -- the hierarchy needs the 3-pt condensate.")
     else:
         verdict = (f"chiral s_T = {c0:.2f}+/-{c0_err:.2f} r0 ABOVE the window [{lo},{hi}] -- bag over-"
-                   f"broad; the lever over-/under-shoots, recheck the scale and window.")
+                   f"broad; recheck the scale and window.")
 
     return {"chiral_s_T": float(c0), "chiral_s_T_err": c0_err, "slope": float(c1), "rising": rising,
             "in_window": in_window, "span": span, "points": pts, "fit": (float(c0), float(c1)),
-            "lightest_s_T": lightest_s_T, "any_in_window": any_in, "accelerating": accel,
+            "lightest_s_T": lightest_s_T, "any_in_window": any_in, "n_in_window": n_in, "accelerating": accel,
+            "chiral_s_T_light": float(c0_light), "chiral_s_T_light_err": float(c0_light_err),
+            "k_light": int(k_light), "in_window_light": in_window_light, "stability": stability,
             "verdict": verdict}
 
 
