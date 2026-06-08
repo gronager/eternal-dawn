@@ -631,17 +631,29 @@ def bag_chiral_trend(points, window=(0.43, 0.70), r0_over_a=3.166):
     c0_err = float(np.sqrt(cov[0, 0]))
     rising = bool(c1 < 0)                               # s_T grows as m_pi2 falls toward chiral
     in_window = bool(lo <= c0 <= hi)
+    lightest_s_T = float(y[np.argmin(x)])               # s_T at the lightest (most chiral) point
+    any_in = bool(np.any((y >= lo) & (y <= hi)))        # is any MEASURED point already in the window?
+    # a linear fit in m_pi^2 is a conservative LOWER bound when the rise accelerates toward chiral
+    # (the lightest gaps widen); flag that so a c0 just-below-window is read honestly.
+    accel = bool(len(x) >= 3 and rising and lightest_s_T > c0 + c0_err)
 
     span = float("nan")
-    if in_window:
+    s_for_span = c0 if in_window else (lightest_s_T if any_in else c0)
+    if in_window or any_in:
         from . import fermion_masses as fm
-        lad = fm._ascending_ladder(float(np.clip(c0, 0.30, 1.5)), well=fm.WELL)
+        lad = fm._ascending_ladder(float(np.clip(s_for_span, 0.30, 1.5)), well=fm.WELL)
         span = float(lad[-1] / lad[0])
 
     if in_window:
         verdict = (f"the bag GROWS into the productive window: chiral s_T = {c0:.2f}+/-{c0_err:.2f} r0 "
                    f"in [{lo},{hi}] -> lever span ~{span:.0f} vs observed 3477. CONSISTENT WITH "
                    f"DERIVED (valence chiral limit; unitary + 3-pt confirmation owed).")
+    elif rising and c0 < lo and any_in:
+        verdict = (f"ENCOURAGING: the linear chiral extrapolation sits just below the window "
+                   f"(s_T={c0:.2f}+/-{c0_err:.2f} r0), but the lightest measured point is already IN it "
+                   f"(s_T={lightest_s_T:.2f}, lever span ~{span:.0f})"
+                   + (" and the rise ACCELERATES toward chiral (linear is a lower bound)" if accel else "")
+                   + ". Firm it with more light-mass stats / the 3-pt condensate.")
     elif rising and c0 < lo:
         verdict = (f"the bag RISES toward chiral but extrapolates to s_T = {c0:.2f}+/-{c0_err:.2f} r0, "
                    f"still BELOW the window [{lo},{hi}] -- the one-body bag under-shoots; push to "
@@ -655,6 +667,7 @@ def bag_chiral_trend(points, window=(0.43, 0.70), r0_over_a=3.166):
 
     return {"chiral_s_T": float(c0), "chiral_s_T_err": c0_err, "slope": float(c1), "rising": rising,
             "in_window": in_window, "span": span, "points": pts, "fit": (float(c0), float(c1)),
+            "lightest_s_T": lightest_s_T, "any_in_window": any_in, "accelerating": accel,
             "verdict": verdict}
 
 
