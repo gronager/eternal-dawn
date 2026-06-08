@@ -792,6 +792,12 @@ def _gevp_lambdas(Cmat, t0, eps=1e-6):
     only supports that many rungs)."""
     Nt, N, _ = Cmat.shape
     C0 = 0.5 * (Cmat[t0] + Cmat[t0].T)
+    # the nucleon correlator can be uniformly NEGATIVE (a contraction-sign convention); then C0 is
+    # negative-definite and sqrt(w0) is imaginary. Flip the whole matrix by its dominant-eigenvalue
+    # sign so the signal subspace is positive, then whiten. The overall sign cancels in m_eff.
+    wp = np.linalg.eigvalsh(C0)
+    sgn = -1.0 if abs(wp.min()) > abs(wp.max()) else 1.0
+    C0 = sgn * C0
     w0, V0 = np.linalg.eigh(C0)
     keep = w0 > eps * w0.max()
     lam = np.full((Nt, N), np.nan)
@@ -800,7 +806,7 @@ def _gevp_lambdas(Cmat, t0, eps=1e-6):
     Winv = V0[:, keep] / np.sqrt(w0[keep])                 # C0^{-1/2} on the kept subspace, (N, k)
     k = int(keep.sum())
     for t in range(Nt):
-        Ct = 0.5 * (Cmat[t] + Cmat[t].T)
+        Ct = sgn * 0.5 * (Cmat[t] + Cmat[t].T)
         A = Winv.T @ Ct @ Winv                            # k x k, well-conditioned
         ev = np.linalg.eigvalsh(A)
         lam[t, :k] = np.sort(ev)[::-1]
@@ -861,8 +867,41 @@ def gevp_spectrum(raw, N, T, t0=2, tmin=None, tmax=None):
         v = jk[:, n][np.isfinite(jk[:, n])]
         if len(v) > 1:
             err[n] = float(np.sqrt((len(v) - 1) / len(v) * np.sum((v - v.mean()) ** 2)))
+
+    n_clean, count_verdict = _count_generations(masses, err)
     return {"masses": masses, "mass_err": err, "meff": meff, "t0": t0,
-            "tmin": int(lo), "tmax": int(hi), "n_cfg": ncfg}
+            "tmin": int(lo), "tmax": int(hi), "n_cfg": ncfg, "n_clean": n_clean,
+            "verdict": count_verdict}
+
+
+def _count_generations(masses, err, clean_frac=0.15):
+    """Count the CLEAN radial rungs (= candidate generations) in a GEVP spectrum: a level is clean if
+    it has a finite mass and a relative error below clean_frac, AND every lighter level is also clean
+    (the tower must be contiguous from the ground state -- a clean level above a noisy gap is not a
+    resolved rung). Returns (n_clean, verdict). The framework's live prediction is HOW MANY: three
+    clean rungs and a noisy fourth postdicts the Standard Model's three generations; a clean fourth
+    predicts a fourth (whose neutrino must be heavy to evade the LEP Z-width)."""
+    masses = np.asarray(masses, dtype=float)
+    err = np.asarray(err, dtype=float)
+    n_clean = 0
+    for n in range(len(masses)):
+        ok = (np.isfinite(masses[n]) and np.isfinite(err[n]) and masses[n] > 0
+              and err[n] < clean_frac * abs(masses[n]))
+        if not ok:
+            break
+        n_clean += 1
+    if n_clean <= 2:
+        verdict = (f"{n_clean} clean rung(s) -- the basis/statistics resolve too few to test the "
+                   f"generation count; add operators, configs, or a bigger box.")
+    elif n_clean == 3:
+        verdict = ("THREE clean rungs (and no clean fourth) -- consistent with exactly three "
+                   "generations, a postdiction of the Standard Model's flavour count. Confirm the "
+                   "fourth is genuinely noise (not just under-resolved) before claiming the cap.")
+    else:
+        verdict = (f"{n_clean} clean rungs -- a FOURTH (or higher) generation is resolved. If real, "
+                   f"its neutrino must be heavy/sterile to evade the LEP Z-width (3 light neutrinos). "
+                   f"Check it is a bound rung, not a two-particle scattering state.")
+    return n_clean, verdict
 
 
 # The lattice theory for the torsiton (L4). NOT the sextet -- that was a walking proxy for the

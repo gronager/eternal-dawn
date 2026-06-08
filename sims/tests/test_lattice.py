@@ -411,3 +411,40 @@ def test_condensate_3pt_negative_convention_sink_ok():
     chk = chk.copy(); chk[:, 1] *= -1.0; chk[:, 2] *= -1.0
     res = lat.condensate_3pt(p3, c2, sr, chk, T=24, t_snk=8, tau_window=(3, 6))
     assert res["self_check_ok"] is True and res["sink_ok"] is True   # sign-robust: not a node
+
+
+def _synthetic_gevp(masses, T=24, N=3, t0=2, amp=None, sign=1.0, seed=3):
+    """An N-operator GEVP correlator matrix C_ij(t) = sum_n A_in A_jn e^{-m_n t} for known masses,
+    scaled by `sign` (to test the globally-negative convention). Rows [cfg, i, j, t, C]."""
+    rng = np.random.default_rng(seed)
+    masses = np.asarray(masses, float)
+    A = np.eye(N) + 0.3 * rng.standard_normal((N, N)) if amp is None else amp
+    rows = []
+    for cfg in range(1, 9):
+        for t in range(T):
+            C = sign * (A * np.exp(-masses * t)[None, :]) @ A.T
+            for i in range(N):
+                for j in range(N):
+                    rows.append([cfg, i, j, t, C[i, j] * (1 + 0.005 * rng.standard_normal())])
+    return np.array(rows)
+
+
+def test_gevp_sign_robust_recovers_masses_when_negative():
+    # a globally NEGATIVE correlator matrix (sign convention) must give the SAME answer as positive
+    true = [0.5, 0.9, 1.4]
+    res_pos = lat.gevp_spectrum(_synthetic_gevp(true, sign=+1.0), N=3, T=24, t0=2, tmin=3, tmax=8)
+    res_neg = lat.gevp_spectrum(_synthetic_gevp(true, sign=-1.0), N=3, T=24, t0=2, tmin=3, tmax=8)
+    assert np.allclose(res_pos["masses"], res_neg["masses"], equal_nan=True)   # the point: sign-robust
+    for n in range(2):                                   # the two cleanly-resolved levels
+        assert abs(res_pos["masses"][n] - true[n]) < 0.05
+
+
+def test_generation_count_three_vs_four():
+    # three clean rungs -> "three generations"; a clean fourth -> "FOURTH ... generation"
+    n3, v3 = lat._count_generations([0.5, 0.9, 1.4, 2.0], [0.01, 0.02, 0.05, 0.9])
+    assert n3 == 3 and "THREE clean" in v3
+    n4, v4 = lat._count_generations([0.5, 0.9, 1.4, 2.0], [0.01, 0.02, 0.05, 0.1])
+    assert n4 == 4 and "FOURTH" in v4
+    # a noisy second breaks the contiguous tower at one
+    n1, _ = lat._count_generations([0.5, 0.9, 1.4], [0.01, 0.9, 0.05])
+    assert n1 == 1
