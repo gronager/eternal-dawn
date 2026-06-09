@@ -61,6 +61,15 @@ def total_charge(n):
     return float(topological_charge_density(n).sum())
 
 
+def coarse_order(n, sigma=3.0):
+    """The local condensate magnitude |<n>| (coarse-grained order parameter): 0 in the hot disordered
+    fluid (the field cancels on averaging), ~1 in the cold condensed vacuum. This is the *medium* the
+    torsitons are knotted in -- the chiral condensate itself, the thing the charge-density map omits."""
+    from scipy.ndimage import gaussian_filter
+    m = np.stack([gaussian_filter(n[..., a], sigma, mode="wrap") for a in range(n.shape[-1])], -1)
+    return np.sqrt(np.sum(m * m, -1)).clip(0.0, 1.0)
+
+
 def energy_density(n, kappa=0.5, mu2=0.1):
     """The baby-Skyrme energy density: sigma gradient + Skyrme stabiliser + vacuum potential."""
     A, B = _dx(n), _dy(n)

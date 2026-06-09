@@ -34,8 +34,8 @@ def main():
     # pick four snapshots: early (disordered), two intermediate, final (frozen torsitons)
     idx = [int(0.08 * len(frames)), int(0.30 * len(frames)), int(0.60 * len(frames)), len(frames) - 1]
 
-    fig = plt.figure(figsize=(12.6, 6.6))
-    gs = fig.add_gridspec(2, 4, height_ratios=[1.25, 1.0], hspace=0.32, wspace=0.18)
+    fig = plt.figure(figsize=(12.6, 8.4))
+    gs = fig.add_gridspec(3, 4, height_ratios=[1.12, 1.12, 1.0], hspace=0.34, wspace=0.16)
 
     qmax = np.percentile(np.abs(frames[idx[1]][2]), 99.7) or 1.0
     labels = ["hot tally\n(disordered)", "cooling\n(domains)", "condensing\n(knots forming)",
@@ -43,13 +43,23 @@ def main():
     for k, i in enumerate(idx):
         s, n, q = frames[i]
         T = res["T"][i]
-        ax = fig.add_subplot(gs[0, k])
-        ax.imshow(q.T, origin="lower", cmap="RdBu_r", vmin=-qmax, vmax=qmax, interpolation="nearest")
-        ax.set_xticks([]); ax.set_yticks([])
-        ax.set_title(f"{labels[k]}\nT={T:.2f}", fontsize=9.5)
+        # row 0: the CONDENSATE itself -- the medium ordering from disordered (~0) to vacuum (~1)
+        axo = fig.add_subplot(gs[0, k])
+        axo.imshow(gq.coarse_order(n, sigma=3.0).T, origin="lower", cmap="viridis", vmin=0, vmax=1,
+                   interpolation="nearest")
+        axo.set_xticks([]); axo.set_yticks([])
+        axo.set_title(f"{labels[k]}\nT={T:.2f}", fontsize=9.5)
+        if k == 0:
+            axo.set_ylabel("condensate $|\\langle n\\rangle|$", fontsize=9.5)
+        # row 1: the torsitons -- the topological charge density (the knots in that medium)
+        axq = fig.add_subplot(gs[1, k])
+        axq.imshow(q.T, origin="lower", cmap="RdBu_r", vmin=-qmax, vmax=qmax, interpolation="nearest")
+        axq.set_xticks([]); axq.set_yticks([])
+        if k == 0:
+            axq.set_ylabel("torsitons $q(x)$", fontsize=9.5)
 
     # --- condensation: energy + winding content vs time ---
-    axc = fig.add_subplot(gs[1, :2])
+    axc = fig.add_subplot(gs[2, :2])
     t = np.arange(len(res["content"]))
     axc.plot(t, res["content"] / res["content"].max(), "o-", color="C3", ms=3,
              label="winding content $\\sum|q|$ (torsiton count)")
@@ -60,7 +70,7 @@ def main():
     axc.legend(fontsize=8, loc="upper right"); axc.grid(alpha=0.2)
 
     # --- Kibble-Zurek: faster quench -> more torsitons ---
-    axk = fig.add_subplot(gs[1, 2:])
+    axk = fig.add_subplot(gs[2, 2:])
     rates, content = gq.quench_rate_scan([0.5, 1.0, 2.0, 4.0, 8.0], L=96, base_steps=8000,
                                          T0=0.9, seed=11, **PAR)
     axk.loglog(rates, content, "o-", color="C2", lw=1.8)
