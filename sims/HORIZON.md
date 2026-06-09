@@ -41,9 +41,12 @@ magnitude*; the lattice (L4) remains the exact arbiter for the quantum spectrum.
 ## Staged execution plan (recommended order)
 
 - **3a ✅ confinement demonstrator** — quarks confined, baryons/leptons free (`genesis_confine`).
-- **3b → the SU(3)-flavour baryon octet.** Build on `genesis_quench3d` (the SU(2) Skyrmion) + SU(3)
-  collective quantization → the proton/neutron/Λ/Σ/Ξ spectrum and the Δ. *This is the first genuinely
-  PREDICTIVE multi-baryon spectrum* (relative masses ~30%, the Skyrme-model accuracy). Start here.
+- **3b ✅ the baryon octet+decuplet** (`genesis_su3`). The hedgehog soliton + rigid-rotor collective
+  quantization gives the nucleon, the Δ, and the hyperons (Λ, Σ, Ξ; Σ*, Ξ*, Ω). N, Δ, Ω calibrate
+  (f_π, e, the strange scale); the rest are **predictions** — the decuplet equal spacing to ~1%, the
+  octet to ~3–9%. *The Horizon's first genuine prediction.* Known limitation: the Λ–Σ split (their
+  isospin) needs the full Yabu–Ando treatment; here they are degenerate. With f_π, e from the lattice
+  Λ this becomes absolute-scale from first principles.
 - **3c → the lepton sector.** Colourless knots + the electroweak charge → the charged-lepton tower.
 - **3d → couple them.** Leptons + (confined) quarks → baryons, all condensing together from one
   transition, with the full *relative* spectrum (the complete species cascade, dynamical).
