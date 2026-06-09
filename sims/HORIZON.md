@@ -47,7 +47,12 @@ magnitude*; the lattice (L4) remains the exact arbiter for the quantum spectrum.
   octet to ~3–9%. *The Horizon's first genuine prediction.* Known limitation: the Λ–Σ split (their
   isospin) needs the full Yabu–Ando treatment; here they are degenerate. With f_π, e from the lattice
   Λ this becomes absolute-scale from first principles.
-- **3c → the lepton sector.** Colourless knots + the electroweak charge → the charged-lepton tower.
+- **3c ✅ the lepton sector** (`genesis_leptons`). The colourless half of the soliton: free (3a), no
+  flavour rotor, so the spectrum is the RADIAL tower — the generations e, μ, τ from the s_T ladder; the
+  neutrinos are the same rungs with the weakest condensate grip → sub-eV, no new scale. The unified
+  picture (`horizon_species`): the whole observable fermion spectrum from one soliton — leptons
+  (colourless rungs) + baryons (coloured Skyrmions), 11 orders of magnitude, two organising principles
+  set by colour.
 - **3d → couple them.** Leptons + (confined) quarks → baryons, all condensing together from one
   transition, with the full *relative* spectrum (the complete species cascade, dynamical).
 - **3e → feed the lattice numbers** (`Λ, σ, s_T, c_T`) → absolute MeV + the genesis abundance. The
