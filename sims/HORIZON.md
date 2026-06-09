@@ -53,8 +53,12 @@ magnitude*; the lattice (L4) remains the exact arbiter for the quantum spectrum.
   picture (`horizon_species`): the whole observable fermion spectrum from one soliton — leptons
   (colourless rungs) + baryons (coloured Skyrmions), 11 orders of magnitude, two organising principles
   set by colour.
-- **3d → couple them.** Leptons + (confined) quarks → baryons, all condensing together from one
-  transition, with the full *relative* spectrum (the complete species cascade, dynamical).
+- **3d ✅ the unified genesis** (`genesis_horizon`). The capstone: all observable matter from ONE
+  cooling transition — the colourless leptons (rungs) + neutrinos (3c) and the coloured sector confined
+  (3a) into the baryon octet/decuplet (3b), every species switching on together as the condensate
+  forms. 14 species, 11 orders of magnitude, one transition. **Parametrised for the lattice:**
+  `genesis(scale_MeV=Λ, s_T=s_T)` runs on the calibrated values now and re-runs for the absolute-MeV
+  prediction the moment L4 lands — the re-run hook.
 - **3e → feed the lattice numbers** (`Λ, σ, s_T, c_T`) → absolute MeV + the genesis abundance. The
   *prediction* — the fan either lands on the observed twelve or it does not.
 
