@@ -153,44 +153,59 @@ with **m_N/m_π = 1.648** — the heavy-sea constituent-counting value, unchange
 1.623. The torsiton binds in the bigger box exactly as before; the bag question is what moved.
 
 **The bag RESOLVES — the genuine three-body number (`run/10`).** This is the payoff of T=48. The
-connected nucleon scalar 3-point `⟨N|q̄q(r)|N⟩` (sequential source, self-check passes to all digits,
-sink at t_snk=18 < node 26): the **τ-plateau bag lifts clean off the cutoff**, `R0 = 1.42a` (vs the
-pilot's unresolved R0<1a), giving
+connected nucleon scalar 3-point `⟨N|q̄q(r)|N⟩` (sequential source, self-check passes to all digits)
+lifts the **τ-plateau bag clean off the cutoff**, `R0 = 1.4–1.8a` (vs the pilot's unresolved R0<1a),
+and the scalar charge is **rock-stable, g_S = 0.21**, across all sink times. The sink-time scan
+(243 configs), the decisive Stage-1 test:
 
-> **s_T = R0/r0 = 0.452 ± (stat) — IN the productive window [0.43, 0.70].**
+| t_snk | dist. to node (26) | R0 | s_T | err |
+|---|---|---|---|---|
+| 16 | 10 | 1.45a | 0.462 | ±0.013 |
+| 18 |  8 | 1.42a | 0.452 | — |
+| 20 |  6 | 1.76a | 0.563 | ±0.058 |
 
-This is the genuine three-body condensate, not the one-body proxy: the real object the fermion-mass
-hierarchy reduces to, and it lands in the window. The scalar charge holds, **g_S = 0.207**,
-shape-independent as before. The two-state τ-fit *over-corrected* on this ensemble (R0=4.29a,
-s_T=1.37 — as unstable as the pilot's under-correction R0=0.46a); at this large t_snk the plateau is
-already ground-state-dominated, so the resolved plateau is the trustworthy ground-state number and
-the two-state line is flagged unstable (`gs_reliable=False`, `s_T_best` = the plateau — the verdict
-fix in `lattice.condensate_3pt`).
+> **The bag is RESOLVED and IN the window [0.43, 0.70] at every sink time — `s_T ≈ 0.45–0.56`
+> (central ≈ 0.50, sink-systematic ≈ ±0.06).** The value is *not* pinned within the window.
+
+What is robust: the bag resolves (R0 ≈ 1.4–1.8a, off the cutoff), it lies in the productive window,
+and `g_S = 0.21` is shape- and sink-independent (the genuinely pinned number). What is *not* pinned:
+the precise `s_T`. The two clean points (t_snk=16,18) agree at ~0.45; t_snk=20 drifts up to 0.56 with
+a 4× larger error, sitting only 6 slices from the backward node — so two effects push R0 up together
+and are **degenerate on this ensemble**: residual excited-state relaxation (the ground-state bag is
+genuinely larger) vs. backward contamination from the node (spurious inflation). The two-state τ-fit
+that would separate them is unstable (R0 swings 4.2–6.1a — flagged `gs_reliable=False`; it needs more
+τ-room, i.e. a larger T). Given the exponential lever (`d ln span / d ln s_T ≈ 15`), this ±0.06
+maps to a charged-lepton span anywhere from ~8000 to ~50000 — so this ensemble confirms the
+*mechanism* (resolved bag, in the window) but does **not** deliver the spectrum to ~30%.
 
 **The one-body proxy agrees (`run/09`).** The dressed-quark scalar profile chiral scan puts the
 lightest three points in the window and extrapolates to **s_T ≈ 0.430**, with the consecutive-rung
 lever spanning **×3684 vs the observed ×3477** charged-lepton span — consistent with the derived
 hierarchy.
 
-**Three independent roads converge at s_T ≈ 0.43–0.45.** They did not have to:
+**Three independent roads all land in the window.** They did not have to:
 
 | road | what it measures | s_T |
 |---|---|---|
 | one-body proxy (`run/09`) | dressed-quark bag ρ(r)=Tr[S†S], chiral-extrapolated | 0.430 |
-| three-body condensate (`run/10`) | ⟨N\|q̄q(r)\|N⟩, the genuine knot | 0.452 |
+| three-body condensate (`run/10`) | ⟨N\|q̄q(r)\|N⟩, the genuine knot | 0.45–0.56 |
 | lepton hierarchy (`genesis_horizon`) | the s_T the ×3477 lever *requires* | 0.428 |
 
-The bag sharpness measured directly on the lattice and the bag sharpness the lepton masses demand
-agree to ~5%. The framework's central claim — one substrate, one knot-size, sets the whole fermion
-ladder — survives a real measurement rather than a fit.
+All three sit inside [0.43, 0.70]: the bag sharpness measured directly on the lattice and the
+sharpness the lepton masses demand are the same kind of number, not orders apart. The framework's
+central claim — one substrate, one knot-size, sets the whole fermion ladder — survives a real
+measurement. What the three roads do **not** yet do is *agree to a few percent*: the three-body bag
+spans 0.45–0.56, and against the exponential lever that spread is the dominant uncertainty.
 
-**Honest caveats (unchanged).** Still a *single, heavy* sea mass (m_π a ≈ 1.27, far from the chiral
-point), ~30% accuracy by construction, and the lever model sits inside the lepton road. Window
-*membership* is strongly indicated, not yet bulletproof: that wants the Stage-2 lighter seas (−0.75,
-−0.85) for a unitary chiral extrapolation of s_T(m_π²) and g_S(m_π²), plus the SINKT-stability check
-(t_snk = 16, 18, 20) and the nodal GEVP generation count. But Stage 1's question — *does the bag
-resolve and the two-state fit behave once T=48 gives it τ-room?* — is answered: **the bag resolved,
-in the window, on the genuine three-body operator.**
+**Honest caveats.** Still a *single, heavy* sea mass (m_π a ≈ 1.27, far from the chiral point), and
+the lever model sits inside the lepton road. The **sink-time scan is done and it revealed a
+systematic** (s_T drifts 0.45→0.56 as t_snk approaches the node), so the value is bracketed, not
+pinned. The honest lesson for Stage 2: the urgent lever is **larger T** (T=64), to give the two-state
+τ-fit the room to stabilise and separate excited-state relaxation from backward contamination — *not*
+only the lighter seas (−0.75, −0.85). Both are wanted; T is the one this scan flagged. Also owed: the
+nodal GEVP generation count. But Stage 1's question — *does the bag resolve once T=48 gives it
+τ-room?* — is answered yes: **the bag resolved, off the cutoff, in the window, on the genuine
+three-body operator, at every sink time** — the precise value within the window is Stage-2 work.
 
 ## L1 — confinement (status)
 
