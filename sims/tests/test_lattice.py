@@ -269,6 +269,42 @@ def test_gevp_recovers_excited_states():
     assert res["masses"][0] < res["masses"][1] < res["masses"][2]
 
 
+def test_nodal_gevp_recovers_three_generations():
+    # The NODAL-basis test: the covariant-Laplacian polynomial sources (0,1,2 radial nodes) give the
+    # GEVP an N=3 cross-correlator matrix C_ij(t) = sum_n Z[n,i] Z[n,j] exp(-E_n t). With three
+    # well-separated, cleanly-overlapping levels, gevp_spectrum must recover all three eigen-energies
+    # AND _count_generations must report exactly 3 clean rungs (the three-generation postdiction).
+    # This is the Python-side gate on the nodal pipeline; the C++ nodal smearing only changes the
+    # OVERLAPS Z (giving real 1-/2-node sensitivity), not the on-disk [cfg,i,j,t,C] format this reads.
+    import numpy as np
+    from cartasis_sims import lattice as lat
+    rng = np.random.default_rng(7)
+    N, T = 3, 24
+    E = np.array([0.40, 0.75, 1.15])                 # three KNOWN eigen-energies: gen I, II, III
+    # node-bearing overlaps: operator k (k nodes) couples most strongly to state k, with controlled
+    # off-diagonal mixing (a well-conditioned, non-collinear basis -- what the nodes buy us).
+    Z = np.array([[1.0, 0.45, 0.20],                 # Z[state, operator]
+                  [0.50, 1.0, 0.55],
+                  [0.25, 0.50, 1.0]])
+    rows = []
+    for cfg in range(1, 13):
+        for t in range(T):
+            for i in range(N):
+                for j in range(N):
+                    c = sum(Z[n, i] * Z[n, j] * np.exp(-E[n] * t) for n in range(N))
+                    c *= (1 + 0.002 * rng.standard_normal())
+                    rows.append([cfg, i, j, t, c])
+    res = lat.gevp_spectrum(np.array(rows), N=N, T=T, t0=2, tmin=3, tmax=8)
+    assert abs(res["masses"][0] - E[0]) < 0.03        # ground (gen I)
+    assert abs(res["masses"][1] - E[1]) < 0.06        # first excited (gen II)
+    assert abs(res["masses"][2] - E[2]) < 0.15        # second excited (gen III)
+    assert res["masses"][0] < res["masses"][1] < res["masses"][2]
+    # the recovered tower is three clean, contiguous rungs -> three generations
+    n_clean, verdict = lat._count_generations(res["masses"], res["mass_err"])
+    assert n_clean == 3
+    assert res["n_clean"] == 3
+
+
 def _synthetic_bag(R0_true, a_true=0.5, L=12, peak=1.0, ncfg=5, plateau=(4, 10), seed=0):
     """measure_bag_profile-style PROF rows [cfg, r2, t, rho_sum, count] for a known Fermi bag
     rho_norm(r)=1/(1+exp((r-R0)/a)), with the exact lattice r^2 shell counts (nearest image)."""
@@ -492,3 +528,115 @@ def test_condensate_3pt_reports_groundstate_bag():
     res = lat.condensate_3pt(p3, c2, sr, chk, T=24, t_snk=12, tau_window=(4, 8), r0_over_a=3.166)
     assert res["self_check_ok"] and abs(res["gs_R0"] - 1.4) < 0.3
     assert "GROUND-STATE" in res["verdict"]
+
+
+def _synthetic_pp(m_pi, G_PP, T, ncfg=8, noise=0.005, seed=7):
+    """measure_decay_constant-style PP rows [cfg, t, C_PP(t)] for a known two-sided cosh
+    C_PP(t) = (G_PP/(2 m_pi)) (e^{-m_pi t} + e^{-m_pi (T-t)}), with small per-config noise."""
+    rng = np.random.default_rng(seed)
+    tt = np.arange(T)
+    shape = (G_PP / (2.0 * m_pi)) * (np.exp(-m_pi * tt) + np.exp(-m_pi * (T - tt)))
+    rows = []
+    for c in range(1, ncfg + 1):
+        for t in range(T):
+            rows.append([c, t, shape[t] * (1.0 + noise * rng.standard_normal())])
+    return np.array(rows, dtype=float)
+
+
+def test_decay_constant_recovers_mpi_and_fpi():
+    # synthetic cosh PP correlator with KNOWN m_pi and G_PP; decay_constant must recover both,
+    # and f_pi*a must equal the PCAC formula (2 m_q / m_pi^2) sqrt(G_PP).
+    m_pi_true, G_PP_true, m_q, T = 0.30, 0.8, 0.05, 32
+    pp = _synthetic_pp(m_pi_true, G_PP_true, T)
+    res = lat.decay_constant(pp, m_q=m_q, T=T, tmin=4, tmax=14)
+    assert abs(res["m_pi"] - m_pi_true) < 0.02
+    assert abs(res["G_PP"] - G_PP_true) < 0.05
+    f_expected = (2.0 * m_q / m_pi_true**2) * np.sqrt(G_PP_true)
+    assert abs(res["f_pi"] - f_expected) < 0.05 * f_expected
+    assert np.isclose(res["v"], res["f_pi"])           # the framework's v = f_pi identification
+    assert res["m_pi_err"] < 0.01 and res["f_pi_err"] < 0.05 * f_expected
+    assert res["n_cfg"] == 8
+
+
+def test_sigma_2piv2_check_flags_satisfied_and_violated():
+    # construct (sigma, f_pi) pairs that exactly satisfy / grossly violate sigma = 2 pi v^2.
+    f_pi_a = 0.10
+    sqrt_sigma_sat = np.sqrt(2.0 * np.pi * f_pi_a**2)   # sigma = 2 pi f_pi^2 exactly -> ratio 1
+    sat = lat.sigma_2piv2_check(sqrt_sigma_sat, f_pi_a)
+    assert np.isclose(sat["ratio"], 1.0, atol=1e-9)
+    assert sat["consistent"] and "CONSISTENT" in sat["verdict"]
+    # gross violation: sigma 10x too large -> ratio ~ 10, outside the band
+    viol = lat.sigma_2piv2_check(sqrt_sigma_sat * np.sqrt(10.0), f_pi_a)
+    assert viol["ratio"] > 5.0 and not viol["consistent"]
+    assert "STRAINED" in viol["verdict"]
+
+
+def test_sigma_2piv2_check_within_errors():
+    # a central value off the band but bracketing 1 within the propagated error -> within_err True
+    f_pi_a = 0.10
+    sqrt_sigma_sat = np.sqrt(2.0 * np.pi * f_pi_a**2)
+    res = lat.sigma_2piv2_check(sqrt_sigma_sat * 1.3, f_pi_a,
+                                sqrt_sigma_a_err=0.4 * sqrt_sigma_sat, f_pi_a_err=0.0)
+    assert res["within_err"] and np.isfinite(res["ratio_err"])
+
+
+def _synthetic_va(M, G, T, npol=3, ncfg=8, noise=0.004, seed=11):
+    """measure_s_parameter-style rows [cfg, t, C(t)] for a single-cosh meson correlator
+    C(t) = (G/(2 M)) (e^{-M t} + e^{-M (T-t)}) with KNOWN mass M and amplitude G (the spatial-
+    polarisation-summed amplitude G = npol * F^2 * M^2), with small per-config noise. Used to build
+    a vector (rho) and an axial (a1) channel with chosen masses/decay constants."""
+    rng = np.random.default_rng(seed)
+    tt = np.arange(T)
+    shape = (G / (2.0 * M)) * (np.exp(-M * tt) + np.exp(-M * (T - tt)))
+    rows = []
+    for c in range(1, ncfg + 1):
+        for t in range(T):
+            rows.append([c, t, shape[t] * (1.0 + noise * rng.standard_normal())])
+    return np.array(rows, dtype=float)
+
+
+def test_s_parameter_proxy_recovers_masses_and_qcd_like_sign():
+    # QCD-like input: a1 heavier than rho (M_A > M_V) and F_V > F_A -> S > 0, near the QCD ballpark,
+    # M_A/M_V > 1. Build C_V, C_A as single coshes with known masses/decay constants and recover them.
+    T, npol = 32, 3
+    M_V, M_A = 0.42, 0.68                                 # rho lighter than a1 (QCD-like)
+    F_V, F_A = 0.18, 0.13                                 # vector decay constant larger than axial
+    G_V, G_A = npol * F_V**2 * M_V**2, npol * F_A**2 * M_A**2
+    c_v = _synthetic_va(M_V, G_V, T, npol=npol, seed=11)
+    c_a = _synthetic_va(M_A, G_A, T, npol=npol, seed=12)
+    res = lat.s_parameter_proxy(c_v, c_a, T=T, tmin=4, tmax=14, npol=npol)
+    assert abs(res["M_V"] - M_V) < 0.02 and abs(res["M_A"] - M_A) < 0.02
+    assert abs(res["ratio"] - M_A / M_V) < 0.03 and res["ratio"] > 1.3   # a1 clearly above rho
+    assert abs(res["F_V"] - F_V) < 0.02 and abs(res["F_A"] - F_A) < 0.02
+    # the S-proxy: sign and rough magnitude. S = 4 pi (F_V^2/M_V^2 - F_A^2/M_A^2)
+    S_true = 4.0 * np.pi * (F_V**2 / M_V**2 - F_A**2 / M_A**2)
+    assert res["S"] > 0 and abs(res["S"] - S_true) < 0.1
+    assert res["va_int"] > 0                              # chiral symmetry broken (positive V-A integral)
+    assert res["n_cfg"] == 8
+    # honest verdict: never claims to validate S<0.1; flags the QCD-like expectation
+    assert "does NOT validate S < 0.10" in res["verdict"] and "L5" in res["verdict"]
+
+
+def test_s_parameter_proxy_conformal_input_drives_S_to_zero():
+    # CONFORMAL-like input: degenerate vector and axial (M_A ~ M_V, F_A ~ F_V) -> S -> 0, M_A/M_V -> 1
+    T, npol = 32, 3
+    M_V, M_A = 0.50, 0.505                                # nearly degenerate (parity doubling)
+    F_V, F_A = 0.15, 0.149
+    G_V, G_A = npol * F_V**2 * M_V**2, npol * F_A**2 * M_A**2
+    c_v = _synthetic_va(M_V, G_V, T, npol=npol, seed=21)
+    c_a = _synthetic_va(M_A, G_A, T, npol=npol, seed=22)
+    res = lat.s_parameter_proxy(c_v, c_a, T=T, tmin=4, tmax=14, npol=npol)
+    assert abs(res["ratio"] - 1.0) < 0.05                # M_A/M_V -> 1 (the conformal signature)
+    assert abs(res["S"]) < 0.05                          # V and A nearly cancel -> S near zero
+    # even at small S the honesty bar holds: it does not claim to have validated the walking target
+    assert "does NOT validate S < 0.10" in res["verdict"]
+
+
+def test_s_parameter_proxy_untestable_without_plateau():
+    # garbage (no clean cosh) -> NaN S, flagged untestable, never silently a number
+    T = 32
+    rng = np.random.default_rng(3)
+    c_v = np.array([[c, t, rng.standard_normal()] for c in range(1, 5) for t in range(T)])
+    c_a = np.array([[c, t, rng.standard_normal()] for c in range(1, 5) for t in range(T)])
+    res = lat.s_parameter_proxy(c_v, c_a, T=T, tmin=4, tmax=14)
+    assert (not np.isfinite(res["S"])) or "UNTESTABLE" in res["verdict"] or "S-proxy" in res["verdict"]

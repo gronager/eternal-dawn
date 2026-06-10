@@ -1,10 +1,10 @@
 # Lattice strong-sector pipeline (Eternal Dawn, Part III / Appendix B)
 
 This is the GPU half of the particle-sector programme. The **analysis** half (turning
-measurements into σ, T_c, γ_m, w0) lives in `sims/src/cartasis_sims/lattice.py` and is
-unit-tested on CPU (`sims/tests/test_lattice.py`) with synthetic data, so the extraction logic
-is validated **independent of any GPU run**. This directory holds the build/run scripts that
-produce the configurations and measurements on the GH200.
+measurements into σ, r₀, the spectrum, the bag s_T, f_π) lives in
+`sims/src/cartasis_sims/lattice.py` and is unit-tested on CPU (`sims/tests/test_lattice.py`) with
+synthetic data, so the extraction logic is validated **independent of any GPU run**. This directory
+holds the build/run scripts that produce the configurations and measurements on the GH200.
 
 **Division of labor.** The repo authors and tests the pipeline; you run it on the GH200 and
 commit the outputs/logs back; analysis + iteration happen through the repo. Nothing here needs
@@ -12,43 +12,46 @@ to be re-derived — it is `make`-and-run, the same ethos as the rest of the boo
 
 ---
 
-## The target, and the run order
+## The object, and the run order
 
-The gate measurement is **γ_m** (the mass anomalous dimension): it decides whether the candidate
-strong sector *walks*, which is the prerequisite for both a small electroweak `S` (Part III) and
-the steep mass hierarchy (Part II). But the *run order* starts cheaper, to validate the pipeline
-and bank a result before the expensive dynamical-fermion runs:
+The object is the **torsiton** — the SU(3)-fundamental baryon (colour from the Pauli label,
+Chapter "The Forces from the Field"): three quarks, one of each colour, the chiral soliton the
+framework identifies as the elementary fermion. The headline questions are the lattice targets
+**L1–L5** of Appendix B: does it confine and bind, and how sharp is the mass-giving condensate
+**bag** `s_T` (which sets the whole generation hierarchy). The run order starts cheap, to validate
+the pipeline and set the scale, before the dynamical-fermion runs:
 
-| # | target | what runs | cost (1× GH200) | module function |
+| # | target | what runs | run | module function |
 |---|---|---|---|---|
-| 1 | **σ** (confinement / string tension) | pure-gauge HMC + Wilson-loop static potential | hours | `static_potential_cornell` |
-| 2 | **T_c** (deconfinement = "the condensate melts") | finite-T pure gauge, Polyakov scan | hours–day | `deconfinement_beta_c` |
-| 3 | **w0** (scale setting) | gradient flow on the above | minutes | `gradient_flow_w0` |
-| 4 | **γ_m** (the GATE) | dynamical-fermion HMC + Dirac mode number | days–weeks | `anomalous_dimension_from_mode_number` |
+| L1 | **σ, r₀** (confinement / scale) | pure-gauge HMC + Wilson-loop static potential | `01` | `static_potential_cornell` |
+| — | **T_c** (deconfinement = "the condensate melts") | finite-T pure gauge, Polyakov scan | `02` | `deconfinement_beta_c` |
+| — | **w0** (scale setting) | gradient flow | `03` | `gradient_flow_w0` |
+| L4 | **the spectrum** (m_π, m_N — the torsiton binds) | dynamical Wilson HMC + baryon/pion correlators | `06`,`07` | `baryon_spectrum`, `correlator_mass` |
+| L4 | **the bag s_T** (the generation hierarchy) | dressed-quark profile + condensate 3-pt | `09`,`10` | `bag_profile`, `condensate_3pt` |
+| L4 | **generations** (the radial tower count) | variational (GEVP) baryon, nodal basis | `08` | `gevp_spectrum` |
+| L2 | **σ = 2πv²** (one substrate, mass + confinement) | pion decay constant f_π | `11` | `decay_constant`, `sigma_2piv2_check` |
 
-Steps 1–3 are pure-gauge, single-GPU, interconnect-free — ideal for validating the stack and the
-analysis. Step 4 is the prize and the only expensive one.
+Runs `01`–`03` are pure-gauge, single-GPU, interconnect-free — ideal for validating the stack.
+`07` is the dynamical ensemble everything downstream measures on.
 
-## The candidate theory
+## The theory
 
 ```
 gauge group : SU(3)
-fermions    : N_f = 2 Dirac in the sextet (2-index symmetric) representation
+fermions    : N_f = 2 Dirac, FUNDAMENTAL representation (Wilson), dynamical
 ```
-**Why this one:** it is the leading *near-conformal / walking* candidate with a light
-flavour-singlet scalar — exactly the composite-Higgs/dilaton Part III needs; SU(3) matches the
-colour the Pauli label forces (Chapter 8); and there is substantial existing lattice literature
-(Fodor–Holland–Kuti–Nógrádi–Schröder and others) to validate the stack against before trusting an
-ED-specific number. **Alternatives** to try if this one disappoints: SU(3) with N_f = 8
-fundamental (LatKMI), or minimal walking technicolor SU(2) with N_f = 2 adjoint. The choice of the
-walking sector's group/representation is itself part of what is owed (Appendix B); fixing it is a
-publishable contribution.
+The torsiton is the fundamental-rep baryon — the object QCD calls the nucleon. SU(3) matches the
+colour the Pauli label forces (Chapter "The Forces from the Field"). The strong IR sector is this
+torsion-bound soliton, **not** a separate walking gauge theory; the framework's one torsion force
+wears the strong and the electroweak faces both. The absolute scale Λ (and with it whether the
+propagating-torsion coupling walks) is the **L5** β-function — a separate, harder programme
+(Appendix B), not part of this campaign.
 
-**The gate, concretely:** measure γ_m from the Dirac mode number ν(M) ∝ M^{4/(1+γ_m)}
-(Giusti–Lüscher; the stochastic estimator, so no eigenvectors are stored — memory-light,
-single-GPU). A clearly nonzero γ_m (order ~0.3, debated in the literature) means the sector walks
-and the framework is favourably placed; a vanishing γ_m means it sits in the conformal window or
-runs like QCD, and Part III retreats to Part II.
+**The headline question, concretely:** the fermion-mass hierarchy reduces to one number, the
+sharpness `s_T = R0/r0` of the dynamically-massive bag the radial rungs couple to. The lever's
+productive window — where the consecutive ladder reproduces the observed ×3477 charged-lepton span —
+is `s_T ∈ [0.43, 0.70] r0`. The campaign measures `s_T` (runs `09`, `10`) and tests the sharp
+prediction `σ = 2πv²` (run `11`). Results: `RESULTS.md`.
 
 ## Hardware notes (GH200)
 
@@ -86,13 +89,24 @@ lattice/
 ├── build/build_grid_gh200.sh      # deps + Grid + the 5 test exes + our programs (GH200)
 ├── src/                           # custom Grid measurement programs (Grid ships no turnkey ones)
 │   ├── Makefile                   # compiles against libGrid via grid-config
-│   └── measure_potential.cc       # static potential W(R,T) -> sigma (target 1)
+│   ├── measure_potential.cc       # static potential W(R,T) -> sigma, r0 (L1)
+│   ├── generate_dynamical.cc      # dynamical Nf=2 fundamental Wilson HMC (the torsiton vacuum)
+│   ├── measure_baryon.cc          # pion + baryon (torsiton) correlators -> the spectrum (L4)
+│   ├── measure_baryon_gevp.cc     # variational baryon, nodal basis -> generations (L4)
+│   ├── measure_bag_profile.cc     # one-body dressed-quark bag rho(r) -> s_T proxy (L4)
+│   ├── measure_condensate_3pt.cc  # genuine 3-body condensate <N|qbar q|N> -> the bag s_T (L4)
+│   └── measure_decay_constant.cc  # pion decay constant f_pi -> sigma = 2 pi v^2 test (L2)
 └── run/
     ├── _lib.sh                    # shared: $GRID default, require_exe, note_params
-    ├── 01_puregauge_potential.sh  # target 1: string tension
-    ├── 02_finiteT_polyakov.sh     # target 2: T_c (the melting)
-    ├── 03_gradient_flow.sh        # target 3: w0 scale setting
-    └── 04_dynamical_modenumber.sh # target 4: gamma_m (the gate)
+    ├── 01_puregauge_potential.sh  # L1: string tension sigma, scale r0
+    ├── 02_finiteT_polyakov.sh     # T_c (the melting)
+    ├── 03_gradient_flow.sh        # w0 scale setting
+    ├── 06_baryon_spectrum.sh      # L4: m_pi, m_N (the torsiton binds)
+    ├── 07_dynamical_torsiton.sh   # the dynamical Nf=2 fundamental ensemble
+    ├── 08_torsiton_gevp.sh        # L4: generations (variational, nodal basis)
+    ├── 09_bag_profile.sh          # L4: one-body bag proxy
+    ├── 10_condensate_3pt.sh       # L4: the genuine three-body bag s_T
+    └── 11_decay_constant.sh       # L2: f_pi, the sigma = 2 pi v^2 test
 ```
 
 Each run script writes a plain-text/HDF5 measurement file; feed it to the matching

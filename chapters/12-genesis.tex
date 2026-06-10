@@ -75,6 +75,60 @@ Dawn} this is the outer, cool layer of the standing gradient---and, unlike in $\
 is continuously re-supplied from within by the ongoing extrusion, not a frozen relic of a
 one-time event.
 
+\section{The genesis, simulated}
+\label{sec:genesis-sim}
+
+The cascade above is not only a story to be told; it runs as a simulation. Cooling a chiral fluid
+through the single transition of Stage~1, on a lattice, one watches the stages play out in order:
+the condensate switching on, the field crystallising into torsitons (Stage~2), the coloured ones
+roped into colour-singlet baryons (Stages~3--4), the colourless ones left free as the leptons. The
+defining feature of \emph{Eternal Dawn}---that this is \emph{one} transition, not the Standard
+Model's staged electroweak-then-QCD sequence---is exactly what the simulation shows: every species
+acquires its mass at the same threshold, as the one condensate $v(T)$ grows
+(Figure~\ref{fig:genesis-horizon}). The colourless leptons and sub-eV neutrinos and the confined
+baryon octet and decuplet fan out together, eleven orders of magnitude in mass, from a single cooling
+of a single field.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{genesis_horizon}
+  \caption{The unified genesis: all observable matter condensing from \emph{one} chiral transition.
+  As the condensate $v(T)$ (dotted) switches on at $T_c$, every species' mass turns on at once and
+  the matter content of the universe fans out---the colourless leptons $e,\mu,\tau$ and the sub-eV
+  neutrinos (weakest grip), and the coloured sector confined into the baryon octet and decuplet.
+  One condensate, two organising principles set by colour, the whole Standard-Model matter spectrum.
+  Cooling runs left to right. Reproducible as
+  \texttt{figures/scripts/genesis\_horizon.py}.}
+  \label{fig:genesis-horizon}
+\end{figure}
+
+The crystallisation itself (Stage~2) is a three-dimensional quench: starting from the hot, symmetric
+field and lowering the temperature, the localized self-bound solutions freeze out of the continuum as
+droplets condense from a cooling vapour---standing torsiton knots appearing where the field was
+structureless (Figure~\ref{fig:genesis-quench3d}). Their number follows the Kibble--Zurek scaling of
+a quench \citep{kibble1976,zurek1985}: a faster cooling traps more knots, the genesis abundance of
+matter set by the rate at which the parent feeds the membrane.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{genesis_quench3d}
+  \caption{Stage~2, in three dimensions: torsitons crystallising from the cooling chiral field. The
+  structureless hot plasma (left) freezes into localized, self-bound knots (right) as the temperature
+  drops through the condensation threshold---matter condensing out of the field, not created from
+  nothing. The defect count follows Kibble--Zurek. Reproducible as
+  \texttt{figures/scripts/genesis\_quench3d.py}.}
+  \label{fig:genesis-quench3d}
+\end{figure}
+
+\paragraph{Honest scope.} These are \emph{classical stochastic} effective-field simulations: they
+carry the mechanism and the order of magnitude---which species, in what order, with relative masses
+good to $\sim\!30\%$ and the formation abundance---not the exact quantum spectrum, which is the
+lattice's word (Chapter~\ref{chap:weltformel}, Appendix~\ref{app:lattice}). The single owed input is
+the same one the whole Part turns on: the scale $\Lambda$ and the bag sharpness $s_T$
+(Chapter~\ref{chap:solitons}). The simulation runs now on the calibrated values and re-runs, the same
+code, for the absolute-MeV prediction the day the lattice returns $\Lambda$---the structure is the
+content; the decimals are owed.
+
 \section{The same diagram as the bounce}
 
 The descent---symmetric/massless $\to$ condensate $\to$ mass $\to$ torsitons $\to$

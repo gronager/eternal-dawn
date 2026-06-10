@@ -7,7 +7,7 @@ or per-particle fitting -- the honest ab-initio result. Emits:
   * chapters/auto/weltformel_table.tex -- all 15, torsiton mass with the measured value in ();
   * figures/pdf/weltformel_spectrum.pdf -- a log plot, theory (open) vs measured (filled),
     coloured by family, the 15 particles across twelve orders of magnitude.
-Structure exact; absolute values within one to two orders (no fit); bosons within a percent.
+Structure right; absolute no-fit values order-of-magnitude (worst ~70x); W,Z ~1%, H ~2%.
 """
 from __future__ import annotations
 
@@ -76,11 +76,13 @@ def main():
              r" $1$ a singlet, and weak isospin $T_3$); every boson is a combined (virtual)"
              r" torsiton pair $\boldsymbol{\tau}\bar{\boldsymbol{\tau}}$: the $W,Z$ are"
              r" vectors ($1^-$) and the Higgs a scalar ($0^+$), with predicted heavier partners"
-             r" $h'\,(0^+)$, $\rho_T\,(1^-)$, $a_T\,(1^+)$. The structure is exact---three"
+             r" $h'\,(0^+)$, $\rho_T\,(1^-)$, $a_T\,(1^+)$. The \emph{structure} is right---three"
              r" generations, geometric ladders, quarks above leptons, the neutrino"
-             r" seesaw-suppressed; the absolute fermion values are within one to two orders of"
-             r" magnitude (inter-tower splittings owed to the lattice, Appendix~\ref{app:lattice}),"
-             r" and the gauge bosons within a percent.}",
+             r" seesaw-suppressed; the absolute fermion values, from the single scale with no fit,"
+             r" are order-of-magnitude (worst case $\sim\!70\times$; the inter-tower normalisations"
+             r" are the strongly-coupled core owed to the lattice, Appendix~\ref{app:lattice}). The"
+             r" gauge bosons $W,Z$ land within a percent and $H$ within $\sim2\%$---all three set by"
+             r" the one condensate scale, not independent successes.}",
              r"  \label{tab:weltformel}",
              r"  \footnotesize", r"  \setlength{\tabcolsep}{4pt}",
              r"  \begin{tabular}{l l l l}", r"    \toprule",
@@ -177,8 +179,8 @@ def main():
                       label="predicted composite family (not yet found)")]
     ax.legend(handles=proxies, fontsize=9.5, loc="center left", bbox_to_anchor=(0.0, 0.30))
     ax.set_title("The Weltformel spectrum: all 15 elementary masses from the equations\n"
-                 "one global scale, no fitting -- structure exact, magnitudes within "
-                 "1--2 orders, bosons within a percent", fontsize=12)
+                 "one global scale, no per-particle fit -- structure right, absolute "
+                 "magnitudes order-of-magnitude, $W,Z\\sim1\\%$, $H\\sim2\\%$", fontsize=12)
     ax.grid(True, which="both", axis="y", alpha=0.15)
     fig.tight_layout()
     fig.savefig(os.path.join(PDF_DIR, "weltformel_spectrum.pdf"))

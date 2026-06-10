@@ -22,7 +22,24 @@ MASS="${MASS:--0.5}"
 ITERS="${ITERS:-0,20,50}"      # Wuppertal smearing-step counts; one operator each; 0 = point. radius ~ sqrt(2*iters*alpha)
 SALPHA="${SALPHA:-0.25}"       # smearing weight (normalised form -- stable for any alpha)
 THERM="${THERM:-40}" ; STRIDE="${STRIDE:-10}" ; NPAR="${NPAR:-4}" ; CGTOL="${CGTOL:-1e-8}"
-NOP=$(awk -F, '{print NF}' <<<"$ITERS")
+
+# BASIS selects the variational operators:
+#   gauss (default) -- the NODELESS Wuppertal-iteration basis (ITERS), good for the ground state but
+#                      nearly collinear, so it barely overlaps the radial EXCITATIONS.
+#   nodal           -- covariant-Laplacian POLYNOMIAL-filtered sources carrying 0,1,2,... radial NODES
+#                      (the generation tower). NODAL_NOPS operators at a shared Gaussian width
+#                      NODAL_ITERS. This is the lightweight stand-in for full distillation/LapH:
+#                      node positions are approximate, but the basis gains genuine 1- and 2-node
+#                      overlap so the GEVP can attempt the excited rungs.
+BASIS="${BASIS:-gauss}"
+NODAL_NOPS="${NODAL_NOPS:-3}"   # nodal basis: number of operators = max nodes + 1 (3 -> nodes 0,1,2)
+NODAL_ITERS="${NODAL_ITERS:-30}" # nodal basis: shared Gaussian width as a Wuppertal iteration count
+
+if [ "$BASIS" = "nodal" ]; then
+  NOP="$NODAL_NOPS"
+else
+  NOP=$(awk -F, '{print NF}' <<<"$ITERS")
+fi
 
 shopt -s nullglob
 sel=()
@@ -34,12 +51,21 @@ for cfg in "$OUT"/ckpoint_lat.* "$OUT"/stream*/ckpoint_lat.*; do
   sel+=("$cfg")
 done
 [ "${#sel[@]}" -gt 0 ] || { echo "no configs in $OUT (n>=$THERM, stride $STRIDE)"; exit 1; }
-echo "GEVP on ${#sel[@]} configs, $NOP operators (smear-iters $ITERS), mass=$MASS, $NPAR in parallel"
+if [ "$BASIS" = "nodal" ]; then
+  echo "GEVP on ${#sel[@]} configs, NODAL basis $NOP operators (nodes 0..$((NOP-1)), gauss-iters $NODAL_ITERS), mass=$MASS, $NPAR in parallel"
+else
+  echo "GEVP on ${#sel[@]} configs, GAUSS basis $NOP operators (smear-iters $ITERS), mass=$MASS, $NPAR in parallel"
+fi
 
 start_mps
 for cfg in "${sel[@]}"; do
-  printf '%q --grid %q --config %q --mass %q --smear-iters %q --smear-alpha %q --cg-tol %q --accelerator-threads 8 | grep -E "^[0-9]" > %q\n' \
-    "$MEAS" "$GRIDSPEC" "$cfg" "$MASS" "$ITERS" "$SALPHA" "$CGTOL" "$cfg.gevp"
+  if [ "$BASIS" = "nodal" ]; then
+    printf '%q --grid %q --config %q --mass %q --basis nodal --nodal-nops %q --nodal-iters %q --smear-alpha %q --cg-tol %q --accelerator-threads 8 | grep -E "^[0-9]" > %q\n' \
+      "$MEAS" "$GRIDSPEC" "$cfg" "$MASS" "$NODAL_NOPS" "$NODAL_ITERS" "$SALPHA" "$CGTOL" "$cfg.gevp"
+  else
+    printf '%q --grid %q --config %q --mass %q --basis gauss --smear-iters %q --smear-alpha %q --cg-tol %q --accelerator-threads 8 | grep -E "^[0-9]" > %q\n' \
+      "$MEAS" "$GRIDSPEC" "$cfg" "$MASS" "$ITERS" "$SALPHA" "$CGTOL" "$cfg.gevp"
+  fi
 done | run_pool "$NPAR"
 stop_mps
 

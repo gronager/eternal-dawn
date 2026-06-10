@@ -593,6 +593,371 @@ def correlator_mass(raw, T, tmin=None, tmax=None):
     return {"mass": mass, "mass_err": err, "meff": meff, "t": ts[:-1], "n_cfg": n}
 
 
+# ---------------------------------------------------------------------------
+# 5. The pion decay constant f_pi and the substrate scale v (target L2)
+# ---------------------------------------------------------------------------
+def _cosh_fit_pp(Cbar, m_q, T, tmin=None, tmax=None):
+    """Two-sided cosh fit of a zero-momentum pseudoscalar-pseudoscalar correlator C_PP(t) to
+        C_PP(t) = (G_PP / (2 m_pi)) * (e^{-m_pi t} + e^{-m_pi (T-t)}),
+    returning (m_pi*a, G_PP, f_pi*a). The mass comes from the effective-mass plateau of the cosh
+    (acosh-based, periodic) in the fit window; the amplitude G_PP is then the least-squares overlap
+    of the (fixed-shape) cosh ansatz with the data over the same window. f_pi*a follows from the
+    PCAC / pseudoscalar-density relation (see decay_constant)."""
+    C = np.asarray(Cbar, dtype=float)
+    if tmin is None:
+        tmin = max(1, T // 8)
+    if tmax is None:
+        tmax = max(tmin + 1, T // 2 - 1)
+    tt = np.arange(len(C))
+    # periodic effective mass from the cosh ratio: cosh(m(t-T/2))/cosh(m(t+1-T/2)) = C(t)/C(t+1).
+    # m_eff(t) solves R = cosh(m(t-T/2))/cosh(m(t+1-T/2)); use the symmetric-cosh acosh estimator
+    #   m_eff(t) = arccosh( (C(t-1)+C(t+1)) / (2 C(t)) ),
+    # which is exact for a single periodic cosh and avoids choosing the T/2 origin explicitly.
+    meff = np.full(len(C), np.nan)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        for t in range(1, len(C) - 1):
+            num = C[t - 1] + C[t + 1]
+            den = 2.0 * C[t]
+            if den != 0 and num / den >= 1.0:
+                meff[t] = np.arccosh(num / den)
+    idx = np.arange(tmin, min(tmax, len(C) - 1))
+    idx = idx[np.isfinite(meff[idx])]
+    if len(idx) < 1:
+        return float("nan"), float("nan"), float("nan")
+    m_pi = float(np.mean(meff[idx]))
+    # amplitude: fit C_PP(t) = (G/(2 m)) * shape(t), shape = e^{-m t}+e^{-m(T-t)}, by least squares
+    shape = np.exp(-m_pi * tt) + np.exp(-m_pi * (T - tt))
+    sel = idx
+    A = (shape[sel] / (2.0 * m_pi))
+    denom = float(np.dot(A, A))
+    G_PP = float(np.dot(A, C[sel]) / denom) if denom > 0 else float("nan")
+    f_pi = _f_pi_from_pcac(m_q, m_pi, G_PP)
+    return m_pi, G_PP, f_pi
+
+
+def _f_pi_from_pcac(m_q, m_pi, G_PP):
+    """f_pi*a (bare/unrenormalised) from the PCAC / pseudoscalar-density route:
+        f_pi = (2 m_q / m_pi^2) * sqrt(G_PP),
+    with m_q the bare Wilson quark mass (input mass shifted by the critical mass) and
+    G_PP = |<0|Pbar|pi>|^2 the pseudoscalar-density overlap. This is the unrenormalised number;
+    the renormalised f_pi needs Z_A, Z_P and m_crit (all OWED). Convention note: this returns
+    f_pi in the f_pi ~ 92 MeV (chiral, F_pi) normalisation; multiply by sqrt(2) for the 130 MeV
+    (f_pi = sqrt(2) F_pi) convention."""
+    if not (np.isfinite(m_pi) and np.isfinite(G_PP)) or m_pi <= 0 or G_PP < 0:
+        return float("nan")
+    return float((2.0 * m_q / (m_pi ** 2)) * np.sqrt(G_PP))
+
+
+def decay_constant(c_pp, m_q, T, tmin=None, tmax=None):
+    r"""The pion decay constant f_pi*a (and the substrate scale v) from the zero-momentum
+    pseudoscalar correlator C_PP(t) (target L2: test sigma = 2 pi v^2).
+
+    `c_pp` is the (n,3) array of rows [cfg, t, C_PP(t)] (measure_decay_constant output, tagged per
+    config), C_PP(t) = sum_x Tr[gamma5 S(x,t;0) gamma5 S(x,t;0)^dag] = sum_x Tr[S^dag S]. The config
+    average is fit to the two-sided cosh
+        C_PP(t) = (G_PP / (2 m_pi)) * (e^{-m_pi t} + e^{-m_pi (T-t)})
+    to get m_pi*a and the pseudoscalar overlap G_PP = |<0|Pbar|pi>|^2, then f_pi*a via the PCAC /
+    pseudoscalar-density relation
+        f_pi = (2 m_q / m_pi^2) * sqrt(G_PP)     (bare/unrenormalised; m_q = bare Wilson quark mass).
+    Errors are delete-1 jackknife over configs.
+
+    Substrate scale v: in the framework's NJL/chiral-soliton identification v = f_pi (this is an
+    ASSUMPTION of the framework, stated not hidden), so v*a = f_pi*a here; the alternative
+    v^2 ~ |<qbar q>| is not computed here.
+
+    HONEST: single (heavy) sea mass; UNRENORMALISED (Z_A, Z_P, m_crit all owed); the f_pi ~ 92 MeV
+    (F_pi) normalisation is used (multiply by sqrt(2) for the 130 MeV convention). Returns m_pi*a,
+    f_pi*a (= v*a), G_PP, jackknife errors, the fit window, and the per-config table."""
+    c_pp = np.asarray(c_pp, dtype=float)
+    cfg = c_pp[:, 0].astype(int)
+    tt = c_pp[:, 1].astype(int)
+    C = c_pp[:, 2]
+    ts = np.arange(tt.max() + 1)
+    configs = np.unique(cfg)
+    n = len(configs)
+
+    Cbar = np.array([C[tt == s].mean() for s in ts])
+    m_pi, G_PP, f_pi = _cosh_fit_pp(Cbar, m_q, T, tmin, tmax)
+
+    jm, jg, jf = [], [], []
+    for cc in configs:                                   # delete-1 jackknife over configs
+        keep = cfg != cc
+        Cj = np.array([C[keep & (tt == s)].mean() for s in ts])
+        mj, gj, fj = _cosh_fit_pp(Cj, m_q, T, tmin, tmax)
+        if np.isfinite(mj):
+            jm.append(mj)
+        if np.isfinite(gj):
+            jg.append(gj)
+        if np.isfinite(fj):
+            jf.append(fj)
+
+    def jk_err(vals):
+        vals = np.asarray(vals, dtype=float)
+        if vals.size < 2:
+            return float("nan")
+        return float(np.sqrt((vals.size - 1) / vals.size * np.sum((vals - vals.mean()) ** 2)))
+
+    lo = tmin if tmin is not None else max(1, T // 8)
+    hi = tmax if tmax is not None else max(lo + 1, T // 2 - 1)
+    return {"m_pi": m_pi, "m_pi_err": jk_err(jm), "G_PP": G_PP, "G_PP_err": jk_err(jg),
+            "f_pi": f_pi, "f_pi_err": jk_err(jf), "v": f_pi, "v_err": jk_err(jf),
+            "m_q": float(m_q), "tmin": int(lo), "tmax": int(hi), "n_cfg": int(n),
+            "convention": "f_pi ~ 92 MeV (F_pi); x sqrt(2) for the 130 MeV convention",
+            "renorm_note": "UNRENORMALISED: Z_A, Z_P, m_crit owed; v=f_pi is the framework NJL assumption"}
+
+
+def sigma_2piv2_check(sqrt_sigma_a, f_pi_a, sqrt_sigma_a_err=None, f_pi_a_err=None, tol=0.5):
+    r"""Test the framework's sharp prediction sigma = 2 pi v^2 (target L2): one substrate sets BOTH
+    the mass scale and the confinement string tension. With v identified as f_pi (the NJL/chiral-
+    soliton assumption), the lattice numbers are sqrt(sigma)*a (static potential) and f_pi*a (this
+    measurement). The dimensionless test is the ratio
+
+        ratio = sigma / (2 pi v^2) = (sqrt(sigma)*a)^2 / (2 pi (f_pi*a)^2),
+
+    which the prediction sets to 1 (the lattice spacing a cancels). `tol` is the fractional band
+    around 1 within which we call it consistent (default 0.5: a factor-2 band, appropriate for a
+    single heavy sea mass with unrenormalised f_pi). Returns the ratio, its error (if inputs carry
+    errors), consistency flag, and a verdict STRING.
+
+    HONEST: single heavy sea mass; f_pi*a is UNRENORMALISED (Z_A, Z_P, m_crit owed) and the v = f_pi
+    identification is the framework's NJL assumption, not a derived equality -- so a ratio off 1 by a
+    Z-factor (~O(1)) is expected and NOT yet a falsification; only a gross (order-of-magnitude)
+    mismatch would be."""
+    sa = float(sqrt_sigma_a)
+    fa = float(f_pi_a)
+    sigma = sa ** 2
+    twopi_v2 = 2.0 * np.pi * fa ** 2
+    ratio = float(sigma / twopi_v2) if twopi_v2 != 0 else float("nan")
+
+    # error propagation: ratio = sigma_a^2 / (2 pi f_a^2); d ln ratio = 2 dsa/sa - 2 dfa/fa
+    ratio_err = float("nan")
+    if sqrt_sigma_a_err is not None and f_pi_a_err is not None and np.isfinite(ratio):
+        rel = np.sqrt((2.0 * sqrt_sigma_a_err / sa) ** 2 + (2.0 * f_pi_a_err / fa) ** 2)
+        ratio_err = float(abs(ratio) * rel)
+
+    consistent = bool(np.isfinite(ratio) and abs(ratio - 1.0) <= tol)
+    # is it consistent within the propagated error band (a looser, statistics-aware test)?
+    within_err = bool(np.isfinite(ratio_err) and abs(ratio - 1.0) <= ratio_err)
+
+    f_pi_pred_a = float(np.sqrt(sigma / (2.0 * np.pi))) if sigma >= 0 else float("nan")
+
+    if not np.isfinite(ratio):
+        verdict = ("sigma = 2 pi v^2 UNTESTABLE here: f_pi*a did not come out finite (no pion plateau "
+                   "/ amplitude). Get a clean C_PP cosh fit first.")
+    elif consistent:
+        verdict = (f"sigma = 2 pi v^2 CONSISTENT: sigma/(2 pi f_pi^2) = {ratio:.2f}"
+                   + (f" +/- {ratio_err:.2f}" if np.isfinite(ratio_err) else "")
+                   + f" (within the factor-{1+tol:.0f} band of 1). One substrate plausibly sets both the "
+                   f"mass scale and the string tension: from sqrt(sigma)*a={sa:.3f} the prediction is "
+                   f"f_pi*a={f_pi_pred_a:.3f} vs measured {fa:.3f}. CAVEATS: single heavy sea mass; f_pi*a "
+                   f"is UNRENORMALISED (Z_A, Z_P, m_crit all owed, each an O(1) shift); v=f_pi is the "
+                   f"framework's NJL assumption, not a derived equality -- so this is an encouraging "
+                   f"order-of-magnitude success, not yet a confirmed equality.")
+    elif within_err:
+        verdict = (f"sigma = 2 pi v^2 consistent WITHIN ERRORS: sigma/(2 pi f_pi^2) = {ratio:.2f} +/- "
+                   f"{ratio_err:.2f} brackets 1, though the central value is off the factor-{1+tol:.0f} "
+                   f"band. Same caveats (single heavy mass; unrenormalised; v=f_pi assumed). Tighten the "
+                   f"statistics / add the Z-factors before reading the central offset as physics.")
+    else:
+        direction = "LARGER" if ratio > 1.0 else "SMALLER"
+        verdict = (f"sigma = 2 pi v^2 STRAINED: sigma/(2 pi f_pi^2) = {ratio:.2f}"
+                   + (f" +/- {ratio_err:.2f}" if np.isfinite(ratio_err) else "")
+                   + f" -- sigma is {direction} than 2 pi f_pi^2 by more than the factor-{1+tol:.0f} band "
+                   f"(predicted f_pi*a={f_pi_pred_a:.3f} vs measured {fa:.3f}). NOT yet a falsification: "
+                   f"the f_pi*a here is UNRENORMALISED (a Z_A/Z_P/m_crit factor of O(1) is owed) at a "
+                   f"single heavy sea mass, and v=f_pi is the framework's NJL assumption. Add the "
+                   f"renormalisation and a chiral extrapolation before reading this as a verdict against "
+                   f"the prediction; only an order-of-magnitude mismatch would falsify.")
+
+    return {"ratio": ratio, "ratio_err": ratio_err, "consistent": consistent,
+            "within_err": within_err, "sqrt_sigma_a": sa, "f_pi_a": fa, "sigma_a2": sigma,
+            "twopi_v2_a2": twopi_v2, "f_pi_pred_a": f_pi_pred_a, "tol": float(tol),
+            "verdict": verdict}
+
+
+# ---------------------------------------------------------------------------
+# 5b. The electroweak S parameter proxy from the isovector V-A correlators (the L3 control)
+# ---------------------------------------------------------------------------
+def _cosh_fit_ga(Cbar, T, tmin=None, tmax=None):
+    """Two-sided cosh fit of a zero-momentum meson correlator C(t) to
+        C(t) = (G / (2 M)) * (e^{-M t} + e^{-M (T-t)}),
+    returning (M*a, G) -- the mass from the periodic acosh effective-mass plateau and the amplitude
+    G from the least-squares overlap of the fixed-shape cosh, exactly as _cosh_fit_pp but WITHOUT the
+    PCAC f_pi step (the vector/axial channels carry their own decay-constant convention, handled in
+    s_parameter_proxy). G is the SAME amplitude convention as _cosh_fit_pp: C(t)=(G/(2M))*shape(t)."""
+    C = np.asarray(Cbar, dtype=float)
+    if tmin is None:
+        tmin = max(1, T // 8)
+    if tmax is None:
+        tmax = max(tmin + 1, T // 2 - 1)
+    tt = np.arange(len(C))
+    meff = np.full(len(C), np.nan)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        for t in range(1, len(C) - 1):
+            num = C[t - 1] + C[t + 1]
+            den = 2.0 * C[t]
+            if den != 0 and num / den >= 1.0:
+                meff[t] = np.arccosh(num / den)
+    idx = np.arange(tmin, min(tmax, len(C) - 1))
+    idx = idx[np.isfinite(meff[idx])]
+    if len(idx) < 1:
+        return float("nan"), float("nan")
+    M = float(np.mean(meff[idx]))
+    shape = np.exp(-M * tt) + np.exp(-M * (T - tt))
+    A = (shape[idx] / (2.0 * M))
+    denom = float(np.dot(A, A))
+    G = float(np.dot(A, C[idx]) / denom) if denom > 0 else float("nan")
+    return M, G
+
+
+def _f_from_G(G, M, npol=3):
+    """The vector/axial decay constant F (per polarisation) from the cosh amplitude G of the
+    zero-momentum, spatial-polarisation-SUMMED correlator. With <0|V_i|V> = F M eps_i and the
+    correlator summed over npol=3 spatial polarisations, the cosh amplitude is G = npol * F^2 * M^2,
+    so F^2 = G / (npol * M^2) and F = sqrt(G/(npol*M^2)). Returns F (NaN if G<0 or M<=0)."""
+    if not (np.isfinite(G) and np.isfinite(M)) or M <= 0 or G < 0:
+        return float("nan")
+    return float(np.sqrt(G / (npol * M ** 2)))
+
+
+def s_parameter_proxy(c_v, c_a, T, tmin=None, tmax=None, npol=3):
+    r"""A FIRST lattice estimate of the electroweak S parameter (Peskin-Takeuchi) from the isovector
+    VECTOR minus AXIAL-VECTOR correlators (measure_s_parameter), the L3 control point (Eternal Dawn,
+    Ch. "The Forces from the Field": does the electroweak-breaking sector clear S < 0.1, or sit in the
+    QCD-like graveyard at S ~ 0.25?).
+
+    Inputs (measure_s_parameter rows, config-tagged):
+      c_v : (n,3) [cfg, t, C_V(t)]   -- the connected isovector VECTOR correlator (gamma_i, rho channel)
+      c_a : (n,3) [cfg, t, C_A(t)]   -- the connected isovector AXIAL correlator (gamma_i g5, a1 channel)
+    both summed over the npol=3 spatial polarisations i=1,2,3 (the disconnected pieces cancel for the
+    isovector current).
+
+    Method. The config-averaged C_V and C_A are each cosh-fit (the SAME machinery as decay_constant) for
+    the rho mass M_V, the a1 mass M_A, and the cosh amplitudes G_V, G_A; the decay constants follow from
+    F^2 = G/(npol M^2) (so F^2/M^2 = G/(npol M^4)). The lowest-resonance (vector-meson-dominance /
+    Weinberg-sum-rule-saturated) S-proxy is
+
+        S = 4 pi ( F_V^2 / M_V^2  -  F_A^2 / M_A^2 ).
+
+    Also returned: the DIRECT walking diagnostic M_A/M_V (-> 1 if conformal, ~1.6 QCD-like) and the
+    integrated chiral order parameter sum_t (C_V(t) - C_A(t)) (nonzero iff chiral symmetry is broken).
+    Errors are delete-1 jackknife over configs.
+
+    HONEST (mirror the bar of decay_constant / condensate_3pt): this is the LOWEST-RESONANCE saturation
+    (the rho and a1 only, not the full spectral integral); the currents are UNRENORMALISED (Z_V, Z_A are
+    owed, each an O(1) factor); a SINGLE heavy sea mass (no chiral extrapolation); and the FUNDAMENTAL
+    rep is QCD-like, NOT walking, so this is EXPECTED to land near S ~ 0.25. That characterises the
+    sector and TESTS the assumption -- it does NOT validate S < 0.1, which needs the near-conformal /
+    propagating-torsion regime (target L5). Returns M_V, M_A, M_A/M_V, F_V, F_A, S, integrated V-A, the
+    jackknife errors, the fit window, and a verdict STRING."""
+    c_v = np.asarray(c_v, dtype=float)
+    c_a = np.asarray(c_a, dtype=float)
+
+    def _avg(raw):
+        cfg = raw[:, 0].astype(int)
+        tt = raw[:, 1].astype(int)
+        C = raw[:, 2]
+        ts = np.arange(tt.max() + 1)
+        Cbar = np.array([C[tt == s].mean() for s in ts])
+        return cfg, tt, C, ts, Cbar
+
+    cfgV, ttV, CV, tsV, CVbar = _avg(c_v)
+    cfgA, ttA, CA, tsA, CAbar = _avg(c_a)
+    configs = np.unique(np.concatenate([cfgV, cfgA]))
+    n = len(configs)
+
+    def _point(CVb, CAb):
+        M_V, G_V = _cosh_fit_ga(CVb, T, tmin, tmax)
+        M_A, G_A = _cosh_fit_ga(CAb, T, tmin, tmax)
+        F_V = _f_from_G(G_V, M_V, npol)
+        F_A = _f_from_G(G_A, M_A, npol)
+        S = float("nan")
+        if all(np.isfinite(x) for x in (F_V, M_V, F_A, M_A)) and M_V > 0 and M_A > 0:
+            S = 4.0 * np.pi * (F_V ** 2 / M_V ** 2 - F_A ** 2 / M_A ** 2)
+        ratio = float(M_A / M_V) if (np.isfinite(M_V) and M_V > 0) else float("nan")
+        # integrated chiral order parameter sum_t (C_V - C_A) over the common time extent
+        ncom = min(len(CVb), len(CAb))
+        va_int = float(np.sum(CVb[:ncom] - CAb[:ncom]))
+        return {"M_V": M_V, "M_A": M_A, "ratio": ratio, "F_V": F_V, "F_A": F_A,
+                "S": S, "va_int": va_int}
+
+    full = _point(CVbar, CAbar)
+
+    jk = {k: [] for k in ("M_V", "M_A", "ratio", "F_V", "F_A", "S", "va_int")}
+    for cc in configs:                                   # delete-1 jackknife over configs
+        kv = cfgV != cc
+        ka = cfgA != cc
+        CVj = np.array([CV[kv & (ttV == s)].mean() for s in tsV])
+        CAj = np.array([CA[ka & (ttA == s)].mean() for s in tsA])
+        pj = _point(CVj, CAj)
+        for k in jk:
+            if np.isfinite(pj[k]):
+                jk[k].append(pj[k])
+
+    def jk_err(vals):
+        vals = np.asarray(vals, dtype=float)
+        if vals.size < 2:
+            return float("nan")
+        return float(np.sqrt((vals.size - 1) / vals.size * np.sum((vals - vals.mean()) ** 2)))
+
+    lo = tmin if tmin is not None else max(1, T // 8)
+    hi = tmax if tmax is not None else max(lo + 1, T // 2 - 1)
+
+    S, S_err = full["S"], jk_err(jk["S"])
+    M_V, M_A, ratio = full["M_V"], full["M_A"], full["ratio"]
+    va_int = full["va_int"]
+    Q_QCD, S_TARGET = 0.25, 0.10                          # the QCD graveyard value and the walking target
+
+    if not np.isfinite(S):
+        verdict = ("S-proxy UNTESTABLE here: a clean cosh fit for M_V and/or M_A did not come out (no "
+                   "vector / axial plateau or amplitude). Get clean C_V and C_A cosh fits first.")
+    else:
+        # the SIGN check first: a positive integrated V-A (chiral symmetry broken) and S>0 is the
+        # QCD-like expectation; M_A/M_V well above 1 (~1.6) confirms the a1 sits above the rho (not
+        # near-conformal). State plainly that the fundamental rep is EXPECTED here.
+        if S > 0:
+            near = abs(S - Q_QCD) <= 0.5 * Q_QCD          # within a factor ~1.5 of the QCD value
+            place = ("near the QCD value ~0.25 (the EXPECTED QCD-like result)" if near
+                     else (f"ABOVE the QCD value ~0.25" if S > Q_QCD
+                           else f"BELOW the QCD value ~0.25 but still positive"))
+            verdict = (
+                f"S-proxy = {S:.3f}" + (f" +/- {S_err:.3f}" if np.isfinite(S_err) else "")
+                + f", {place}. The walking diagnostic M_A/M_V = {ratio:.2f} "
+                + ("(QCD-like, a1 clearly above rho)" if np.isfinite(ratio) and ratio > 1.3
+                   else "(close to 1 -- check the fit, this would be the conformal signature)")
+                + f"; the integrated V-A = {va_int:.3e} "
+                + ("(positive: chiral symmetry broken, as expected)" if va_int > 0
+                   else "(non-positive -- recheck the channels)")
+                + f". HONEST: this is the lowest-resonance (VMD/Weinberg-saturated) proxy, currents "
+                + f"UNRENORMALISED (Z_V, Z_A owed), a SINGLE heavy sea mass, and the FUNDAMENTAL rep is "
+                + f"QCD-like, NOT walking -- so landing near {Q_QCD:.2f} CHARACTERISES the sector and "
+                + f"TESTS the load-bearing assumption; it does NOT validate S < {S_TARGET:.2f}, which "
+                + f"needs the near-conformal / propagating-torsion regime (target L5)."
+            )
+        else:
+            verdict = (
+                f"S-proxy = {S:.3f}" + (f" +/- {S_err:.3f}" if np.isfinite(S_err) else "")
+                + f" is NEGATIVE -- below the naive QCD-like expectation. With M_A/M_V = {ratio:.2f} and "
+                + f"integrated V-A = {va_int:.3e}, a negative lowest-resonance S can come from an "
+                + f"under-resolved a1 (heavy, noisy axial channel) or the missing higher-resonance / "
+                + f"contact saturation, NOT from genuine walking. UNRENORMALISED (Z_V, Z_A owed), single "
+                + f"heavy sea mass; this does NOT validate S < {S_TARGET:.2f} (that needs the near-"
+                + f"conformal L5 regime). Tighten the axial fit / add resonances before reading the sign."
+            )
+
+    return {"M_V": M_V, "M_V_err": jk_err(jk["M_V"]), "M_A": M_A, "M_A_err": jk_err(jk["M_A"]),
+            "ratio": ratio, "ratio_err": jk_err(jk["ratio"]),
+            "F_V": full["F_V"], "F_V_err": jk_err(jk["F_V"]),
+            "F_A": full["F_A"], "F_A_err": jk_err(jk["F_A"]),
+            "S": S, "S_err": S_err, "va_int": va_int, "va_int_err": jk_err(jk["va_int"]),
+            "tmin": int(lo), "tmax": int(hi), "n_cfg": int(n), "npol": int(npol),
+            "S_qcd_ref": Q_QCD, "S_target": S_TARGET,
+            "renorm_note": "UNRENORMALISED: Z_V, Z_A owed; lowest-resonance saturation; single heavy sea "
+                           "mass; fundamental rep EXPECTED QCD-like (~0.25), NOT walking -- does not "
+                           "validate S<0.1 (needs near-conformal/L5).",
+            "verdict": verdict}
+
+
 def bag_chiral_trend(points, window=(0.43, 0.70), r0_over_a=3.166):
     """Chiral extrapolation of the bag sharpness s_T=R0/r0 vs the pion mass squared (Eternal Dawn,
     Ch. 11 Generations -- the real test, not a single heavy point).
