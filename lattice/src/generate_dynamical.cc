@@ -83,6 +83,9 @@
 //
 // A self-contained deflated solver: form the low-mode initial guess  psi0 = sum_i (v_i^dag b)/lam_i v_i
 // in the stored eigenbasis, then refine with an ordinary CG. Cannot bias physics (CG refines to tol).
+// NB: defined inside namespace Grid so OperatorFunction/RealD/ComplexD/Zero/innerProduct resolve here
+// (the `using namespace Grid` is local to main()).
+namespace Grid {
 template <class Field>
 class DeflatedCG : public OperatorFunction<Field> {
  public:
@@ -100,6 +103,7 @@ class DeflatedCG : public OperatorFunction<Field> {
     cg(Linop, src, psi);                                 // refine to tolerance: result is exact-to-tol
   }
 };
+}  // namespace Grid
 #endif
 
 int main(int argc, char **argv) {
@@ -256,7 +260,7 @@ int main(int argc, char **argv) {
   //   TwoFlavourEvenOddRatioPseudoFermionAction<Impl>(NumOp&, DenOp&, CG&, CG&);   // num=LIGHT
   // (Some Grid versions name the ratio class TwoFlavourEvenOddRatioPseudoFermionAction; if absent,
   //  the non-EO TwoFlavourRatioPseudoFermionAction exists -- but prefer the EO form.)
-  std::vector<ActionBase<HMCWrapper::Field> *> pfActions;
+  std::vector<Action<HMCWrapper::Field> *> pfActions;
   if (ladder.size() == 1) {
     auto *Nf2 = new TwoFlavourEvenOddPseudoFermionAction<FermionImplPolicy>(*fops[0], slv, slv);
     Nf2->is_smeared = false;
