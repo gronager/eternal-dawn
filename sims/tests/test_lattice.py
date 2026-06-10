@@ -578,3 +578,65 @@ def test_sigma_2piv2_check_within_errors():
     res = lat.sigma_2piv2_check(sqrt_sigma_sat * 1.3, f_pi_a,
                                 sqrt_sigma_a_err=0.4 * sqrt_sigma_sat, f_pi_a_err=0.0)
     assert res["within_err"] and np.isfinite(res["ratio_err"])
+
+
+def _synthetic_va(M, G, T, npol=3, ncfg=8, noise=0.004, seed=11):
+    """measure_s_parameter-style rows [cfg, t, C(t)] for a single-cosh meson correlator
+    C(t) = (G/(2 M)) (e^{-M t} + e^{-M (T-t)}) with KNOWN mass M and amplitude G (the spatial-
+    polarisation-summed amplitude G = npol * F^2 * M^2), with small per-config noise. Used to build
+    a vector (rho) and an axial (a1) channel with chosen masses/decay constants."""
+    rng = np.random.default_rng(seed)
+    tt = np.arange(T)
+    shape = (G / (2.0 * M)) * (np.exp(-M * tt) + np.exp(-M * (T - tt)))
+    rows = []
+    for c in range(1, ncfg + 1):
+        for t in range(T):
+            rows.append([c, t, shape[t] * (1.0 + noise * rng.standard_normal())])
+    return np.array(rows, dtype=float)
+
+
+def test_s_parameter_proxy_recovers_masses_and_qcd_like_sign():
+    # QCD-like input: a1 heavier than rho (M_A > M_V) and F_V > F_A -> S > 0, near the QCD ballpark,
+    # M_A/M_V > 1. Build C_V, C_A as single coshes with known masses/decay constants and recover them.
+    T, npol = 32, 3
+    M_V, M_A = 0.42, 0.68                                 # rho lighter than a1 (QCD-like)
+    F_V, F_A = 0.18, 0.13                                 # vector decay constant larger than axial
+    G_V, G_A = npol * F_V**2 * M_V**2, npol * F_A**2 * M_A**2
+    c_v = _synthetic_va(M_V, G_V, T, npol=npol, seed=11)
+    c_a = _synthetic_va(M_A, G_A, T, npol=npol, seed=12)
+    res = lat.s_parameter_proxy(c_v, c_a, T=T, tmin=4, tmax=14, npol=npol)
+    assert abs(res["M_V"] - M_V) < 0.02 and abs(res["M_A"] - M_A) < 0.02
+    assert abs(res["ratio"] - M_A / M_V) < 0.03 and res["ratio"] > 1.3   # a1 clearly above rho
+    assert abs(res["F_V"] - F_V) < 0.02 and abs(res["F_A"] - F_A) < 0.02
+    # the S-proxy: sign and rough magnitude. S = 4 pi (F_V^2/M_V^2 - F_A^2/M_A^2)
+    S_true = 4.0 * np.pi * (F_V**2 / M_V**2 - F_A**2 / M_A**2)
+    assert res["S"] > 0 and abs(res["S"] - S_true) < 0.1
+    assert res["va_int"] > 0                              # chiral symmetry broken (positive V-A integral)
+    assert res["n_cfg"] == 8
+    # honest verdict: never claims to validate S<0.1; flags the QCD-like expectation
+    assert "does NOT validate S < 0.10" in res["verdict"] and "L5" in res["verdict"]
+
+
+def test_s_parameter_proxy_conformal_input_drives_S_to_zero():
+    # CONFORMAL-like input: degenerate vector and axial (M_A ~ M_V, F_A ~ F_V) -> S -> 0, M_A/M_V -> 1
+    T, npol = 32, 3
+    M_V, M_A = 0.50, 0.505                                # nearly degenerate (parity doubling)
+    F_V, F_A = 0.15, 0.149
+    G_V, G_A = npol * F_V**2 * M_V**2, npol * F_A**2 * M_A**2
+    c_v = _synthetic_va(M_V, G_V, T, npol=npol, seed=21)
+    c_a = _synthetic_va(M_A, G_A, T, npol=npol, seed=22)
+    res = lat.s_parameter_proxy(c_v, c_a, T=T, tmin=4, tmax=14, npol=npol)
+    assert abs(res["ratio"] - 1.0) < 0.05                # M_A/M_V -> 1 (the conformal signature)
+    assert abs(res["S"]) < 0.05                          # V and A nearly cancel -> S near zero
+    # even at small S the honesty bar holds: it does not claim to have validated the walking target
+    assert "does NOT validate S < 0.10" in res["verdict"]
+
+
+def test_s_parameter_proxy_untestable_without_plateau():
+    # garbage (no clean cosh) -> NaN S, flagged untestable, never silently a number
+    T = 32
+    rng = np.random.default_rng(3)
+    c_v = np.array([[c, t, rng.standard_normal()] for c in range(1, 5) for t in range(T)])
+    c_a = np.array([[c, t, rng.standard_normal()] for c in range(1, 5) for t in range(T)])
+    res = lat.s_parameter_proxy(c_v, c_a, T=T, tmin=4, tmax=14)
+    assert (not np.isfinite(res["S"])) or "UNTESTABLE" in res["verdict"] or "S-proxy" in res["verdict"]
