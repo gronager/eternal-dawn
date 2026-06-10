@@ -207,13 +207,32 @@ int main(int argc, char **argv) {
   if (deflateN > 0) {
     std::cout << GridLogMessage << "deflation: building " << deflateN
               << " low modes of the SEA even-odd M^dag M (VRAM-resident) ..." << std::endl;
-    // VERIFY AT COMPILE -- the Grid eigensolver API is version-specific. Canonical route:
-    //   SchurDiagMooeeOperator<FermionAction,FermionField> HermOp(*fops[0]);  // even-odd M^dag M
-    //   Chebyshev<FermionField> cheby(alpha, beta, order);                    // spectral filter
-    //   ImplicitlyRestartedLanczos<FermionField> IRL(HermOp, cheby, Nstop=deflateN, Nk, Nm, ...);
-    //   defl_evec.resize(Nm, FermionField(GridRBPtr)); defl_eval.resize(Nm);
-    //   int Nconv; IRL.calc(defl_eval, defl_evec, src0, Nconv); defl_evec.resize(Nconv);
-    // Fill defl_evec/defl_eval here, then:
+    // ---- Implicitly-Restarted Lanczos on the even-odd Schur operator M_ee^dag M_ee (Hermitian PD).
+    // VERIFY AT COMPILE -- Grid's IRL ctor signature and the Cheby/Op wrappers vary by version; the
+    // TUNE constants (spectral window lo/hi, Chebyshev order, Krylov sizes Nk/Nm) need a few tries.
+    // If anything here won't build, this whole block is behind -DUSE_DEFLATION, so the safe binary is
+    // unaffected; and if calc() returns 0 modes, slvp stays &CG (graceful fallback to plain CG).
+    typedef SchurDiagMooeeOperator<FermionAction, FermionField> SchurOp;
+    SchurOp HermOp(*fops[0]);                              // M_ee^dag M_ee on the red-black checkerboard
+    const RealD cheb_lo = 1.0e-3, cheb_hi = 64.0;          // TUNE: bracket the M^dag M spectrum
+    const int cheb_ord = 60;                               // TUNE: Chebyshev order (higher = sharper)
+    Chebyshev<FermionField> cheby(cheb_lo, cheb_hi, cheb_ord);
+    FunctionHermOp<FermionField> ChebyOp(cheby, HermOp);   // filtered op (amplifies the low end)
+    PlainHermOp<FermionField> PlainOp(HermOp);             // bare op (for the Ritz/eigenvalue pass)
+    const int Nstop = deflateN;                            // wanted converged modes
+    const int Nk = deflateN + 20;                          // TUNE: working set
+    const int Nm = deflateN + 40;                          // TUNE: max Krylov dim (Nm > Nk > Nstop)
+    ImplicitlyRestartedLanczos<FermionField> IRL(ChebyOp, PlainOp, Nstop, Nk, Nm, 1.0e-8, 200);
+    defl_eval.resize(Nm);
+    defl_evec.resize(Nm, FermionField(GridRBPtr));         // eigenvectors live on the RB (checkerboard) grid
+    FermionField src0(GridRBPtr);
+    GridParallelRNG pRNG(GridRBPtr);                       // local RNG for the Lanczos start vector
+    pRNG.SeedFixedIntegers(std::vector<int>{seed, seed + 1, seed + 2, seed + 3});
+    gaussian(pRNG, src0);
+    int Nconv = 0;
+    IRL.calc(defl_eval, defl_evec, src0, Nconv);
+    defl_evec.resize(Nconv);
+    defl_eval.resize(Nconv);
     DCG = new DeflatedCG<FermionField>(defl_evec, defl_eval, CG);
     if (!defl_evec.empty()) slvp = DCG;                  // repoint the solver at the deflated one
     std::cout << GridLogMessage << "deflation: " << defl_evec.size()
