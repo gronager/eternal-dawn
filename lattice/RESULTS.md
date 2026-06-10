@@ -2,9 +2,10 @@
 
 This file records the non-perturbative lattice results, with enough detail to reproduce. The
 torsiton is the **SU(3)-fundamental baryon** (colour from the Pauli label, Ch. "The Forces from the
-Field") — three quarks, one of each colour, the object QCD calls the nucleon. **Not** the sextet
-(that was a walking proxy for the electroweak S parameter, L3 — a different question, and the wrong
-turn for the soliton).
+Field") — three quarks, one of each colour, the object QCD calls the nucleon. The strong IR sector is
+this torsion-bound soliton; the one torsion force wears the strong and electroweak faces both, so
+there is no separate walking gauge sector to measure here. The absolute scale (the propagating-torsion
+β-function, L5) is a separate, harder programme.
 
 ## L4 pilot — the torsiton ground state (quenched)
 

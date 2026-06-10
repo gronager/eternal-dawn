@@ -593,6 +593,188 @@ def correlator_mass(raw, T, tmin=None, tmax=None):
     return {"mass": mass, "mass_err": err, "meff": meff, "t": ts[:-1], "n_cfg": n}
 
 
+# ---------------------------------------------------------------------------
+# 5. The pion decay constant f_pi and the substrate scale v (target L2)
+# ---------------------------------------------------------------------------
+def _cosh_fit_pp(Cbar, m_q, T, tmin=None, tmax=None):
+    """Two-sided cosh fit of a zero-momentum pseudoscalar-pseudoscalar correlator C_PP(t) to
+        C_PP(t) = (G_PP / (2 m_pi)) * (e^{-m_pi t} + e^{-m_pi (T-t)}),
+    returning (m_pi*a, G_PP, f_pi*a). The mass comes from the effective-mass plateau of the cosh
+    (acosh-based, periodic) in the fit window; the amplitude G_PP is then the least-squares overlap
+    of the (fixed-shape) cosh ansatz with the data over the same window. f_pi*a follows from the
+    PCAC / pseudoscalar-density relation (see decay_constant)."""
+    C = np.asarray(Cbar, dtype=float)
+    if tmin is None:
+        tmin = max(1, T // 8)
+    if tmax is None:
+        tmax = max(tmin + 1, T // 2 - 1)
+    tt = np.arange(len(C))
+    # periodic effective mass from the cosh ratio: cosh(m(t-T/2))/cosh(m(t+1-T/2)) = C(t)/C(t+1).
+    # m_eff(t) solves R = cosh(m(t-T/2))/cosh(m(t+1-T/2)); use the symmetric-cosh acosh estimator
+    #   m_eff(t) = arccosh( (C(t-1)+C(t+1)) / (2 C(t)) ),
+    # which is exact for a single periodic cosh and avoids choosing the T/2 origin explicitly.
+    meff = np.full(len(C), np.nan)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        for t in range(1, len(C) - 1):
+            num = C[t - 1] + C[t + 1]
+            den = 2.0 * C[t]
+            if den != 0 and num / den >= 1.0:
+                meff[t] = np.arccosh(num / den)
+    idx = np.arange(tmin, min(tmax, len(C) - 1))
+    idx = idx[np.isfinite(meff[idx])]
+    if len(idx) < 1:
+        return float("nan"), float("nan"), float("nan")
+    m_pi = float(np.mean(meff[idx]))
+    # amplitude: fit C_PP(t) = (G/(2 m)) * shape(t), shape = e^{-m t}+e^{-m(T-t)}, by least squares
+    shape = np.exp(-m_pi * tt) + np.exp(-m_pi * (T - tt))
+    sel = idx
+    A = (shape[sel] / (2.0 * m_pi))
+    denom = float(np.dot(A, A))
+    G_PP = float(np.dot(A, C[sel]) / denom) if denom > 0 else float("nan")
+    f_pi = _f_pi_from_pcac(m_q, m_pi, G_PP)
+    return m_pi, G_PP, f_pi
+
+
+def _f_pi_from_pcac(m_q, m_pi, G_PP):
+    """f_pi*a (bare/unrenormalised) from the PCAC / pseudoscalar-density route:
+        f_pi = (2 m_q / m_pi^2) * sqrt(G_PP),
+    with m_q the bare Wilson quark mass (input mass shifted by the critical mass) and
+    G_PP = |<0|Pbar|pi>|^2 the pseudoscalar-density overlap. This is the unrenormalised number;
+    the renormalised f_pi needs Z_A, Z_P and m_crit (all OWED). Convention note: this returns
+    f_pi in the f_pi ~ 92 MeV (chiral, F_pi) normalisation; multiply by sqrt(2) for the 130 MeV
+    (f_pi = sqrt(2) F_pi) convention."""
+    if not (np.isfinite(m_pi) and np.isfinite(G_PP)) or m_pi <= 0 or G_PP < 0:
+        return float("nan")
+    return float((2.0 * m_q / (m_pi ** 2)) * np.sqrt(G_PP))
+
+
+def decay_constant(c_pp, m_q, T, tmin=None, tmax=None):
+    r"""The pion decay constant f_pi*a (and the substrate scale v) from the zero-momentum
+    pseudoscalar correlator C_PP(t) (target L2: test sigma = 2 pi v^2).
+
+    `c_pp` is the (n,3) array of rows [cfg, t, C_PP(t)] (measure_decay_constant output, tagged per
+    config), C_PP(t) = sum_x Tr[gamma5 S(x,t;0) gamma5 S(x,t;0)^dag] = sum_x Tr[S^dag S]. The config
+    average is fit to the two-sided cosh
+        C_PP(t) = (G_PP / (2 m_pi)) * (e^{-m_pi t} + e^{-m_pi (T-t)})
+    to get m_pi*a and the pseudoscalar overlap G_PP = |<0|Pbar|pi>|^2, then f_pi*a via the PCAC /
+    pseudoscalar-density relation
+        f_pi = (2 m_q / m_pi^2) * sqrt(G_PP)     (bare/unrenormalised; m_q = bare Wilson quark mass).
+    Errors are delete-1 jackknife over configs.
+
+    Substrate scale v: in the framework's NJL/chiral-soliton identification v = f_pi (this is an
+    ASSUMPTION of the framework, stated not hidden), so v*a = f_pi*a here; the alternative
+    v^2 ~ |<qbar q>| is not computed here.
+
+    HONEST: single (heavy) sea mass; UNRENORMALISED (Z_A, Z_P, m_crit all owed); the f_pi ~ 92 MeV
+    (F_pi) normalisation is used (multiply by sqrt(2) for the 130 MeV convention). Returns m_pi*a,
+    f_pi*a (= v*a), G_PP, jackknife errors, the fit window, and the per-config table."""
+    c_pp = np.asarray(c_pp, dtype=float)
+    cfg = c_pp[:, 0].astype(int)
+    tt = c_pp[:, 1].astype(int)
+    C = c_pp[:, 2]
+    ts = np.arange(tt.max() + 1)
+    configs = np.unique(cfg)
+    n = len(configs)
+
+    Cbar = np.array([C[tt == s].mean() for s in ts])
+    m_pi, G_PP, f_pi = _cosh_fit_pp(Cbar, m_q, T, tmin, tmax)
+
+    jm, jg, jf = [], [], []
+    for cc in configs:                                   # delete-1 jackknife over configs
+        keep = cfg != cc
+        Cj = np.array([C[keep & (tt == s)].mean() for s in ts])
+        mj, gj, fj = _cosh_fit_pp(Cj, m_q, T, tmin, tmax)
+        if np.isfinite(mj):
+            jm.append(mj)
+        if np.isfinite(gj):
+            jg.append(gj)
+        if np.isfinite(fj):
+            jf.append(fj)
+
+    def jk_err(vals):
+        vals = np.asarray(vals, dtype=float)
+        if vals.size < 2:
+            return float("nan")
+        return float(np.sqrt((vals.size - 1) / vals.size * np.sum((vals - vals.mean()) ** 2)))
+
+    lo = tmin if tmin is not None else max(1, T // 8)
+    hi = tmax if tmax is not None else max(lo + 1, T // 2 - 1)
+    return {"m_pi": m_pi, "m_pi_err": jk_err(jm), "G_PP": G_PP, "G_PP_err": jk_err(jg),
+            "f_pi": f_pi, "f_pi_err": jk_err(jf), "v": f_pi, "v_err": jk_err(jf),
+            "m_q": float(m_q), "tmin": int(lo), "tmax": int(hi), "n_cfg": int(n),
+            "convention": "f_pi ~ 92 MeV (F_pi); x sqrt(2) for the 130 MeV convention",
+            "renorm_note": "UNRENORMALISED: Z_A, Z_P, m_crit owed; v=f_pi is the framework NJL assumption"}
+
+
+def sigma_2piv2_check(sqrt_sigma_a, f_pi_a, sqrt_sigma_a_err=None, f_pi_a_err=None, tol=0.5):
+    r"""Test the framework's sharp prediction sigma = 2 pi v^2 (target L2): one substrate sets BOTH
+    the mass scale and the confinement string tension. With v identified as f_pi (the NJL/chiral-
+    soliton assumption), the lattice numbers are sqrt(sigma)*a (static potential) and f_pi*a (this
+    measurement). The dimensionless test is the ratio
+
+        ratio = sigma / (2 pi v^2) = (sqrt(sigma)*a)^2 / (2 pi (f_pi*a)^2),
+
+    which the prediction sets to 1 (the lattice spacing a cancels). `tol` is the fractional band
+    around 1 within which we call it consistent (default 0.5: a factor-2 band, appropriate for a
+    single heavy sea mass with unrenormalised f_pi). Returns the ratio, its error (if inputs carry
+    errors), consistency flag, and a verdict STRING.
+
+    HONEST: single heavy sea mass; f_pi*a is UNRENORMALISED (Z_A, Z_P, m_crit owed) and the v = f_pi
+    identification is the framework's NJL assumption, not a derived equality -- so a ratio off 1 by a
+    Z-factor (~O(1)) is expected and NOT yet a falsification; only a gross (order-of-magnitude)
+    mismatch would be."""
+    sa = float(sqrt_sigma_a)
+    fa = float(f_pi_a)
+    sigma = sa ** 2
+    twopi_v2 = 2.0 * np.pi * fa ** 2
+    ratio = float(sigma / twopi_v2) if twopi_v2 != 0 else float("nan")
+
+    # error propagation: ratio = sigma_a^2 / (2 pi f_a^2); d ln ratio = 2 dsa/sa - 2 dfa/fa
+    ratio_err = float("nan")
+    if sqrt_sigma_a_err is not None and f_pi_a_err is not None and np.isfinite(ratio):
+        rel = np.sqrt((2.0 * sqrt_sigma_a_err / sa) ** 2 + (2.0 * f_pi_a_err / fa) ** 2)
+        ratio_err = float(abs(ratio) * rel)
+
+    consistent = bool(np.isfinite(ratio) and abs(ratio - 1.0) <= tol)
+    # is it consistent within the propagated error band (a looser, statistics-aware test)?
+    within_err = bool(np.isfinite(ratio_err) and abs(ratio - 1.0) <= ratio_err)
+
+    f_pi_pred_a = float(np.sqrt(sigma / (2.0 * np.pi))) if sigma >= 0 else float("nan")
+
+    if not np.isfinite(ratio):
+        verdict = ("sigma = 2 pi v^2 UNTESTABLE here: f_pi*a did not come out finite (no pion plateau "
+                   "/ amplitude). Get a clean C_PP cosh fit first.")
+    elif consistent:
+        verdict = (f"sigma = 2 pi v^2 CONSISTENT: sigma/(2 pi f_pi^2) = {ratio:.2f}"
+                   + (f" +/- {ratio_err:.2f}" if np.isfinite(ratio_err) else "")
+                   + f" (within the factor-{1+tol:.0f} band of 1). One substrate plausibly sets both the "
+                   f"mass scale and the string tension: from sqrt(sigma)*a={sa:.3f} the prediction is "
+                   f"f_pi*a={f_pi_pred_a:.3f} vs measured {fa:.3f}. CAVEATS: single heavy sea mass; f_pi*a "
+                   f"is UNRENORMALISED (Z_A, Z_P, m_crit all owed, each an O(1) shift); v=f_pi is the "
+                   f"framework's NJL assumption, not a derived equality -- so this is an encouraging "
+                   f"order-of-magnitude success, not yet a confirmed equality.")
+    elif within_err:
+        verdict = (f"sigma = 2 pi v^2 consistent WITHIN ERRORS: sigma/(2 pi f_pi^2) = {ratio:.2f} +/- "
+                   f"{ratio_err:.2f} brackets 1, though the central value is off the factor-{1+tol:.0f} "
+                   f"band. Same caveats (single heavy mass; unrenormalised; v=f_pi assumed). Tighten the "
+                   f"statistics / add the Z-factors before reading the central offset as physics.")
+    else:
+        direction = "LARGER" if ratio > 1.0 else "SMALLER"
+        verdict = (f"sigma = 2 pi v^2 STRAINED: sigma/(2 pi f_pi^2) = {ratio:.2f}"
+                   + (f" +/- {ratio_err:.2f}" if np.isfinite(ratio_err) else "")
+                   + f" -- sigma is {direction} than 2 pi f_pi^2 by more than the factor-{1+tol:.0f} band "
+                   f"(predicted f_pi*a={f_pi_pred_a:.3f} vs measured {fa:.3f}). NOT yet a falsification: "
+                   f"the f_pi*a here is UNRENORMALISED (a Z_A/Z_P/m_crit factor of O(1) is owed) at a "
+                   f"single heavy sea mass, and v=f_pi is the framework's NJL assumption. Add the "
+                   f"renormalisation and a chiral extrapolation before reading this as a verdict against "
+                   f"the prediction; only an order-of-magnitude mismatch would falsify.")
+
+    return {"ratio": ratio, "ratio_err": ratio_err, "consistent": consistent,
+            "within_err": within_err, "sqrt_sigma_a": sa, "f_pi_a": fa, "sigma_a2": sigma,
+            "twopi_v2_a2": twopi_v2, "f_pi_pred_a": f_pi_pred_a, "tol": float(tol),
+            "verdict": verdict}
+
+
 def bag_chiral_trend(points, window=(0.43, 0.70), r0_over_a=3.166):
     """Chiral extrapolation of the bag sharpness s_T=R0/r0 vs the pion mass squared (Eternal Dawn,
     Ch. 11 Generations -- the real test, not a single heavy point).
