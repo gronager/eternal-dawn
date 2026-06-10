@@ -21,8 +21,18 @@ MASS="${MASS:--0.5}"        # dynamical sea-quark mass (lighter than quenched m_
 NTRAJ="${NTRAJ:-1000}"      # total trajectories (dynamical thermalises slower than pure gauge)
 MDSTEPS="${MDSTEPS:-20}"    # raise if acceptance is low (the fermion force is stiff)
 SAVE="${SAVE:-5}"          # checkpoint cadence
-NSTREAMS="${NSTREAMS:-1}"  # independent streams (raise to fill the GPU once one stream is tuned)
+NSTREAMS="${NSTREAMS:-1}"  # independent streams (raise to fill the GPU: each ~2GB, so the 96GB GH200
+                           # runs many in parallel -> N x the configs per wall-clock, the cheap way to
+                           # turn VRAM into statistics, until memory BANDWIDTH saturates)
+HASEN="${HASEN:-}"         # OPT-IN Hasenbusch masses (comma-separated, HEAVIER than MASS), e.g. "-0.2,0.2".
+                           # ~2-3x on top of the (always-on) even-odd preconditioning. EXACT only if the
+                           # ratio convention is right -> if set, CROSS-CHECK the plaquette/m_pi against
+                           # the plain ensemble on a short run BEFORE the production run.
+DEFLATE="${DEFLATE:-0}"    # OPT-IN low-mode deflation count (the VRAM filler). Needs the binary built
+                           # with -DUSE_DEFLATION (see PRODUCTION.md); EXPERIMENTAL, validate like HASEN.
 OUT="${OUT:-out/dyn_L${L}x${T}_m${MASS}}"; mkdir -p "$OUT"
+hasen_flag="" ; [ -n "$HASEN" ] && hasen_flag="--hasenbusch $HASEN"
+defl_flag="" ; [ "$DEFLATE" -gt 0 ] 2>/dev/null && defl_flag="--deflate $DEFLATE"
 
 # --- 1. generate the dynamical ensemble (skip if configs already exist) ---------------------
 shopt -s nullglob
@@ -35,8 +45,8 @@ else
   start_mps
   for k in $(seq 1 "$NSTREAMS"); do
     d="$OUT/stream$k"
-    printf 'mkdir -p %q && cd %q && %q --grid %q --beta %q --mass %q --seed %d --mdsteps %d --save-interval %d --StartingType HotStart --Trajectories %d --accelerator-threads 8 > hmc.log 2>&1\n' \
-      "$d" "$d" "$GEN" "$GRIDSPEC" "$BETA" "$MASS" "$((k*1000 + 1))" "$MDSTEPS" "$SAVE" "$NTRAJ"
+    printf 'mkdir -p %q && cd %q && %q --grid %q --beta %q --mass %q --seed %d --mdsteps %d --save-interval %d %s %s --StartingType HotStart --Trajectories %d --accelerator-threads 8 > hmc.log 2>&1\n' \
+      "$d" "$d" "$GEN" "$GRIDSPEC" "$BETA" "$MASS" "$((k*1000 + 1))" "$MDSTEPS" "$SAVE" "$hasen_flag" "$defl_flag" "$NTRAJ"
   done | run_pool "$NSTREAMS"
   stop_mps
   n=$(ls "$OUT"/stream*/ckpoint_lat.* 2>/dev/null | grep -vE '\.gz$' | wc -l)

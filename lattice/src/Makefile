@@ -10,6 +10,7 @@ CXX      := $(shell $(GRID_CONFIG) --cxx 2>/dev/null)
 CXXFLAGS := $(shell $(GRID_CONFIG) --cxxflags 2>/dev/null)
 LDFLAGS  := $(shell $(GRID_CONFIG) --ldflags 2>/dev/null)
 LIBS     := $(shell $(GRID_CONFIG) --libs 2>/dev/null)
+EXTRA    ?=          # extra compile flags, e.g. EXTRA=-DUSE_DEFLATION to enable the deflation path
 
 PROGS := measure_potential generate_gauge measure_baryon measure_baryon_gevp generate_dynamical measure_bag_profile measure_condensate_3pt measure_decay_constant measure_s_parameter
 
@@ -23,7 +24,7 @@ check:
 	@echo "using CXX=$(CXX)"
 
 %: %.cc
-	$(CXX) $(CXXFLAGS) $< -o $@ $(LDFLAGS) $(LIBS)
+	$(CXX) $(CXXFLAGS) $(EXTRA) $< -o $@ $(LDFLAGS) $(LIBS)
 
 clean:
 	rm -f $(PROGS)
