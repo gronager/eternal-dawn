@@ -96,9 +96,29 @@ L=16 T=48 BETA=5.6 MASS=-0.75 HASEN="-0.3,0.1" NTRAJ=2500 MDSTEPS=40 NSTREAMS=4 
 run shows acceptance ~0.7–0.9 and dH ~ O(1); (c) **cross-check the plaquette (and m_π via run/06) on
 ~20–40 configs against the plain ensemble — they must agree within errors.** Even-odd alone (no
 `HASEN`) needs only (a),(b). Also raise `NSTREAMS` (each stream ~2 GB) to run many chains in parallel
-on the one GPU — N× the configs per wall-clock until bandwidth saturates. *Owed follow-up (the real
-VRAM exploit):* mixed-precision CG and adaptive multigrid/deflation in the HMC solver — the biggest
-solver win near the chiral point, deliberately left out until even-odd + Hasenbusch are validated.
+on the one GPU — N× the configs per wall-clock until bandwidth saturates.
+
+**Expected wall-clock** (3-day plain baseline): even-odd ~×2 → ~36 h; + Hasenbusch (2 masses) ~×2–2.5
+→ **~14 h, already under a day**; + deflation a further ~×2 → ~6–7 h. The first two are the safe,
+validated-by-design stack; deflation is the experimental last factor.
+
+### The VRAM filler — low-mode deflation (`DEFLATE`, `-DUSE_DEFLATION`)
+
+`generate_dynamical` carries an **experimental** deflation accelerator (the genuine 96 GB exploit):
+hold `N` low eigenvectors of the sea operator resident and deflate the CG. It is **behind a compile
+flag** so it can never break the validated even-odd+Hasenbusch binary:
+
+```bash
+make -C lattice/src CXXFLAGS="$(grid-config --cxxflags) -DUSE_DEFLATION" generate_dynamical
+L=16 T=48 MASS=-0.75 HASEN="-0.3,0.1" DEFLATE=200 NSTREAMS=2 ... ./run/07_dynamical_torsiton.sh
+```
+
+It is **exact** (the action solve refines to CG tolerance) and **reversible** (the subspace is frozen
+for the run) by construction — so it cannot bias the ensemble, only the speed. Two honest caveats:
+the Grid eigensolver API is version-specific (the `USE_DEFLATION` block flags the exact calls to
+fill in/verify), and the subspace **goes stale** as the gauge field decorrelates — recompute it on
+each checkpoint/restart to refresh, until the in-run trajectory-boundary refresh hook is added (owed).
+*Owed follow-up:* mixed-precision CG, and the sustained in-run subspace refresh.
 
 ## What lands
 

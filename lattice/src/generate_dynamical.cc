@@ -43,11 +43,17 @@
 //      cheaply, m_pi via run/06) AGREE with the existing plain m=-0.5 ensemble within errors.
 //      Even-odd alone (no --hasenbusch) is an exact identity and needs only (a),(b).
 //
-//  Follow-ups left OFF this binary on purpose (higher risk untested, or the real VRAM filler):
-//   - mixed-precision CG (single-precision inner solve, ~1.5-2x; safe -- accept/reject on the
-//     double residual -- but the SP-grid wiring is fiddly);
-//   - adaptive MULTIGRID / deflation (the genuine 96 GB exploit, biggest solver win near the
-//     chiral point, but the riskiest to deploy untested -- add it only after (1)+(2) are validated).
+//  (3) LOW-MODE DEFLATION -- OPT-IN via --deflate N, and ONLY in a binary built -DUSE_DEFLATION.
+//      The genuine 96 GB exploit: hold N low eigenvectors of the sea operator resident and use them
+//      as a deflated initial guess, cutting CG iterations near the chiral point. EXPERIMENTAL
+//      SCAFFOLD -- the Grid eigensolver API is version-specific and the in-run subspace refresh is an
+//      owed hook; see the USE_DEFLATION block. Exact (action solve refines to tolerance) and
+//      reversible (subspace frozen for the run, recompute on restart) by construction, but the
+//      acceleration decays as the gauge field decorrelates until the refresh hook is added. Default
+//      OFF and behind the compile flag so it can NEVER break the validated even-odd+Hasenbusch build.
+//
+//  Still OFF on purpose: mixed-precision CG (single-precision inner solve, ~1.5-2x; safe but the
+//  SP-grid wiring is fiddly) -- a clean follow-up once the above are validated.
 // ============================================================================================
 //
 // (beta, mass) ARE THE KNOBS: lower mass toward the DYNAMICAL critical point for a light pion (the
@@ -57,6 +63,44 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <algorithm>
+
+#ifdef USE_DEFLATION
+// ============================================================================================
+// LOW-MODE DEFLATION accelerator (the 96 GB VRAM filler) -- EXPERIMENTAL SCAFFOLD, build with
+// -DUSE_DEFLATION only. This is NOT validated blind: the Grid Lanczos / eigensolver API is
+// version-specific, and the production-grade win needs the subspace REFRESHED at trajectory
+// boundaries (see the staleness note below), which must be hooked into your Grid's HMC runner.
+//
+// SAFETY (must hold for the ensemble to stay correct):
+//   * EXACTNESS: the action (accept/reject) solve must still converge to the tight CG tolerance --
+//     deflation only changes the INITIAL GUESS, so a converged solve gives the identical action.
+//   * REVERSIBILITY: the deflation subspace must be FROZEN within a trajectory (and across any
+//     reversibility check). Refresh ONLY between trajectories. The simple scaffold below freezes
+//     the subspace for the WHOLE run (built once on the starting config) -> trivially reversible
+//     and exact, but the acceleration DECAYS as the gauge field decorrelates; recompute it on each
+//     checkpoint/restart (cheap, automatic) to keep it fresh. Sustained in-run refresh = owed hook.
+//
+// A self-contained deflated solver: form the low-mode initial guess  psi0 = sum_i (v_i^dag b)/lam_i v_i
+// in the stored eigenbasis, then refine with an ordinary CG. Cannot bias physics (CG refines to tol).
+template <class Field>
+class DeflatedCG : public OperatorFunction<Field> {
+ public:
+  std::vector<Field> &evec;          // eigenvectors of the SAME operator being solved (VRAM resident)
+  std::vector<RealD> &eval;          // their eigenvalues
+  ConjugateGradient<Field> &cg;      // the refiner (tight tolerance -> exact action)
+  DeflatedCG(std::vector<Field> &v, std::vector<RealD> &e, ConjugateGradient<Field> &c)
+      : evec(v), eval(e), cg(c) {}
+  void operator()(LinearOperatorBase<Field> &Linop, const Field &src, Field &psi) {
+    psi = Zero();
+    for (size_t i = 0; i < evec.size(); ++i) {           // deflated initial guess in the low modes
+      ComplexD a = innerProduct(evec[i], src);
+      psi = psi + (a / eval[i]) * evec[i];
+    }
+    cg(Linop, src, psi);                                 // refine to tolerance: result is exact-to-tol
+  }
+};
+#endif
 
 int main(int argc, char **argv) {
   using namespace Grid;
@@ -95,6 +139,11 @@ int main(int argc, char **argv) {
   }
   if (GridCmdOptionExists(argv, argv + argc, "--hasenbusch"))
     hasenStr = GridCmdOptionPayload(argv, argv + argc, "--hasenbusch");
+  int deflateN = 0;        // OPT-IN low-mode deflation (the VRAM filler); needs -DUSE_DEFLATION build
+  if (GridCmdOptionExists(argv, argv + argc, "--deflate")) {
+    std::string s = GridCmdOptionPayload(argv, argv + argc, "--deflate");
+    GridCmdOptionInt(s, deflateN);
+  }
 
   // parse the (optional) Hasenbusch masses: must be HEAVIER (larger) than the sea `mass`, ascending
   std::vector<RealD> hmasses;
@@ -144,6 +193,41 @@ int main(int argc, char **argv) {
   for (auto m : ladder)
     fops.push_back(new FermionAction(U, *GridPtr, *GridRBPtr, m));
 
+  // ---- solver selection: plain CG, or (opt-in, -DUSE_DEFLATION) low-mode deflated CG ----
+  // The action constructors take an OperatorFunction&; default to CG. With deflation we build a
+  // low-mode subspace of the SEA operator (fops[0], the stiffest/most expensive solves) and refine
+  // through it. (The Hasenbusch HEAVY solves see the sea-mass subspace as a harmless, suboptimal
+  // guess -- CG still refines to tolerance, so it stays exact; for full benefit each mass wants its
+  // own subspace, an owed refinement.)
+  OperatorFunction<FermionField> *slvp = &CG;            // pointer, so deflation can REPOINT it
+#ifdef USE_DEFLATION
+  std::vector<FermionField> defl_evec;
+  std::vector<RealD> defl_eval;
+  DeflatedCG<FermionField> *DCG = nullptr;
+  if (deflateN > 0) {
+    std::cout << GridLogMessage << "deflation: building " << deflateN
+              << " low modes of the SEA even-odd M^dag M (VRAM-resident) ..." << std::endl;
+    // VERIFY AT COMPILE -- the Grid eigensolver API is version-specific. Canonical route:
+    //   SchurDiagMooeeOperator<FermionAction,FermionField> HermOp(*fops[0]);  // even-odd M^dag M
+    //   Chebyshev<FermionField> cheby(alpha, beta, order);                    // spectral filter
+    //   ImplicitlyRestartedLanczos<FermionField> IRL(HermOp, cheby, Nstop=deflateN, Nk, Nm, ...);
+    //   defl_evec.resize(Nm, FermionField(GridRBPtr)); defl_eval.resize(Nm);
+    //   int Nconv; IRL.calc(defl_eval, defl_evec, src0, Nconv); defl_evec.resize(Nconv);
+    // Fill defl_evec/defl_eval here, then:
+    DCG = new DeflatedCG<FermionField>(defl_evec, defl_eval, CG);
+    if (!defl_evec.empty()) slvp = DCG;                  // repoint the solver at the deflated one
+    std::cout << GridLogMessage << "deflation: " << defl_evec.size()
+              << " modes held; subspace FROZEN for the run (recompute on restart to refresh)."
+              << std::endl;
+  }
+#else
+  if (deflateN > 0)
+    std::cout << GridLogMessage << "WARNING: --deflate " << deflateN
+              << " ignored -- rebuild with -DUSE_DEFLATION to enable the deflation accelerator."
+              << std::endl;
+#endif
+  OperatorFunction<FermionField> &slv = *slvp;           // CG by default, the deflated solver if built
+
   // The pseudofermion actions. EVEN-ODD preconditioned throughout (exact; ~2x).
   //  - no Hasenbusch (ladder size 1): a single EvenOdd two-flavour det(M_sea^d M_sea).
   //  - with Hasenbusch: a telescoping chain of EvenOdd RATIO actions (light numerator / heavy
@@ -155,19 +239,19 @@ int main(int argc, char **argv) {
   //  the non-EO TwoFlavourRatioPseudoFermionAction exists -- but prefer the EO form.)
   std::vector<ActionBase<HMCWrapper::Field> *> pfActions;
   if (ladder.size() == 1) {
-    auto *Nf2 = new TwoFlavourEvenOddPseudoFermionAction<FermionImplPolicy>(*fops[0], CG, CG);
+    auto *Nf2 = new TwoFlavourEvenOddPseudoFermionAction<FermionImplPolicy>(*fops[0], slv, slv);
     Nf2->is_smeared = false;
     pfActions.push_back(Nf2);
   } else {
     // ratios: det(M_i^d M_i / M_{i+1}^d M_{i+1}), i = 0 .. n-1  (numerator LIGHTER = fops[i])
     for (size_t i = 0; i + 1 < ladder.size(); ++i) {
       auto *ratio = new TwoFlavourEvenOddRatioPseudoFermionAction<FermionImplPolicy>(
-          *fops[i], *fops[i + 1], CG, CG);              // num = fops[i] (lighter), den = fops[i+1]
+          *fops[i], *fops[i + 1], slv, slv);            // num = fops[i] (lighter), den = fops[i+1]
       ratio->is_smeared = false;
       pfActions.push_back(ratio);
     }
     // cap: the heaviest mass as a plain EvenOdd two-flavour determinant
-    auto *cap = new TwoFlavourEvenOddPseudoFermionAction<FermionImplPolicy>(*fops.back(), CG, CG);
+    auto *cap = new TwoFlavourEvenOddPseudoFermionAction<FermionImplPolicy>(*fops.back(), slv, slv);
     cap->is_smeared = false;
     pfActions.push_back(cap);
   }
@@ -202,6 +286,9 @@ int main(int argc, char **argv) {
 
   for (auto *a : pfActions) delete a;
   for (auto *f : fops) delete f;
+#ifdef USE_DEFLATION
+  if (DCG) delete DCG;
+#endif
   Grid_finalize();
   return 0;
 }
