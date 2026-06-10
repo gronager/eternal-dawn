@@ -74,6 +74,32 @@ done
 repeat measurements 1–5 per ensemble. The deliverables: `s_T(m_π²)` and `g_S(m_π²)` extrapolated to
 the chiral point on a resolved, unitary, T=48 lattice — the number the pilot could not give.
 
+### Speeding up the light-sea generation (the GH200's 96 GB)
+
+`generate_dynamical` now ships two standard dynamical-Wilson accelerators, risk-ordered:
+
+- **Even-odd (red-black) preconditioning — always on, free, exact.** A determinant *identity*, so it
+  cannot bias the ensemble (worst case: lower acceptance). ~2×. No validation beyond the usual
+  acceptance/dH check.
+- **Hasenbusch mass preconditioning — opt-in via `HASEN`, off by default.** Splits the determinant into
+  a telescoping product of mass-ratio factors with smoother forces → bigger steps / fewer CG iters,
+  another ~2–3×. EXACT *only if* Grid's numerator/denominator ratio convention is as assumed; a
+  backwards convention silently samples the **wrong** action while acceptance still looks fine.
+
+```bash
+# light sea WITH the accelerators (Hasenbusch masses HEAVIER than the sea, ascending):
+L=16 T=48 BETA=5.6 MASS=-0.75 HASEN="-0.3,0.1" NTRAJ=2500 MDSTEPS=40 NSTREAMS=4 \
+  OUT=out/dyn_L16x48_m-0.75 ./run/07_dynamical_torsiton.sh
+```
+
+**MANDATORY validation before a 3-day production run with `HASEN` set:** (a) it compiles; (b) a short
+run shows acceptance ~0.7–0.9 and dH ~ O(1); (c) **cross-check the plaquette (and m_π via run/06) on
+~20–40 configs against the plain ensemble — they must agree within errors.** Even-odd alone (no
+`HASEN`) needs only (a),(b). Also raise `NSTREAMS` (each stream ~2 GB) to run many chains in parallel
+on the one GPU — N× the configs per wall-clock until bandwidth saturates. *Owed follow-up (the real
+VRAM exploit):* mixed-precision CG and adaptive multigrid/deflation in the HMC solver — the biggest
+solver win near the chiral point, deliberately left out until even-odd + Hasenbusch are validated.
+
 ## What lands
 
 - a **resolved** ground-state bag `s_T` from the two-state fit (T=48 τ-room) → in/out of the window, decisively;
