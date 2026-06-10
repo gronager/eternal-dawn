@@ -228,7 +228,9 @@ int main(int argc, char **argv) {
     const int Nm = deflateN + 40;                          // TUNE: max Krylov dim (Nm > Nk > Nstop)
     ImplicitlyRestartedLanczos<FermionField> IRL(ChebyOp, PlainOp, Nstop, Nk, Nm, 1.0e-8, 200);
     defl_eval.resize(Nm);
-    defl_evec.resize(Nm, FermionField(GridRBPtr));         // eigenvectors live on the RB (checkerboard) grid
+    defl_evec.reserve(Nm);                                 // Grid Lattice is not vector-copy-constructible:
+    for (int i = 0; i < Nm; ++i)                           // build each RB-grid field in place (no copy)
+      defl_evec.emplace_back(GridRBPtr);                   // eigenvectors live on the RB checkerboard grid
     FermionField src0(GridRBPtr);
     GridParallelRNG pRNG(GridRBPtr);                       // local RNG for the Lanczos start vector
     pRNG.SeedFixedIntegers(std::vector<int>{seed, seed + 1, seed + 2, seed + 3});
