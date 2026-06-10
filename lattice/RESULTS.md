@@ -88,6 +88,51 @@ this first ensemble establishes: the torsiton **binds in the real dynamical vacu
 dresses the gauge dynamics (the scale shift), and the pion is a genuine sea-quark Goldstone. The
 method works unquenched, end to end.
 
+## L4 — the mass-giving bag (condensate 3-pt + generations)
+
+The fermion-mass hierarchy reduces to one number: the sharpness `s_T` of the dynamically-massive
+**bag** the radial rungs couple to (Chapter 11). A sharp bag spreads the consecutive generations
+across the full charged-lepton span (×3477); a broad bag flattens them. So the programme's headline
+lattice question is **how sharp is the bag**, measured in units of the confinement scale, `s_T = R0/r0`.
+The lever's productive window — where the consecutive ladder reproduces the observed span — is
+`s_T ∈ [0.43, 0.70] r0`.
+
+**The one-body proxy (`run/09`, the clean result).** The gauge-invariant dressed-quark scalar profile
+`ρ(r)=Tr[S†S]` gives a bag whose half-density radius rises monotonically as the pion lightens. On the
+12³×24 sea-(−0.5) ensemble, a valence scan (the guard dropping exceptional configs past the wall)
+puts **three measured points inside the window** (s_T = 0.49, 0.45, 0.43 at m_π a = 0.32, 0.37, 0.40),
+and the light-mass chiral extrapolation lands at **s_T ≈ 0.5 r0, in the window**. As a one-body proxy
+this is the *best current estimate*: the bag grows into the productive window toward the chiral limit
+— consistent with the hierarchy being derived.
+
+**The genuine three-body condensate (`run/10`).** The connected nucleon scalar 3-point
+`⟨N|q̄q(r)|N⟩` was built and **validated**: the sequential source (the derivative of the validated
+2-pt contraction) passes its self-check (`recon == C_N` to all digits, by Euler), the sink guard is
+sign-robust (the nucleon correlator here is uniformly negative — a convention), and a two-state fit in
+τ removes the time-direction excited states. What it delivers cleanly is the **scalar charge
+`g_S = 0.26 → 0.27`** (−0.90 → −0.95), *rising* toward chiral and shape-independent — a robust number.
+What it does **not** yet deliver is the bag *shape*: source smearing was the wrong tool (it convolves
+the spatial profile with the ~3a source blob — the smeared R0 ≈ 2.5a is just the smearing kernel),
+and the point-source two-state fit returns R0 = 0.46a, **below the lattice resolution** (a ≈ 0.16 fm,
+so R0 < ½ a — over-corrected on 7 τ points). The bag sits *at* the cutoff (~1a) on this coarse pilot;
+the position-space `s_T` is bracketed (0.15 three-body fit ↔ 0.53 one-body proxy), **not pinned**.
+
+**Generations (`run/08`, GEVP).** The variational nucleon spectrum resolves the **ground state
+cleanly** (m_N a ≈ 2.26, consistent with the single-operator 2.11) but **not** the excited tower: the
+three Wuppertal-smeared operators are nodeless Gaussians, nearly collinear, with almost no overlap on
+the *nodal* radial excitations the generations live in. So the count (3? 4?) is unresolved — a
+basis/statistics limit, not an absence. It needs **nodal operators** (Laplacian-filtered sources),
+more configs, and a bigger box.
+
+**Honest status.** The pilot ensemble (12³×24, a ≈ 0.16 fm, 48 configs) is at its **resolution
+limit** for both the bag shape and the generation count. What is banked and reusable: the torsiton
+binds; the full condensate-3-pt machinery is built and self-validated; `g_S` rises toward chiral; and
+the one-body proxy says the bag enters the window. What is owed to a **production ensemble**: a finer
+`a` (to resolve a ~1a bag — the dominant limitation), bigger `T` (T=48, to feed the two-state fit the
+τ-range it starves for), bigger `L` (finite-volume control and room for the extended excitations),
+more configs, nodal GEVP operators, and ultimately a lighter *unitary* sea. The pipeline is done,
+end to end; it is the lattice that must grow.
+
 ## L1 — confinement (status)
 
 The pure-gauge area law / string tension pipeline (`measure_potential`, `run/01`) is in hand and
