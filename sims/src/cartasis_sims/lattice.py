@@ -816,6 +816,10 @@ def condensate_3pt(p3, c2, sr, chk, T, t_snk, tau_window=None, r0_over_a=3.166, 
 
     lo_p, hi_p = 0.43, 0.70
     where = ("IN" if lo_p <= s_T <= hi_p else ("below" if s_T < lo_p else "above"))
+    # the two-state fit is only TRUSTWORTHY when its R0 is comparable to the (resolved) plateau R0; if
+    # it swings far from it the tau-fit is ill-conditioned (it over/under-corrected). At a large t_snk
+    # the plateau is itself ground-state-dominated, so prefer it and flag the two-state as unstable.
+    gs_reliable = bool(gs is not None and R0 > 1.2 and 0.6 < (gs_R0 / max(R0, 1e-9)) < 2.2)
     if not sc_ok:
         verdict = (f"SELF-CHECK FAILED: reconstruction {recon:.4g} vs C_N(t_snk) {cn_snk:.4g} "
                    f"(resid {sc_resid:.1%}) -- the sequential source is wrong; fix the sigma_seq "
@@ -825,13 +829,20 @@ def condensate_3pt(p3, c2, sr, chk, T, t_snk, tau_window=None, r0_over_a=3.166, 
                    f"the sign-normalised 2-pt turns over at t={node_t} (backward-propagating wrong-"
                    f"parity state), and t_snk={t_snk} is at/beyond it. The s_T={s_T:.3f} here is "
                    f"backward-contaminated; rerun with SINKT < {node_t}.")
+    elif R0 > 1.2 and not gs_reliable:
+        # RESOLVED bag, large t_snk -> the plateau IS the ground state; the two-state fit is unstable
+        twostate = f" (two-state fit unstable here: R0={gs_R0:.1f}a, ignore it)" if gs is not None else ""
+        verdict = (f"self-check PASSED, sink on the plateau (t_snk={t_snk} < node {node_t}); g_S = "
+                   f"{abs(g_S):.3f}. RESOLVED condensate bag s_T = R0/r0 = {s_T:.3f}+/-{s_T_err:.3f} r0 "
+                   f"({where} the window [{lo_p},{hi_p}]) -- the genuine three-body number, R0={R0:.2f}a "
+                   f"off the cutoff, plateau ground-state-dominated at this large t_snk{twostate}.")
     elif gs is not None:
         gw = ("IN" if lo_p <= gs_s_T <= hi_p else ("below" if gs_s_T < lo_p else "above"))
         verdict = (f"self-check PASSED, sink on the plateau (t_snk={t_snk} < node {node_t}); g_S = "
                    f"{abs(g_S):.3f}. GROUND-STATE bag (two-state fit in tau, dE={gs['dE']:.2f}): "
                    f"s_T = R0/r0 = {gs_s_T:.3f} r0 ({gw} the window [{lo_p},{hi_p}]). "
-                   f"[the tau-plateau average {s_T:.3f} is excited-contaminated; use a POINT source "
-                   f"-- source smearing convolves the spatial profile with the source blob.]")
+                   f"[the tau-plateau average {s_T:.3f} is excited-contaminated -- raise t_snk so the "
+                   f"plateau is ground-state-dominated.]")
     else:
         verdict = (f"self-check PASSED (resid {sc_resid:.1%}), sink on the plateau (t_snk={t_snk} < "
                    f"node {node_t}); scalar charge g_S = {abs(g_S):.3f}. tau-plateau bag s_T = R0/r0 = "
@@ -839,10 +850,12 @@ def condensate_3pt(p3, c2, sr, chk, T, t_snk, tau_window=None, r0_over_a=3.166, 
                    f"3-pt, plateau average -- excited-contaminated; the two-state fit needs more tau "
                    f"points (bigger T) to isolate the ground state.")
 
+    # the best single number: the resolved plateau when the two-state fit is unstable, else the gs fit
+    s_T_best = s_T if (R0 > 1.2 and not gs_reliable) else (gs_s_T if gs is not None else s_T)
     return {"self_check_ok": sc_ok, "self_check_resid": sc_resid, "recon": recon, "cn_snk": cn_snk,
             "sink_ok": sink_ok, "node_t": int(node_t), "g_S": g_S, "g_S_tau": gS_tau, "r": r,
             "rho3": rho3, "R0": R0, "s_T": s_T, "s_T_err": s_T_err, "n_cfg": n,
-            "gs_s_T": gs_s_T, "gs_R0": gs_R0, "gs": gs,
+            "gs_s_T": gs_s_T, "gs_R0": gs_R0, "gs": gs, "gs_reliable": gs_reliable, "s_T_best": s_T_best,
             "tau_window": tau_window, "verdict": verdict}
 
 
