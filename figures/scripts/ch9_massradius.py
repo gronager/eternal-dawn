@@ -140,6 +140,17 @@ def main():
                 "below here a BH is compressed ENERGY\n(the tally), not compressed mass",
                 (mb_x, mb_y), xytext=(10, -2), textcoords="offset points", fontsize=8.0, color="0.15")
 
+    # the HAWKING WATERSHED: T_H(M) = T_CMB (~Moon mass, 4.5e25 g). Below it an UNFED hole net-
+    # evaporates faster than it grows -- the fork in the journey. The void seed sits BELOW it: what
+    # carries the seed UP across the membrane is the parent's feeding, not its own mass.
+    m_eq = 25.65
+    ax.plot([logR_bh(m_eq)], [m_eq], "X", color="#d2691e", ms=11, zorder=7)
+    ax.annotate("Hawking watershed: $T_H\\!=\\!T_{\\rm CMB}$ ($\\sim$Moon mass)\n"
+                "below here an UNFED hole net-evaporates (Hawking)\n"
+                "instead of growing -- the seed is carried up by the\n"
+                "parent's feeding, not by its own mass", (logR_bh(m_eq), m_eq),
+                xytext=(10, 3), textcoords="offset points", fontsize=7.8, color="#d2691e")
+
     ax.annotate("void seed (mountain mass) --\ncompressed energy in the void", (logR_bh(M_SEED), M_SEED),
                 xytext=(8, -16), textcoords="offset points", fontsize=8.4, color="C2", fontweight="bold")
     ax.annotate("a smaller black hole:\ntiny outside, a universe inside", (logR_bh(34), 34),
