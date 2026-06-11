@@ -238,8 +238,11 @@ int main(int argc, char **argv) {
     gaussian(pRNG, src0);
     int Nconv = 0;
     IRL.calc(defl_eval, defl_evec, src0, Nconv);
-    defl_evec.resize(Nconv);
-    defl_eval.resize(Nconv);
+    // trim to the converged count. NB: vector::resize(n) would instantiate a DEFAULT-construct path,
+    // and Grid's Lattice has no default ctor -- so shrink with erase (destroy-only, no construction).
+    if (Nconv >= 0 && (int)defl_evec.size() > Nconv)
+      defl_evec.erase(defl_evec.begin() + Nconv, defl_evec.end());
+    defl_eval.resize(Nconv);                              // RealD is default-constructible, fine
     DCG = new DeflatedCG<FermionField>(defl_evec, defl_eval, CG);
     if (!defl_evec.empty()) slvp = DCG;                  // repoint the solver at the deflated one
     std::cout << GridLogMessage << "deflation: " << defl_evec.size()
