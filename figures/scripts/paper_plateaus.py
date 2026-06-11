@@ -48,9 +48,20 @@ def main():
               f"  then re-run this script.")
         sys.exit(0)
 
-    raw = np.loadtxt(DATA)
-    if raw.ndim != 2 or raw.shape[1] != 4:
-        sys.exit("expected rows 'cfg t C_pi C_N'")
+    # robust parse: keep only clean 'cfg t C_pi C_N' numeric rows (Grid log lines that begin with a
+    # digit can slip through run/06's grep, e.g. "1 0SharedMemoryNone: ..."); drop anything else.
+    raw_rows = []
+    for line in open(DATA):
+        toks = line.split()
+        if len(toks) != 4:
+            continue
+        try:
+            raw_rows.append([float(x) for x in toks])
+        except ValueError:
+            continue
+    raw = np.array(raw_rows)
+    if raw.ndim != 2 or raw.shape[0] == 0 or raw.shape[1] != 4:
+        sys.exit("no clean 'cfg t C_pi C_N' rows in the data file")
     cfgs = np.unique(raw[:, 0]).astype(int)
     ts = np.unique(raw[:, 1]).astype(int)
     nt = ts.max() + 1
