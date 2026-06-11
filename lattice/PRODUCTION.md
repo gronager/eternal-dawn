@@ -58,15 +58,20 @@ L=16 T=48 MASS=-0.5 ITERS="0,10,30,60,100" OUT=out/dyn_L16x48_m-0.5 THERM=300 ST
 **Stage-1 success = the run/10 GROUND-STATE line resolves** (R0 ≳ 1.5a, not below the cutoff) and is
 stable as you vary `SINKT` (try 16, 18, 20). If it does, the method is sound and we go to light mass.
 
-## Stage 2 — the physics (lighter sea, unitary, chiral)
+## Stage 2 — the physics (lighter sea, unitary, chiral) — **at T = 64**
 
-Two lighter sea masses for a chiral extrapolation. Targets are by **m_π a**, not the bare mass —
-tune: run a short generation, measure m_π (run/06), adjust toward m_π a ≈ 0.5 and ≈ 0.35.
+Two lighter sea masses for a chiral extrapolation, **on a longer lattice, T = 64**. This is the key
+change from Stage 1: the sink-time scan (RESULTS.md, L16×48) showed the three-body bag `s_T` *drifting*
+0.45→0.56 across sink times because the two-state fit starved for τ-room and `t_snk=20` crowded the
+backward node at T/2 = 24. **T = 64 moves the node to 32**, giving the fit the room to *pin* `s_T`
+rather than bracket it — the decisive lever, even more than the lighter sea. (The Hasenbusch
+convention is validated once at T = 48 against the plain reference, then trusted here; it is
+geometry-independent.) Targets are by **m_π a**: tune toward m_π a ≈ 0.5 and ≈ 0.35.
 
 ```bash
 for M in -0.75 -0.85; do
-  L=16 T=48 BETA=5.6 MASS=$M NTRAJ=2500 MDSTEPS=40 SAVE=5 NSTREAMS=1 \
-    OUT=out/dyn_L16x48_m$M ./run/07_dynamical_torsiton.sh 2>&1 | tee dyn_L16x48_m$M.gen.log
+  L=16 T=64 BETA=5.6 MASS=$M HASEN="-0.3,0.1" NTRAJ=2500 MDSTEPS=40 SAVE=5 NSTREAMS=1 \
+    OUT=out/dyn_L16x64_m$M ./run/07_dynamical_torsiton.sh 2>&1 | tee dyn_L16x64_m$M.gen.log
 done
 ```
 

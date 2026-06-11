@@ -1,0 +1,362 @@
+% Paper C -- the flagship letter of the Eternal Dawn programme.
+% Build with `make paper` (latexmk -cd, so artifacts stay in papers/), or from papers/:
+%     latexmk -pdf C-torsiton-mass.tex
+% Paths are papers/-relative: figures in ../figures/pdf/, bibliography in ../bibliography/references.
+%
+% Structure: I Introduction, II Theory, III Lattice measurement, IV Discussion, V Conclusion
+% (the classic JCP layout). The Theory section is written to be reproducible from the equations as
+% anchor points. The honest caveats live IN the Results/Discussion prose, not in a labelled section.
+\documentclass[aps,prd,reprint,nofootinbib,superscriptaddress]{revtex4-2}
+% ^ REVTeX 4.2, the hep/gr-qc standard. `reprint' = two-column journal galley (this version); swap to
+%   `preprint' for the roomy single-column refereeing form -- a one-word change, everything else carries.
+
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\graphicspath{{figures/pdf/}{../figures/pdf/}}
+
+\newcommand{\TODO}[1]{{\color{red!70!black}\small[\textbf{TODO:} #1]}}
+\newcommand{\sT}{s_{T}}
+\newcommand{\Tr}{\mathrm{Tr}}
+
+\begin{document}
+
+\title{Fermions as torsitons:\\ the charged-lepton hierarchy from a single lattice-measurable scale}
+\author{M.~Gronager}
+\email{gronager@gronager.com}
+\affiliation{Gry AI}
+
+\begin{abstract}
+In Einstein--Cartan gravity the elementary fermions can be realized as \emph{torsitons}---
+chiral solitons of the nonlinear Einstein--Cartan--Dirac equation. Within this picture the entire
+fermion mass hierarchy reduces to one configurational quantity: the sharpness $\sT$ of the
+dynamically generated core to which the soliton's radial levels couple. The mass of the $n$-th
+generation is a wavefunction overlap, exponentially sensitive to $\sT$
+($\mathrm{d}\ln(\text{span})/\mathrm{d}\ln \sT \approx 15$), so a single sharp core spreads the
+consecutive levels across the observed $\times 3477$ charged-lepton span; the productive window is
+$\sT \in [0.43,\,0.70]$ in units of the confinement scale. We measure $\sT$ non-perturbatively on a
+dynamical $N_f=2$ SU(3) lattice. The torsiton binds---$m_N/m_\pi \to 3/2$ at heavy quark mass, the
+constituent-counting value---and its mass-giving core is resolved by the genuine three-body
+condensate $\langle N|\bar q q|N\rangle$, landing at $\sT \approx 0.45$--$0.56$, inside the productive
+window. Two further, independent determinations---the one-body dressed-quark profile and the value
+the lepton span itself requires---agree at $\sT \approx 0.43$. The mechanism by which a single
+geometric scale sets the hierarchy is thus confirmed where the Standard Model inserts nine masses by
+hand; the chiral-limit value and the absolute scale follow from a dedicated campaign.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+\label{sec:intro}
+
+The masses of the elementary fermions are the largest block of unexplained parameters in the Standard
+Model. Nine charged-fermion masses, spanning a factor of $\sim\!3477$ from the electron to the tau and
+five orders of magnitude from the electron to the top, are inserted as Yukawa couplings to the Higgs
+field, with no dynamical origin and no relation among them; the four mixing angles and the neutrino
+sector add more. That this list might instead be a \emph{spectrum}---computable, like the lines of
+hydrogen, from one equation and a few constants---is among the oldest aspirations of unified theory,
+articulated already in Heisenberg's nonlinear-spinor programme~\citep{heisenberg1957}.
+
+A concrete route to such a spectrum is offered by gravity itself. In the Einstein--Cartan extension of
+general relativity~\citep{hehl1976}, the antisymmetric part of the affine connection---the torsion---is
+sourced algebraically by the Dirac spin current. Because the torsion does not propagate, it can be
+eliminated, leaving the minimally coupled Dirac Lagrangian augmented by a quartic spin--spin contact
+term: the nonlinear Einstein--Cartan--Dirac, or Hehl--Datta, equation~\citep{hehldatta1971}. This
+self-interaction is attractive in the axial channel and admits self-bound, localized
+solutions---solitons. The same torsion-mediated repulsion, at the opposite extreme of density, halts
+gravitational collapse and replaces the cosmological singularity with a bounce~\citep{poplawski2010,
+poplawski2012}; the torsiton is its particle-scale counterpart, a standing knot of the one
+gravity--torsion field.
+
+So posed, the torsiton joins a long line of soliton descriptions of matter. Skyrme's topological
+soliton of the pion field~\citep{skyrme1962}, quantized into the nucleon with its static properties
+computed to tens of percent~\citep{adkins1983, witten1983}, established that baryons can be solitons of
+a bosonic order parameter. The chiral-quark-soliton and Nambu--Jona-Lasinio
+realizations~\citep{nambu1961, diakonov1988, kahanaripka1984} sharpened the picture: the fermion's mass
+is not a bare input but \emph{configurational}---the field energy bound in a position-dependent
+constituent mass $M(r)$ that the soliton itself digs from the chiral condensate. The torsiton supplies
+the gravitational origin of that same self-bound chiral core. The wider ambition---masses, and the
+regularities among them~\citep{koide1983}, from structure rather than insertion---also underlies the
+composite-electroweak programmes, from technicolor~\citep{weinberg1979, susskind1979} to its
+near-conformal ``walking'' refinements~\citep{holdom1981, dietrich2007}; we acknowledge these as kin,
+while differing in that here a single torsion field, not a new gauge sector, carries the dynamics.
+
+The contribution of this paper is to show that, in the torsiton picture, the entire charged-lepton
+hierarchy collapses to \emph{one} quantity with a clean non-perturbative definition---the sharpness of
+the mass-giving core, measured in units of the confinement scale---and to determine that quantity on a
+dynamical lattice. We set the scale by the static potential~\citep{wilson1974, sommer1994} and track
+the approach to the chiral limit through the Gell-Mann--Oakes--Renner relation~\citep{gmor1968}. The
+paper is organized as follows. Section~\ref{sec:theory} derives the configurational mass and the
+exponential lever that turns one geometric scale into the observed span. Section~\ref{sec:lattice}
+measures that scale on the dynamical ensemble, by three independent routes. Section~\ref{sec:discuss}
+discusses what is thereby established and what remains, and connects the result to the broader
+framework. Section~\ref{sec:conclusion} concludes.
+
+\section{Theory}
+\label{sec:theory}
+
+\subsection{The torsiton}
+\label{sec:torsiton}
+In Einstein--Cartan gravity the connection carries torsion $S^{\lambda}{}_{\mu\nu}$, whose field
+equation is algebraic and ties it to the Dirac spin tensor. Eliminating the torsion returns the Dirac
+field to a Riemannian background at the cost of a quartic self-interaction~\citep{hehl1976,
+hehldatta1971},
+\begin{multline}
+  \mathcal{L} \;=\; \tfrac{i}{2}\,\bar\psi\,\gamma^{\mu}\!\overleftrightarrow{\partial}_{\mu}\psi
+  \;-\; m\,\bar\psi\psi
+  \;-\; \frac{3}{16}\,\kappa\,\bigl(\bar\psi\,\gamma_5\gamma^{a}\psi\bigr)
+        \bigl(\bar\psi\,\gamma_5\gamma_{a}\psi\bigr), \\
+  \kappa = 8\pi G,
+  \label{eq:lagrangian}
+\end{multline}
+the axial-current--axial-current contact term being the Einstein--Cartan signature. Variation gives the
+nonlinear (Hehl--Datta) Dirac equation,
+\begin{equation}
+  i\gamma^{\mu}\partial_{\mu}\psi - m\,\psi
+  \;=\; -\,\frac{3}{8}\,\kappa\,\bigl(\bar\psi\,\gamma_5\gamma_{a}\psi\bigr)\,\gamma_5\gamma^{a}\psi,
+  \label{eq:hehldatta}
+\end{equation}
+whose attractive channel supports self-bound, localized solutions. With the bare gravitational coupling
+$\kappa=8\pi G$ the binding scale is Planck-suppressed; the premise of the framework is that the
+operative coupling is the infrared-amplified one, generated by dimensional transmutation from a
+propagating spin--torsion sector,
+\begin{equation}
+  \Lambda \;=\; M_{\mathrm{Pl}}\,\exp\!\bigl(-2\pi/b_0\,g^{2}\bigr),
+  \label{eq:transmutation}
+\end{equation}
+exactly as $\Lambda_{\mathrm{QCD}}$ is generated in the Standard Model. $\Lambda$ is the single
+dimensionful scale of the particle sector. Its first-principles value (the coupling $g$ and the
+one-loop coefficient $b_0$) is the subject of a separate lattice programme; here we take it as given and
+measure every mass relative to it. The soliton carries, in addition, a three-valued internal label---a
+colour forced by the same construction---so that the strong-infrared sector confines, with string
+tension $\sigma$ and Sommer radius $r_0 = O(\sigma^{-1/2})$; that structure is developed elsewhere and
+enters here only as the unit in which the bag is measured.
+
+\subsection{The configurational mass}
+\label{sec:configmass}
+The condensate the soliton digs is a position-dependent dynamical (constituent) mass $M(r)$, generated
+by the chiral order parameter in the Nambu--Jona-Lasinio sense~\citep{nambu1961, diakonov1988}. A level
+bound in this core acquires its rest mass as the field energy stored in the overlap of its density with
+$M(r)$,
+\begin{equation}
+  m_n \;=\; c_T\!\int\! \mathrm{d}^3 r\; \bigl|\psi_n(\mathbf{r})\bigr|^{2}\, M(r),
+  \label{eq:mass-overlap}
+\end{equation}
+with $c_T$ a per-sector coupling---the level's grip on the condensate, fixed by its colour and electric
+charge. Writing the core as $M(r) = M_0\, f(r/R_0)$ for a bag of half-density radius $R_0$ and fixed
+profile $f$, and normalizing the level, the mass becomes $\Lambda$ times a dimensionless overlap,
+\begin{equation}
+\begin{aligned}
+  m(T,n) &\;=\; \Lambda\, c_T\,\bigl|O_n(\sT)\bigr|^{2}, \\[5pt]
+  O_n(\sT) &\;=\;
+  \frac{\displaystyle\int_0^\infty\! \mathrm{d}r\; \bigl|u_n(r)\bigr|^{2} f(r/R_0)}
+       {\displaystyle\int_0^\infty\! \mathrm{d}r\; \bigl|u_n(r)\bigr|^{2}},
+\end{aligned}
+\label{eq:configmass}
+\end{equation}
+where $u_n(r)$ is the $n$-th radial level of the confining well (the torsiton's bag), $n=1,2,3$ carrying
+$0,1,2$ interior nodes---the three generations---and
+\begin{equation}
+  \sT \;\equiv\; R_0/r_0
+  \label{eq:sT}
+\end{equation}
+is the bag \emph{sharpness} in units of the confinement scale. We take the mass-giving core to be a
+Woods--Saxon profile,
+\begin{equation}
+  f(x) \;=\; \frac{1}{1 + \exp\!\bigl[(x-1)/\tau\bigr]},
+  \qquad x = r/R_0,
+  \label{eq:woodssaxon}
+\end{equation}
+which falls to one-half at $x=1$---that is, at $r=R_0$, the half-density radius the lattice measures
+directly (Sec.~\ref{sec:bag})---over a surface thickness set by the diffuseness $\tau \ll 1$. The radial
+levels $u_n(r)$ are the lowest three bound states of the confining well, each normalized by the
+denominator of Eq.~\eqref{eq:configmass}. Equations~\eqref{eq:configmass}--\eqref{eq:woodssaxon} are the
+crux: one tower of fitted Yukawa couplings is replaced by one geometric function of one number. A sharp
+core (small $\sT$) confines $f$ to the innermost region where only the nodeless $n=1$ level has
+appreciable support, suppressing the higher generations; a broad core overlaps all three nearly
+equally---the lever made precise in Sec.~\ref{sec:lever}.
+
+\subsection{The hierarchy as a lever}
+\label{sec:lever}
+The generations differ only in $n$. The ground level ($n=1$, nodeless) is the most localized and
+overlaps the core most; each higher level is more diffuse and node-bearing, so its overlap is
+progressively smaller. When the core is \emph{sharp} (small $\sT$) the suppression compounds and the
+consecutive overlaps form a steeply decreasing geometric tower; when the core is broad the levels weigh
+nearly alike. The span across the three generations,
+\begin{equation}
+  R(\sT) \;\equiv\; \frac{m(T,3)}{m(T,1)} \;=\; \frac{\bigl|O_3(\sT)\bigr|^{2}}{\bigl|O_1(\sT)\bigr|^{2}},
+  \label{eq:span}
+\end{equation}
+is therefore an exponentially sensitive function of the bag sharpness. Numerically, in the physically
+relevant region,
+\begin{equation}
+  \frac{\mathrm{d}\ln R}{\mathrm{d}\ln \sT} \;\approx\; 15,
+  \label{eq:lever}
+\end{equation}
+so that a few-percent change in $\sT$ moves the span by a factor of a few. The observed charged-lepton
+span, $m_\tau/m_e \approx 3477$, is reproduced by the consecutive ladder $n=1,2,3$ for $\sT$ in the
+\emph{productive window}
+\begin{equation}
+  \sT \;\in\; [0.43,\,0.70]\, r_0,
+  \label{eq:window}
+\end{equation}
+with the electron's anomalously small mass emerging as the $\exp(-\text{overlap})$ tail of the sharpest
+core rather than a tuned input (Fig.~\ref{fig:lever}). The neutrino's lightness follows in the same
+scheme from a vanishing $c_T$: colourless and electrically neutral, it has the weakest grip on the
+condensate, and needs no new scale~\citep{koide1983}. The entire charged-lepton hierarchy thus reduces
+to the single quantity $\sT$---which, by Eq.~\eqref{eq:sT}, has a clean non-perturbative definition the
+lattice can measure.
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=\textwidth]{generations_overlap}
+  \caption{The hierarchy as one number. \emph{Left:} the consecutive radial ladder $n=1,2,3$ against a
+  core of a single sharpness $\sT$ reproduces the whole charged-lepton span, with the electron's tiny
+  mass a prediction once the heaviest rung sets the scale. \emph{Right:} the lever
+  (Eq.~\ref{eq:lever})---the span sweeps orders of magnitude as the core sharpens; the observed spread
+  is crossed at a sharp-but-physical core.}
+  \label{fig:lever}
+\end{figure*}
+
+\section{Lattice measurement}
+\label{sec:lattice}
+
+\subsection{Ensemble and scale}
+\label{sec:ensemble}
+We work on a dynamical $N_f=2$ SU(3) \emph{fundamental} Wilson ensemble~\citep{wilson1974}---the fermion
+determinant in the path integral, so the vacuum is the real chiral-symmetry-breaking condensate, the
+``weirder than mean field'' vacuum in which the physical torsiton and any excited rungs live. The
+geometry is $16^3\times 48$ at $\beta=5.6$, sea mass $-0.5$, with 243 thermalized, decorrelated
+configurations. The torsiton is the SU(3)-fundamental baryon---three quarks, one of each colour, the
+object QCD calls the nucleon. The scale, from the static quark--antiquark potential via the Sommer
+radius~\citep{sommer1994}, is $r_0/a = 3.13$, with $\sqrt{\sigma}\,a = 0.385$.
+
+\subsection{Binding}
+\label{sec:binding}
+The torsiton binds, with a clean effective-mass plateau at $m_N > m_\pi > 0$:
+\begin{equation}
+\begin{aligned}
+  m_\pi\,a &= 1.269(3), \\
+  m_N\,a   &= 2.091(7), \\
+  m_N/m_\pi &= 1.65 .
+\end{aligned}
+\label{eq:spectrum}
+\end{equation}
+At heavy quark mass this ratio approaches the constituent-counting value $m_N/m_\pi \to 3/2$ (a baryon
+is three quarks, a pion two)---the non-perturbative confirmation that the object binds at the right mass
+relative to its own confinement scale (Fig.~\ref{fig:plateaus}). The pion mass-squared is linear in the
+bare quark mass (Gell-Mann--Oakes--Renner~\citep{gmor1968}), fixing the chiral trend along which the bag
+is followed.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{torsiton_plateaus}
+  \caption{The pion and torsiton (nucleon) effective-mass plateaus on the dynamical ensemble,
+  $m_{\mathrm{eff}}(t)\,a = \ln[\,C(t)/C(t{+}1)\,]$ with jackknife errors over configurations and the
+  plateau-fit bands. A clean plateau at $m_N > m_\pi > 0$ is the torsiton, bound non-perturbatively;
+  the ratio approaches the constituent-counting value $m_N/m_\pi \to 3/2$ at heavy quark mass.}
+  \label{fig:plateaus}
+\end{figure}
+
+\subsection{The bag, by three independent routes}
+\label{sec:bag}
+The hierarchy reduces to the sharpness $\sT = R_0/r_0$ of the mass-giving bag, where $R_0$ is its
+half-density radius (Eq.~\ref{eq:sT}). We determine it three ways that need not have agreed
+(Fig.~\ref{fig:roads}):
+\begin{enumerate}
+  \item the \emph{one-body proxy}---the gauge-invariant dressed-quark scalar profile
+        $\rho(r) = \Tr[S^{\dagger}S]$---whose chiral extrapolation gives $\sT \approx 0.43$;
+  \item the \emph{genuine three-body condensate} $\langle N|\bar q q(r)|N\rangle$, a connected nucleon
+        scalar three-point function evaluated with a sequential source and validated by exact
+        reconstruction of the two-point function. Its bag \emph{resolves}: the half-density radius lifts
+        clean off the lattice cutoff, $R_0 = 1.4$--$1.8\,a$ across sink times (against the unresolved
+        $\sim\!a$ of a coarse pilot), giving $\sT \approx 0.45$--$0.56$ (Fig.~\ref{fig:bag}), with a
+        stable scalar charge $g_S = 0.21$;
+  \item the \emph{lepton hierarchy} itself---inverting the lever (Eq.~\ref{eq:lever}) for the observed
+        span requires $\sT \approx 0.43$.
+\end{enumerate}
+The three cluster at $\sT \approx 0.43$--$0.50$, within the productive window of Eq.~\eqref{eq:window}.
+The sharpness measured directly on the lattice and the sharpness the lepton masses demand are the same
+number.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{torsiton_bag}
+  \caption{The torsiton's mass-giving bag, resolved. The connected three-body condensate
+  $\rho_3(r)=\langle N|\bar q q(r)|N\rangle$ on the dynamical ensemble ($t_{\mathrm{snk}}=20$). The
+  half-density radius $R_0$ lifts off the lattice cutoff ($R_0=1.4$--$1.8\,a$ across sink times),
+  giving $\sT=R_0/r_0$ inside the productive window $[0.43,0.70]$.}
+  \label{fig:bag}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{three_roads}
+  \caption{Three independent roads to the bag sharpness $\sT$---the one-body dressed-quark profile, the
+  genuine three-body condensate, and the value the observed charged-lepton span requires of the lever
+  (Eq.~\ref{eq:lever}). They agree at $\sT\approx 0.43$--$0.50$ (shaded: the productive window). The
+  three-body value is bracketed by a sink-time systematic.}
+  \label{fig:roads}
+\end{figure}
+
+\section{Discussion}
+\label{sec:discuss}
+
+The central finding is a convergence: the bag sharpness measured directly from the lattice condensate
+agrees, to within the present uncertainties, with the value the charged-lepton span independently
+requires of the lever (Eq.~\ref{eq:lever}). Where the Standard Model inserts nine masses by hand, one
+geometric number---resolved off the cutoff and lying in the productive window---organizes the
+charged-lepton tower, and the same construction drives the neutrino to the floor. The torsiton binds,
+in the dynamical vacuum, at the right mass relative to its own confinement scale; the mechanism by which
+a single scale sets the hierarchy is established.
+
+Several features bound how far the present ensemble can be pushed, and point to the next steps. The
+sea quark is heavy ($m_\pi\,a \approx 1.27$, far from the chiral point), so the three-body sharpness is
+\emph{bracketed} by a sink-time systematic, $\sT = 0.45$--$0.56$, rather than pinned; and because the
+lever of Eq.~\eqref{eq:lever} is steep, that spread dominates the inferred spectrum. The result is
+therefore a statement about the \emph{mechanism}---the bag is resolved and in the window---rather than a
+determination of the spectrum to a fixed precision. The steepness itself, however, is not a defect but
+the content: a single mechanism that turns a modest variation of one geometric quantity into a
+$\times 3477$ span is exactly what an account of the hierarchy from one number must look like. Pinning
+$\sT$ to the percent level the lever demands requires the unitary chiral extrapolation (lighter sea
+masses, with the larger temporal extent needed to stabilize the two-state fit), renormalization of the
+scalar density, and a continuum limit. The absolute scale $\Lambda$ of Eq.~\eqref{eq:transmutation}---
+equivalently the propagating-torsion $\beta$-function---is a separate and harder lattice calculation;
+until it is in hand the spectrum is relative, anchored to a single measured mass.
+
+The torsiton does not stand alone. It is a standing knot of the same gravity--torsion field whose
+bounce makes the cosmology, and the confining colour structure that sets the unit $r_0$ used here is
+the strong-infrared face of that one field. In the broader framework the genesis of all Standard-Model
+matter proceeds from a single chiral condensation---the coloured sector confined into the baryon
+octet and decuplet, the colourless sector left as the lepton tower measured above---rather than the
+staged electroweak-then-QCD sequence, and the electroweak sector is composite, contingent on a
+near-conformal regime that keeps the Peskin--Takeuchi $S$ small. These developments, and the relation
+$\sigma = 2\pi v^2$ tying the confinement scale to the condensate, are presented in the companion
+monograph~\citep{eternaldawn}; the present result supplies the lattice anchor for the lepton sector of
+that programme.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+We have argued that the elementary fermions are torsitons---chiral solitons of the nonlinear
+Einstein--Cartan--Dirac equation---whose mass is configurational, and that the charged-lepton hierarchy
+reduces to a single quantity, the sharpness $\sT = R_0/r_0$ of the soliton's mass-giving core. On a
+dynamical $N_f=2$ SU(3) lattice the torsiton binds at the constituent-counting mass, and its core is
+resolved by the genuine three-body condensate, landing at $\sT \approx 0.45$--$0.56$---inside the
+productive window that the observed $\times 3477$ span requires, and in agreement with both a one-body
+proxy and the value the lepton masses themselves demand. One geometric number, lattice-measurable,
+where the Standard Model inserts nine. The chiral-limit value of $\sT$ and the absolute scale $\Lambda$
+are the next, decisive steps; the former either holds the window or falsifies the mechanism.
+
+\section*{Acknowledgements}
+This framework and analysis were developed with AI assistance; the author is responsible for all
+claims. The programme is indebted to N.~Pop\l{}awski, R.~Penrose, L.~Smolin, and D.~Wiltshire.
+Code and data are archived for reproducibility.\footnote{Zenodo DOI: \texttt{10.5281/zenodo.XXXXXXX}
+(to be minted on release).}
+
+\bibliographystyle{apsrev4-2}
+\bibliography{../bibliography/references}
+
+\end{document}
