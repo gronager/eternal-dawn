@@ -6,16 +6,14 @@
 % Structure: I Introduction, II Theory, III Lattice measurement, IV Discussion, V Conclusion
 % (the classic JCP layout). The Theory section is written to be reproducible from the equations as
 % anchor points. The honest caveats live IN the Results/Discussion prose, not in a labelled section.
-\documentclass[11pt,a4paper]{article}
+\documentclass[aps,prd,preprint,nofootinbib,superscriptaddress]{revtex4-2}
+% ^ REVTeX 4.2, the hep/gr-qc standard. `preprint' = single column (this draft); swap to `twocolumn'
+%   for the PRD/PRL journal-galley look -- a one-word change, everything else carries over.
 
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
-\usepackage[numbers,sort&compress]{natbib}
-\usepackage[margin=1in]{geometry}
 \usepackage{xcolor}
-\usepackage[hidelinks]{hyperref}
+\usepackage{hyperref}
 
 \graphicspath{{figures/pdf/}{../figures/pdf/}}
 
@@ -23,18 +21,15 @@
 \newcommand{\sT}{s_{T}}
 \newcommand{\Tr}{\mathrm{Tr}}
 
-\title{\bfseries Fermions as torsitons:\\ the charged-lepton hierarchy from a single lattice-measurable scale}
-\author{%
-  M.~Gr\o nager\\[2pt]
-  \small Gry AI\\
-  \small\texttt{gronager@gronager.com}}
-\date{\today}
-
 \begin{document}
-\maketitle
+
+\title{Fermions as torsitons:\\ the charged-lepton hierarchy from a single lattice-measurable scale}
+\author{M.~Gr\o nager}
+\email{gronager@gronager.com}
+\affiliation{Gry AI}
 
 \begin{abstract}
-\noindent In Einstein--Cartan gravity the elementary fermions can be realized as \emph{torsitons}---
+In Einstein--Cartan gravity the elementary fermions can be realized as \emph{torsitons}---
 chiral solitons of the nonlinear Einstein--Cartan--Dirac equation. Within this picture the entire
 fermion mass hierarchy reduces to one configurational quantity: the sharpness $\sT$ of the
 dynamically generated core to which the soliton's radial levels couple. The mass of the $n$-th
@@ -50,6 +45,8 @@ the lepton span itself requires---agree at $\sT \approx 0.43$. The mechanism by 
 geometric scale sets the hierarchy is thus confirmed where the Standard Model inserts nine masses by
 hand; the chiral-limit value and the absolute scale follow from a dedicated campaign.
 \end{abstract}
+
+\maketitle
 
 \section{Introduction}
 \label{sec:intro}
@@ -354,7 +351,7 @@ claims. The programme is indebted to N.~Pop\l{}awski, R.~Penrose, L.~Smolin, and
 Code and data are archived for reproducibility.\footnote{Zenodo DOI: \texttt{10.5281/zenodo.XXXXXXX}
 (to be minted on release).}
 
-\bibliographystyle{plainnat}
+\bibliographystyle{apsrev4-2}
 \bibliography{../bibliography/references}
 
 \end{document}
