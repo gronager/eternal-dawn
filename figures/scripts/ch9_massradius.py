@@ -43,11 +43,11 @@ def logR_bh(logM):
 
 
 def logR_in(logM):
-    """The cosmic INSIDE view at CONSTANT (cosmic) density: M = rho R^3 -- a slope-3 line. It crosses
-    the membrane (BH) line at the CRITICAL universe (our scale, inside = outside); below that the
-    inside is bigger (the TARDIS gap). A universe more massive than the critical one cannot sit at
-    this density -- it would be inside its own horizon -- so the inside line stops there."""
-    return (logM - LOGRHO_C - 0.62) / 3.0
+    """The cosmic INSIDE view. A big TARDIS gap for small/young universes; it ASYMPTOTES to the
+    membrane (BH) line at the mature/OGU end -- as a universe expands toward de Sitter, Omega -> 1 and
+    its inner density converges to critical (the BH-line density), approaching the line but never
+    crossing it (the inside can never be denser than the outside). Schematic."""
+    return logR_bh(logM) + 26.6 * np.exp(-(logM - M_SEED) / 12.0)
 
 
 def main():
@@ -121,17 +121,17 @@ def main():
         ax.plot([r], [m], "s", color="C0", ms=6, zorder=5)
         ax.annotate(lab, (r, m), xytext=(3, -3), textcoords="offset points", fontsize=7.4, color="C0")
 
-    # ---- the TARDIS: OUTSIDE (membrane line) vs INSIDE (cosmic, constant density) ---------------
-    # the constant-density inside line runs up to the CRITICAL universe (our scale), where it meets
-    # the membrane line (inside = outside). Smaller black holes have a big TARDIS gap.
-    ax.plot([logR_in(m) for m in np.linspace(M_SEED, 56.0, 40)],
-            np.linspace(M_SEED, 56.0, 40), color="C0", lw=2.2, alpha=0.9, zorder=4)   # INSIDE line
-    for m, col in [(M_SEED, "C2"), (34.0, "0.3"), (56.0, "C3")]:
+    # ---- the TARDIS: OUTSIDE (membrane line) vs INSIDE (cosmic, asymptoting to the line) ---------
+    # the inside line ASYMPTOTES to the membrane: the TARDIS gap is enormous for a young void seed and
+    # narrows up the line, the inside converging on the outside at the OGU (de Sitter, Omega -> 1).
+    mline = np.linspace(M_SEED, M_OGU, 60)
+    ax.plot([logR_in(m) for m in mline], mline, color="C0", lw=2.2, alpha=0.9, zorder=4)  # INSIDE line
+    for m, col, big in [(M_SEED, "C2", False), (34.0, "0.3", False),
+                        (56.0, "C3", False), (M_OGU, "C1", True)]:
         ro, ri = logR_bh(m), logR_in(m)
         ax.plot([ro, ri], [m, m], color=col, lw=1.0, ls=":", zorder=4)            # TARDIS connector
-        ax.plot([ro], [m], "o", color=col, ms=8, zorder=6)                        # OUTSIDE (dense)
-        ax.plot([ri], [m], "o", color=col, ms=7, mfc="white", zorder=6)           # INSIDE (thin)
-    ax.plot([logR_bh(M_OGU)], [M_OGU], "o", color="C1", ms=11, zorder=6)          # OGU: mature, on the line
+        ax.plot([ro], [m], "o", color=col, ms=(11 if big else 8), zorder=6)       # OUTSIDE (dense)
+        ax.plot([ri], [m], "o", color=col, ms=(9 if big else 7), mfc="white", zorder=6)  # INSIDE (thin)
 
     # the smallest MASS-formed black hole: where torsitonisation (nuclear density) meets the BH line
     mb_x, mb_y = 6.1, 33.9
@@ -147,8 +147,9 @@ def main():
     ax.annotate("our universe -- the CRITICAL point\n(inside $=$ outside, $R_{\\rm Hubble}\\!=\\!R_s$)",
                 (logR_bh(56), 56), xytext=(7, -20), textcoords="offset points", fontsize=8.6,
                 color="C3", fontweight="bold")
-    ax.annotate("OGU -- firstborn, largest\n(more expanded, lower density)", (logR_bh(M_OGU), M_OGU),
-                xytext=(9, -6), textcoords="offset points", fontsize=9.2, color="C1", fontweight="bold")
+    ax.annotate("OGU -- firstborn, largest; inside $\\to$ outside\n"
+                "(de Sitter, $\\Omega\\!\\to\\!1$: the inside asymptotes to the line)", (logR_bh(M_OGU), M_OGU),
+                xytext=(9, -6), textcoords="offset points", fontsize=9.0, color="C1", fontweight="bold")
     # the "tally" wedge: between the membrane and torsitonisation lines, below their meeting -- no mass
     ax.text(-1.0, 23.0, "the tally:\nno mass yet", fontsize=9, color="#6a3d9a", style="italic",
             ha="center", va="center", fontweight="bold")
