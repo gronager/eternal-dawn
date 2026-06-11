@@ -57,27 +57,43 @@ def main():
     ax.fill_between(xx, ylo, CO_C - xx, color="#5a5a5a", alpha=0.17, lw=0)
     ax.plot(yy + BH_C, yy, color="0.1", lw=1.7)                                   # membrane / OUTSIDE line
     ax.plot(xx, CO_C - xx, color="0.15", lw=1.4, ls=(0, (5, 2)))                  # Compton line
-    ax.plot([R_PL], [M_PL], "o", color="black", ms=6)
-    ax.annotate("Planck apex", (R_PL, M_PL), xytext=(6, -13), textcoords="offset points",
-                fontsize=8.5, color="0.2")
+    ax.plot([R_PL], [M_PL], "s", color="black", ms=7)
+    ax.annotate("Planck apex =\nsmallest possible\nblack hole", (R_PL, M_PL), xytext=(6, -30),
+                textcoords="offset points", fontsize=8.3, color="0.2")
+
+    # cosmic epoch lines (constant density, slope 3) -- our genesis epochs; NO GUT in ED
+    def epoch_line(logrho, label, lx):
+        rr = np.linspace(xlo, xhi, 60)
+        mm = 3.0 * rr + logrho + 0.62
+        ax.plot(rr, mm, color="0.5", lw=0.8, ls=(0, (4, 3)), alpha=0.7, zorder=1)
+        ly = 3.0 * lx + logrho + 0.62
+        ax.text(lx, ly, label, fontsize=7.8, color="0.4", rotation=72, rotation_mode="anchor",
+                ha="left", va="bottom")
+    epoch_line(15.0, "QGP", -7.5)
+    epoch_line(2.0, "nuclear (BBN)", -2.0)
+    epoch_line(-12.0, "atomic (recomb)", 3.0)
     ax.text(-27, 49, "torsion--gravity\nmembrane\n(cross it $\\to$ a child\nuniverse bounces out)",
             fontsize=9.5, color="#7a3b3b", ha="center", va="center", style="italic")
     ax.text(-18, -23, "quantum uncertainty", rotation=-43, fontsize=10, color="0.3",
             ha="center", va="center", style="italic")
 
     # ---- diagonal of existence: representative objects (the INSIDE of our universe) ------------
-    objs = [(-12.6, -27, "e"), (-13, -23.8, "p"), (-8, -23, "atom"), (-5, -15, "virus"),
-            (2, 5, "human"), (8.8, 27.8, "Earth"), (10.8, 33.3, "Sun"), (9, 33.3, "WD"),
-            (6, 33.6, "NS"), (22.7, 45.3, "Milky Way"), (25, 48, "clusters")]
+    objs = [(-8, -23, "atom"), (-5, -15, "virus"), (2, 5, "human"), (8.8, 27.8, "Earth"),
+            (10.8, 33.3, "Sun"), (9, 33.3, "WD"), (6, 33.6, "NS"), (22.7, 45.3, "Milky Way"),
+            (25, 48, "clusters")]
     ax.plot([o[0] for o in objs], [o[1] for o in objs], "o", color="C0", ms=4, alpha=0.8, zorder=3)
     for x, y, lab in objs:
         ax.annotate(lab, (x, y), xytext=(4, 3), textcoords="offset points", fontsize=7.5, color="C0")
 
-    # ---- the genesis cascade: creates the particles, marked AT the particle scale --------------
-    ax.annotate("genesis cascade (inside the young universe):\n"
-                r"$\rho_C$ membrane $\to$ mass-on $\to$ confinement $\to$ baryons $+$ leptons $\to$ nuclei"
-                "\n-- our fermion/baryon creation, here where the particles are",
-                (-13, -23.8), xytext=(-2, -10.0), textcoords="data", fontsize=8.0, color="C4",
+    # ---- the charged-lepton spectrum on the Compton limit: OUR mass spectrum (the torsiton rungs)
+    leptons = [(-10.42, -27.04, "e"), (-12.71, -24.73, r"$\mu$"), (-13.96, -23.50, r"$\tau$")]
+    ax.plot([l[0] for l in leptons], [l[1] for l in leptons], "*", color="C4", ms=11, zorder=5)
+    for x, y, lab in leptons:
+        ax.annotate(lab, (x, y), xytext=(-3, 4), textcoords="offset points", fontsize=9,
+                    color="C4", ha="right", fontweight="bold")
+    ax.annotate("the charged-lepton spectrum $e,\\mu,\\tau$\n"
+                "(the torsiton generations -- our mass result)\ncreated in the genesis cascade",
+                (-12.7, -24.7), xytext=(2.0, -16.0), textcoords="data", fontsize=8.2, color="C4",
                 ha="left", va="top", arrowprops=dict(arrowstyle="->", color="C4", lw=0.9))
 
     # ---- the TARDIS: OUTSIDE (membrane line) vs INSIDE (cosmic), across the range ---------------
