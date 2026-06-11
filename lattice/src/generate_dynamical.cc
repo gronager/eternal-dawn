@@ -263,19 +263,22 @@ int main(int argc, char **argv) {
   //    denominator) capped by a single EvenOdd two-flavour action on the heaviest mass.
   // VERIFY AT COMPILE: class names + ctor signatures in YOUR Grid --
   //   TwoFlavourEvenOddPseudoFermionAction<Impl>(FermOp&, CG&, CG&);
-  //   TwoFlavourEvenOddRatioPseudoFermionAction<Impl>(NumOp&, DenOp&, CG&, CG&);   // num=LIGHT
-  // (Some Grid versions name the ratio class TwoFlavourEvenOddRatioPseudoFermionAction; if absent,
-  //  the non-EO TwoFlavourRatioPseudoFermionAction exists -- but prefer the EO form.)
+  //   TwoFlavourEvenOddRatioPseudoFermionAction<Impl>(DenOp&, NumOp&, CG&, CG&);
+  // CONVENTION (verified from the HMC log's det-ratio printout): the FIRST argument is the
+  // DENOMINATOR, the SECOND the NUMERATOR -- i.e. it represents det(2nd)/det(1st). So to put the
+  // LIGHTER mass in the numerator (the Hasenbusch chain that telescopes to the sea determinant) the
+  // call must be (heavier, lighter) = (fops[i+1], fops[i]).
   std::vector<Action<HMCWrapper::Field> *> pfActions;
   if (ladder.size() == 1) {
     auto *Nf2 = new TwoFlavourEvenOddPseudoFermionAction<FermionImplPolicy>(*fops[0], slv, slv);
     Nf2->is_smeared = false;
     pfActions.push_back(Nf2);
   } else {
-    // ratios: det(M_i^d M_i / M_{i+1}^d M_{i+1}), i = 0 .. n-1  (numerator LIGHTER = fops[i])
+    // ratios det(M_i)/det(M_{i+1}), i=0..n-1, telescoping x cap det(M_n) = det(M_sea). With Grid's
+    // (Den,Num) order, NUMERATOR = lighter = fops[i] goes SECOND, denominator = fops[i+1] first.
     for (size_t i = 0; i + 1 < ladder.size(); ++i) {
       auto *ratio = new TwoFlavourEvenOddRatioPseudoFermionAction<FermionImplPolicy>(
-          *fops[i], *fops[i + 1], slv, slv);            // num = fops[i] (lighter), den = fops[i+1]
+          *fops[i + 1], *fops[i], slv, slv);            // (Den=heavier fops[i+1], Num=lighter fops[i])
       ratio->is_smeared = false;
       pfActions.push_back(ratio);
     }
