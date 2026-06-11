@@ -42,12 +42,33 @@ def logR_bh(logM):
     return logM + BH_C
 
 
+def logR_co(logM):
+    return CO_C - logM
+
+
+A_GAP, TAU_DS, TAU_HK = 26.6, 12.0, 8.0   # TARDIS gap at the seed; de Sitter vs Hawking decay scales
+
+
+def _envelope(logM):
+    """The floor of the wedge: the upper of the two exclusion lines (membrane high-M, Compton low-M),
+    smoothly rounded at the Planck apex where they meet."""
+    k = 2.0
+    return np.logaddexp(k * logR_bh(logM), k * logR_co(logM)) / k
+
+
 def logR_in(logM):
-    """The cosmic INSIDE view. A big TARDIS gap for small/young universes; it ASYMPTOTES to the
-    membrane (BH) line at the mature/OGU end -- as a universe expands toward de Sitter, Omega -> 1 and
-    its inner density converges to critical (the BH-line density), approaching the line but never
-    crossing it (the inside can never be denser than the outside). Schematic."""
-    return logR_bh(logM) + 26.6 * np.exp(-(logM - M_SEED) / 12.0)
+    """The TARDIS inside view as a FULL ARC between the two exclusions. HIGH mass: asymptotes to the
+    membrane (BH) line -- de Sitter, Omega -> 1, inside = outside (the OGU). LOW mass: asymptotes to the
+    Compton line -- the Hawking/quantum limit, where an evaporating hole's 'inside' has shrunk to a
+    single quantum (a torsiton), inside = outside again, the other way. The TARDIS bulge between is
+    'bigger on the inside'; it peaks at the void seed, the smallest full universe. Both asymptotes meet
+    at the Planck apex. Schematic."""
+    logM = np.asarray(logM, float)
+    bump = np.where(logM >= M_SEED,
+                    A_GAP * np.exp(-(logM - M_SEED) / TAU_DS),     # de Sitter side, decays upward
+                    A_GAP * np.exp(-(M_SEED - logM) / TAU_HK))     # Hawking side, decays downward
+    out = _envelope(logM) + bump
+    return out if out.ndim else float(out)
 
 
 def main():
@@ -62,7 +83,8 @@ def main():
     ax.plot(yy + BH_C, yy, color="0.1", lw=1.7)                                   # membrane / OUTSIDE line
     ax.plot(xx, CO_C - xx, color="0.15", lw=1.4, ls=(0, (5, 2)))                  # Compton line
     ax.plot([R_PL], [M_PL], "s", color="black", ms=7)
-    ax.annotate("Planck apex =\nsmallest possible\nblack hole", (R_PL, M_PL), xytext=(6, -30),
+    ax.annotate("Planck apex = smallest possible\nblack hole; the de Sitter and Hawking\n"
+                "asymptotes of the TARDIS arc meet here", (R_PL, M_PL), xytext=(6, -34),
                 textcoords="offset points", fontsize=8.3, color="0.2")
 
     # cosmic epoch lines (constant density, slope 3) -- our genesis epochs; NO GUT in ED
@@ -126,6 +148,18 @@ def main():
     # narrows up the line, the inside converging on the outside at the OGU (de Sitter, Omega -> 1).
     mline = np.linspace(M_SEED, M_OGU, 60)
     ax.plot([logR_in(m) for m in mline], mline, color="C0", lw=2.2, alpha=0.9, zorder=4)  # INSIDE line
+    # the HAWKING tail: the same arc continued DOWN below the seed -- as a hole evaporates its inside
+    # shrinks toward a single quantum, the curve peeling off the membrane to asymptote onto the Compton
+    # (quantum) line at the fermion scale. The two asymptotes (de Sitter, Hawking) meet at the apex.
+    mline_hk = np.linspace(-26.0, M_SEED, 60)
+    ax.plot([logR_in(m) for m in mline_hk], mline_hk, color="C0", lw=1.5, ls=(0, (4, 2)),
+            alpha=0.75, zorder=4)
+    ax.annotate("the Hawking tail: evaporating, the inside\n"
+                "shrinks to a single quantum (a torsiton) and\n"
+                "the arc asymptotes to the Compton line --\n"
+                "inside $=$ outside again, the quantum way",
+                (logR_in(1.0), 1.0), xytext=(7, -2), textcoords="offset points",
+                fontsize=7.8, color="C0")
     for m, col, big in [(M_SEED, "C2", False), (34.0, "0.3", False),
                         (56.0, "C3", False), (M_OGU, "C1", True)]:
         ro, ri = logR_bh(m), logR_in(m)
