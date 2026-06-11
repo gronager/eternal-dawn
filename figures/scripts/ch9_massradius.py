@@ -69,7 +69,7 @@ def main():
         ly = 3.0 * lx + logrho + 0.62
         ax.text(lx, ly, label, fontsize=7.8, color="0.4", rotation=72, rotation_mode="anchor",
                 ha="left", va="bottom")
-    epoch_line(15.0, "QGP", -7.5)
+    epoch_line(15.0, "torsitonisation (mass-on)", -7.5)
     epoch_line(2.0, "nuclear (BBN)", -2.0)
     epoch_line(-12.0, "atomic (recomb)", 3.0)
     ax.text(-27, 49, "torsion--gravity\nmembrane\n(cross it $\\to$ a child\nuniverse bounces out)",
@@ -104,11 +104,6 @@ def main():
     for lab, m, r in [("p", -23.78, -13.05), ("n", -23.78, -12.78)]:                # composite nucleons
         ax.plot([r], [m], "s", color="C0", ms=6, zorder=5)
         ax.annotate(lab, (r, m), xytext=(3, -3), textcoords="offset points", fontsize=7.4, color="C0")
-    ax.annotate("the 15 elementary masses (the Weltformel) on the cosmic diagram --\n"
-                "all 12 fermions (the torsiton generations) $+$ the composite $W,Z,H$;\n"
-                "their masses are the torsiton result, created in the genesis cascade",
-                (lc(-23.5), -23.5), xytext=(2.0, -33.0), textcoords="data", fontsize=8.0, color="0.25",
-                ha="left", va="center", arrowprops=dict(arrowstyle="->", color="0.4", lw=0.8))
 
     # ---- the TARDIS: OUTSIDE (membrane line) vs INSIDE (cosmic), across the range ---------------
     ax.plot([logR_in(m) for m in np.linspace(M_SEED, M_OGU, 40)],
@@ -157,11 +152,40 @@ def main():
     ax.add_patch(FancyArrowPatch((logR_bh(M_OGU) + 0.4, M_OGU + 0.8), (14.0, 69.0), arrowstyle="->",
                                  mutation_scale=13, color="0.5", lw=1.1))
 
-    leg = [Line2D([], [], color="0.1", lw=2, label="OUTSIDE: universes as black holes (the membrane)"),
-           Line2D([], [], color="C0", lw=2, label="INSIDE: the cosmos each contains (the TARDIS view)"),
-           Line2D([], [], color="0.3", marker="o", lw=0, label="outside point (compact, dense)"),
-           Line2D([], [], color="0.3", marker="o", mfc="white", lw=0, label="inside point (cosmic, thin)")]
-    ax.legend(handles=leg, loc="lower right", fontsize=8.2, framealpha=0.92)
+    # ---- the 12 fermions as a 4x3 table (towers x generations) in the open lower-right ----------
+    tx = [30.0, 35.0, 40.0]                                   # generation columns I, II, III
+    ty = [-5.0, -10.0, -15.0, -20.0]                          # tower rows: up, down, lepton, neutrino
+    ax.text(17.0, 4.0, "the 12 fermions $=$ the torsiton generations", fontsize=10,
+            color="0.12", fontweight="bold")
+    ax.text(17.0, 1.0, "4 towers (charge/colour grip) $\\times$ 3 rungs (the bag-sharpness ladder)",
+            fontsize=8.2, color="0.35")
+    for j, g in enumerate(["gen I", "gen II", "gen III"]):
+        ax.text(tx[j], -1.2, g, fontsize=8.6, color="0.3", ha="center", fontweight="bold")
+    rows = [("up-type quark", "o", "C1", ["u", "c", "t"]),
+            ("down-type quark", "o", "C1", ["d", "s", "b"]),
+            ("charged lepton", "*", "C4", ["e", r"$\mu$", r"$\tau$"]),
+            ("neutrino", "v", "C9", [r"$\nu_1$", r"$\nu_2$", r"$\nu_3$"])]
+    for i, (rl, mk, col, names) in enumerate(rows):
+        ax.text(17.0, ty[i], rl, fontsize=8.4, color=col, va="center")
+        for j, nm in enumerate(names):
+            ax.plot([tx[j] - 1.6], [ty[i]], mk, color=col, ms=(11 if mk == "*" else 7.5), zorder=5)
+            ax.text(tx[j] - 0.6, ty[i], nm, fontsize=9, color=col, va="center", fontweight="bold")
+    ax.text(17.0, -24.5, "their 15 masses (with the composite $W,Z,H$) are the torsiton result,\n"
+            "created in the genesis cascade -- the same plane as the cosmology",
+            fontsize=8.0, color="0.3", va="top")
+    ax.plot([18], [-29.5], "o", color="0.3", ms=7)
+    ax.text(19, -29.5, "outside (compact, dense)", fontsize=7.8, color="0.3", va="center")
+    ax.plot([18], [-32.0], "o", color="0.3", ms=6, mfc="white")
+    ax.text(19, -32.0, "inside (cosmic, thin) -- the TARDIS", fontsize=7.8, color="0.3", va="center")
+
+    # ---- easter egg: the actual TARDIS -- bigger on the inside (the only honest way: a baby universe)
+    ax.plot([2.0], [7.0], "s", color="#1f3a93", ms=8, zorder=6)                    # police box (outside)
+    ax.plot([15.0], [7.0], "s", color="#1f3a93", ms=8, mfc="white", zorder=6)      # the interior
+    ax.plot([2.0, 15.0], [7.0, 7.0], color="#1f3a93", lw=1.0, ls=":", zorder=5)
+    ax.annotate("TARDIS\n($\\sim$4 m$^3$ police box outside)", (2.0, 7.0), xytext=(-4, 9),
+                textcoords="offset points", fontsize=7.8, color="#1f3a93", ha="right")
+    ax.annotate("bigger on the inside -- in ED the only honest\nway is a baby universe behind the door",
+                (15.0, 7.0), xytext=(6, 2), textcoords="offset points", fontsize=7.8, color="#1f3a93")
 
     ax.set_xlim(xlo, xhi); ax.set_ylim(ylo, 73)
     ax.set_xlabel(r"$\log_{10}\,(\,$physical radius $/\,\mathrm{cm})$")
