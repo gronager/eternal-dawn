@@ -6,9 +6,9 @@
 % Structure: I Introduction, II Theory, III Lattice measurement, IV Discussion, V Conclusion
 % (the classic JCP layout). The Theory section is written to be reproducible from the equations as
 % anchor points. The honest caveats live IN the Results/Discussion prose, not in a labelled section.
-\documentclass[aps,prd,preprint,nofootinbib,superscriptaddress]{revtex4-2}
-% ^ REVTeX 4.2, the hep/gr-qc standard. `preprint' = single column (this draft); swap to `twocolumn'
-%   for the PRD/PRL journal-galley look -- a one-word change, everything else carries over.
+\documentclass[aps,prd,reprint,nofootinbib,superscriptaddress]{revtex4-2}
+% ^ REVTeX 4.2, the hep/gr-qc standard. `reprint' = two-column journal galley (this version); swap to
+%   `preprint' for the roomy single-column refereeing form -- a one-word change, everything else carries.
 
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
@@ -208,16 +208,16 @@ condensate, and needs no new scale~\citep{koide1983}. The entire charged-lepton 
 to the single quantity $\sT$---which, by Eq.~\eqref{eq:sT}, has a clean non-perturbative definition the
 lattice can measure.
 
-\begin{figure}[t]
+\begin{figure*}[t]
   \centering
-  \includegraphics[width=0.92\textwidth]{generations_overlap}
+  \includegraphics[width=\textwidth]{generations_overlap}
   \caption{The hierarchy as one number. \emph{Left:} the consecutive radial ladder $n=1,2,3$ against a
   core of a single sharpness $\sT$ reproduces the whole charged-lepton span, with the electron's tiny
   mass a prediction once the heaviest rung sets the scale. \emph{Right:} the lever
   (Eq.~\ref{eq:lever})---the span sweeps orders of magnitude as the core sharpens; the observed spread
   is crossed at a sharp-but-physical core.}
   \label{fig:lever}
-\end{figure}
+\end{figure*}
 
 \section{Lattice measurement}
 \label{sec:lattice}
@@ -247,7 +247,7 @@ is followed.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.72\textwidth]{torsiton_plateaus}
+  \includegraphics[width=\columnwidth]{torsiton_plateaus}
   \caption{The pion and torsiton (nucleon) effective-mass plateaus on the dynamical ensemble,
   $m_{\mathrm{eff}}(t)\,a = \ln[\,C(t)/C(t{+}1)\,]$ with jackknife errors over configurations and the
   plateau-fit bands. A clean plateau at $m_N > m_\pi > 0$ is the torsiton, bound non-perturbatively;
@@ -278,7 +278,7 @@ number.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.72\textwidth]{torsiton_bag}
+  \includegraphics[width=\columnwidth]{torsiton_bag}
   \caption{The torsiton's mass-giving bag, resolved. The connected three-body condensate
   $\rho_3(r)=\langle N|\bar q q(r)|N\rangle$ on the dynamical ensemble ($t_{\mathrm{snk}}=20$). The
   half-density radius $R_0$ lifts off the lattice cutoff ($R_0=1.4$--$1.8\,a$ across sink times),
@@ -288,7 +288,7 @@ number.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.72\textwidth]{three_roads}
+  \includegraphics[width=\columnwidth]{three_roads}
   \caption{Three independent roads to the bag sharpness $\sT$---the one-body dressed-quark profile, the
   genuine three-body condensate, and the value the observed charged-lepton span requires of the lever
   (Eq.~\ref{eq:lever}). They agree at $\sT\approx 0.43$--$0.50$ (shaded: the productive window). The
