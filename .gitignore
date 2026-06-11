@@ -48,3 +48,9 @@ sims/**/output/
 # Python build/editable-install artifacts
 *.egg-info/
 *.egg-link
+
+# standalone paper build artifacts (the .tex is the source of truth)
+papers/*.pdf
+papers/*.blg
+papers/*.out
+papers/*.synctex.gz

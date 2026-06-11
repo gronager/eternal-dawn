@@ -5,13 +5,18 @@ VENV := $(SIM)/.venv
 PYTHON := $(VENV)/bin/python
 FIGSCRIPTS := $(wildcard figures/scripts/ch*.py)
 
-.PHONY: all pdf figures epub sim-install sim-test hash clean distclean
+.PHONY: all pdf paper figures epub sim-install sim-test hash clean distclean
 
 all: pdf
 
 pdf:
 	@mkdir -p $(BUILD)
 	latexmk -pdf $(MAIN).tex
+
+# Standalone papers extracted from the monograph (build from the repo root so the shared
+# figures/ and bibliography/ paths resolve). Add new papers to the loop as they land.
+paper:
+	latexmk -cd -pdf papers/C-torsiton-mass.tex
 
 # Regenerate every chapter figure (PDFs land in figures/pdf/).
 figures: sim-install
