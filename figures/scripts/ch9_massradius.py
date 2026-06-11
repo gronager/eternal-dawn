@@ -119,6 +119,18 @@ def main():
     ax.annotate("OGU -- inside $\\approx$ outside\n(it is its own interior)", (logR_bh(M_OGU), M_OGU),
                 xytext=(9, -6), textcoords="offset points", fontsize=9.2, color="C1", fontweight="bold")
 
+    # ---- the DARK SECTOR: child universes are still fed, so the OUTSIDE mass CLIMBS the line ----
+    for m in (M_SEED, 34.0, 56.0):
+        ro = logR_bh(m)
+        ax.add_patch(FancyArrowPatch((ro - 0.5, m + 0.3), (ro + 1.2, m + 2.0), arrowstyle="-|>",
+                                     mutation_scale=12, color="#c000c0", lw=2.0, zorder=7))
+    ax.annotate("still fed by the parent: the OUTSIDE mass climbs the line --\n"
+                "dark matter (the mass arriving) $+$ dark energy (its inflow rate) $=$ the ongoing dawn\n"
+                "(the OGU is parentless: no inflow, no dark sector -- it only evaporates)",
+                (logR_bh(56), 56), xytext=(-2.0, 62.0), textcoords="data", fontsize=8.0,
+                color="#c000c0", ha="left", va="center",
+                arrowprops=dict(arrowstyle="->", color="#c000c0", lw=0.9))
+
     # the two density labels along the two lines
     ax.text(logR_bh(61) - 5.5, 61 + 1.2, r"OUTSIDE: $\rho \propto 1/M^2$ (compact, dense)",
             fontsize=8.6, color="0.2", rotation=45, rotation_mode="anchor")
