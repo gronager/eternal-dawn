@@ -56,3 +56,4 @@ sims/**/output/
 papers/*.blg
 papers/*.out
 papers/*.synctex.gz
+papers/*Notes.bib
