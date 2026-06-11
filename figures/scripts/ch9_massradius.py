@@ -35,15 +35,19 @@ M_PL, R_PL = -4.74, -32.79
 M_SEED, M_OGU = 16.0, 63.0
 
 
+LOGRHO_C = -29.0       # the cosmic / critical density universes settle at (g cm^-3)
+
+
 def logR_bh(logM):
     return logM + BH_C
 
 
 def logR_in(logM):
-    """The cosmic INSIDE view: outside R_s plus a TARDIS gap that is huge at the seed and closes
-    (converges onto the membrane line) at the OGU. Schematic."""
-    gap = 40.0 * (M_OGU - logM) / (M_OGU - M_SEED)        # 40 dex at the seed -> 0 at the OGU
-    return logR_bh(logM) + gap
+    """The cosmic INSIDE view at CONSTANT (cosmic) density: M = rho R^3 -- a slope-3 line. It crosses
+    the membrane (BH) line at the CRITICAL universe (our scale, inside = outside); below that the
+    inside is bigger (the TARDIS gap). A universe more massive than the critical one cannot sit at
+    this density -- it would be inside its own horizon -- so the inside line stops there."""
+    return (logM - LOGRHO_C - 0.62) / 3.0
 
 
 def main():
@@ -117,28 +121,37 @@ def main():
         ax.plot([r], [m], "s", color="C0", ms=6, zorder=5)
         ax.annotate(lab, (r, m), xytext=(3, -3), textcoords="offset points", fontsize=7.4, color="C0")
 
-    # ---- the TARDIS: OUTSIDE (membrane line) vs INSIDE (cosmic), across the range ---------------
-    ax.plot([logR_in(m) for m in np.linspace(M_SEED, M_OGU, 40)],
-            np.linspace(M_SEED, M_OGU, 40), color="C0", lw=2.2, alpha=0.9, zorder=4)   # INSIDE line
-    pairs = [(M_SEED, "void seed (mountain mass)\nmicroscopic outside, a universe inside", "C2"),
-             (34.0, "a smaller black hole", "0.3"),
-             (56.0, "our universe", "C3"),
-             (M_OGU, "OGU (firstborn, largest\nbefore it evaporates)", "C1")]
-    for m, lab, col in pairs:
+    # ---- the TARDIS: OUTSIDE (membrane line) vs INSIDE (cosmic, constant density) ---------------
+    # the constant-density inside line runs up to the CRITICAL universe (our scale), where it meets
+    # the membrane line (inside = outside). Smaller black holes have a big TARDIS gap.
+    ax.plot([logR_in(m) for m in np.linspace(M_SEED, 56.0, 40)],
+            np.linspace(M_SEED, 56.0, 40), color="C0", lw=2.2, alpha=0.9, zorder=4)   # INSIDE line
+    for m, col in [(M_SEED, "C2"), (34.0, "0.3"), (56.0, "C3")]:
         ro, ri = logR_bh(m), logR_in(m)
         ax.plot([ro, ri], [m, m], color=col, lw=1.0, ls=":", zorder=4)            # TARDIS connector
         ax.plot([ro], [m], "o", color=col, ms=8, zorder=6)                        # OUTSIDE (dense)
-        if m < M_OGU - 0.1:
-            ax.plot([ri], [m], "o", color=col, ms=7, mfc="white", zorder=6)       # INSIDE (thin)
-    # the seed (a diamond) + our universe labels
-    ax.annotate("void seed (mountain mass)", (logR_bh(M_SEED), M_SEED), xytext=(8, -14),
-                textcoords="offset points", fontsize=8.6, color="C2", fontweight="bold")
+        ax.plot([ri], [m], "o", color=col, ms=7, mfc="white", zorder=6)           # INSIDE (thin)
+    ax.plot([logR_bh(M_OGU)], [M_OGU], "o", color="C1", ms=11, zorder=6)          # OGU: mature, on the line
+
+    # the smallest MASS-formed black hole: where torsitonisation (nuclear density) meets the BH line
+    mb_x, mb_y = 6.1, 33.9
+    ax.plot([mb_x], [mb_y], "P", color="0.1", ms=9, zorder=6)
+    ax.annotate("smallest MASS-formed black hole\n($\\sim$ few $M_\\odot$, nuclear density) --\n"
+                "below here a BH is compressed ENERGY\n(the tally), not compressed mass",
+                (mb_x, mb_y), xytext=(10, -2), textcoords="offset points", fontsize=8.0, color="0.15")
+
+    ax.annotate("void seed (mountain mass) --\ncompressed energy in the void", (logR_bh(M_SEED), M_SEED),
+                xytext=(8, -16), textcoords="offset points", fontsize=8.4, color="C2", fontweight="bold")
     ax.annotate("a smaller black hole:\ntiny outside, a universe inside", (logR_bh(34), 34),
-                xytext=(8, -20), textcoords="offset points", fontsize=8.0, color="0.3")
-    ax.annotate("our universe -- OUTSIDE\n(a black hole in the parent)", (logR_bh(56), 56),
-                xytext=(7, -20), textcoords="offset points", fontsize=8.6, color="C3", fontweight="bold")
-    ax.annotate("OGU -- inside $\\approx$ outside\n(it is its own interior)", (logR_bh(M_OGU), M_OGU),
+                xytext=(8, -22), textcoords="offset points", fontsize=8.0, color="0.3")
+    ax.annotate("our universe -- the CRITICAL point\n(inside $=$ outside, $R_{\\rm Hubble}\\!=\\!R_s$)",
+                (logR_bh(56), 56), xytext=(7, -20), textcoords="offset points", fontsize=8.6,
+                color="C3", fontweight="bold")
+    ax.annotate("OGU -- firstborn, largest\n(more expanded, lower density)", (logR_bh(M_OGU), M_OGU),
                 xytext=(9, -6), textcoords="offset points", fontsize=9.2, color="C1", fontweight="bold")
+    # the "tally" wedge: between the membrane and torsitonisation lines, below their meeting -- no mass
+    ax.text(-1.0, 23.0, "the tally:\nno mass yet", fontsize=9, color="#6a3d9a", style="italic",
+            ha="center", va="center", fontweight="bold")
 
     # ---- the DARK SECTOR: child universes are still fed, so the OUTSIDE mass CLIMBS the line ----
     for m in (M_SEED, 34.0, 56.0):
