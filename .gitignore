@@ -49,8 +49,10 @@ sims/**/output/
 *.egg-info/
 *.egg-link
 
-# standalone paper build artifacts (the .tex is the source of truth)
-papers/*.pdf
+# standalone paper build artifacts (the .tex is the source of truth);
+# the built PDF IS tracked (like book.pdf) so it is reviewable/downloadable from the repo
+# (negating the global *.pdf rule above, as book.pdf and the figure PDFs do).
+!papers/*.pdf
 papers/*.blg
 papers/*.out
 papers/*.synctex.gz
