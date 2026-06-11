@@ -153,6 +153,16 @@ def main():
     ax.text(-1.0, 23.0, "the tally:\nno mass yet", fontsize=9, color="#6a3d9a", style="italic",
             ha="center", va="center", fontweight="bold")
 
+    # ---- the inner-density JOURNEY: a field carrying each universe from cradle to grave ----------
+    # born at rho_C (the no-mass tally density, on the critical line) -> expands, thinning -> dies at
+    # near-void density (far right, under-critical). Not one line: a flow toward lower density.
+    for m in (34.0, 41.0, 48.0, 55.0):
+        x0 = max(logR_bh(m), 8.0) + 1.5
+        ax.annotate("", xy=(x0 + 9.0, m - 3.0), xytext=(x0, m),
+                    arrowprops=dict(arrowstyle="-|>", color="0.5", lw=1.2, alpha=0.5))
+    ax.text(29.5, 25.0, "the inner-density journey:\nborn at $\\rho_C$ (cradle, no mass) $\\to$\n"
+            "expand, thinning $\\to$ grave (near-void)", fontsize=8.2, color="0.4", va="top")
+
     # ---- the DARK SECTOR: child universes are still fed, so the OUTSIDE mass CLIMBS the line ----
     for m in (M_SEED, 34.0, 56.0):
         ro = logR_bh(m)
