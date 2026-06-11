@@ -227,12 +227,13 @@ int main(int argc, char **argv) {
     const int Nk = deflateN + 20;                          // TUNE: working set
     const int Nm = deflateN + 40;                          // TUNE: max Krylov dim (Nm > Nk > Nstop)
     ImplicitlyRestartedLanczos<FermionField> IRL(ChebyOp, PlainOp, Nstop, Nk, Nm, 1.0e-8, 200);
+    GridBase *frb = fops[0]->FermionRedBlackGrid();        // the exact checkerboard grid the Schur op solves on
     defl_eval.resize(Nm);
     defl_evec.reserve(Nm);                                 // Grid Lattice is not vector-copy-constructible:
     for (int i = 0; i < Nm; ++i)                           // build each RB-grid field in place (no copy)
-      defl_evec.emplace_back(GridRBPtr);                   // eigenvectors live on the RB checkerboard grid
-    FermionField src0(GridRBPtr);
-    GridParallelRNG pRNG(GridRBPtr);                       // local RNG for the Lanczos start vector
+      defl_evec.emplace_back(frb);                         // eigenvectors live on the RB checkerboard grid
+    FermionField src0(frb);
+    GridParallelRNG pRNG(frb);                             // local RNG for the Lanczos start vector
     pRNG.SeedFixedIntegers(std::vector<int>{seed, seed + 1, seed + 2, seed + 3});
     gaussian(pRNG, src0);
     int Nconv = 0;
