@@ -164,10 +164,21 @@ $0,1,2$ interior nodes---the three generations---and
   \sT \;\equiv\; R_0/r_0
   \label{eq:sT}
 \end{equation}
-is the bag \emph{sharpness} in units of the confinement scale. Equations~\eqref{eq:configmass}
-and~\eqref{eq:sT} are the crux: one tower of fitted Yukawa couplings is replaced by one geometric
-function of one number. \TODO{state the well/profile used for $u_n$, $f$ (harmonic bag / Woods--Saxon)
-and the normalization convention, so the overlap is fully specified.}
+is the bag \emph{sharpness} in units of the confinement scale. We take the mass-giving core to be a
+Woods--Saxon profile,
+\begin{equation}
+  f(x) \;=\; \frac{1}{1 + \exp\!\bigl[(x-1)/\tau\bigr]},
+  \qquad x = r/R_0,
+  \label{eq:woodssaxon}
+\end{equation}
+which falls to one-half at $x=1$---that is, at $r=R_0$, the half-density radius the lattice measures
+directly (Sec.~\ref{sec:bag})---over a surface thickness set by the diffuseness $\tau \ll 1$. The radial
+levels $u_n(r)$ are the lowest three bound states of the confining well, each normalized by the
+denominator of Eq.~\eqref{eq:configmass}. Equations~\eqref{eq:configmass}--\eqref{eq:woodssaxon} are the
+crux: one tower of fitted Yukawa couplings is replaced by one geometric function of one number. A sharp
+core (small $\sT$) confines $f$ to the innermost region where only the nodeless $n=1$ level has
+appreciable support, suppressing the higher generations; a broad core overlaps all three nearly
+equally---the lever made precise in Sec.~\ref{sec:lever}.
 
 \subsection{The hierarchy as a lever}
 \label{sec:lever}
