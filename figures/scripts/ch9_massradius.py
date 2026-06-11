@@ -47,8 +47,8 @@ def logR_in(logM):
 
 
 def main():
-    fig, ax = plt.subplots(figsize=(9.8, 10.0))
-    xlo, xhi, ylo, yhi = -36, 42, -30, 66
+    fig, ax = plt.subplots(figsize=(9.8, 10.6))
+    xlo, xhi, ylo, yhi = -36, 42, -36, 66
 
     # ---- forbidden regions + boundaries + Planck apex ------------------------------------------
     yy = np.linspace(ylo, yhi, 400)
@@ -85,16 +85,30 @@ def main():
     for x, y, lab in objs:
         ax.annotate(lab, (x, y), xytext=(4, 3), textcoords="offset points", fontsize=7.5, color="C0")
 
-    # ---- the charged-lepton spectrum on the Compton limit: OUR mass spectrum (the torsiton rungs)
-    leptons = [(-10.42, -27.04, "e"), (-12.71, -24.73, r"$\mu$"), (-13.96, -23.50, r"$\tau$")]
-    ax.plot([l[0] for l in leptons], [l[1] for l in leptons], "*", color="C4", ms=11, zorder=5)
-    for x, y, lab in leptons:
-        ax.annotate(lab, (x, y), xytext=(-3, 4), textcoords="offset points", fontsize=9,
-                    color="C4", ha="right", fontweight="bold")
-    ax.annotate("the charged-lepton spectrum $e,\\mu,\\tau$\n"
-                "(the torsiton generations -- our mass result)\ncreated in the genesis cascade",
-                (-12.7, -24.7), xytext=(2.0, -16.0), textcoords="data", fontsize=8.2, color="C4",
-                ha="left", va="top", arrowprops=dict(arrowstyle="->", color="C4", lw=0.9))
+    # ---- the full Weltformel spectrum on the Compton limit: ALL 12 fermions (the torsiton rungs),
+    #      the composite W/Z/H "mesons" (torsiton-antitorsiton pairs), and the nucleons p, n -------
+    def lc(m):                                                 # Compton radius for a given log-mass
+        return CO_C - m
+    groups = [
+        ("quarks", "o", "C1", [("u", -26.41), ("d", -26.08), ("s", -24.78),
+                               ("c", -23.64), ("b", -23.13), ("t", -21.51)]),
+        ("charged leptons", "*", "C4", [("e", -27.04), (r"$\mu$", -24.72), (r"$\tau$", -23.50)]),
+        ("neutrinos", "v", "C9", [(r"$\nu_1$", -34.5), (r"$\nu_2$", -34.0), (r"$\nu_3$", -33.5)]),
+        (r"$W,Z,H$ (composite)", "D", "C2", [("W", -21.84), ("Z", -21.79), ("H", -21.65)]),
+    ]
+    for name, mk, col, items in groups:
+        for lab, m in items:
+            ax.plot([lc(m)], [m], mk, color=col, ms=(11 if mk == "*" else 7.5), zorder=5)
+            ax.annotate(lab, (lc(m), m), xytext=(-2, 4), textcoords="offset points", fontsize=7.4,
+                        color=col, ha="right", fontweight="bold")
+    for lab, m, r in [("p", -23.78, -13.05), ("n", -23.78, -12.78)]:                # composite nucleons
+        ax.plot([r], [m], "s", color="C0", ms=6, zorder=5)
+        ax.annotate(lab, (r, m), xytext=(3, -3), textcoords="offset points", fontsize=7.4, color="C0")
+    ax.annotate("the 15 elementary masses (the Weltformel) on the cosmic diagram --\n"
+                "all 12 fermions (the torsiton generations) $+$ the composite $W,Z,H$;\n"
+                "their masses are the torsiton result, created in the genesis cascade",
+                (lc(-23.5), -23.5), xytext=(2.0, -33.0), textcoords="data", fontsize=8.0, color="0.25",
+                ha="left", va="center", arrowprops=dict(arrowstyle="->", color="0.4", lw=0.8))
 
     # ---- the TARDIS: OUTSIDE (membrane line) vs INSIDE (cosmic), across the range ---------------
     ax.plot([logR_in(m) for m in np.linspace(M_SEED, M_OGU, 40)],
