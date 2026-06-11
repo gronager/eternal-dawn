@@ -47,8 +47,8 @@ def logR_in(logM):
 
 
 def main():
-    fig, ax = plt.subplots(figsize=(9.8, 10.6))
-    xlo, xhi, ylo, yhi = -36, 42, -36, 66
+    fig, ax = plt.subplots(figsize=(9.8, 11.2))
+    xlo, xhi, ylo, yhi = -36, 42, -38, 66
 
     # ---- forbidden regions + boundaries + Planck apex ------------------------------------------
     yy = np.linspace(ylo, yhi, 400)
@@ -72,6 +72,18 @@ def main():
     epoch_line(15.0, "torsitonisation (mass-on)", -7.5)
     epoch_line(2.0, "nuclear (BBN)", -2.0)
     epoch_line(-12.0, "atomic (recomb)", 3.0)
+
+    # ---- energy scales on the right (E = mc^2): the Planck/bounce scale, electroweak, and the CMB ---
+    GEV = 23.75                                                # log10(1 g . c^2 / GeV)
+    for elab, lgev, col in [(r"$E_P$ (the bounce scale)", 19.09, "0.4"),
+                            (r"$E_{\rm EW}$", 2.0, "0.4")]:
+        m = lgev - GEV
+        ax.axhline(m, color=col, lw=0.6, ls=":", alpha=0.5)
+        ax.text(xhi - 0.5, m + 0.5, elab, fontsize=8, color=col, ha="right")
+    m_cmb = -12.6 - GEV                                        # CMB photon energy ~2.7 K
+    ax.axhline(m_cmb, color="C5", lw=0.9, ls=":", alpha=0.8)
+    ax.text(xlo + 1.5, m_cmb + 0.7, r"CMB $\approx$ the parent's Hawking radiation",
+            fontsize=9, color="C5", fontweight="bold")
     ax.text(-27, 49, "torsion--gravity\nmembrane\n(cross it $\\to$ a child\nuniverse bounces out)",
             fontsize=9.5, color="#7a3b3b", ha="center", va="center", style="italic")
     ax.text(-18, -23, "quantum uncertainty", rotation=-43, fontsize=10, color="0.3",
@@ -178,18 +190,23 @@ def main():
     ax.plot([18], [-32.0], "o", color="0.3", ms=6, mfc="white")
     ax.text(19, -32.0, "inside (cosmic, thin) -- the TARDIS", fontsize=7.8, color="0.3", va="center")
 
-    # ---- easter egg: the actual TARDIS -- bigger on the inside (the only honest way: a baby universe)
-    ax.plot([2.0], [7.0], "s", color="#1f3a93", ms=8, zorder=6)                    # police box (outside)
-    ax.plot([15.0], [7.0], "s", color="#1f3a93", ms=8, mfc="white", zorder=6)      # the interior
-    ax.plot([2.0, 15.0], [7.0, 7.0], color="#1f3a93", lw=1.0, ls=":", zorder=5)
-    ax.annotate("TARDIS\n($\\sim$4 m$^3$ police box outside)", (2.0, 7.0), xytext=(-4, 9),
+    # ---- the TARDIS, made rigorous: a police-box-sized BLACK HOLE (R_s ~ 1 m) on the gravity line,
+    #      with a baby universe on the inside line -- the only honest way to be bigger on the inside.
+    m_t = 29.83                                                # R_s ~ 1 m (logR = 2) -> ~100 Earth masses
+    ro_t, ri_t = logR_bh(m_t), logR_in(m_t)
+    ax.plot([ro_t, ri_t], [m_t, m_t], color="#1f3a93", lw=1.0, ls=":", zorder=5)
+    ax.plot([ro_t], [m_t], "s", color="#1f3a93", ms=8, zorder=6)
+    ax.plot([ri_t], [m_t], "s", color="#1f3a93", ms=8, mfc="white", zorder=6)
+    ax.annotate("TARDIS: a police-box\nblack hole ($R_s\\sim$1 m)", (ro_t, m_t), xytext=(-4, 9),
                 textcoords="offset points", fontsize=7.8, color="#1f3a93", ha="right")
-    ax.annotate("bigger on the inside -- in ED the only honest\nway is a baby universe behind the door",
-                (15.0, 7.0), xytext=(6, 2), textcoords="offset points", fontsize=7.8, color="#1f3a93")
+    ax.annotate("...a baby universe inside\n(the only honest way to be bigger on the inside)",
+                (ri_t, m_t), xytext=(6, -2), textcoords="offset points", fontsize=7.8, color="#1f3a93")
 
     ax.set_xlim(xlo, xhi); ax.set_ylim(ylo, 73)
     ax.set_xlabel(r"$\log_{10}\,(\,$physical radius $/\,\mathrm{cm})$")
     ax.set_ylabel(r"$\log_{10}\,(\,$mass $/\,\mathrm{g})$")
+    secax = ax.secondary_yaxis('right', functions=(lambda g: g + 23.75, lambda e: e - 23.75))
+    secax.set_ylabel(r"$\log_{10}\,(\,$energy $/\,\mathrm{GeV})$    ($E=mc^2$)")
     ax.set_title("The Eternal Dawn mass--radius diagram\n"
                  "the TARDIS: outside (compact) and inside (a universe) converge at the OGU; beyond, the void",
                  fontsize=11.5)
