@@ -34,20 +34,43 @@ OUT="${OUT:-out/dyn_L${L}x${T}_m${MASS}}"; mkdir -p "$OUT"
 hasen_flag="" ; [ -n "$HASEN" ] && hasen_flag="--hasenbusch $HASEN"
 defl_flag="" ; [ "$DEFLATE" -gt 0 ] 2>/dev/null && defl_flag="--deflate $DEFLATE"
 
-# --- 1. generate the dynamical ensemble (skip if configs already exist) ---------------------
+# --- 1. generate the dynamical ensemble (auto-RESUME per stream from its latest checkpoint) --
+# Re-running this command continues each stream from the last saved trajectory (gauge + RNG) rather
+# than restarting -- so a dropped terminal costs nothing. A stream already at NTRAJ is skipped.
 shopt -s nullglob
-_existing=( "$OUT"/ckpoint_lat.* "$OUT"/stream*/ckpoint_lat.* )
-if [ "${#_existing[@]}" -gt 0 ]; then
-  echo "using existing dynamical configs in $OUT (${#_existing[@]} found)"
+all_done=1
+gen_cmds=()
+for k in $(seq 1 "$NSTREAMS"); do
+  d="$OUT/stream$k"; mkdir -p "$d"
+  last=0                                            # latest checkpointed trajectory (0 = none)
+  for f in "$d"/ckpoint_lat.*; do
+    case "$f" in *.gz) continue;; esac
+    nn="${f##*.}"; case "$nn" in ''|*[!0-9]*) continue;; esac
+    [ "$nn" -gt "$last" ] && last="$nn"
+  done
+  if [ "$last" -ge "$NTRAJ" ]; then
+    echo "stream$k: complete ($last/$NTRAJ) -- skipping"; continue
+  fi
+  start_type="HotStart"; start_traj=0; remain="$NTRAJ"
+  if [ "$last" -gt 0 ] && [ -e "$d/ckpoint_rng.$last" ]; then
+    start_type="CheckpointStart"; start_traj="$last"; remain="$((NTRAJ - last))"
+    echo "stream$k: resuming from trajectory $last ($remain to go)"
+  elif [ "$last" -gt 0 ]; then
+    echo "stream$k: ckpoint_lat.$last has no matching ckpoint_rng.$last -- starting hot"
+  else
+    echo "stream$k: fresh start ($NTRAJ trajectories)"
+  fi
+  all_done=0
+  gen_cmds+=( "$(printf 'cd %q && %q --grid %q --beta %q --mass %q --seed %d --mdsteps %d --save-interval %d %s %s --StartingType %s --StartingTrajectory %d --Trajectories %d --accelerator-threads 8 >> hmc.log 2>&1' \
+    "$d" "$GEN" "$GRIDSPEC" "$BETA" "$MASS" "$((k*1000 + 1))" "$MDSTEPS" "$SAVE" "$hasen_flag" "$defl_flag" "$start_type" "$start_traj" "$remain")" )
+done
+if [ "$all_done" -eq 1 ]; then
+  echo "all $NSTREAMS streams already at $NTRAJ trajectories in $OUT"
 else
-  echo "generating $NSTREAMS x $NTRAJ dynamical trajectories (beta=$BETA mass=$MASS $GRIDSPEC mdsteps=$MDSTEPS)"
+  echo "generating (beta=$BETA mass=$MASS $GRIDSPEC mdsteps=$MDSTEPS hasen=${HASEN:-none})"
   echo "  WATCH: acceptance (~0.7-0.9 is healthy; raise MDSTEPS if low) and dH per trajectory (~O(1))."
   start_mps
-  for k in $(seq 1 "$NSTREAMS"); do
-    d="$OUT/stream$k"
-    printf 'mkdir -p %q && cd %q && %q --grid %q --beta %q --mass %q --seed %d --mdsteps %d --save-interval %d %s %s --StartingType HotStart --Trajectories %d --accelerator-threads 8 > hmc.log 2>&1\n' \
-      "$d" "$d" "$GEN" "$GRIDSPEC" "$BETA" "$MASS" "$((k*1000 + 1))" "$MDSTEPS" "$SAVE" "$hasen_flag" "$defl_flag" "$NTRAJ"
-  done | run_pool "$NSTREAMS"
+  printf '%s\n' "${gen_cmds[@]}" | run_pool "$NSTREAMS"
   stop_mps
   n=$(ls "$OUT"/stream*/ckpoint_lat.* 2>/dev/null | grep -vE '\.gz$' | wc -l)
   echo "done: $n configs in $OUT/stream*/"

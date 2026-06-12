@@ -65,19 +65,23 @@ change from Stage 1: the sink-time scan (RESULTS.md, L16×48) showed the three-b
 0.45→0.56 across sink times because the two-state fit starved for τ-room and `t_snk=20` crowded the
 backward node at T/2 = 24. **T = 64 moves the node to 32**, giving the fit the room to *pin* `s_T`
 rather than bracket it — the decisive lever, even more than the lighter sea. (The Hasenbusch
-convention is validated once at T = 48 against the plain reference, then trusted here; it is
-geometry-independent.) Targets are by **m_π a**: tune toward m_π a ≈ 0.5 and ≈ 0.35.
+convention is **validated** — see below — and is geometry-independent, so it is trusted here.)
+Targets are by **m_π a**: tune toward m_π a ≈ 0.5 and ≈ 0.35.
 
 ```bash
+# launch DETACHED so a dropped terminal can't kill it; run/07 auto-resumes if it ever does.
 for M in -0.75 -0.85; do
-  L=16 T=64 BETA=5.6 MASS=$M HASEN="-0.3,0.1" NTRAJ=2500 MDSTEPS=40 SAVE=5 NSTREAMS=1 \
-    OUT=out/dyn_L16x64_m$M ./run/07_dynamical_torsiton.sh 2>&1 | tee dyn_L16x64_m$M.gen.log
+  nohup env L=16 T=64 BETA=5.6 MASS=$M HASEN="-0.3,0.1" NTRAJ=2500 MDSTEPS=20 SAVE=5 NSTREAMS=1 \
+    OUT=out/dyn_L16x64_m$M ./run/07_dynamical_torsiton.sh > dyn_L16x64_m$M.gen.log 2>&1 &
 done
+disown -a    # or, cleaner: run the whole loop inside `tmux new -s prod` and detach with C-b d
 ```
 
-(Lighter mass ⇒ raise `MDSTEPS` and `NTRAJ`; watch acceptance closely — the force is stiffer.) Then
-repeat measurements 1–5 per ensemble. The deliverables: `s_T(m_π²)` and `g_S(m_π²)` extrapolated to
-the chiral point on a resolved, unitary, T=48 lattice — the number the pilot could not give.
+**MDSTEPS=20, not 40.** The validation run at m=−0.75 showed MDSTEPS=40 gives |dH| ~ 0.03 at
+acceptance ≈ 1 — badly over-integrated. Since |dH| ∝ (1/MDSTEPS)², MDSTEPS≈20 lands |dH| ~ 0.1–0.15
+at ~0.95 acceptance: a free ~2× on top of the accelerators. For the stiffer m=−0.85 start at ~24–28
+and watch acceptance. Then repeat measurements 1–5 per ensemble. Deliverables: `s_T(m_π²)` and
+`g_S(m_π²)` extrapolated to the chiral point on a resolved, unitary, T=64 lattice.
 
 ### Speeding up the light-sea generation (the GH200's 96 GB)
 
@@ -97,11 +101,17 @@ L=16 T=48 BETA=5.6 MASS=-0.75 HASEN="-0.3,0.1" NTRAJ=2500 MDSTEPS=40 NSTREAMS=4 
   OUT=out/dyn_L16x48_m-0.75 ./run/07_dynamical_torsiton.sh
 ```
 
-**MANDATORY validation before a 3-day production run with `HASEN` set:** (a) it compiles; (b) a short
-run shows acceptance ~0.7–0.9 and dH ~ O(1); (c) **cross-check the plaquette (and m_π via run/06) on
-~20–40 configs against the plain ensemble — they must agree within errors.** Even-odd alone (no
-`HASEN`) needs only (a),(b). Also raise `NSTREAMS` (each stream ~2 GB) to run many chains in parallel
-on the one GPU — N× the configs per wall-clock until bandwidth saturates.
+**Validation — DONE (✓ certified).** The protocol was: (a) it compiles; (b) a short run shows
+acceptance ~0.7–0.9 and dH ~ O(1); (c) cross-check the plaquette against the plain ensemble — they
+must agree within errors. Result: the log telescope reads correctly
+(det(−0.75)/det(−0.3)·det(−0.3)/det(0.1)·det(0.1) = det(−0.75)); dH is symmetric and sub-0.05; and a
+**stationarity test** — the exact production telescope (HASEN=−0.3,0.1) launched from a *plain*-
+equilibrated m=−0.5 config — held the plaquette at **0.5514**, dead on the 35-config plain reference
+**0.55138(1)** (difference 3×10⁻⁵, ~20× below the fluctuation). A backwards convention would have
+sampled a grossly different action and drifted off within a trajectory or two; it did not. Since the
+convention is mass- and geometry-independent, this certifies HASEN=−0.3,0.1 for the T=64 light-sea
+runs. Even-odd alone (no `HASEN`) needs only (a),(b). Raise `NSTREAMS` (each stream ~2–3 GB at T=64)
+to run many chains in parallel on the one GPU — N× the configs per wall-clock until bandwidth saturates.
 
 **Expected wall-clock** (3-day plain baseline): even-odd ~×2 → ~36 h; + Hasenbusch (2 masses) ~×2–2.5
 → **~14 h, already under a day**; + deflation a further ~×2 → ~6–7 h. The first two are the safe,
