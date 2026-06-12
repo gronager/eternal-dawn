@@ -72,20 +72,19 @@ def logR_in(logM):
 
 
 def main():
-    fig, ax = plt.subplots(figsize=(9.8, 11.2))
+    fig, ax = plt.subplots(figsize=(10.0, 12.6))
     xlo, xhi, ylo, yhi = -36, 42, -38, 66
 
     # ---- forbidden regions + boundaries + Planck apex ------------------------------------------
-    yy = np.linspace(ylo, yhi, 400)
+    yy = np.linspace(ylo, 75, 400)
     ax.fill_betweenx(yy, xlo, yy + BH_C, color="#7a3b3b", alpha=0.15, lw=0)
     xx = np.linspace(xlo, xhi, 400)
     ax.fill_between(xx, ylo, CO_C - xx, color="#5a5a5a", alpha=0.17, lw=0)
     ax.plot(yy + BH_C, yy, color="0.1", lw=1.7)                                   # membrane / OUTSIDE line
     ax.plot(xx, CO_C - xx, color="0.15", lw=1.4, ls=(0, (5, 2)))                  # Compton line
     ax.plot([R_PL], [M_PL], "s", color="black", ms=7)
-    ax.annotate("Planck apex = smallest possible\nblack hole; the de Sitter and Hawking\n"
-                "asymptotes of the TARDIS arc meet here", (R_PL, M_PL), xytext=(6, -34),
-                textcoords="offset points", fontsize=8.3, color="0.2")
+    ax.annotate("Planck apex\n(smallest BH; the two\narcs meet here)", (R_PL, M_PL), xytext=(8, -26),
+                textcoords="offset points", fontsize=8.0, color="0.2")
 
     # cosmic epoch lines (constant density, slope 3) -- our genesis epochs; NO GUT in ED
     def epoch_line(logrho, label, lx):
@@ -154,10 +153,7 @@ def main():
     mline_hk = np.linspace(-26.0, M_SEED, 60)
     ax.plot([logR_in(m) for m in mline_hk], mline_hk, color="C0", lw=1.5, ls=(0, (4, 2)),
             alpha=0.75, zorder=4)
-    ax.annotate("the Hawking tail: evaporating, the inside\n"
-                "shrinks to a single quantum (a torsiton) and\n"
-                "the arc asymptotes to the Compton line --\n"
-                "inside $=$ outside again, the quantum way",
+    ax.annotate("Hawking tail:\ninside $\\to$ one quantum\n(asymptotes to Compton)",
                 (logR_in(1.0), 1.0), xytext=(7, -2), textcoords="offset points",
                 fontsize=7.8, color="C0")
     for m, col, big in [(M_SEED, "C2", False), (34.0, "0.3", False),
@@ -170,33 +166,29 @@ def main():
     # the smallest MASS-formed black hole: where torsitonisation (nuclear density) meets the BH line
     mb_x, mb_y = 6.1, 33.9
     ax.plot([mb_x], [mb_y], "P", color="0.1", ms=9, zorder=6)
-    ax.annotate("smallest MASS-formed black hole\n($\\sim$ few $M_\\odot$, nuclear density) --\n"
-                "below here a BH is compressed ENERGY\n(the tally), not compressed mass",
-                (mb_x, mb_y), xytext=(10, -2), textcoords="offset points", fontsize=8.0, color="0.15")
+    ax.annotate("smallest mass-formed BH\n($\\sim$few $M_\\odot$, nuclear density)",
+                (mb_x, mb_y), xytext=(9, 5), textcoords="offset points", fontsize=8.0, color="0.15")
 
     # the HAWKING WATERSHED: T_H(M) = T_CMB (~Moon mass, 4.5e25 g). Below it an UNFED hole net-
     # evaporates faster than it grows -- the fork in the journey. The void seed sits BELOW it: what
     # carries the seed UP across the membrane is the parent's feeding, not its own mass.
     m_eq = 25.65
     ax.plot([logR_bh(m_eq)], [m_eq], "X", color="#d2691e", ms=11, zorder=7)
-    ax.annotate("Hawking watershed: $T_H\\!=\\!T_{\\rm CMB}$ ($\\sim$Moon mass)\n"
-                "below here an UNFED hole net-evaporates (Hawking)\n"
-                "instead of growing -- the seed is carried up by the\n"
-                "parent's feeding, not by its own mass", (logR_bh(m_eq), m_eq),
-                xytext=(10, 3), textcoords="offset points", fontsize=7.8, color="#d2691e")
+    ax.annotate("Hawking watershed\n$T_H\\!=\\!T_{\\rm CMB}$ ($\\sim$Moon mass):\nbelow, an unfed hole evaporates",
+                (logR_bh(m_eq), m_eq), xytext=(-8, 6), textcoords="offset points", fontsize=7.8,
+                color="#d2691e", ha="right")
 
-    ax.annotate("void seed (mountain mass) --\ncompressed energy in the void", (logR_bh(M_SEED), M_SEED),
-                xytext=(8, -16), textcoords="offset points", fontsize=8.4, color="C2", fontweight="bold")
-    ax.annotate("a smaller black hole:\ntiny outside, a universe inside", (logR_bh(34), 34),
-                xytext=(8, -22), textcoords="offset points", fontsize=8.0, color="0.3")
-    ax.annotate("our universe -- the CRITICAL point\n(inside $=$ outside, $R_{\\rm Hubble}\\!=\\!R_s$)",
-                (logR_bh(56), 56), xytext=(7, -20), textcoords="offset points", fontsize=8.6,
+    ax.annotate("void seed\n(mountain mass)", (logR_bh(M_SEED), M_SEED),
+                xytext=(-8, -20), textcoords="offset points", fontsize=8.4, color="C2",
+                fontweight="bold", ha="right",
+                arrowprops=dict(arrowstyle="-", color="C2", lw=0.6))
+    ax.annotate("our universe (critical):\ninside $=$ outside, $R_{\\rm Hubble}\\!=\\!R_s$",
+                (logR_bh(56), 56), xytext=(8, -16), textcoords="offset points", fontsize=8.6,
                 color="C3", fontweight="bold")
-    ax.annotate("OGU -- firstborn, largest; inside $\\to$ outside\n"
-                "(de Sitter, $\\Omega\\!\\to\\!1$: the inside asymptotes to the line)", (logR_bh(M_OGU), M_OGU),
-                xytext=(9, -6), textcoords="offset points", fontsize=9.0, color="C1", fontweight="bold")
+    ax.annotate("OGU -- firstborn, largest\n(inside $\\to$ outside, de Sitter)", (logR_bh(M_OGU), M_OGU),
+                xytext=(9, -2), textcoords="offset points", fontsize=9.0, color="C1", fontweight="bold")
     # the "tally" wedge: between the membrane and torsitonisation lines, below their meeting -- no mass
-    ax.text(-1.0, 23.0, "the tally:\nno mass yet", fontsize=9, color="#6a3d9a", style="italic",
+    ax.text(-7.0, 20.5, "the tally:\nno mass yet", fontsize=9, color="#6a3d9a", style="italic",
             ha="center", va="center", fontweight="bold")
 
     # ---- the inner-density JOURNEY: a field carrying each universe from cradle to grave ----------
@@ -206,18 +198,17 @@ def main():
         x0 = max(logR_bh(m), 8.0) + 1.5
         ax.annotate("", xy=(x0 + 9.0, m - 3.0), xytext=(x0, m),
                     arrowprops=dict(arrowstyle="-|>", color="0.5", lw=1.2, alpha=0.5))
-    ax.text(29.5, 25.0, "the inner-density journey:\nborn at $\\rho_C$ (cradle, no mass) $\\to$\n"
-            "expand, thinning $\\to$ grave (near-void)", fontsize=8.2, color="0.4", va="top")
+    ax.text(31.0, 17.0, "inner-density journey:\ncradle ($\\rho_C$) $\\to$ grave (void)",
+            fontsize=8.2, color="0.4", va="top", ha="center")
 
     # ---- the DARK SECTOR: child universes are still fed, so the OUTSIDE mass CLIMBS the line ----
     for m in (M_SEED, 34.0, 56.0):
         ro = logR_bh(m)
         ax.add_patch(FancyArrowPatch((ro - 0.5, m + 0.3), (ro + 1.2, m + 2.0), arrowstyle="-|>",
                                      mutation_scale=12, color="#c000c0", lw=2.0, zorder=7))
-    ax.annotate("still fed by the parent: the OUTSIDE mass climbs the line --\n"
-                "dark matter (the mass arriving) $+$ dark energy (its inflow rate) $=$ the ongoing dawn\n"
-                "(the OGU is parentless: no inflow, no dark sector -- it only evaporates)",
-                (logR_bh(56), 56), xytext=(-2.0, 62.0), textcoords="data", fontsize=8.0,
+    ax.annotate("still fed: the outside mass climbs the line --\n"
+                "dark matter $+$ dark energy $=$ the ongoing dawn",
+                (logR_bh(34), 34), xytext=(-35.0, 44.0), textcoords="data", fontsize=8.2,
                 color="#c000c0", ha="left", va="center",
                 arrowprops=dict(arrowstyle="->", color="#c000c0", lw=0.9))
 
@@ -266,19 +257,17 @@ def main():
     ax.plot([ro_t, ri_t], [m_t, m_t], color="#1f3a93", lw=1.0, ls=":", zorder=5)
     ax.plot([ro_t], [m_t], "s", color="#1f3a93", ms=8, zorder=6)
     ax.plot([ri_t], [m_t], "s", color="#1f3a93", ms=8, mfc="white", zorder=6)
-    ax.annotate("TARDIS: a police-box\nblack hole ($R_s\\sim$1 m)", (ro_t, m_t), xytext=(-4, 9),
+    ax.annotate("TARDIS: police-box BH\n($R_s\\sim$1 m) ...", (ro_t, m_t), xytext=(-6, 10),
                 textcoords="offset points", fontsize=7.8, color="#1f3a93", ha="right")
-    ax.annotate("...a baby universe inside\n(the only honest way to be bigger on the inside)",
-                (ri_t, m_t), xytext=(6, -2), textcoords="offset points", fontsize=7.8, color="#1f3a93")
+    ax.annotate("... a baby universe inside", (ri_t, m_t), xytext=(6, 5),
+                textcoords="offset points", fontsize=7.8, color="#1f3a93")
 
-    ax.set_xlim(xlo, xhi); ax.set_ylim(ylo, 73)
+    ax.set_xlim(xlo, xhi); ax.set_ylim(ylo, 75)
     ax.set_xlabel(r"$\log_{10}\,(\,$physical radius $/\,\mathrm{cm})$")
     ax.set_ylabel(r"$\log_{10}\,(\,$mass $/\,\mathrm{g})$")
     secax = ax.secondary_yaxis('right', functions=(lambda g: g + 23.75, lambda e: e - 23.75))
     secax.set_ylabel(r"$\log_{10}\,(\,$energy $/\,\mathrm{GeV})$    ($E=mc^2$)")
-    ax.set_title("The Eternal Dawn mass--radius diagram\n"
-                 "the TARDIS: outside (compact) and inside (a universe) converge at the OGU; beyond, the void",
-                 fontsize=11.5)
+    ax.set_title("The Eternal Dawn mass--radius diagram", fontsize=13)
     ax.grid(alpha=0.12)
 
     fig.tight_layout()
