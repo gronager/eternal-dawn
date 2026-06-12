@@ -30,9 +30,12 @@ HASEN="${HASEN:-}"         # OPT-IN Hasenbusch masses (comma-separated, HEAVIER 
                            # the plain ensemble on a short run BEFORE the production run.
 DEFLATE="${DEFLATE:-0}"    # OPT-IN low-mode deflation count (the VRAM filler). Needs the binary built
                            # with -DUSE_DEFLATION (see PRODUCTION.md); EXPERIMENTAL, validate like HASEN.
+MIXEDPREC="${MIXEDPREC:-}" # OPT-IN single-precision-inner CG (~2x). Needs the binary built with
+                           # -DUSE_MIXEDPREC. EXACT (refined to double tol); validate like HASEN.
 OUT="${OUT:-out/dyn_L${L}x${T}_m${MASS}}"; mkdir -p "$OUT"
 hasen_flag="" ; [ -n "$HASEN" ] && hasen_flag="--hasenbusch $HASEN"
 defl_flag="" ; [ "$DEFLATE" -gt 0 ] 2>/dev/null && defl_flag="--deflate $DEFLATE"
+mixp_flag="" ; [ -n "$MIXEDPREC" ] && mixp_flag="--mixed-prec"
 
 # --- 1. generate the dynamical ensemble (auto-RESUME per stream from its latest checkpoint) --
 # Re-running this command continues each stream from the last saved trajectory (gauge + RNG) rather
@@ -61,8 +64,8 @@ for k in $(seq 1 "$NSTREAMS"); do
     echo "stream$k: fresh start ($NTRAJ trajectories)"
   fi
   all_done=0
-  gen_cmds+=( "$(printf 'cd %q && %q --grid %q --beta %q --mass %q --seed %d --mdsteps %d --save-interval %d %s %s --StartingType %s --StartingTrajectory %d --Trajectories %d --accelerator-threads 8 >> hmc.log 2>&1' \
-    "$d" "$GEN" "$GRIDSPEC" "$BETA" "$MASS" "$((k*1000 + 1))" "$MDSTEPS" "$SAVE" "$hasen_flag" "$defl_flag" "$start_type" "$start_traj" "$remain")" )
+  gen_cmds+=( "$(printf 'cd %q && %q --grid %q --beta %q --mass %q --seed %d --mdsteps %d --save-interval %d %s %s %s --StartingType %s --StartingTrajectory %d --Trajectories %d --accelerator-threads 8 >> hmc.log 2>&1' \
+    "$d" "$GEN" "$GRIDSPEC" "$BETA" "$MASS" "$((k*1000 + 1))" "$MDSTEPS" "$SAVE" "$hasen_flag" "$defl_flag" "$mixp_flag" "$start_type" "$start_traj" "$remain")" )
 done
 if [ "$all_done" -eq 1 ]; then
   echo "all $NSTREAMS streams already at $NTRAJ trajectories in $OUT"
