@@ -29,3 +29,17 @@ repository-code: "https://github.com/gronager/eternal-dawn"
 doi: "10.5281/zenodo.20664888"
 version: "0.1.0"
 date-released: "2026-06-12"
+preferred-citation:
+  type: book
+  title: "Eternal Dawn: A continuous, conservative cosmology from minimal axioms"
+  authors:
+    - given-names: Michael
+      family-names: Gronager
+      orcid: "https://orcid.org/0009-0006-5933-0065"
+  year: 2026
+  month: 6
+  version: "0.1.0"
+  doi: "10.5281/zenodo.20664888"
+  url: "https://doi.org/10.5281/zenodo.20664888"
+  publisher:
+    name: Zenodo
