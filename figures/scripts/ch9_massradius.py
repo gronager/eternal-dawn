@@ -185,10 +185,10 @@ def main():
                 xytext=(-8, -20), textcoords="offset points", fontsize=8.4, color="C2",
                 fontweight="bold", ha="right",
                 arrowprops=dict(arrowstyle="-", color="C2", lw=0.6))
-    ax.annotate("our universe (critical):\ninside $=$ outside, $R_{\\rm Hubble}\\!=\\!R_s$",
+    ax.annotate("our universe\n(critical):\ninside $=$ outside,\n$R_{\\rm Hubble}\\!=\\!R_s$",
                 (logR_bh(56), 56), xytext=(8, -16), textcoords="offset points", fontsize=8.6,
                 color="C3", fontweight="bold")
-    ax.annotate("OGU -- firstborn, largest\n(inside $\\to$ outside, de Sitter)", (logR_bh(M_OGU), M_OGU),
+    ax.annotate("OGU: firstborn,\nlargest\n(inside $\\to$ outside,\nde Sitter)", (logR_bh(M_OGU), M_OGU),
                 xytext=(9, -2), textcoords="offset points", fontsize=9.0, color="C1", fontweight="bold")
     # the "tally" wedge: between the membrane and torsitonisation lines, below their meeting -- no mass
     ax.text(-7.0, 20.5, "the tally:\nno mass yet", fontsize=9, color="#6a3d9a", style="italic",
@@ -228,12 +228,11 @@ def main():
                                  mutation_scale=13, color="0.5", lw=1.1))
 
     # ---- the 12 fermions as a 4x3 table (towers x generations) in the open lower-right ----------
-    tx = [30.0, 35.0, 40.0]                                   # generation columns I, II, III
+    tx = [26.0, 31.0, 36.0]                                   # generation columns I, II, III (shifted 5% left)
     ty = [-5.0, -10.0, -15.0, -20.0]                          # tower rows: up, down, lepton, neutrino
-    ax.text(17.0, 4.0, "the 12 fermions $=$ the torsiton generations", fontsize=10,
-            color="0.12", fontweight="bold")
-    ax.text(17.0, 1.0, "4 towers (charge/colour grip) $\\times$ 3 rungs (the bag-sharpness ladder)",
-            fontsize=8.2, color="0.35")
+    ax.text(13.0, 7.0, "Fermions $=$ Torsiton Gen.", fontsize=10, color="0.12", fontweight="bold")
+    ax.text(13.0, 4.6, "4 towers (charge/colour grip)\n$\\times$\n3 rungs (the bag-sharpness ladder)",
+            fontsize=8.2, color="0.35", va="top", linespacing=1.4)
     for j, g in enumerate(["gen I", "gen II", "gen III"]):
         ax.text(tx[j], -1.2, g, fontsize=8.6, color="0.3", ha="center", fontweight="bold")
     rows = [("up-type quark", "o", "C1", ["u", "c", "t"]),
@@ -241,17 +240,18 @@ def main():
             ("charged lepton", "*", "C4", ["e", r"$\mu$", r"$\tau$"]),
             ("neutrino", "v", "C9", [r"$\nu_1$", r"$\nu_2$", r"$\nu_3$"])]
     for i, (rl, mk, col, names) in enumerate(rows):
-        ax.text(17.0, ty[i], rl, fontsize=8.4, color=col, va="center")
+        ax.text(13.0, ty[i], rl, fontsize=8.4, color=col, va="center")
         for j, nm in enumerate(names):
             ax.plot([tx[j] - 1.6], [ty[i]], mk, color=col, ms=(11 if mk == "*" else 7.5), zorder=5)
             ax.text(tx[j] - 0.6, ty[i], nm, fontsize=9, color=col, va="center", fontweight="bold")
-    ax.text(17.0, -24.5, "their 15 masses (with the composite $W,Z,H$) are the torsiton result,\n"
-            "created in the genesis cascade -- the same plane as the cosmology",
-            fontsize=8.0, color="0.3", va="top")
-    ax.plot([18], [-29.5], "o", color="0.3", ms=7)
-    ax.text(19, -29.5, "outside (compact, dense)", fontsize=7.8, color="0.3", va="center")
-    ax.plot([18], [-32.0], "o", color="0.3", ms=6, mfc="white")
-    ax.text(19, -32.0, "inside (cosmic, thin) -- the TARDIS", fontsize=7.8, color="0.3", va="center")
+    ax.text(13.0, -22.5,
+            "their 15 masses\n(with the composite $W$, $Z$, $H$)\nare the torsiton result,\n"
+            "created in the genesis cascade\nthe same plane as the cosmology",
+            fontsize=8.0, color="0.3", va="top", linespacing=1.35)
+    ax.plot([14], [-31.0], "o", color="0.3", ms=7)
+    ax.text(15, -31.0, "outside (compact, dense)", fontsize=7.8, color="0.3", va="center")
+    ax.plot([14], [-33.5], "o", color="0.3", ms=6, mfc="white")
+    ax.text(15, -33.5, "inside (cosmic, thin) -- the TARDIS", fontsize=7.8, color="0.3", va="center")
 
     # ---- the TARDIS, made rigorous: a police-box-sized BLACK HOLE (R_s ~ 1 m) on the gravity line,
     #      with a baby universe on the inside line -- the only honest way to be bigger on the inside.
