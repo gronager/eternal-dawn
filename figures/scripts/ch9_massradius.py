@@ -15,6 +15,9 @@ which is so vast it is its own interior. Beyond it: the scaleless void.
 The genesis cascade (mass-on -> confinement -> baryons -> nuclei) happens INSIDE the young universe
 and CREATES the particles on the diagonal of existence -- so it is marked there, at the particle
 scale, not on the universe line. Renders figures/pdf/ed_massradius.pdf. Schematic, cgs.
+
+Reworked for Eternal Dawn after the "all objects" mass-radius diagram of C. H. Lineweaver and
+V. M. Patel, "All objects and some questions", Am. J. Phys. 91, 819 (2023).
 """
 from __future__ import annotations
 
@@ -268,6 +271,9 @@ def main():
     secax = ax.secondary_yaxis('right', functions=(lambda g: g + 23.75, lambda e: e - 23.75))
     secax.set_ylabel(r"$\log_{10}\,(\,$energy $/\,\mathrm{GeV})$    ($E=mc^2$)")
     ax.set_title("The Eternal Dawn mass--radius diagram", fontsize=13)
+    ax.text(xlo + 0.6, ylo + 0.9,
+            "after Lineweaver & Patel, 'All objects and some questions' (Am. J. Phys. 2023)",
+            fontsize=6.5, color="0.45", style="italic")
     ax.grid(alpha=0.12)
 
     fig.tight_layout()
