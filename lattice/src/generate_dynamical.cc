@@ -152,6 +152,10 @@ class MixedPrecCG : public OperatorFunction<typename FermionActionD::FermionFiel
     SchurDiagMooeeOperator<FermionActionF, FieldF> SchurF(FermOpF);       // single inner operator
     MixedPrecisionConjugateGradient<FieldD, FieldF> mpcg(Tolerance, MaxInner, MaxOuter,
                                                          SinglePrecGrid, SchurF, LinOpD);
+    // CRITICAL: the inner solve is SINGLE precision -- never ask it below ~1e-6 (single eps ~1.2e-7),
+    // or the CG hits its floor and breaks down to NaN. Grid defaults InnerTolerance to the OUTER tol
+    // (1e-8 here); loosen it. The OUTER loop still refines to `Tolerance` in double, so this is exact.
+    mpcg.InnerTolerance = 1.0e-5;
     mpcg(src, psi);                                       // single-precision inner, refined in double
   }
 };
