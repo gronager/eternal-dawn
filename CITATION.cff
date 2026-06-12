@@ -13,7 +13,7 @@ abstract: >-
   forming singularities, extruding child universes through a bounce membrane;
   the supraverse condenses into an eternal, recursive population of universes.
   The monograph plus a fully reproducible simulation/figure pipeline: every
-  number and figure regenerates from the code (make figures; make doe).
+  number and figure regenerates from the code (make figures; make pdf).
 keywords:
   - cosmology
   - Einstein-Cartan gravity
@@ -26,7 +26,6 @@ keywords:
   - supraverse
 license: CC-BY-4.0
 repository-code: "https://github.com/gronager/eternal-dawn"
-# Fill in after the Zenodo deposit mints a DOI:
-# doi: "10.5281/zenodo.XXXXXXX"
-# version: "0.1.0"
-# date-released: "2026-06-01"
+doi: "10.5281/zenodo.20664888"
+version: "0.1.0"
+date-released: "2026-06-12"
