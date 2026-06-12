@@ -52,8 +52,14 @@
 //      acceleration decays as the gauge field decorrelates until the refresh hook is added. Default
 //      OFF and behind the compile flag so it can NEVER break the validated even-odd+Hasenbusch build.
 //
-//  Still OFF on purpose: mixed-precision CG (single-precision inner solve, ~1.5-2x; safe but the
-//  SP-grid wiring is fiddly) -- a clean follow-up once the above are validated.
+//  (4) MIXED-PRECISION CG -- OPT-IN via --mixed-prec, and ONLY in a binary built -DUSE_MIXEDPREC.
+//      The inner solve runs in SINGLE precision and is refined to the DOUBLE-precision tolerance, so
+//      the action (accept/reject) is bit-for-bit the double-precision result -- EXACT, it cannot bias
+//      the ensemble -- while the single-precision Dslash runs ~2x on the GH200. Each fermion operator
+//      gets a single-precision twin on a single grid; the twin's gauge is synced from the double
+//      operator each solve. Behind the compile flag so it can NEVER break the validated double binary;
+//      validate like Hasenbusch (the plaquette must still land on the plain reference). See the
+//      USE_MIXEDPREC block for the version-specific VERIFY-AT-COMPILE points.
 // ============================================================================================
 //
 // (beta, mass) ARE THE KNOBS: lower mass toward the DYNAMICAL critical point for a light pion (the
@@ -106,6 +112,52 @@ class DeflatedCG : public OperatorFunction<Field> {
 }  // namespace Grid
 #endif
 
+#ifdef USE_MIXEDPREC
+// ============================================================================================
+// MIXED-PRECISION CG accelerator -- EXACT, build with -DUSE_MIXEDPREC only.
+// The single-precision inner solve is REFINED to the double-precision tolerance, so the action
+// (accept/reject) is the identical double-precision result -- it cannot bias the ensemble, it only
+// drops the cost (~2x, single-precision Dslash on the GH200). One adapter per fermion operator: it
+// pairs the double operator (whose gauge the runner evolves) with a single-precision twin on a single
+// grid; each solve it copies the current gauge D->F (precisionChange) and runs Grid's
+// MixedPrecisionConjugateGradient (single inner operator, the passed double operator as the refiner).
+//
+// VERIFY AT COMPILE (version-specific -- iterate against your Grid; all behind the flag, so the safe
+// double-precision binary is untouched):
+//   * WilsonImplF, WilsonFermion<WilsonImplF>, its FermionField + GaugeField.
+//   * WilsonFermion PUBLIC members Umu, UmuEven, UmuOdd (the stored gauge + its checkerboards).
+//   * precisionChange(out_single, in_double); pickCheckerboard(Even/Odd, out, in).
+//   * SchurDiagMooeeOperator<FermionActionF, FieldF> (the single inner Hermitian op).
+//   * MixedPrecisionConjugateGradient<FieldD,FieldF>(tol, maxinner, maxouter, sp_rb_grid, LinopF, LinopD)
+//     with operator()(const FieldD& src, FieldD& psi). If the ctor arg order differs, swap here.
+namespace Grid {
+template <class FermionActionD, class FermionActionF>
+class MixedPrecCG : public OperatorFunction<typename FermionActionD::FermionField> {
+ public:
+  typedef typename FermionActionD::FermionField FieldD;
+  typedef typename FermionActionF::FermionField FieldF;
+  FermionActionD &FermOpD;            // double operator (gauge evolved by the runner)
+  FermionActionF &FermOpF;            // single-precision twin (gauge synced per solve)
+  GridBase *SinglePrecGrid;          // single-precision RED-BLACK grid (the solve checkerboard)
+  RealD Tolerance;                   // outer DOUBLE target tolerance (== the plain CG -> exact action)
+  Integer MaxInner, MaxOuter;
+  MixedPrecCG(FermionActionD &opD, FermionActionF &opF, GridBase *spRbGrid, RealD tol,
+              Integer maxInner, Integer maxOuter)
+      : FermOpD(opD), FermOpF(opF), SinglePrecGrid(spRbGrid),
+        Tolerance(tol), MaxInner(maxInner), MaxOuter(maxOuter) {}
+  void operator()(LinearOperatorBase<FieldD> &LinOpD, const FieldD &src, FieldD &psi) {
+    precisionChange(FermOpF.Umu, FermOpD.Umu);            // sync the SP gauge to the current MD config
+    pickCheckerboard(Even, FermOpF.UmuEven, FermOpF.Umu);
+    pickCheckerboard(Odd, FermOpF.UmuOdd, FermOpF.Umu);
+    SchurDiagMooeeOperator<FermionActionF, FieldF> SchurF(FermOpF);       // single inner operator
+    MixedPrecisionConjugateGradient<FieldD, FieldF> mpcg(Tolerance, MaxInner, MaxOuter,
+                                                         SinglePrecGrid, SchurF, LinOpD);
+    mpcg(src, psi);                                       // single-precision inner, refined in double
+  }
+};
+}  // namespace Grid
+#endif
+
 int main(int argc, char **argv) {
   using namespace Grid;
   Grid_init(&argc, &argv);
@@ -115,6 +167,10 @@ int main(int argc, char **argv) {
   typedef WilsonFermion<FermionImplPolicy> FermionAction;  // this Grid lacks the WilsonFermionR
                                                            // typedef; instantiate the template
   typedef typename FermionAction::FermionField FermionField;
+#ifdef USE_MIXEDPREC
+  typedef WilsonImplF FermionImplPolicyF;                  // single-precision twin (mixed-prec inner)
+  typedef WilsonFermion<FermionImplPolicyF> FermionActionF;
+#endif
 
   HMCWrapper TheHMC;
 
@@ -148,6 +204,7 @@ int main(int argc, char **argv) {
     std::string s = GridCmdOptionPayload(argv, argv + argc, "--deflate");
     GridCmdOptionInt(s, deflateN);
   }
+  bool useMixedPrec = GridCmdOptionExists(argv, argv + argc, "--mixed-prec");  // needs -DUSE_MIXEDPREC
 
   // parse the (optional) Hasenbusch masses: must be HEAVIER (larger) than the sea `mass`, ascending
   std::vector<RealD> hmasses;
@@ -257,6 +314,37 @@ int main(int argc, char **argv) {
 #endif
   OperatorFunction<FermionField> &slv = *slvp;           // CG by default, the deflated solver if built
 
+  // ---- per-operator solver table. Default: the (deflated-or-plain) CG for every operator. With
+  //      --mixed-prec (and -DUSE_MIXEDPREC) each operator gets its own single-precision-inner solver.
+  //      Each pseudofermion action inverts exactly ONE operator (the ratio action its NUMERATOR
+  //      fops[i]; the cap and the no-Hasenbusch case their single op), so a per-operator solver
+  //      suffices -- no runtime dispatch on the passed operator is needed.
+  std::vector<OperatorFunction<FermionField> *> solvers(ladder.size(), &slv);
+#ifdef USE_MIXEDPREC
+  std::vector<FermionActionF *> fopsF;
+  std::vector<MixedPrecCG<FermionAction, FermionActionF> *> mpcgs;
+  LatticeGaugeFieldF *UfF = nullptr;
+  if (useMixedPrec) {
+    GridCartesian *FGridF = SpaceTimeGrid::makeFourDimGrid(
+        GridDefaultLatt(), GridDefaultSimd(Nd, vComplexF::Nsimd()), GridDefaultMpi());
+    GridRedBlackCartesian *FrbGridF = SpaceTimeGrid::makeFourDimRedBlackGrid(FGridF);
+    UfF = new LatticeGaugeFieldF(FGridF);                 // SP gauge twin (each operator syncs from D)
+    for (auto m : ladder) fopsF.push_back(new FermionActionF(*UfF, *FGridF, *FrbGridF, m));
+    for (size_t i = 0; i < ladder.size(); ++i) {
+      mpcgs.push_back(new MixedPrecCG<FermionAction, FermionActionF>(
+          *fops[i], *fopsF[i], FrbGridF, 1.0e-8, 4000, 100));   // (tol, maxinner, maxouter)
+      solvers[i] = mpcgs[i];
+    }
+    std::cout << GridLogMessage << "mixed-precision CG: ON (" << ladder.size()
+              << " SP operators; single-precision inner solve refined to 1e-8 double)." << std::endl;
+  }
+#else
+  if (useMixedPrec)
+    std::cout << GridLogMessage
+              << "WARNING: --mixed-prec ignored -- rebuild with -DUSE_MIXEDPREC to enable it."
+              << std::endl;
+#endif
+
   // The pseudofermion actions. EVEN-ODD preconditioned throughout (exact; ~2x).
   //  - no Hasenbusch (ladder size 1): a single EvenOdd two-flavour det(M_sea^d M_sea).
   //  - with Hasenbusch: a telescoping chain of EvenOdd RATIO actions (light numerator / heavy
@@ -268,9 +356,13 @@ int main(int argc, char **argv) {
   // DENOMINATOR, the SECOND the NUMERATOR -- i.e. it represents det(2nd)/det(1st). So to put the
   // LIGHTER mass in the numerator (the Hasenbusch chain that telescopes to the sea determinant) the
   // call must be (heavier, lighter) = (fops[i+1], fops[i]).
+  // Each action is given the solver for the operator it INVERTS: the ratio its numerator fops[i],
+  // the cap and the single-action case their one operator. (With --mixed-prec these are the
+  // single-precision-inner solvers; otherwise all point at the same CG.)
   std::vector<Action<HMCWrapper::Field> *> pfActions;
   if (ladder.size() == 1) {
-    auto *Nf2 = new TwoFlavourEvenOddPseudoFermionAction<FermionImplPolicy>(*fops[0], slv, slv);
+    auto *Nf2 = new TwoFlavourEvenOddPseudoFermionAction<FermionImplPolicy>(
+        *fops[0], *solvers[0], *solvers[0]);
     Nf2->is_smeared = false;
     pfActions.push_back(Nf2);
   } else {
@@ -278,12 +370,13 @@ int main(int argc, char **argv) {
     // (Den,Num) order, NUMERATOR = lighter = fops[i] goes SECOND, denominator = fops[i+1] first.
     for (size_t i = 0; i + 1 < ladder.size(); ++i) {
       auto *ratio = new TwoFlavourEvenOddRatioPseudoFermionAction<FermionImplPolicy>(
-          *fops[i + 1], *fops[i], slv, slv);            // (Den=heavier fops[i+1], Num=lighter fops[i])
+          *fops[i + 1], *fops[i], *solvers[i], *solvers[i]);  // Den=fops[i+1], Num=fops[i] (inverted)
       ratio->is_smeared = false;
       pfActions.push_back(ratio);
     }
     // cap: the heaviest mass as a plain EvenOdd two-flavour determinant
-    auto *cap = new TwoFlavourEvenOddPseudoFermionAction<FermionImplPolicy>(*fops.back(), slv, slv);
+    auto *cap = new TwoFlavourEvenOddPseudoFermionAction<FermionImplPolicy>(
+        *fops.back(), *solvers[ladder.size() - 1], *solvers[ladder.size() - 1]);
     cap->is_smeared = false;
     pfActions.push_back(cap);
   }
@@ -320,6 +413,11 @@ int main(int argc, char **argv) {
   for (auto *f : fops) delete f;
 #ifdef USE_DEFLATION
   if (DCG) delete DCG;
+#endif
+#ifdef USE_MIXEDPREC
+  for (auto *m : mpcgs) delete m;
+  for (auto *f : fopsF) delete f;
+  if (UfF) delete UfF;
 #endif
   Grid_finalize();
   return 0;

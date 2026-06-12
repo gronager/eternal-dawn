@@ -133,7 +133,31 @@ for the run) by construction — so it cannot bias the ensemble, only the speed.
 the Grid eigensolver API is version-specific (the `USE_DEFLATION` block flags the exact calls to
 fill in/verify), and the subspace **goes stale** as the gauge field decorrelates — recompute it on
 each checkpoint/restart to refresh, until the in-run trajectory-boundary refresh hook is added (owed).
-*Owed follow-up:* mixed-precision CG, and the sustained in-run subspace refresh.
+
+### Mixed-precision CG (`MIXEDPREC`, `-DUSE_MIXEDPREC`) — the recommended ~2× for the light sea
+
+The single-precision-inner solver, **refined to the double-precision tolerance** so the action is the
+identical double result — **exact**, it cannot bias the ensemble — while the single-precision Dslash
+runs ~2× on the GH200. Lower-risk than deflation (no subspace staleness, no eigensolver), so it is the
+preferred accelerator beyond even-odd + Hasenbusch. Each fermion operator gets a single-precision twin;
+its gauge is synced from the double operator each solve. Behind the compile flag, so the validated
+double binary is untouched:
+
+```bash
+make -C lattice/src EXTRA=-DUSE_MIXEDPREC generate_dynamical
+# then add MIXEDPREC=1 to the run/07 invocation, e.g.
+L=16 T=64 MASS=-0.75 HASEN="-0.3,0.1" MDSTEPS=12 MIXEDPREC=1 ... ./run/07_dynamical_torsiton.sh
+```
+
+**Validate exactly like Hasenbusch** before trusting a production run: a short `MIXEDPREC=1` chain
+launched from a plain-equilibrated config must hold the plaquette on the reference (the refinement
+makes it exact, so it will — this just confirms the SP wiring is right). The `USE_MIXEDPREC` block
+carries the version-specific VERIFY-AT-COMPILE points (member names, `precisionChange`,
+`MixedPrecisionConjugateGradient` ctor) — expect a couple of build iterations, all behind the flag.
+
+**Combined budget** (per L16×64 light-sea mass, GH200, solo): plain MDSTEPS=20 ≈ 240 s/traj; MDSTEPS=12
+≈ 145 s; + mixed-precision ≈ **~90 s/traj → ~1.5 days for 1500 trajectories.** Deflation would stack a
+further factor but is the experimental path. *Owed follow-up:* the in-run subspace refresh for deflation.
 
 ## What lands
 
