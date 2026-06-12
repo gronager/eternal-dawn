@@ -185,15 +185,6 @@ def main():
                 "parent's feeding, not by its own mass", (logR_bh(m_eq), m_eq),
                 xytext=(10, 3), textcoords="offset points", fontsize=7.8, color="#d2691e")
 
-    # the HAWKING RADIATION line: the wavelength of the EMITTED quanta (lambda ~ 16 R_s, Wien peak) --
-    # PARALLEL to the membrane, ~1.2 dex above it. As a sub-watershed hole evaporates DOWN the membrane,
-    # its emitted radiation tracks this line. (Distinct from the Compton/quantum tail of the inside arc.)
-    HK_OFF = 1.2
-    mh = np.linspace(M_PL, 34.0, 60)
-    ax.plot(logR_bh(mh) + HK_OFF, mh, color="#d2691e", lw=1.3, ls=(0, (1, 2)), alpha=0.85, zorder=3)
-    ax.text(logR_bh(8.0) + HK_OFF, 8.0, r"Hawking radiation ($\lambda\approx16\,R_s$)", fontsize=7.8,
-            color="#d2691e", rotation=45, rotation_mode="anchor", ha="left", va="bottom")
-
     ax.annotate("void seed (mountain mass) --\ncompressed energy in the void", (logR_bh(M_SEED), M_SEED),
                 xytext=(8, -16), textcoords="offset points", fontsize=8.4, color="C2", fontweight="bold")
     ax.annotate("a smaller black hole:\ntiny outside, a universe inside", (logR_bh(34), 34),
