@@ -205,8 +205,8 @@ This repository is the canonical, reproducible record of the work. Every figure 
 number regenerates from the code (`make figures`, `make sim-test`), and the full git
 history timestamps each step of its development.
 
-**To cite:** see `CITATION.cff` (GitHub renders a "Cite this repository" button). Once
-archived on Zenodo, add the minted DOI there and here.
+**To cite:** see `CITATION.cff` (GitHub renders a "Cite this repository" button); the
+archival record is **Zenodo DOI [10.5281/zenodo.20664888](https://doi.org/10.5281/zenodo.20664888)**.
 
 **Provenance / integrity.** `make hash` writes `MANIFEST.sha256`: a SHA-256 of the
 book, every figure, and every source and simulation file, with a UTC timestamp and the
@@ -214,17 +214,16 @@ current git commit. Committing that manifest fixes the exact bytes to a point in
 its single root hash can additionally be anchored to any timestamping/notary service
 (or a blockchain) for an independent attestation.
 
-**Recommended attribution path (fast, free, citable):**
-1. **Zenodo** (zenodo.org) — upload the built PDF + this repo; it mints a permanent
-   **DOI and tamper-proof timestamp** the same day, no gatekeeper. This is the priority
-   record (strictly better than a bare hash: timestamped *and* citable *and* indexed).
-2. **arXiv** (gr-qc / astro-ph.CO) — the physicist's standard preprint (needs an
-   endorsement); the credential that signals serious work.
-3. **ORCID** — `0009-0006-5933-0065` (now recorded in `CITATION.cff` and on the title
-   page); a free persistent author ID. (A ResearchGate profile is good for *reach* but
-   is not a substitute for a DOI or ORCID.)
-4. **ResearchGate / Substack / blog** — for reach and narrative, each linking back to
-   the Zenodo DOI so the popular telling cannot undercut the priority claim.
+**The attribution record (fast, free, citable):**
+1. **Zenodo** — archived at DOI **[10.5281/zenodo.20664888](https://doi.org/10.5281/zenodo.20664888)**:
+   a permanent **DOI and tamper-proof timestamp**, minted with no gatekeeper, indexed and
+   citable (strictly better than a bare hash). This is the priority record.
+2. **ORCID** — `0009-0006-5933-0065`, recorded in `CITATION.cff` and on the title page; a
+   free persistent author ID.
+3. **arXiv** (gr-qc / astro-ph.CO) — the physicist's standard preprint, pending an
+   endorsement; the credential that signals serious work.
+4. **ResearchGate / Substack / blog** — optional, for reach and narrative, each linking
+   back to the Zenodo DOI so the popular telling cannot undercut the priority claim.
 
 ## About the author
 
