@@ -146,9 +146,12 @@ class MixedPrecCG : public OperatorFunction<typename FermionActionD::FermionFiel
       : FermOpD(opD), FermOpF(opF), SinglePrecGrid(spRbGrid),
         Tolerance(tol), MaxInner(maxInner), MaxOuter(maxOuter) {}
   void operator()(LinearOperatorBase<FieldD> &LinOpD, const FieldD &src, FieldD &psi) {
-    precisionChange(FermOpF.Umu, FermOpD.Umu);            // sync the SP gauge to the current MD config
-    pickCheckerboard(Even, FermOpF.UmuEven, FermOpF.Umu);
-    pickCheckerboard(Odd, FermOpF.UmuOdd, FermOpF.Umu);
+    // sync the SP operator's gauge to the current MD config. Precision-change the DOUBLED gauge AND its
+    // checkerboards DIRECTLY from the double operator (which the action just ImportGauge'd) -- no
+    // pickCheckerboard on the SP grid, the one cross-grid op most likely to misfire across versions.
+    precisionChange(FermOpF.Umu, FermOpD.Umu);
+    precisionChange(FermOpF.UmuEven, FermOpD.UmuEven);
+    precisionChange(FermOpF.UmuOdd, FermOpD.UmuOdd);
     SchurDiagMooeeOperator<FermionActionF, FieldF> SchurF(FermOpF);       // single inner operator
     MixedPrecisionConjugateGradient<FieldD, FieldF> mpcg(Tolerance, MaxInner, MaxOuter,
                                                          SinglePrecGrid, SchurF, LinOpD);
