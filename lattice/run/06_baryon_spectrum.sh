@@ -38,7 +38,7 @@ echo "measuring baryon+pion on ${#sel[@]} configs, mass=$MASS, $NPAR in parallel
 # --- solve + contract on each config (parallel on the GPU) ---------------------------------
 start_mps
 for cfg in "${sel[@]}"; do
-  printf '%q --grid %q --config %q --mass %q --cg-tol %q --accelerator-threads 8 | grep -E "^[0-9]" > %q\n' \
+  printf '%q --grid %q --config %q --mass %q --cg-tol %q --accelerator-threads 8 | grep -E "^[0-9]+[[:space:]]" > %q\n' \
     "$MEAS" "$GRIDSPEC" "$cfg" "$MASS" "$CGTOL" "$cfg.bar"
 done | run_pool "$NPAR"
 stop_mps
@@ -47,7 +47,7 @@ stop_mps
 ci=0; : > "$OUT/baryon_raw.dat"
 for cfg in "${sel[@]}"; do
   ci=$((ci+1))
-  awk -v c=$ci '/^[0-9]/{print c, $0}' "$cfg.bar" >> "$OUT/baryon_raw.dat"
+  awk -v c=$ci '/^[0-9]+[ \t]/{print c, $0}' "$cfg.bar" >> "$OUT/baryon_raw.dat"
 done
 echo "measured ${#sel[@]} configs -> $OUT/baryon_raw.dat"
 
@@ -72,5 +72,6 @@ for name in ("pion", "nucleon"):
         print("    no clean plateau -- adjust the window / raise statistics / heavier mass")
 if np.isfinite(res['nucleon']['mass']) and np.isfinite(res['pion']['mass']):
     print(f"\n  m_N / m_pi = {res['nucleon']['mass']/res['pion']['mass']:.3f}   "
-          f"(the torsiton is bound at m_N>0; ratio drops toward the chiral limit)")
+          f"(the torsiton is bound at m_N>0; ratio RISES toward the chiral limit, "
+          f"from the 3/2 constituent-counting floor at heavy mass)")
 PY
