@@ -44,18 +44,33 @@ note_params() {
 # single small job. MPS lets independent CUDA processes truly share the SMs (not just
 # time-slice), so N parallel measurements run ~N x faster until the GPU saturates.
 start_mps() {
+  # NO_MPS=1 bypasses MPS entirely: unset the pipe env so child jobs attach DIRECTLY to the GPU
+  # (Default compute mode). Use this when another job (e.g. a live HMC) already owns the MPS server
+  # and reusing it hangs -- the clients block attaching to the server. Bypassing leaves that server,
+  # and any HMC depending on it, completely untouched.
+  if [ -n "${NO_MPS:-}" ]; then
+    unset CUDA_MPS_PIPE_DIRECTORY CUDA_MPS_LOG_DIRECTORY
+    echo "[mps] NO_MPS set -- bypassing MPS; jobs run directly on the GPU (Default compute mode)"
+    return 0
+  fi
   command -v nvidia-cuda-mps-control >/dev/null 2>&1 || { echo "[mps] not available; skipping"; return 0; }
   export CUDA_MPS_PIPE_DIRECTORY="${CUDA_MPS_PIPE_DIRECTORY:-/tmp/nvidia-mps}"
   export CUDA_MPS_LOG_DIRECTORY="${CUDA_MPS_LOG_DIRECTORY:-/tmp/nvidia-mps-log}"
   mkdir -p "$CUDA_MPS_PIPE_DIRECTORY" "$CUDA_MPS_LOG_DIRECTORY"
   if nvidia-cuda-mps-control -d 2>/dev/null; then
+    export MPS_STARTED_HERE=1                            # we own it -> stop_mps may quit it
     echo "[mps] daemon started ($CUDA_MPS_PIPE_DIRECTORY)"
   else
-    echo "[mps] daemon already running -- reusing it"   # already up: fine, not an error
+    echo "[mps] daemon already running -- reusing it (will NOT stop it on exit)"
   fi
   return 0                                               # never fail the caller (set -e safe)
 }
 stop_mps() {
+  # SAFETY: never quit a daemon we did not start -- another job (a live HMC) may be an MPS client of
+  # it, and quitting kills that job's GPU context. Skip when bypassing, or when reusing an existing
+  # daemon (set MPS_STARTED_HERE in start_mps only if you want this to stop it).
+  [ -n "${NO_MPS:-}" ] && return 0
+  [ -z "${MPS_STARTED_HERE:-}" ] && { echo "[mps] leaving daemon running (not started by us)"; return 0; }
   command -v nvidia-cuda-mps-control >/dev/null 2>&1 || return 0
   echo quit | nvidia-cuda-mps-control 2>/dev/null || true
   echo "[mps] daemon stopped"
