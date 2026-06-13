@@ -72,5 +72,6 @@ for name in ("pion", "nucleon"):
         print("    no clean plateau -- adjust the window / raise statistics / heavier mass")
 if np.isfinite(res['nucleon']['mass']) and np.isfinite(res['pion']['mass']):
     print(f"\n  m_N / m_pi = {res['nucleon']['mass']/res['pion']['mass']:.3f}   "
-          f"(the torsiton is bound at m_N>0; ratio drops toward the chiral limit)")
+          f"(the torsiton is bound at m_N>0; ratio RISES toward the chiral limit, "
+          f"from the 3/2 constituent-counting floor at heavy mass)")
 PY
