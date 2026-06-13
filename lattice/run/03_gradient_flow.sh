@@ -7,12 +7,28 @@ OUT="${OUT:-out/flow}"; mkdir -p "$OUT"
 ENS="${ENS:-out/puregauge}"   # reuse the target-1 ensemble (or any ensemble)
 require_exe "$GRID/tests/smearing/Test_WilsonFlow"
 
-L=24 ; T=48
+L="${L:-24}" ; T="${T:-48}"
+THERM="${THERM:-0}" ; STRIDE="${STRIDE:-1}"
+start_mps                            # NO_MPS=1 -> direct GPU (bypass a busy MPS server, e.g. a live HMC)
+# Select thermalised, decorrelated UNSMEARED gauge configs. Flow needs the raw HMC field
+# (ckpoint_lat.*), NOT the smeared cfg_smr.* -- flowing an already-smeared field gives the wrong scale.
+shopt -s nullglob
+sel=()
+for cfg in "$ENS"/ckpoint_lat.* "$ENS"/stream*/ckpoint_lat.* "$ENS"/cfg.*; do
+  [[ "$cfg" == *.gz || "$cfg" == *cfg_smr* ]] && continue
+  n="${cfg##*.}"; [[ "$n" =~ ^[0-9]+$ ]] || continue
+  (( n >= THERM )) || continue
+  (( n % STRIDE == 0 )) || continue
+  sel+=("$cfg")
+done
+[ "${#sel[@]}" -gt 0 ] || { echo "no configs in $ENS (n>=$THERM, stride $STRIDE)"; exit 1; }
+echo "gradient flow on ${#sel[@]} configs ($L.$L.$L.$T)"
 : > "$OUT/t2E_raw.dat"        # columns: t  t^2<E>  (per config)
-for cfg in "$ENS"/cfg.*; do
+for cfg in "${sel[@]}"; do
   "$GRID/tests/smearing/Test_WilsonFlow" --config "$cfg" --grid $L.$L.$L.$T \
       --flowtime 4.0 --flowsteps 400 >> "$OUT/t2E_raw.dat"
 done
+stop_mps
 python3 - "$OUT/t2E_raw.dat" "$OUT/t2E.dat" <<'PY'
 import sys, numpy as np
 raw=np.loadtxt(sys.argv[1]); t=np.unique(raw[:,0])
