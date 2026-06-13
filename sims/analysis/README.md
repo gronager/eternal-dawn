@@ -4,21 +4,27 @@ Two standalone scripts (numpy + matplotlib only) to (a) confirm the L4 HMC is so
 and (b) pull m_pi, m_N, m_N/m_pi off the configs you already have -- you do **not**
 need to wait for trajectory 1500. Plots land in `sims/output/lattice/`.
 
-## 1. HMC health (run on the live log)
+## 1. HMC health (run on the live Grid log)
 
 ```bash
-python sims/analysis/hmc_health.py path/to/RUN.log
-# pin the thermalisation cut yourself instead of auto:
-python sims/analysis/hmc_health.py path/to/RUN.log --therm 250
-# a whitespace table instead of a Grid log (columns: traj dH acc plaq):
-python sims/analysis/hmc_health.py ensemble.txt --table
+python sims/analysis/hmc_health.py lattice/out/dyn_L16x64_m-0.75/stream1/hmc.log
+# pin the measurement thermalisation cut (in trajectories) if auto looks off:
+python sims/analysis/hmc_health.py .../hmc.log --therm 100
+# override beta/volume if the banner isn't in your slice of the log:
+python sims/analysis/hmc_health.py .../hmc.log --beta 5.6 --volume 262144
 ```
 
-Checks: acceptance (want 0.70-0.90), `<exp(-dH)> == 1` (the unbiasedness test),
-`<dH>` and the dH histogram, plaquette plateau + first-half/second-half drift test,
-and the plaquette integrated autocorrelation time (tau_int -> traj per independent
-config). Exit code 1 if any check WARNs. If it parses 0 records, the log format
-differs from stock Grid -- paste ~20 lines and the regexes at the top get a one-line fix.
+Reads Grid's `GridLogHMC` summary format directly:
+`Total H after trajectory ... dH = X`, the `Skipping Metropolis test` thermalisation
+phase, and `Metropolis_test -- ACCEPTED/REJECTED`. Plaquette is reconstructed from the
+Wilson gauge action (`S [1][0] H`) as `1 - Sg/(beta*6*V)` -- beta and volume are
+auto-read from the banner (`beta=...`, `Full Dimensions : [...]`).
+
+Reports: thermalisation length (Metropolis-skip count) and where the plaquette plateau
+sets in; acceptance and `<exp(-dH)>==1` over the PRODUCTION trajectories only; `<dH>`;
+plaquette plateau mean + first/second-half drift; and `tau_int(plaq)` -> how many traj
+between independent configs (so you know the right config-save stride and your N_eff).
+Exit 0 healthy, 1 if a WARN fires, 2 if the parse is too thin to judge.
 
 ## 2. Spectroscopy plateau (run on thermalised configs, now)
 
