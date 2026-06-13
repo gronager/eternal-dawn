@@ -49,8 +49,14 @@ start_mps() {
   # and reusing it hangs -- the clients block attaching to the server. Bypassing leaves that server,
   # and any HMC depending on it, completely untouched.
   if [ -n "${NO_MPS:-}" ]; then
-    unset CUDA_MPS_PIPE_DIRECTORY CUDA_MPS_LOG_DIRECTORY
-    echo "[mps] NO_MPS set -- bypassing MPS; jobs run directly on the GPU (Default compute mode)"
+    # Point clients at an EMPTY pipe dir (no server) so each makes a DIRECT CUDA context and ignores
+    # MPS. NB: *unsetting* CUDA_MPS_PIPE_DIRECTORY is NOT enough -- the client then falls back to the
+    # default /tmp/nvidia-mps, which is exactly where a live HMC's MPS server sits, so it tries (and
+    # fails) to attach there and aborts init. An empty dir has no daemon socket -> direct GPU.
+    export CUDA_MPS_PIPE_DIRECTORY="/tmp/ed-nomps.$$"
+    export CUDA_MPS_LOG_DIRECTORY="/tmp/ed-nomps-log.$$"
+    mkdir -p "$CUDA_MPS_PIPE_DIRECTORY" "$CUDA_MPS_LOG_DIRECTORY"
+    echo "[mps] NO_MPS set -- empty pipe dir ($CUDA_MPS_PIPE_DIRECTORY), no server -> direct GPU"
     return 0
   fi
   command -v nvidia-cuda-mps-control >/dev/null 2>&1 || { echo "[mps] not available; skipping"; return 0; }
