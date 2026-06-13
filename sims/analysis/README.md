@@ -48,3 +48,22 @@ ground-state line for s_T itself -- these scripts stop at the lattice observable
 Tip: ratios converge faster than absolute masses, so a few tens of thermalised configs
 already bracket `m_N/m_pi`. Start a parallel measurement job on the saved configs while
 HMC keeps generating.
+
+## 3. Chiral extrapolation (valence-mass scan)
+
+After running `06` at several valence masses and saving each `baryon_raw.dat`
+(e.g. `baryon_raw_m-0.75.dat`, `…m-0.5.dat`, `…m-0.3.dat`):
+
+```bash
+python sims/analysis/chiral_extrap.py \
+    baryon_raw_m-0.75.dat baryon_raw_m-0.5.dat baryon_raw_m-0.3.dat
+# explicit masses / windows:
+python sims/analysis/chiral_extrap.py f1 f2 f3 --masses -0.75 -0.5 -0.3 --T 64 \
+    --pion-window 8 21 --nucleon-windows 10,20 12,24 16,26
+```
+
+Fits m_pi a (cosh) and m_N a (forward log, over several windows -> the window systematic
+that dominates the baryon error) per ensemble, then extrapolates: the **GMOR line**
+(m_pi^2 vs valence mass -> critical mass m_crit) and the **chiral nucleon**
+(m_N vs m_pi^2 -> m_N^0, the chiral-limit torsiton mass). Lattice units; multiply by 1/a
+(w0/r0 from `run/03`) for MeV. Masses are inferred from the `m-*.dat` filenames.
