@@ -38,7 +38,7 @@ echo "measuring baryon+pion on ${#sel[@]} configs, mass=$MASS, $NPAR in parallel
 # --- solve + contract on each config (parallel on the GPU) ---------------------------------
 start_mps
 for cfg in "${sel[@]}"; do
-  printf '%q --grid %q --config %q --mass %q --cg-tol %q --accelerator-threads 8 | grep -E "^[0-9]" > %q\n' \
+  printf '%q --grid %q --config %q --mass %q --cg-tol %q --accelerator-threads 8 | grep -E "^[0-9]+[[:space:]]" > %q\n' \
     "$MEAS" "$GRIDSPEC" "$cfg" "$MASS" "$CGTOL" "$cfg.bar"
 done | run_pool "$NPAR"
 stop_mps
@@ -47,7 +47,7 @@ stop_mps
 ci=0; : > "$OUT/baryon_raw.dat"
 for cfg in "${sel[@]}"; do
   ci=$((ci+1))
-  awk -v c=$ci '/^[0-9]/{print c, $0}' "$cfg.bar" >> "$OUT/baryon_raw.dat"
+  awk -v c=$ci '/^[0-9]+[ \t]/{print c, $0}' "$cfg.bar" >> "$OUT/baryon_raw.dat"
 done
 echo "measured ${#sel[@]} configs -> $OUT/baryon_raw.dat"
 

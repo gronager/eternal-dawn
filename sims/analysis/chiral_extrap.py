@@ -38,10 +38,24 @@ warnings.filterwarnings("ignore", message="invalid value encountered")
 
 # ---- load + jackknife -----------------------------------------------------------------
 def load_raw(path):
-    """baryon_raw.dat (cfg t C_pi C_N) -> C_pi[cfg,t], C_N[cfg,t]."""
-    a = np.loadtxt(path, ndmin=2)
-    if a.shape[1] < 4:
-        sys.exit(f"{path}: expected 4 columns (cfg t C_pi C_N), got {a.shape[1]}")
+    """baryon_raw.dat (cfg t C_pi C_N) -> C_pi[cfg,t], C_N[cfg,t].
+
+    Robust to non-numeric junk lines: Grid can leak a GPU-init line that starts with a
+    digit (e.g. '0SharedMemoryNone:') past run/06's grep, so keep only rows of exactly four
+    float-parseable columns."""
+    rows = []
+    with open(path) as fh:
+        for line in fh:
+            p = line.split()
+            if len(p) != 4:
+                continue
+            try:
+                rows.append([float(x) for x in p])
+            except ValueError:
+                continue
+    if not rows:
+        sys.exit(f"{path}: no valid 'cfg t C_pi C_N' rows found")
+    a = np.array(rows)
     cfgs = sorted(np.unique(a[:, 0]))
     nt = int(a[:, 1].max()) + 1
     ci = {c: i for i, c in enumerate(cfgs)}
