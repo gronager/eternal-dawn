@@ -336,3 +336,32 @@ background — the Route-2 zero-mode calc was already built; also `hedgehog`, `k
   excited-contaminated (its unstable two-state fit reached for R0→0, so the true ground-state bag *could* be
   sharper — wants a larger t_snk / stabilised two-state fit). But as it stands the well/tower picture is not
   saved by the chiral trend → confirms the pivot to Hopfions (Route 1).
+
+## Hopfion Stage 1 + Koide: topology gives the STRUCTURE, Z3 gives the MAGNITUDE (added 2026-06-14)
+**Hopfion Stage 1 (`hopfion.py`).** Built charge-Q Hopfions (division-free Hopf map), verified the Hopf
+invariant numerically (Q=−1,−2,−3 = a·b), measured the Faddeev–Skyrme energy ladder.
+- ✓ Structure: three distinct topological sectors → protection (no μ→eγ) + ordered ladder + neutrino
+  carries Q alone (mixing). Everything the decay diagrams demanded.
+- ✗ Magnitude from field energy: E(Q)~Q^{3/4} (Vakulenko–Kapitanskii), E(1):E(2):E(3)≈1:1.4:1.9 — far
+  too gentle for 3477. **BUT** the Hopfion field energy is the BACKGROUND energy, NOT the lepton mass;
+  the mass is still the configurational OVERLAP of the bound Dirac zero mode with the condensate, which is
+  exponentially sensitive to the core sharpness (a *different* quantity than the total energy). So the
+  gentle E(Q) does NOT constrain the hierarchy — Stage 1 did not doom it.
+**Koide (`koide.py`) — where the magnitude actually lives.** Charged-lepton Koide Q=(Σm)/(Σ√m)²=2/3 to
+**1e-5**. Foot geometry: √m_k = m0(1+√2 cos(δ+2πk/3)), k=0,1,2 — three points 120° apart, **√2 amplitude
+FIXED** (that *is* the 2/3: Σcos=0, Σcos²=3/2 ⇒ Σ√m=3m0, Σm=6m0² ⇒ Q=2/3 for any δ). So **two numbers
+(scale m0, phase δ) fix all three masses.**
+- **Framework synthesis (Routes 1+3 merge):** three generations = three **Z3-related topological sectors**
+  (Hopfion charges sharing one condensate). The Z3 forces the √(configurational-mass) overlaps to 120°
+  phases → Koide. The **hierarchy (3477) is the PHASE δ**, not a power law: δ places the electron at the
+  overlap **node** (1+√2 cos ≈ 0.04), where the configurational overlap nearly cancels → anomalously tiny
+  electron. Small δ-shifts move the near-node electron hugely while barely touching μ,τ — the steep
+  sensitivity the overlap supplies near a node (and the chapter's "electron tiny as a prediction" = this node).
+- **Quarks:** Koide approximate (up 0.85, down 0.73) = **broken Z3 = CKM mixing**. Fits mixing-vs-hierarchy:
+  cleanest Z3 (leptons, no mixing) → exact 2/3; broken Z3 (quarks, CKM) → approximate.
+- **Net:** topology (Hopfions) gives the structure — which states, protection, mixing, the "3"; the **Z3
+  sum rule (Koide) gives the magnitude** via one phase. Established: Koide 1983, Foot 1994; new: the Z3
+  phases = distinct topological sectors, and the near-node = the configurational overlap cancelling.
+- **Open:** δ itself is still an input (the one phase per tower), as the 44 is the one scale — but the
+  framework now predicts the *form* (√2 amplitude / 2/3) from Z3, and reduces each tower to (scale, phase).
+  Neutrino Koide would *predict* the absolute ν masses (only Δm² known) — a falsifiable next step.
