@@ -62,3 +62,36 @@ universe inside + Hawking CMB outside = the Page curve.)
 
 Tiers: (1) toy thermodynamic V_eff / entropic pressure [sign, doable now — first pass above];
 (2) Jacobson entanglement-equilibrium second variation; (3) generalized entropy / QES (rigorous).
+
+## Results (Tier 2 + Tier 3 + the other limit) — added 2026-06-14
+
+**Tier 2 (the rigorous sign).** Jacobson's first variation = Einstein (attractive). The bounce force is
+the *entropy bound*, now a theorem-grade inequality: Casini (2008) proved the Bekenstein bound from
+**positivity of relative entropy** (S_rel = ΔK − ΔS ≥ 0 — "information cannot die," as an inequality);
+Bousso + Wall (GSL) give the holographic A/4 form. The bound is **one-sided**, so over-compression past
+saturation is *forbidden*, not softly resisted → the back-reaction sign is **definite: repulsive wall.**
+Chain: unitarity → relative entropy ≥ 0 → entropy bound → no compression past the void seed → bounce.
+
+**Tier 3 (the QES = the child universe).** S_gen(r) = πr²/ℓ_P² + S_matter(r). The area capacity shrinks
+(∝r²) as the collapse proceeds while S_matter ~ N stays; the quantum extremal surface sits where they
+meet, R_QES = √(N/π) ℓ_P with N = (M_Pl/m_n)². Numbers: **R_QES = 0.12 fm ≈ void-seed R_s (0.42 fm) ≈
+Compton (0.21 fm) — same scale.** The island caps the entropy at A_QES/4G = N (finite, holographic) =
+the void-seed BH entropy — instead of running away. So **the island = the child universe**, the **QES =
+the bounce membrane**, the **bounce = the Page-curve turnover** (info preserved), and **black hole =
+child universe (island) + Hawking radiation (the CMB)** — the framework's central claim, *verbatim*, in
+the language that resolved the information paradox. (Heuristic transcription of the island formula to a
+collapsing ball in our universe; O(1)/coefficient factors unpinned; rigorous version = the gravitational
+path integral. Scale and logic are sound.)
+
+**The other limit — fermion birth (the dual).** `curved_gap` (M = √(M_flat² − R/4)) *is* the information
+statement: the chiral condensate is an entanglement order parameter; curvature (Lichnerowicz R/4)
+disrupts it, low curvature lets it crystallize. So the two limits are one knob (curvature), two ordered
+phases: **bounce** = information forbidden to be *destroyed* (holographic ceiling → wall); **particles**
+= information forbidden to *disperse* (crystallizes into the condensate, then the bound-level spectrum).
+The bounce membrane R_crit = 4M_flat² is the phase boundary; it's persistent (the ongoing dawn) because
+the parent holds the inflow on the high-curvature/fluid side and it crystallizes as it crosses.
+
+**The arc.** "Is the matter torsion?" → torsion strands into two sectors and can't make the masses
+without a postulate → the bounce, the void seed, the no-singularity axiom, the force, and the child
+universe all re-derive from **quantum information / entanglement**, with torsion demoted to one possible
+microscopic skin on the gravitational sector. Conserved throughout: the information never died.
