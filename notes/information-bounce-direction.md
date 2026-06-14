@@ -382,3 +382,26 @@ neutrino mass set obeying exact Koide and the measured Δm².
 - **Honest:** (a) does not deliver "ν masses from Koide 2/3" — that's falsified by Δm². What it delivers is
   a *consistency win* (Z3 broken where mixing is large) + a bounded target (NO, Σm∈[59,120] meV). The known
   literature agrees: exact Koide does not fit neutrinos (Brannen-type phase modifications are needed).
+
+## Generations as CONDENSATE excitations -- the ceiling-free hierarchy (added 2026-06-14)
+New idea (the right one for the magnitude): generations are excitations of the **condensate** sigma, not
+of the bound state. The (fixed) fermion sits in each condensate mode; mass = overlap int rho_f sigma_n.
+Tested in `condensate_excitation.py`.
+- **Why it beats every bound-state picture:** those capped the span at ~2-15 (three wavefunctions in ONE
+  well overlap similarly). Here each generation is a DIFFERENT condensate mode, and as rho_f approaches the
+  ground mode its overlap with the EXCITED modes -> 0 by **orthogonality**. So the span is **ceiling-free**:
+  it diverges near a/b=1 (span 28->278->788->1790->7230 as a/b=0.85->0.99). **First mechanism that reaches
+  3477 naturally.** The near-cancellation IS Koide's node = the anomalously light generation.
+- **Clean rung assignment:** lightest = most-excited condensate mode (most cancellation) -> electron =
+  highest condensate excitation, tau = condensate ground. (Resolves "which rung is the electron.")
+- **Koide-compatible:** the overlap masses cross Q=2/3 at special a/b (between 0.95 and 0.97), not forced.
+- **Honest limits (mechanism, not a model):** one knob (a/b) fits one ratio -- the electron matches, the
+  muon lands ~3x light; and the *toy* 3D-oscillator modes don't lock Koide-2/3 to span-3477 (leptons have
+  both; the toy gives Q=2/3 at span~400). So the **specific** modes aren't the lepton pattern -- the
+  Z3/Koide structure is still needed to fix BOTH ratios. What this supplies is the **MAGNITUDE MECHANISM**
+  (steep, ceiling-free, node=light gen) that the bound-state towers structurally lacked.
+- **Synthesis:** generations = three (Z3-related) condensate excitations; the fermion's near-orthogonal
+  overlap with each gives the steep masses; Koide's sqrt2/(2/3) is the Z3 constraint that fixes both ratios;
+  the electron's tininess = near-orthogonality node. Protection still wants topology/Z3 (excited condensate
+  modes decay unless protected). Next: the actual chiral-soliton condensate modes (not toy oscillators) --
+  do they lock Koide-2/3 to the lepton span?
