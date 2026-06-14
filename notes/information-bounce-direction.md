@@ -142,3 +142,37 @@ discontinuities; unitarity/ongoing dawn) say the same thing — the bounce is so
   open frontier. A Woods–Saxon FIT (scale + one ratio → 12) is descriptive; the *physics* that fixes the
   shape canonically is owed. The 12 = **4 towers (charge/colour grip, c_T) × 3 rungs (radial levels, s_T)**;
   s_T sets the level spacing, c_T the tower split — both should be canonic if the soliton shape is.
+
+## The condensate is primary; torsion is a UV skin; the vector channel is the grip (added 2026-06-14)
+The eq-6.2 audit + the "is it still scaled spin/torsion?" question resolve together:
+- **The binding *is* the chiral condensate σ=⟨ψ̄ψ⟩** — one object, two names. "Spin/torsion" is a claim about
+  its UV *origin* (dead as gravitational torsion: 37 orders subcritical → it's strong IR dynamics by
+  dimensional transmutation, whatever the deep origin). "Information-dispersion resistance" is what σ *is*
+  in principle: an entanglement order parameter / off-diagonal long-range order (the BCS analogy the
+  chapter already makes — Nambu's "mass is a gap" = "mass is sustained coherence"). Not competing operators;
+  a UV story and a principle story for the same σ. The scalar well S=−gσ is unchanged either way.
+- **What the information view changes: what's *primary*.** Torsion forces the axial operator (ψ̄γ₅γ^μψ)²
+  as fundamental → the scalar well is a derived Fierz shadow (dragging the mandatory vector partner,
+  G_V/G_S=2). Information inverts it: the scalar condensate is primary, and "won't disperse" is a
+  **gradient** statement (∇σ)² — the bag's **surface tension**, already in the model (Friedberg–Lee σ-field,
+  `cs._sigma_newton`). ⇒ the contact term eq:nld is the integrated-out UV artifact; the σ-field-with-
+  stiffness (eq:gap onward) is the load-bearing IR description, and the "cohesion" *is* the surface tension.
+- **The eq-6.2 missing term (now fixed): the vector repulsion.** eq:nld is axial-axial; the bridge to the
+  scalar well is a Fierz step that also yields a vector (ω-like) channel, G_V/G_S=2 (`coupling_derivation`,
+  scheme-independent, from m_σ=2M, m_ω=√6 M). The book's eq:radial kept only the scalar S(r); the vector
+  V(r) (entering E−V₀) was dropped. It's the term that *unbound* the soliton in the 2nd-order reduction;
+  binding survives only in the first-order (G,F) solver (`dirac_soliton`), where the vector **loosens the
+  bag monotonically**.
+- **The vector channel is the m_e/m_p freezing knob.** g_vω is the conserved-charge (baryon/vector)
+  coupling: a baryon feels scalar+vector, a colourless lepton doesn't feel the strong vector → the
+  scalar/vector balance *is* the tower-splitting grip c_T. Strong-sector internal ratios are frozen by
+  dimensional transmutation (one Λ → all hadron ratios universal — not a hope, how QCD works). Cross-sector
+  m_e/m_p is frozen **iff** the grip is universal — and G_V/G_S=2 is scheme-independent (a pure number),
+  which is the evidence that it is. So **m_e/m_p frozen ⇔ G_V/G_S a topological number** = the lab-note
+  "topology fixes ratios, scale floats," now wearing an operator (vector=charge/topology side, scalar=
+  mass/scale side). Freezing is argued; the *value* 1836 is not yet reproduced (mean field gives O(1–10)).
+  If the lattice confirms G_V/G_S≈2, that is direct evidence m_e/m_p is the *same* in a sibling universe.
+- **Numerical check (`dirac_soliton`, adiabatic g_v ramp).** Converged window g_v≤0.5: every level shifts
+  up, spacing ratio d₂₃/d₁₂ compresses 6.66→6.38 — the spectrum is *not* the scalar well's alone. Past
+  g_v≈0.75 the **third bound level is ejected** and convergence breaks — the generation *count* rides on
+  the scalar/vector balance, not just the core sharpness. (The fragility is the falsifiable content.)
