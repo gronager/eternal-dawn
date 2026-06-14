@@ -491,3 +491,23 @@ marginal binding (the chiral phase boundary), watch the condensate-overlap span.
   (continuous, slowly-varying) transition. So the same near-conformality the electroweak S-parameter needs
   is what would make the chiral transition continuous enough to drive the hierarchy. One property
   (walking/near-conformal) would serve both. Worth chasing.
+
+## L16x64 clean bag is BROAD; and "why 4" = tetrahedral saturation (added 2026-06-14)
+- **Lattice (run/10, t_snk=30, 113 configs):** g_S=0.238 (stable). The cleaner bag is **broader**, not
+  sharper: s_T 0.81->**0.955** (R0=3.02a), two-state extrapolation broader still (R0=8.4a). Excited states
+  are MORE localized, so removing them reveals the broad ground state. **The "sharp bag in the productive
+  window [0.43,0.70]" claim is contradicted** -- the clean number is s_T~0.95, above the window, trending
+  broader. Kills the original sharp-bag->hierarchy (the chapter's s_T lever). BUT broad = marginally bound =
+  **near-critical**, exactly where the criticality magnitude mechanism lives -- so the lattice retires the
+  OLD picture and is consistent with the NEW (criticality) one. (Fold the broad-bag finding into the chapter.)
+- **Tetrahedron from the four-fermion term -- "why 4" is rigorous.** In 3D at most **d+1=4** points can be
+  mutually equidistant (the regular simplex); the 5th cannot fully bond. Verified (LJ N-body): E/bond =
+  -1.000 exactly for N=2,3,4 (fully bonded), breaks at N=5 (-0.91, frustrated). **Nuclear precedent: the
+  A=5 gap** -- no stable 5-nucleon nucleus (He-5, Li-5 unbound); the alpha (A=4) is doubly magic. So the
+  four-fermion (Hehl-Datta) interaction -> **tetrahedral 4-cluster, saturated at 4** -> A4 -> 1+3 = scale +
+  3 generations (the triplet = the cluster's vibrational modes = the generations; Koide = the 1+3).
+- **The 4-body calc to make it a result:** SVM/Faddeev-Yakubovsky binding scan for the (Fierzed) contact
+  attraction, N=2-5 -- does E/N peak at 4 with a 5-gap (the quantum A=5 gap)? Open ingredient: the four
+  distinct internal states of the corners (Dirac components? 2_spin x 2?) -- Pauli needs them, like the
+  alpha's p-up p-down n-up n-down. If the peak+gap appear, "four-fermion -> tetrahedron -> 3 generations"
+  is dynamical, not assumed -- the deepest "why A4" answer the flavour problem lacks.
