@@ -324,3 +324,15 @@ background — the Route-2 zero-mode calc was already built; also `hedgehog`, `k
   different knot, not an excitation of one knot — exactly the distinction the Roper result forces. Neutrino
   carries link# alone → low links near-degenerate → mix. "Why 3" = energetics of bound links. **Next calc:
   Dirac zero modes in Hopfion backgrounds of link 0,1,2 — does the mass ladder up, and is each protected?**
+
+## L16×64@−0.75 bag: scales up, doesn't sharpen — well picture not rescued (added 2026-06-14)
+3-body condensate, 90 configs, t_snk=24, valence −0.5 on the −0.75 sea (g_S=0.234, self-check PASS).
+- Measured bag: R0=2.71a, **s_T=0.855** (r0/a=3.165), wall **a_wall/R0=0.42**, tail λ=1.34a. Spectrum at
+  the physical depth (m_vac·r0=1.16): **1 level**, span ~2.4 when forced. Same verdict as L16×48.
+- **Wall trend L16×48→L16×64: a_wall/R0 0.46→0.42** (tail λ 0.96→1.34). The bag **scaled UP** (s_T 0.62→
+  0.86) toward the lighter sea with the wall *fraction* ~constant — growth, not sharpening. The ~9% drop is
+  marginal; both soft. **No rescue of the span.**
+- Caveats (not final): valence −0.5 (not the −0.75 chiral point); the t_snk=24 plateau is flagged
+  excited-contaminated (its unstable two-state fit reached for R0→0, so the true ground-state bag *could* be
+  sharper — wants a larger t_snk / stabilised two-state fit). But as it stands the well/tower picture is not
+  saved by the chiral trend → confirms the pivot to Hopfions (Route 1).
