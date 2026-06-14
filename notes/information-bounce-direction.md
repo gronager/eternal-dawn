@@ -176,3 +176,32 @@ The eq-6.2 audit + the "is it still scaled spin/torsion?" question resolve toget
   up, spacing ratio d₂₃/d₁₂ compresses 6.66→6.38 — the spectrum is *not* the scalar well's alone. Past
   g_v≈0.75 the **third bound level is ejected** and convergence breaks — the generation *count* rides on
   the scalar/vector balance, not just the core sharpness. (The fragility is the falsifiable content.)
+
+## Measure the well, don't parametrize it — count vs. span, and the wall is the lever (added 2026-06-14)
+Built the shape-agnostic well→spectrum pipeline (`well_spectrum.py`): consumes any (M(r),V(r)) — mean-field,
+parametric, or a lattice-measured profile (`well_from_bag_profile` maps the dressed-quark density ρ(r)
+to M(r)=m_vac(1−ρ)) — and returns the spectrum as *outputs* (level count, node-labelled E_n, two
+configmass pieces). Engine: inward/outward RK4 matching with a **pole-free Wronskian** eigen-condition.
+- **Doubler finding (matters for the chapter).** The old finite-difference matrix solver was
+  fermion-doubler-contaminated: grid-scale spurious modes were counted as radial excitations and
+  **inflated the generation count**. The doubler-free count is smaller; any "the bag binds 3" resting on
+  the matrix count was unreliable. The un-fitted mean-field well binds **1** level at standard couplings.
+- **The slip, and its correction.** Went "don't parametrize with 2-param Woods–Saxon" → "measure the full
+  M(r),V(r)" → (regressed) "measure two numbers s_T and m_vac·r0." That last step is the *same* 2-parameter
+  description, no better than WS. **Test (fixed R0 & depth, 5 different shapes):** the **count** is robust
+  (11–12 everywhere — a coarse WKB-area, ~2-number feature), but the **span swings 23×** (3.4 → 79). So:
+  count ≈ 2 numbers (fine); **masses/span = full shape (2 numbers far too light).**
+- **The wall/tail is the lever, not the radius.** At fixed R0 the span is set by the surface thickness:
+  sharp wall (a=0.05R0)→span 79, soft (a=0.45R0)→3.4. The chapter's s_T=R0/r0 *ties* a=0.15R0 and so
+  conflates size with wall-sharpness; the honest lever is **how fast M(r) falls at the surface**. The
+  lattice must **resolve the wall/tail**, not just the half-density radius.
+- **The two measured numbers that ARE legitimate, and what they fix:** m_vac·r0 (depth) fixes the **count**
+  (at fixed shape: 1→2→3→7→12 as m_vac·r0 = 0.9→2→4→8→16) and the overall scale; s_T (size) is coarse.
+  The **hierarchy** is carried by the wall, which no two numbers capture.
+- **Derived-not-fitted = the line between light and real.** What makes "measure the full M(r) and solve"
+  NOT just WS-with-more-knobs is *where M(r) comes from*: the **dressed-quark self-energy output by the
+  gauge dynamics at the one scale Λ**, measured from the *propagator* **independently of the lepton masses**,
+  then used to *predict* them — the same status as lattice QCD predicting hadrons from Λ_QCD. Light = fit
+  the shape to the answer; not-light = compute the propagator, then solve. **Open hard part (not papered
+  over):** the closed-form M(r) from Λ alone exists only at mean-field, where it's too shallow (binds 1);
+  the lattice propagator is the non-perturbative *evaluation*, not a closed-form derivation.
