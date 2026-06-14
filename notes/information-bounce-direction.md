@@ -439,3 +439,28 @@ Including the quark/baryon diagrams and reading the neutrino oscillations as dat
 - **New constraints the oscillations add to the soliton field:** (i) a 2+1 knot spectrum, (ii) an
   approximate μ-τ symmetry, (iii) the neutral knots float (unanchored) — the *direct cause* of large
   PMNS. The CKM-vs-PMNS contrast (aligned vs tri-bimaximal) is the anchored-vs-floating dichotomy.
+
+## A4/Z3 unifies them: Koide masses AND tri-bimaximal mixing from ONE symmetry (added 2026-06-14)
+Took A4 (tetrahedral, order 12) seriously as the symmetry of the three generation sectors (`a4_flavor.py`).
+Generations = the A4 triplet 3; breaking to different residual subgroups in the two sectors gives:
+- **Charged leptons (residual Z3) → CIRCULANT sqrt-mass → Koide.** M_e = circ(c0,c1,c1*) has eigenvalues
+  sqrt(m_k) = c0 + 2|c1|cos(phi + 2pi k/3) — **exactly the Koide/Foot form**. And **Koide Q=2/3 holds
+  precisely at |c1|/c0 = 1/sqrt2** (verified): the famous sqrt2 amplitude IS the circulant's off/diagonal
+  ratio. The phase phi = the Koide phase delta sets the hierarchy (delta≈227° reproduces the lepton masses
+  to <1%); every circulant is diagonalised by the Z3 Fourier "magic" matrix.
+- **Neutrinos (residual Z2 = mu-tau) → magic+mu-tau Majorana → TBM** (form-diagonalised, |U−TBM|=0): the
+  large PMNS (sin²θ12=1/3, θ23=45°, θ13=0).
+- **So ONE A4 yields both:** the Koide-form masses (Z3, the diagonal) and TBM mixing (Z2, the off-diagonal)
+  — the two independent observables (Koide + oscillations) are two faces of the same A4. Framework twist:
+  A4 is the symmetry of the three TOPOLOGICAL/CONDENSATE sectors (the knots) — a *geometric* flavour
+  symmetry of the soliton field, not an imposed horizontal symmetry.
+- **Honest fine-print (the residual inputs A4 does NOT force):** the sqrt2 (exact 2/3) is a specific
+  singlet/doublet coupling ratio |c1|/c0=1/sqrt2, not forced; and exact TBM has θ13=0 while the measured
+  θ13≈8.6° is a real ~0.15 correction. A4 supplies the STRUCTURE that unifies masses and mixing; the
+  magnitude phase delta and the small TBM-breaking remain inputs (the same one-phase-per-tower residue,
+  now plus a TBM correction). Established territory (Altarelli–Feruglio A4→TBM; Koide's circulant); the
+  framework's claim is that this A4 is the soliton field's geometry.
+- **The standing picture now:** soliton field with **A4** symmetry carrying 3 knots; Z3 (charged, anchored)
+  → circulant → Koide masses + rigid (no μ→eγ); Z2 (neutral, floating) → TBM mixing + oscillations
+  (2+1 spectrum, μ-τ symmetric); magnitude = the near-critical Koide phase (CNS-selected?). Masses and
+  mixing finally come from one structure; the open residue is the phase (criticality) + θ13.
