@@ -69,6 +69,34 @@ def koide_Q(a, b=1.0, square=False, r=None):
     return float(m.sum() / s.sum() ** 2)
 
 
+def real_soliton_modes(g=5.0, lam=6.0, nf=3, v=1.0, R=14.0, N=700, eps_break=0.4):
+    """The HONEST test: the REAL chiral-soliton condensate modes, not toy oscillators. Solve the
+    chiral soliton (chiral_soliton.solve_chiral), build the condensate-fluctuation operator
+    H_sig = -d^2/dr^2 + lam(3 sigma_0^2 - v^2) (binding -lam v^2 in the bag, m_sigma^2=2 lam v^2 outside),
+    find its BOUND modes (omega^2 < m_sigma^2), and overlap each with the fermion density. Returns
+    (n_bound, overlaps, span, koide_Q). Finding: the real soliton binds ~2 modes (not 3); tuned to 3,
+    they are near-DEGENERATE in overlap (span ~1.2, Q~1/3) -- the steep toy span needed the fermion to
+    sit at near-orthogonality (a/b->1), a near-critical point the self-consistent soliton does NOT
+    naturally occupy. So the mechanism is real but the magnitude wants a criticality driver, not free."""
+    from scipy.linalg import eigh_tridiagonal
+    from . import chiral_soliton as cs
+    o = cs.solve_chiral(v=v, g=g, lam=lam, n_fermions=nf, R=R, N=N, eps_break=eps_break)
+    r = o["r"]; h = r[1] - r[0]; s0 = o["sigma"]; rho = o["density"]
+    thr = 2 * lam * v**2
+    diag = 2.0 / h**2 + lam * (3 * s0**2 - v**2)
+    off = -np.ones(len(r) - 1) / h**2
+    w, U = eigh_tridiagonal(diag, off)
+    ov = []
+    for k in range(len(w)):
+        if w[k] < thr * 0.999:
+            u = U[:, k] / np.sqrt(h)
+            ov.append(_trapz(rho * (u / r) * r**2, r))
+    m = np.abs(np.array(ov))
+    span_ = float(m.max() / m.min()) if len(m) else float("nan")
+    Q = float(m.sum() / np.sqrt(m).sum() ** 2) if len(m) else float("nan")
+    return len(ov), np.array(ov), span_, Q
+
+
 def report():
     print("Generations as condensate excitations -- the ceiling-free hierarchy\n")
     r = _grid()
@@ -83,7 +111,15 @@ def report():
     print("  - Koide Q crosses 2/3 at special a/b (compatible, not forced).")
     print("  - lightest gen = most-excited condensate mode (most cancellation): electron = highest")
     print("    condensate excitation, tau = condensate ground. One knob a/b fits one ratio; the Z3/Koide")
-    print("    structure fixes both. This supplies the MAGNITUDE mechanism the bound-state towers lacked.")
+    print("    structure fixes both. This supplies the MAGNITUDE mechanism the bound-state towers lacked.\n")
+
+    print("  REAL chiral-soliton condensate modes (not toy oscillators):")
+    n, ov, sp, Q = real_soliton_modes(g=5.0, lam=6.0, nf=3)
+    print(f"    bound modes = {n}, overlaps = {np.round(ov,4)}, span = {sp:.1f}, Koide Q = {Q:.3f}")
+    print("    -> the real soliton binds ~2-3 modes, and when 3 they are near-DEGENERATE (span ~1.2,")
+    print("    Q~1/3), NOT steep. The toy's ceiling-free span needed a/b->1 (near-orthogonality) -- a")
+    print("    near-critical point the self-consistent soliton does not naturally sit at. Mechanism real;")
+    print("    magnitude wants a criticality driver (what pins a/b->1?), else it is the one tuned number.")
 
 
 if __name__ == "__main__":
