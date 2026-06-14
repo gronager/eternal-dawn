@@ -405,3 +405,13 @@ Tested in `condensate_excitation.py`.
   the electron's tininess = near-orthogonality node. Protection still wants topology/Z3 (excited condensate
   modes decay unless protected). Next: the actual chiral-soliton condensate modes (not toy oscillators) --
   do they lock Koide-2/3 to the lepton span?
+- **RAN IT (real modes, `real_soliton_modes`): no -- and the reason is sharp.** The real chiral soliton's
+  condensate-fluctuation operator H_sig=-d²/dr²+λ(3σ0²-v²) binds **~2 modes**, not 3; tuned to 3
+  (g=5,λ=6,n_f=3) the overlaps are near-**degenerate** (-1.08,+0.94,-0.89 → **span 1.2, Koide Q≈1/3**),
+  the OPPOSITE of steep. The toy's ceiling-free span needed **a/b→1** (fermion near-orthogonal to the
+  excited modes) — a **near-critical** point the self-consistent soliton does NOT naturally occupy (its
+  fermion/condensate widths give O(1) overlaps → modest span). **So the mechanism is real but the
+  magnitude is not free:** it wants a *criticality driver* that pins the fermion to near-orthogonality
+  (a/b→1). Without it, near-orthogonality is the one tuned number per tower (like the Koide phase δ).
+  **Open:** is there dynamics that self-organises to a/b→1 (marginal binding / critical condensate)? That
+  -- not the mode structure -- is now the crux of the magnitude.
