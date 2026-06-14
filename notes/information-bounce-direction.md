@@ -415,3 +415,27 @@ Tested in `condensate_excitation.py`.
   (a/b→1). Without it, near-orthogonality is the one tuned number per tower (like the Koide phase δ).
   **Open:** is there dynamics that self-organises to a/b→1 (marginal binding / critical condensate)? That
   -- not the mode structure -- is now the crux of the magnitude.
+
+## Transitions (CKM) + oscillations as the tell about the knot field (added 2026-06-14)
+Including the quark/baryon diagrams and reading the neutrino oscillations as data (`mixing.py`).
+- **The W is the knot-reconnection operator; the three sectors differ by how reconnectable they are.**
+  Charged leptons: NO cross-generation vertex (no μ→eγ); τ→ν_τ+W, W→μν̄_μ — the tau becomes its OWN
+  ν_τ, the W independently makes the lighter pair (no direct τ→μ). RIGID. Quarks: cross-gen vertices
+  EXIST but CKM-suppressed (s→u, b→c, b→u). SOFT (weakly reconnectable). Neutrinos: mass≠flavour basis
+  by large PMNS → oscillate.
+- **MIXING = MISALIGNMENT of the mass (true-knot) and flavour (W-coupling) basis, set by ANCHORING.**
+  Charged knots (u,d,charged leptons) anchored by charge → bases ALIGN → small mixing (CKM off-diagonal
+  power 0.018 ~ identity) AND exact Koide. Neutral knot (neutrino) unanchored → orientation FLOATS →
+  strong misalignment → large mixing (PMNS off-diag power 0.35, near tri-bimaximal). **One principle —
+  charge anchors the knot orientation — gives BOTH the Koide pattern (masses) and the mixing pattern.**
+- **Oscillation = interferometer of the knot energies** (phase exp(−i m_i² L/2E)): the "double
+  oscillation" = TWO gaps of THREE knots (Δm31²/Δm21² ≈ 34 → a **2+1 spectrum**: two near-degenerate +
+  one split). 3 knots → 2 frequencies; a 4th would add a 3rd → none seen → **no light sterile**.
+- **The PMNS pattern is the geometric readout of the 3-knot arrangement:** near-maximal θ23 ≈ a **μ-τ
+  exchange symmetry** of the knot field; near-tri-bimaximal = the **A4/Z3** discrete symmetry — the SAME
+  Z3 Koide reads off the masses. Oscillations measure the OFF-diagonal (Z3 via mixing), Koide the
+  diagonal (Z3 via masses); together they pin the three-knot Z3/A4 and both favour **normal ordering +
+  hierarchical Σm ≈ 60 meV** (the standing ν bet, now from two independent observables).
+- **New constraints the oscillations add to the soliton field:** (i) a 2+1 knot spectrum, (ii) an
+  approximate μ-τ symmetry, (iii) the neutral knots float (unanchored) — the *direct cause* of large
+  PMNS. The CKM-vs-PMNS contrast (aligned vs tri-bimaximal) is the anchored-vs-floating dichotomy.
