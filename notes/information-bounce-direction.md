@@ -254,3 +254,50 @@ topologies. Concordant with the lattice (m_vac·R0~0.7, no tower), now from part
   heavier, *unbounded* by any single-well level spacing. Doesn't hand us 3477, but removes the ceiling.
 - **Lineage (resembles, not adopts):** Bilson-Thompson braided preons, Harari–Shupe rishons — generations
   as topology, with the decay diagrams as the same evidence.
+
+## Start with the neutrino; W/Z/Higgs are waves not knots (added 2026-06-14)
+- **Neutrino = the bare generation topology.** Matter = a topological soliton of the condensate is already
+  real physics: the **Skyrmion** (a π₃ winding of the chiral field, M=SU(2)≅S³, π₃(S³)=ℤ) *is* baryon
+  number (Witten). Layer the charges as windings: baryon# = Skyrme π₃; electric charge = a gauged U(1)
+  winding; **generation = a THIRD invariant** of the richer (chiral×axial/torsion) manifold. A charged
+  lepton carries all three tangled; a **neutrino carries the generation invariant alone** (no charge, no
+  colour, ~no mass) → it is the clean probe. *Start with the neutrino.*
+- **Mixing ∝ 1/hierarchy is a PREDICTION (SM inputs it).** Mixing = near-degenerate knots tunnelling
+  (2-level QM: angle ~ off-diagonal/splitting). Charged leptons steep (3477)→~0 mixing; quarks medium→
+  small (CKM); neutrinos near-degenerate→large (PMNS). Same near-degeneracy that lets ν oscillate is what
+  is absent for the steeply-split charged leptons (→ no μ→eγ). **Neutrinos Majorana** (neutral=own antiknot),
+  **charged Dirac** — testable via 0νββ.
+- **W/Z/Higgs are NOT solitons — the *other* excitation class.** A condensate supports knots (topological,
+  conserved, stable = the fermions = stable information) AND modes (non-topological ripples = the bosons =
+  radiated messengers). **Higgs = σ**, the scalar breathing mode of the binding condensate (sets every
+  knot's mass; v→0 kills them; the m_σ~2M scale) — Peter Higgs keeps his particle, as the condensate's
+  amplitude mode. **W/Z = vector modes + eaten Goldstones**; the **W is the knot-reconnection quantum** of
+  the previous section (a wave that re-ties a knot, carrying off ΔQ and the flavour). Caveat: this is
+  composite-EWSB → owes the **S-parameter** (S<0.1, the existing `electroweak_S.py` / L-targets), and the
+  standing "NOT technicolor" caution (resembles the EWSB pattern, not the model-building).
+
+## Homotopy first pass — what gives a 3-valued generation invariant on the neutral knot (added 2026-06-14)
+The spine is solid (Skyrme: matter = π₃ texture, baryon# = winding). The generation needs a SECOND
+invariant carried by the neutral knot. Three routes:
+1. **Hopf / linking — π₃(S²)=ℤ.** If the neutral order parameter is an S² field n̂(x) (the chiral/axial
+   direction), 3D textures are **Hopfions**: π₃(S²)=ℤ = self-**linking number** = "how knotted." Generation
+   = linking number; the neutrino is the pure S² texture. Literally knots. Gives a *tower* (ℤ); "exactly 3"
+   = energetics (only the lowest links stay bound — a finite knot tower). Mass ↑ with linking.
+2. **Zero-mode index — Jackiw–Rebbi / Atiyah–Singer.** A knot binds an integer number of protected fermion
+   zero modes = a topological index; generation = which mode. Could give **exactly 3** *if the index is 3*.
+   The modes share the knot's charge (same charge across gens) but carry distinct conserved indices (flavour
+   conserved → no μ→eγ). **Mechanism for mixing-vs-hierarchy:** the splitting of the zero-mode multiplet is
+   sourced by the CHARGE coupling → charged knots split hugely (pinned), neutral knots stay near-degenerate
+   (mix). This is the most attractive route (exactly-3 + the mixing correlation), *contingent* on the index
+   = 3 — tying that to N_c=3 is a speculative NEW claim (N_c ⊥ N_gen in the SM; not established).
+3. **Discrete flavour symmetry — π₀(ℤ₃ or A₄)=3.** Generation = which of 3 discrete vacua; connects to the
+   established A₄/ℤ₃ neutrino-mixing literature (tri-bimaximal etc.); mixing = small symmetry breaking.
+   Gives exactly 3 by construction, but a *postulated* discrete symmetry (less derived).
+- **Honest verdict:** π₃ is generically ℤ (or ℤ^k), so a pure-topology "exactly 3" does NOT come from a
+  finite homotopy group of the obvious manifolds — it comes from the **index** (route 2) or a **discrete
+  symmetry** (route 3). Favoured synthesis: the knot is a Skyrmion (baryon# = π₃), its protected zero-mode
+  multiplet is the generation (route 2), with the charge sourcing the splitting (→ neutral degenerate/mix,
+  charged pinned). **The decisive calc:** count the fermion zero modes of the Eq-6.2 Dirac operator in a
+  unit-winding (Skyrmion) background — is the protected multiplet 3-dimensional? (Honest: the B=1 Skyrmion's
+  collective modes give the nucleon/Δ spin-isospin tower, NOT obviously 3 generations — so "index=3" is a
+  hope to be checked, not a result.)
