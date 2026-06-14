@@ -205,3 +205,20 @@ configmass pieces). Engine: inward/outward RK4 matching with a **pole-free Wrons
   the shape to the answer; not-light = compute the propagator, then solve. **Open hard part (not papered
   over):** the closed-form M(r) from Λ alone exists only at mean-field, where it's too shallow (binds 1);
   the lattice propagator is the non-perturbative *evaluation*, not a closed-form derivation.
+
+## L16×64@−0.75 clean depth: the bag binds ~one quark, not a tower (added 2026-06-14)
+First clean measurement on the live ensemble (89 configs, NO_MPS=1 direct-GPU; the MPS client-connect
+bug needed the empty-pipe bypass): **m_π a = 0.6336(20)**, **m_N a = 1.1159(79)**, m_N/m_π = 1.76. So:
+- **Depth m_vac·r0 = (m_N/3)(r0/a) ≈ 1.16** (r0/a=3.131 from L16×48, to be pinned by run/03). With the
+  L16×48 bag shape this binds **0–1 levels** — not three.
+- **The robust statement (WKB):** n_levels ~ m_vac·R0/π, with m_vac·R0 = (m_vac·r0)·s_T ≈ 1.16·0.6 ≈ **0.7**,
+  while 3 levels need m_vac·R0 ≳ 2.5π ≈ **8**. The measured QCD-like bag is **~11× short** of a three-rung
+  tower. Physically sensible: a dressed/constituent quark is a *ground-state* object; its radial
+  excitations are unstable resonances (ρ′, ρ″), not three stable rungs.
+- **So the "3 generations = 3 radial levels in one bag" picture is in ~order-of-magnitude tension with the
+  lattice.** Caveats (keep it a tension, not a verdict): heavy pion (m_π≈780 MeV, not chiral); the −0.75
+  bag *shape* not yet measured (used −0.5); r0/a and the M=m_vac(1−ρ) dictionary assumed. But an 11× gap
+  in m_vac·R0 is not closed by modest chiral trends. **This is the sharpest quantitative test yet of the
+  generation-tower picture, and it is failing.** → revisit Picture B (distinct solitons per generation)
+  and the decay-diagram structure (separate conserved lepton flavors ⇒ generations are not radial
+  excitations of one well — see next).
