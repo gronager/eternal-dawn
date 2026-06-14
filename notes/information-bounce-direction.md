@@ -222,3 +222,35 @@ bug needed the empty-pipe bypass): **m_π a = 0.6336(20)**, **m_N a = 1.1159(79)
   generation-tower picture, and it is failing.** → revisit Picture B (distinct solitons per generation)
   and the decay-diagram structure (separate conserved lepton flavors ⇒ generations are not radial
   excitations of one well — see next).
+
+## Generations are topology, not excitation — the decay diagrams settle it (added 2026-06-14)
+Independent of the lattice, the μ/τ decay diagrams kill the radial-tower picture and point to distinct
+topologies. Concordant with the lattice (m_vac·R0~0.7, no tower), now from particle data.
+- **The killer: μ→eγ does not happen (BR < 4.2e-13).** If μ and e were radial levels (2s,1s) of one
+  well, the muon would de-excite radiatively to the electron — same J=½, same parity, an M1 transition,
+  *fast*. It refuses; it only dies *weakly* (μ→ν_μ W, W→eν̄_e). Radial excitations carry no protected
+  label; the absence means the generation label is a **conserved quantum number (lepton flavor)**, so the
+  generations are **NOT radial excitations of one well.**
+- **The vertices:** μ→ν_μ is within-generation (the lepton converts to its *own* neutrino); the W carries
+  the flavor change into a *separate* vertex. e and μ never touch directly. τ decays *democratically* to
+  e/μ/hadrons (≈18/17/65%) — no rung-by-rung ladder (another nail).
+- **Reframing (the framework's own "knot" language): generations = distinct knot TOPOLOGIES.**
+  Topologically protected ⇒ can't smoothly deform into each other ⇒ no μ→eγ; flavor conservation is
+  *automatic*, not imposed. The **W is the only knot-reconnection operator** (cuts/re-ties the topology,
+  carrying flavor away); strong/condensate dynamics binds the knot, only the weak interaction re-ties it.
+- **Two topological labels:** charge (shared by all 3 generations, sets the universal W-coupling) ⊥
+  generation (distinct, sets the mass via knot complexity). Extends "charge=topology=fixed, mass=scale=
+  flows" with a *second* fixed index. Universality (W-coupling identical across gens, <1%) = the
+  generation label is orthogonal to charge.
+- **Neutrino prediction (the handle):** charged knots are pinned (no mixing, no μ→eγ); neutral knots
+  (neutrinos) are light and near-degenerate ⇒ **tunnel between topologies ⇒ mix** (oscillations). Predicts
+  the KNOWN anti-correlation the SM merely inputs: **mixing ∝ 1/hierarchy** — charged leptons steep
+  (3477) → ~no mixing; quarks medium → small mixing (CKM); neutrinos flat (near-degenerate) → large
+  mixing (PMNS). Same structure that forbids μ→eγ permits ν-oscillation.
+- **Majorana/Dirac:** a neutral knot is its own antiknot ⇒ **neutrinos Majorana**; charged knots ≠ their
+  antiknots ⇒ **charged leptons Dirac**. Falsifiable via neutrinoless double beta decay.
+- **Why this helps:** the hierarchy is no longer "level spacing in one well" (lattice-failed, capped at
+  span ~3–5) but the **field energies of distinct soliton topologies** — a more complex knot can be far
+  heavier, *unbounded* by any single-well level spacing. Doesn't hand us 3477, but removes the ceiling.
+- **Lineage (resembles, not adopts):** Bilson-Thompson braided preons, Harari–Shupe rishons — generations
+  as topology, with the decay diagrams as the same evidence.
