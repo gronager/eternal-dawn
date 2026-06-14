@@ -464,3 +464,30 @@ Generations = the A4 triplet 3; breaking to different residual subgroups in the 
   → circulant → Koide masses + rigid (no μ→eγ); Z2 (neutral, floating) → TBM mixing + oscillations
   (2+1 spectrum, μ-τ symmetric); magnitude = the near-critical Koide phase (CNS-selected?). Masses and
   mixing finally come from one structure; the open residue is the phase (criticality) + θ13.
+
+## Criticality scan: the driver is REAL; magnitude = the ORDER of the chiral transition (added 2026-06-14)
+Tested the criticality driver (`condensate_excitation.criticality_scan`): scan the coupling g toward
+marginal binding (the chiral phase boundary), watch the condensate-overlap span.
+- **The driver is confirmed.** As g→critical (binding margin E/Mvac: 0.59→0.85), the span **grows sharply**
+  (1.5 deep → 5.9 → 8.3 → 13 → 21 → **28.6** at the edge) and the excited-mode overlap heads to the
+  **NODE** (0.145→0.07). So marginal binding DOES self-tune the fermion toward near-orthogonality (a/b→1)
+  with the excited condensate modes — the hypothesis holds, in the right direction.
+- **But the cut is FIRST-ORDER.** At g≈2.65 the chiral soliton dissolves abruptly (core σ(0)/v flips
+  −0.69 → +1.02, the vacuum) — a first-order transition — capping the span at **~30** before the
+  divergence. So this model gets ~30, not 3477.
+- **The magnitude is now a sharp, lattice-testable question: is the chiral transition FIRST or SECOND
+  order (in the relevant sector)?** Second-order (continuous) → the system can sit arbitrarily close to
+  a/b→1 → the span diverges → the full hierarchy is NATURAL (criticality-driven, not tuned). First-order →
+  capped (this model). Real QCD at physical quark mass is a crossover; the order depends on N_f, m_q, and
+  the channel — exactly the kind of thing the lattice decides.
+- **So the residue sharpened from "one tuned phase" to "the order of a phase transition."** That is a much
+  better place to be: a *mechanism* (criticality → overlap node → steep hierarchy), confirmed in direction,
+  with the remaining question being a concrete, computable property of the chiral dynamics (transition
+  order) rather than a free number. If the transition is second-order, the Koide phase/hierarchy is
+  derived; if first-order, the framework predicts a capped span (and the observed 3477 would need the
+  near-critical point to be approached by other means — CNS, or a near-second-order/walking sector).
+- **Ties to the program:** the framework's IR sector is "walking" (near-conformal, the S<0.1 requirement,
+  Appendix B L-targets) — a walking/near-conformal sector is precisely one with a NEARLY-SECOND-ORDER
+  (continuous, slowly-varying) transition. So the same near-conformality the electroweak S-parameter needs
+  is what would make the chiral transition continuous enough to drive the hierarchy. One property
+  (walking/near-conformal) would serve both. Worth chasing.
