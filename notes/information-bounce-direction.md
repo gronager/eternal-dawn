@@ -105,3 +105,40 @@ the hardest elastic bounce nature permits. Max compression past saturation: ΔR 
 (~half the Schwarzschild radius — a real golf-ball squish, 0.21 fm for the void seed). The bounce is as
 stiff as physics allows *without* a discontinuity: the **supremum-force bounce**. Both core axioms (no
 discontinuities; unitarity/ongoing dawn) say the same thing — the bounce is soft and elastic.
+
+## The hierarchy, and what's universal vs local (added 2026-06-14)
+- **m_n/M_Pl = exp(−44).** NOT tuned (exp of an O(40) number). The **44 = ln(M_Pl/m_n) = e-folds of
+  cohesion running = ½·ln(void-seed bits) = 1/g_UV** (up to the β-coefficient). **Located but underived:**
+  "information cannot disperse" gives the *structure* (stable knot ⇒ soliton ⇒ dimensional transmutation,
+  scale = M_Pl·e^(−1/g)), not the *number*. The 44 is an **input**. Sanity check: Diósi–Penrose
+  gravitational self-localization sits at M_Pl, not m_n — so gravity doesn't set the matter scale either;
+  cohesion does.
+- **Why that 44 = selection, not derivation:** Smolin's CNS (already in the lineage) tunes it for
+  **fecundity** = max black-hole/bounce production = **max information-reproduction**. An evolutionary
+  *why*, honestly labeled.
+- **Two kinds of "constant":** UNIVERSAL & DISCRETE (topology — charges, spins, gauge structure, particle
+  *types*, and the generation *count* as a function of well depth) vs LOCAL & CONTINUOUS (scales — masses,
+  set by the 44). **Mass = scale = flows; charge/spin = topology = fixed.** An electron is an electron
+  everywhere (charge −1, spin ½) but weighs what its universe's 44 dictates.
+- **Handshake / chemistry corollary:** matter carried into a sibling universe rebinds to *that* universe's
+  local fields (the constants are local, not carried with you) → atoms resize, bonds re-energize → you
+  disintegrate trying to shake hands. BUT note the nuance: if the dimensionless **ratios** (m_p/m_e, the
+  12-spectrum) are **canonic** (universal well shape), chemistry is the *same structure, rescaled* (same
+  periodic table, different absolute sizes/energies); only if the ratios are **selected** (well shape
+  varies) is chemistry *qualitatively* different. Open which.
+
+## Eq 6.2 in the age of information — scale vs spectrum (added 2026-06-14)
+- **The scale (the 44) is measured, not derived** — one input. The weltformel is fixed up to *one* mass.
+- **Are the ratios (m_p/m_e=1836, all 12) canonic or local?** This reduces to: **is the well *shape*
+  (s_T, the coupling ratios) universal?** The framework's natural answer is *yes* — the well is the
+  **self-consistent soliton** of eq 6.2 (the field digs its own well via the condensate); the universal
+  field equation ⇒ a universal *dimensionless* shape ⇒ canonic ratios. Then: **measure 1 mass (scale) →
+  predict all 12.** The coupling *ratios* (λ, g_v, the Fierz G_V/G_S=2) are already scheme-independent
+  (`coupling_derivation`), supporting canonic.
+- **Strong-sector ratios ARE canonic** (QCD-like dynamics, lattice-predicted — same in any such universe).
+- **The unsolved crux:** the cross-sector m_p/m_e and the full generation hierarchy (~3477× lepton span)
+  are NOT cleanly reproduced by the well (`dirac_woods_saxon`: ~O(1–10), not 3477). So "canonic spectrum
+  from one universal well" is the **goal**, and the generation mechanism that would make it true is the
+  open frontier. A Woods–Saxon FIT (scale + one ratio → 12) is descriptive; the *physics* that fixes the
+  shape canonically is owed. The 12 = **4 towers (charge/colour grip, c_T) × 3 rungs (radial levels, s_T)**;
+  s_T sets the level spacing, c_T the tower split — both should be canonic if the soliton shape is.
