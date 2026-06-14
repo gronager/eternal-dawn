@@ -365,3 +365,20 @@ FIXED** (that *is* the 2/3: Σcos=0, Σcos²=3/2 ⇒ Σ√m=3m0, Σm=6m0² ⇒ Q
 - **Open:** δ itself is still an input (the one phase per tower), as the 44 is the one scale — but the
   framework now predicts the *form* (√2 amplitude / 2/3) from Z3, and reduces each tower to (scale, phase).
   Neutrino Koide would *predict* the absolute ν masses (only Δm² known) — a falsifiable next step.
+
+## Neutrino Koide: 2/3 is UNREACHABLE — the neutral Z3 is broken (consistent) (added 2026-06-14)
+Walked the (a) neutrino-mass prediction (`koide.neutrino_koide_range`). With the measured splittings
+(Δm²_21=7.42e-5, Δm²_31=2.515e-3 eV²): **exact Koide 2/3 is NOT reachable** — Q maxes at **0.586 (normal
+ordering)** and **0.500 (inverted)**, both below 2/3. So the naive mass prediction *fails*: there is no
+neutrino mass set obeying exact Koide and the measured Δm².
+- **This is consistent, not a defeat.** Neutrinos are the most Z3-broken sector (largest mixing, PMNS):
+  exact Koide (leptons, no mixing, 2/3 to 1e-5) → approximate (quarks, CKM, 0.73–0.85) → **unreachable
+  (neutrinos, can't hit 2/3)**. The Koide deviation tracks the mixing — the Z3 breaks exactly where it must.
+- **Constrained prediction (not a point):** Q∈(1/3, 0.586) for NO. Closest-to-Z3 = **normal ordering,
+  hierarchical (m_light≈0), Σm_ν ≈ 59 meV** — and NO gets closer to the Z3 ideal than IO (0.586 vs 0.500),
+  a soft consistency with the data's mild NO preference. **Falsifiable:** cosmology Σm<120 meV (current),
+  CMB-S4 ~20 meV sensitivity, 0νββ (Majorana). But the framework does NOT pin m_light from Koide alone
+  (the neutral Z3 is broken by ~the mixing).
+- **Honest:** (a) does not deliver "ν masses from Koide 2/3" — that's falsified by Δm². What it delivers is
+  a *consistency win* (Z3 broken where mixing is large) + a bounded target (NO, Σm∈[59,120] meV). The known
+  literature agrees: exact Koide does not fit neutrinos (Brannen-type phase modifications are needed).
