@@ -243,6 +243,35 @@ def woods_saxon_well(s_T, m_vac=0.9, a_frac=0.15, R_mult=12.0, N=900):
     return r, M, np.zeros_like(r)
 
 
+def well_from_bag_profile(prof, m_vac=0.9, r0_over_a=3.166, plateau=(4, 10), N=900, R_mult=4.0):
+    """Turn a MEASURED lattice bag profile (measure_bag_profile PROF rows) into the scalar well M(r)
+    -- the measured shape itself, no Woods-Saxon assumption. The gauge-invariant dressed-quark density
+    rho(r) (peak=1 in the chiral-restored core, ->0 outside) maps to
+
+        M(r) = m_vac * (1 - rho(r)/rho(0)),
+
+    i.e. the mass melts where the quark sits and recovers to m_vac outside. Lengths are converted to
+    r0 units via r0_over_a so the result is directly comparable to woods_saxon_well. `prof` is the
+    (n,5) [cfg, r2, t, rho_sum, cnt] array (or any object lattice._bag_rho accepts). Returns (r,M,V=0).
+    The vector well V(r) is a separate measurement (the vector self-energy / form factor)."""
+    from . import lattice as lat
+    r_lat, rho = lat._bag_rho(np.asarray(prof, dtype=float), plateau)
+    r_phys = r_lat / r0_over_a                            # lattice spacings -> r0 units
+    M_meas = m_vac * np.clip(1.0 - rho, 0.0, None)        # rho already normalised to peak=1
+    R = max(R_mult * r_phys[-1], 10.0)
+    r = np.linspace(R / N, R, N)
+    M = np.interp(r, r_phys, M_meas, left=M_meas[0], right=m_vac)
+    return r, M, np.zeros_like(r)
+
+
+def report_bag_spectrum(prof, m_vac=0.9, r0_over_a=3.166, plateau=(4, 10), label="lattice bag"):
+    """The (2) bridge end-to-end: a measured bag profile -> the scalar well -> the predicted
+    generation spectrum (level count, node-labelled E_n, configurational-mass span). Run on the
+    measure_bag_profile output to read the spectrum off the measured shape, no fitted well."""
+    r, M, V = well_from_bag_profile(prof, m_vac=m_vac, r0_over_a=r0_over_a, plateau=plateau)
+    return report(r, M, V=V, label=label)
+
+
 def report_meanfield(g=4.0, v=1.0, lam=8.0, n_fermions=1, g_v=0.0, m_omega=2.0, N=240, R=10.0):
     """Feed the SELF-CONSISTENT mean-field well (dirac_soliton) into the pipeline and read its
     honest level count + span. This is the 'what does the un-fitted well actually predict?' test."""

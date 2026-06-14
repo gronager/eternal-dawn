@@ -42,6 +42,33 @@ def test_drop_in_tabulated_profile_matches_analytic():
     assert np.allclose(e0, e1, atol=0.02)
 
 
+def _synth_bag(R0_lat=6.0, a=1.2, ncfg=2, tlo=4, thi=10, r2max=200):
+    """A measure_bag_profile-format PROF array: dressed-quark density ~ Fermi bag of radius R0_lat."""
+    rows = [[cfg, r2, t, 1.0 / (1.0 + np.exp((np.sqrt(r2) - R0_lat) / a)), 1.0]
+            for cfg in range(1, ncfg + 1) for t in range(tlo, thi + 1) for r2 in range(0, r2max + 1)]
+    return np.array(rows)
+
+
+def test_lattice_bag_bridge_runs_and_binds():
+    # the (2) bridge: a measured bag profile -> scalar well -> a clean bound spectrum
+    prof = _synth_bag(R0_lat=6.0)
+    r, M, V = ws.well_from_bag_profile(prof, m_vac=4.0)
+    res = ws.spectrum_from_well(r, M, V)
+    assert res["n_bound"] >= 1
+    assert [d["nodes"] for d in res["levels"]] == list(range(res["n_bound"]))  # clean labelling
+    assert M[0] < 0.5 * res["M_vac"]                   # melted core (mass off where the quark sits)
+    assert abs(M[-1] - 4.0) < 1e-6                      # recovers to m_vac outside
+
+
+def test_generation_count_set_by_bag_depth():
+    # at a FIXED measured shape, the number of bound levels (= generations) grows with the depth
+    # m_vac*r0: "exactly 3" is a constraint on the bag DEPTH, not only its sharpness
+    prof = _synth_bag(R0_lat=6.0)
+    counts = [ws.spectrum_from_well(*ws.well_from_bag_profile(prof, m_vac=mv))["n_bound"]
+              for mv in (0.9, 4.0, 16.0)]
+    assert counts[0] < counts[1] < counts[2]
+
+
 def test_two_configmass_pieces_have_opposite_ordering():
     # the open "which rung is the electron" fork: m_local weighs spread-out rungs (ground lightest),
     # m_core weighs localized rungs (ground heaviest) -- they must order oppositely in n
