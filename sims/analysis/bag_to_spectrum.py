@@ -83,17 +83,89 @@ def spectrum_at_depth(r_r0, rho, mvac_r0, N=900, R=12.0):
     return res, sl, sc
 
 
+def _label(path):
+    """A short ensemble tag from the filename: prefer an L.x.. or m-.. token, else the basename."""
+    import os
+    base = os.path.basename(path)
+    for tok in base.replace(".dat", "").replace("_", " ").replace("-", " -").split():
+        if tok.lower().startswith("l") and "x" in tok.lower():
+            return tok
+    for tok in base.replace(".dat", "").split("_"):
+        if tok.startswith("m") and any(c.isdigit() for c in tok):
+            return tok
+    return base.replace(".dat", "")
+
+
+def compare_bags(files, r0a_override=None, plot=None):
+    """Fit the wall of several measured bags and tabulate the trend -- the decisive question is
+    whether a_wall/R0 (the span lever) sharpens toward the chiral point. Overlays rho(r/r0) and the
+    Fermi fits in one plot if matplotlib is available (and --plot or the default output path)."""
+    rows = []
+    for f in files:
+        r_a, rho, r0a_hdr = load_bag(f)
+        r0a = r0a_override or r0a_hdr
+        if r0a is None:
+            print(f"  {f}: no r0/a (header or --r0a) -- skipped"); continue
+        R0, a_wall, lam = fit_shape(r_a, rho)
+        rows.append({"label": _label(f), "r0a": r0a, "R0": R0, "s_T": R0 / r0a,
+                     "a_wall": a_wall, "wall_frac": a_wall / R0, "lam": lam,
+                     "r_r0": r_a / r0a, "rho": rho})
+    if not rows:
+        print("no usable bag files"); return
+
+    print(f"  {'ensemble':>12} {'r0/a':>6} {'s_T=R0/r0':>10} {'a_wall/R0':>10} {'tail lam/a':>11}  wall")
+    for x in rows:
+        tag = "SOFT" if x["wall_frac"] > 0.30 else "SHARP"
+        print(f"  {x['label']:>12} {x['r0a']:>6.3f} {x['s_T']:>10.3f} {x['wall_frac']:>10.3f} "
+              f"{x['lam']:>11.2f}  {tag}")
+    if len(rows) >= 2:
+        trend = rows[-1]["wall_frac"] - rows[0]["wall_frac"]
+        verdict = ("SHARPENING toward chiral (span grows -- mechanism survives)" if trend < -0.02 else
+                   "NOT sharpening (wall stays soft -- measured bag does not give the span)" if trend > 0.02
+                   else "flat (no clear trend yet)")
+        print(f"\n  trend a_wall/R0 ({rows[0]['label']} -> {rows[-1]['label']}): "
+              f"{rows[0]['wall_frac']:.3f} -> {rows[-1]['wall_frac']:.3f}  => {verdict}")
+
+    out = plot or "output/bag_wall_trend.pdf"
+    try:
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+        fig, ax = plt.subplots(figsize=(7, 5))
+        fermi = lambda rr, R0, a: 1.0 / (1.0 + np.exp((rr - R0) / a))
+        for x in rows:
+            line, = ax.plot(x["r_r0"], x["rho"], "o", ms=4,
+                            label=f"{x['label']}: s_T={x['s_T']:.2f}, a_w/R0={x['wall_frac']:.2f}")
+            rr = np.linspace(x["r_r0"].min(), x["r_r0"].max(), 200)
+            ax.plot(rr, fermi(rr, x["R0"] / x["r0a"], x["a_wall"] / x["r0a"]),
+                    "-", color=line.get_color(), alpha=0.6)
+        ax.set_xlabel(r"$r/r_0$"); ax.set_ylabel(r"$\rho(r)/\rho(0)$")
+        ax.set_title("Torsiton bag wall vs sea mass — does it sharpen toward chiral?")
+        ax.legend(); ax.grid(alpha=0.3); fig.tight_layout()
+        import os
+        os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
+        fig.savefig(out); print(f"\n  wrote {out}")
+    except Exception as e:
+        print(f"\n  (plot skipped: {e})")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("bagfile")
+    ap.add_argument("bagfile", nargs="+", help="one bag file (spectrum) or several (wall trend)")
     ap.add_argument("--r0a", type=float, default=None, help="r0/a (else read from header)")
     ap.add_argument("--mvac-r0", type=float, default=None, help="depth m_vac*r0 directly")
     ap.add_argument("--mN", type=float, default=None, help="nucleon m_N a -> depth (m_N/3)*r0a")
     ap.add_argument("--scan", type=float, nargs="*", default=None, help="scan these m_vac*r0 depths")
+    ap.add_argument("--compare", action="store_true", help="wall-sharpening trend across bag files")
+    ap.add_argument("--plot", default=None, help="save the trend overlay to this path (compare mode)")
     args = ap.parse_args()
 
-    r_a, rho, r0a_hdr = load_bag(args.bagfile)
+    if args.compare or len(args.bagfile) > 1:
+        compare_bags(args.bagfile, r0a_override=args.r0a, plot=args.plot)
+        return
+
+    r_a, rho, r0a_hdr = load_bag(args.bagfile[0])
     r0a = args.r0a or r0a_hdr
     if r0a is None:
         ap.error("need r0/a (--r0a or a header line)")
