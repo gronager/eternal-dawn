@@ -27,3 +27,15 @@ def test_electron_is_the_overlap_near_node():
 def test_quarks_only_approximate():
     # leptons clean (exact Z3), quarks have broken Z3 (CKM mixing) -> Koide only approximate
     assert abs(kd.koide_ratio(kd.UP_QUARKS) - 2 / 3) > 0.1
+
+
+def test_neutrino_koide_2_3_not_reachable():
+    # given the measured splittings, Q=2/3 is unreachable for either ordering (the exact Z3 does not
+    # extend to the neutral sector) -- NO tops at ~0.586, IO at ~0.500
+    no = kd.neutrino_koide_range("NO")
+    io = kd.neutrino_koide_range("IO")
+    assert not no["reaches_2_3"] and no["Q_max"] < 0.6
+    assert not io["reaches_2_3"] and io["Q_max"] < 0.52
+    # closest-to-Z3 is hierarchical normal ordering, sum m ~ 59 meV (a falsifiable target)
+    assert no["Q_max"] > io["Q_max"]                  # NO gets closer to 2/3 than IO
+    assert 0.05 < no["sum_m_at_maxQ"] < 0.07

@@ -64,6 +64,34 @@ def node_proximity(m0, delta, perm):
     return 1 + np.sqrt(2) * np.cos(delta + 2 * np.pi * k / 3)
 
 
+# neutrino mass-squared splittings (NuFIT/PDG 2024), eV^2
+DM21 = 7.42e-5
+DM31_NO = 2.515e-3       # normal ordering, m1 lightest
+DM32_IO = -2.498e-3      # inverted ordering, m3 lightest
+
+
+def neutrino_koide_range(ordering="NO", n=4000, ml_max=0.20):
+    """Scan the lightest neutrino mass and return the achievable Koide-Q range given the measured
+    splittings, the closest approach to 2/3, and the implied sum of masses. The point: with the
+    measured Delta m^2, Q=2/3 is NOT reachable for neutrinos (NO tops at ~0.586, IO at ~0.500) -- the
+    exact-Koide (sqrt2-amplitude Z3) does not extend to the neutral sector. This is CONSISTENT with
+    neutrinos being the most Z3-broken sector (largest mixing, PMNS): exact (leptons, no mixing) ->
+    approximate (quarks, CKM) -> unreachable (neutrinos). Returns dict with Q-range, best point, Sum m."""
+    ml = np.linspace(0.0, ml_max, n)
+    if ordering == "NO":
+        m1, m2, m3 = ml, np.sqrt(ml**2 + DM21), np.sqrt(ml**2 + DM31_NO)
+    else:
+        m3 = ml
+        m1 = np.sqrt(ml**2 + abs(DM32_IO) - DM21)
+        m2 = np.sqrt(ml**2 + abs(DM32_IO))
+    M = np.stack([m1, m2, m3], axis=0)
+    Q = M.sum(0) / np.sqrt(M).sum(0) ** 2
+    i = int(np.argmax(Q))
+    return {"ordering": ordering, "Q_min": float(Q.min()), "Q_max": float(Q.max()),
+            "reaches_2_3": bool(Q.max() >= 2 / 3), "ml_at_maxQ": float(ml[i]),
+            "sum_m_at_maxQ": float(M[:, i].sum()), "masses_at_maxQ": M[:, i].copy()}
+
+
 def report():
     print("Koide's relation as the Z3 three-sector fingerprint\n")
     for name, m in [("charged leptons", LEPTONS), ("up quarks", UP_QUARKS),
@@ -80,7 +108,17 @@ def report():
     print("  Charged leptons: Q=2/3 to 1e-5; the 2-param (scale, phase) law reproduces all three to")
     print("  <1%. The hierarchy lives in the PHASE delta (electron near the overlap node), not a power")
     print("  law. Framework: the Z3 = three topological sectors; the near-node = the configurational")
-    print("  overlap nearly cancelling for the lightest generation.")
+    print("  overlap nearly cancelling for the lightest generation.\n")
+
+    print("  Neutrinos -- can exact Koide 2/3 hold given the measured Delta m^2?")
+    for ordering in ("NO", "IO"):
+        r = neutrino_koide_range(ordering)
+        verdict = "REACHABLE" if r["reaches_2_3"] else "NOT reachable"
+        print(f"    {ordering}: Q in [{r['Q_min']:.3f}, {r['Q_max']:.3f}] -> 2/3 {verdict}; "
+              f"closest at m_light={r['ml_at_maxQ']*1e3:.1f} meV, Sum m={r['sum_m_at_maxQ']*1e3:.0f} meV")
+    print("    => exact Koide does NOT extend to neutrinos -- CONSISTENT with the neutral sector being")
+    print("    the most Z3-broken (largest mixing). Closest-to-Z3 = NORMAL ordering, hierarchical,")
+    print("    Sum m ~ 59 meV (falsifiable: cosmology Sum m<120 meV, CMB-S4 ~20 meV sensitivity).")
 
 
 if __name__ == "__main__":
