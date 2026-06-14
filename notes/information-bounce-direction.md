@@ -95,3 +95,13 @@ the parent holds the inflow on the high-curvature/fluid side and it crystallizes
 without a postulate → the bounce, the void seed, the no-singularity axiom, the force, and the child
 universe all re-derive from **quantum information / entanglement**, with torsion demoted to one possible
 microscopic skin on the gravitational sector. Conserved throughout: the information never died.
+
+## Bounce dynamics — the soft wall is the Planck force (added 2026-06-14)
+No hard bounces: a hard (infinite) wall is a *discontinuity* (forbidden by the no-discontinuity axiom),
+AND an inelastic bounce *destroys information* (forbidden by unitarity). So the bounce is **elastic**.
+The Tier-1 resistance dE = (ℏc/ℓ_P²)|dR| gives a restoring force **F = ℏc/ℓ_P² = c⁴/G — the PLANCK
+FORCE** (the GR maximum-force bound, Gibbons/Schiller). Finite ⇒ elastic, no discontinuity; maximal ⇒
+the hardest elastic bounce nature permits. Max compression past saturation: ΔR = E/F = GM/c² = R_s/2
+(~half the Schwarzschild radius — a real golf-ball squish, 0.21 fm for the void seed). The bounce is as
+stiff as physics allows *without* a discontinuity: the **supremum-force bounce**. Both core axioms (no
+discontinuities; unitarity/ongoing dawn) say the same thing — the bounce is soft and elastic.
