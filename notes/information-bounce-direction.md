@@ -301,3 +301,26 @@ invariant carried by the neutral knot. Three routes:
   unit-winding (Skyrmion) background — is the protected multiplet 3-dimensional? (Honest: the B=1 Skyrmion's
   collective modes give the nucleon/Δ spin-isospin tower, NOT obviously 3 generations — so "index=3" is a
   hope to be checked, not a result.)
+
+## Route 2 walked: one winding = ONE protected level, not three → pivot to Route 1 (added 2026-06-14)
+Ran the existing CQSM instrument (`chiral_quark_soliton`: the Eq-6.2 Dirac in the hedgehog winding
+background — the Route-2 zero-mode calc was already built; also `hedgehog`, `kahana_ripka`).
+- **B=1 hedgehog → ONE topologically protected level** (K=0⁺, E/M=0.227 at physical depth) = the baryon
+  (spectral flow: one zero-crossing per unit winding = baryon number). **Not three.**
+- **The winding DOES help the tower bind (on depth):** excited K=0 levels appear; a 3-level window opens at
+  M·r0~3 vs ~8 for the plain scalar well (~6× more efficient — the chiral rotation binds harder). Physical
+  CQSM depth M·r0~1–2 → factor ~1.5–2 short (vs ~11× for the plain well). Supports the "winding/tower
+  helps" instinct on the COUNT-depth front.
+- **But the excited levels are NOT protected** — only the valence crosses zero (spectral flow); the rest
+  are ordinary in-gap bound states = **Roper-like radial excitations** (N(1440)). In the real world the
+  Roper DECAYS (N*→Nπ) — the strong-sector analog of the forbidden μ→eγ. So radial-tower states (winding or
+  not) would decay; they can't be the stable generations.
+- **Verdict:** Route 2 (zero-mode multiplet of ONE winding) gives 1 protected state, not 3. Protection
+  (no μ→eγ) and tower (3 levels) are in TENSION: one winding protects one level; a stack of excited levels
+  is unprotected (Roper-like).
+- **Pivot to Route 1 (Hopf linking), which reconciles both instincts:** each linking number n (π₃(S²)=ℤ) is
+  a DISTINCT topological sector → separately protected (no inter-generation transition, μ→eγ forbidden) AND
+  an ordered ladder (mass↑ with linking = the tower). It's a tower *and* protected, because each rung is a
+  different knot, not an excitation of one knot — exactly the distinction the Roper result forces. Neutrino
+  carries link# alone → low links near-degenerate → mix. "Why 3" = energetics of bound links. **Next calc:
+  Dirac zero modes in Hopfion backgrounds of link 0,1,2 — does the mass ladder up, and is each protected?**
