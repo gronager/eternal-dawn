@@ -20,3 +20,12 @@ def test_lightest_is_most_excited_mode():
 def test_koide_crossed_by_overlap_masses():
     # Q(a/b) is continuous and brackets 2/3 -> the overlap masses are Koide-compatible at some a/b
     assert ce.koide_Q(0.95) < 2 / 3 < ce.koide_Q(0.97)
+
+
+def test_criticality_drives_span_up():
+    # approaching marginal binding (the chiral boundary) grows the span and the binding margin:
+    # the criticality driver is real (span larger at the more-marginal coupling)
+    sc = ce.criticality_scan(g_values=[4.0, 2.7])
+    deep, marginal = sc[0], sc[1]
+    assert marginal["margin"] > deep["margin"]      # E/Mvac -> 1 (more marginal)
+    assert marginal["span"] > 2 * deep["span"]      # span grows sharply toward criticality

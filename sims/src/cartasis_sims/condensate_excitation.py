@@ -97,6 +97,37 @@ def real_soliton_modes(g=5.0, lam=6.0, nf=3, v=1.0, R=14.0, N=700, eps_break=0.4
     return len(ov), np.array(ov), span_, Q
 
 
+def criticality_scan(g_values=None, lam=8.0, nf=2, eps_break=0.4, v=1.0, R=16.0, N=800, iters=400):
+    """The criticality-driver test. Scan the coupling g toward marginal binding (the chiral phase
+    boundary) and track the condensate-overlap span. Hypothesis: approaching the critical point drives
+    the fermion to near-orthogonality with the excited condensate modes (the overlap NODE), so the span
+    diverges. Finding: the span DOES grow sharply toward criticality (the driver is real and in the
+    right direction), but the simple chiral soliton dissolves via a FIRST-ORDER transition (core flips
+    abruptly) and caps the span at ~30 before the divergence. A SECOND-ORDER (continuous) chiral
+    transition would let the system sit arbitrarily close to a/b->1 and deliver the full hierarchy.
+    So the magnitude reduces to: IS THE CHIRAL TRANSITION (in this sector) FIRST OR SECOND ORDER?
+    -- a real, lattice-testable question. Returns a list of dicts (g, core, margin, n_modes, span)."""
+    from scipy.linalg import eigh_tridiagonal
+    from . import chiral_soliton as cs
+    if g_values is None:
+        g_values = np.linspace(5.0, 2.64, 14)
+    out = []
+    for g in g_values:
+        o = cs.solve_chiral(v=v, g=float(g), lam=lam, n_fermions=nf, R=R, N=N,
+                            eps_break=eps_break, iters=iters)
+        r = o["r"]; h = r[1] - r[0]; s0 = o["sigma"]; rho = o["density"]
+        Mvac = abs(o["M"][-1]); E = np.array(o["E"]); Eb = E[(E > 0) & (E < Mvac)]
+        margin = float(Eb.min() / Mvac) if len(Eb) else float("nan")
+        diag = 2.0 / h**2 + lam * (3 * s0**2 - v**2); off = -np.ones(len(r) - 1) / h**2
+        w, U = eigh_tridiagonal(diag, off)
+        ov = [_trapz(rho * (U[:, k] / np.sqrt(h) / r) * r**2, r)
+              for k in range(len(w)) if w[k] < 2 * lam * v**2 * 0.999]
+        m = np.abs(np.array(ov))
+        out.append({"g": float(g), "core": float(o["core_sigma"]), "margin": margin,
+                    "n_modes": len(m), "span": float(m.max() / m.min()) if len(m) >= 2 else float("nan")})
+    return out
+
+
 def report():
     print("Generations as condensate excitations -- the ceiling-free hierarchy\n")
     r = _grid()
@@ -119,7 +150,16 @@ def report():
     print("    -> the real soliton binds ~2-3 modes, and when 3 they are near-DEGENERATE (span ~1.2,")
     print("    Q~1/3), NOT steep. The toy's ceiling-free span needed a/b->1 (near-orthogonality) -- a")
     print("    near-critical point the self-consistent soliton does not naturally sit at. Mechanism real;")
-    print("    magnitude wants a criticality driver (what pins a/b->1?), else it is the one tuned number.")
+    print("    magnitude wants a criticality driver (what pins a/b->1?), else it is the one tuned number.\n")
+
+    print("  CRITICALITY-DRIVER scan (coupling g -> marginal binding / chiral phase boundary):")
+    sc = criticality_scan(g_values=np.array([5.0, 4.0, 3.0, 2.8, 2.74, 2.68, 2.66]))
+    print("    g     core_sig  margin(E/Mvac)  span")
+    for d in sc:
+        print(f"    {d['g']:.2f}   {d['core']:+.3f}     {d['margin']:.3f}        {d['span']:7.1f}")
+    print("    -> span GROWS toward criticality (the driver is real); the excited-mode overlap heads to")
+    print("    the NODE. But the chiral soliton dissolves FIRST-ORDER (~g=2.65), capping span ~30. A")
+    print("    SECOND-ORDER transition would diverge -> magnitude = the ORDER of the chiral transition.")
 
 
 if __name__ == "__main__":
